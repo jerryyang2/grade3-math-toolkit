@@ -450,17 +450,17 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- 🎚️ 提示階層三段消褪控制面板 (Prompt Fading Selector) -->
           <div class="fading-control-panel">
             <span class="fading-label">
-              🎚️ 提示階層消褪調控：
+              🎚️ 提示程度：
             </span>
             <div class="fading-btn-group">
               <button class="fading-btn ${AppState.promptLevel === 1 ? 'active' : ''}" data-level="1" title="完全支持：全色彩位值框與高亮">
-                🟢 Level 1: 全鷹架模式
+                1 全提示
               </button>
               <button class="fading-btn ${AppState.promptLevel === 2 ? 'active' : ''}" data-level="2" title="部分消褪：去強烈色彩，保留黑白對齊線">
-                🟡 Level 2: 半鷹架消褪
+                2 部分提示
               </button>
               <button class="fading-btn ${AppState.promptLevel === 3 ? 'active' : ''}" data-level="3" title="獨立檢測：模擬段考純淨黑白算式">
-                🔴 Level 3: 無鷹架獨立
+                3 自己試試
               </button>
             </div>
           </div>

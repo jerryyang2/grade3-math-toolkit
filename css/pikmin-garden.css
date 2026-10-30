@@ -46,16 +46,16 @@
 .pikmin-garden.is-gathered .pikmin-friend { left: calc(8% + var(--order) * 10.5%); bottom: 16%; --size: 58px; }
 .pikmin-garden.is-gathered .pikmin-friend .pik-figure { animation-duration: 4.5s; }
 .pikmin-garden .is-cheering .pik-figure { animation: pikmin-cheer .7s ease-out; }
-.pikmin-scene .storybook-speech { top: -5px; left: 13%; right: auto; font-size: .66rem; max-width: 90%; padding: 7px 12px; border-radius: 12px 12px 12px 2px; transform: rotate(-2deg); }
+.pikmin-scene .storybook-speech { top: -5px; left: 13%; right: auto; font-size: 1rem; max-width: 90%; padding: 7px 12px; border-radius: 12px 12px 12px 2px; transform: rotate(-2deg); }
 .pikmin-scene .storybook-speech { background: #fffef9; border-color: #b1d0c5; color: #3d6554; box-shadow: 2px 3px 0 #bfdcc980; }
-.garden-caption { position: absolute; right: 9%; bottom: 1%; font-size: .6rem; letter-spacing: .12em; color: #527649; transform: rotate(-4deg); }
+.garden-caption { position: absolute; right: 9%; bottom: 1%; font-size: 1rem; letter-spacing: .12em; color: #527649; transform: rotate(-4deg); }
 .storybook-site .mascot-avatar-circle { width: 82px; height: 102px; padding: 0; }
 .storybook-site .mascot-switch-btn .pikmin-character { width: 28px; height: 38px; }
 .storybook-site .mascot-companion-card { background: #f0f8e6 !important; border: 1px solid #c0d8ab !important; }
 .storybook-site .mascot-role-pill { background: #d8edc4 !important; color: #3e6637 !important; }
 .storybook-site .nav-tab.active { background: #eaf5df; border-bottom-color: #54864b; }
 .storybook-site .nav-tab.active .sketch-icon { transform: rotate(-5deg); }
-.theme-credit { text-align: center; font-size: .65rem; color: #65775f; padding: 12px 16px 25px; }
+.theme-credit { text-align: center; font-size: 1rem; color: #65775f; padding: 12px 16px 25px; }
 .theme-credit a { color: inherit; text-underline-offset: 3px; }
 @keyframes pikmin-walk { 0%,100% { transform: translate(0,0) rotate(-3deg); } 25% { transform: translate(3px,-3px) rotate(2deg); } 50% { transform: translate(6px,0) rotate(3deg); } 75% { transform: translate(3px,-3px) rotate(-2deg); } }
 @keyframes pikmin-leaf { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
@@ -74,9 +74,9 @@
 @media (max-width: 700px) {
   .storybook-site .storybook-welcome { grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); padding-top: 18px; }
   .storybook-welcome h2 { font-size: clamp(1.7rem,5.7vw,2.55rem); }
-  .storybook-eyebrow { font-size: .54rem; letter-spacing: 0; }
-  .storybook-welcome p { font-size: .71rem; }
-  .storybook-greet { font-size: .68rem; padding: 6px 10px; gap: 5px; }
+  .storybook-eyebrow { font-size: 1rem; letter-spacing: 0; }
+  .storybook-welcome p { font-size: 1rem; }
+  .storybook-greet { font-size: 1rem; padding: 6px 10px; gap: 5px; }
   .storybook-greet svg { width: 18px; height: 18px; }
   .pikmin-scene { height: 235px; margin: 0 -9px 0 -5px; align-self: end; }
   .storybook-art .pikmin-garden-ground { position: absolute; width: 135%; height: 100%; max-width: none; bottom: -10px; left: -15%; object-fit: fill; }
@@ -95,8 +95,8 @@
   .pikmin-garden.is-gathered .pikmin-red,.pikmin-garden.is-gathered .pikmin-purple,.pikmin-garden.is-gathered .pikmin-glow { left: 23%; }
   .pikmin-garden.is-gathered .pikmin-yellow,.pikmin-garden.is-gathered .pikmin-white,.pikmin-garden.is-gathered .pikmin-ice { left: 50%; }
   .pikmin-garden.is-gathered .pikmin-blue,.pikmin-garden.is-gathered .pikmin-rock,.pikmin-garden.is-gathered .pikmin-winged { left: 77%; }
-  .pikmin-scene .storybook-speech { left: -6px; top: -6px; max-width: calc(100% + 10px); padding: 5px 7px; font-size: .58rem; line-height: 1.5; }
-  .garden-caption { right: 2px; bottom: 0; font-size: .45rem; letter-spacing: .04em; }
+  .pikmin-scene .storybook-speech { left: -6px; top: -6px; max-width: calc(100% + 10px); padding: 5px 7px; font-size: 1rem; line-height: 1.5; }
+  .garden-caption { right: 2px; bottom: 0; font-size: 1rem; letter-spacing: .04em; }
   .storybook-site .mascot-avatar-circle { width: 52px; height: 72px; }
 }
 /* 設定仍由既有的低刺激與系統偏好統一處理，畫面不增加動畫控制按鈕。 */
