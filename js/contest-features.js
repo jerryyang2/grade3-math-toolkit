@@ -1,5 +1,5 @@
 /**
- * 三年級數學備課平台 - 特教競賽專用「金獎評審」旗艦功能模組 (Contest Flagship Features)
+ * 三年級數學備課平台 - 教學輔助與使用導覽模組 (Contest Flagship Features)
  * 專為全國特殊教育優良教材教具與教學法評選競賽打造：
  * 1. 🕹️ SwitchAccessManager: 重度肢障/腦麻學童「單鍵微動開關掃描輔助模式 (Single-Key Auto Scan)」
  * 2. 📏 ReadingRulerManager: ADHD 與學障「視線專注閱讀導引尺 / 聚焦遮罩 (Visual Focus Ruler)」
@@ -725,7 +725,7 @@
         <html lang="zh-TW">
         <head>
           <meta charset="UTF-8">
-          <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=pikmin-spring-20261031', window.location.href).href}">
+          <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
           <title>學習教室個別化學習單 - ${unit.title}</title>
           <style>
             @page { size: A4; margin: 15mm; }
@@ -894,68 +894,22 @@
                 學習教室三年級上學期數學備課平台
               </h2>
               <div style="font-size:0.95rem; color:#475569; margin-top:4px;">
-                專為認知學障、ADHD、肢障與自閉症學童打造之通用設計 (UDL) 與 C-R-A 智慧備課系統
+                依個別學習需求選用支持的數學備課與教學系統
               </div>
             </div>
             <button id="btn-close-judges-modal" style="background:none; border:none; font-size:1.8rem; color:#94a3b8; cursor:pointer; line-height:1;" title="關閉">✕</button>
           </div>
 
-          <!-- 六大競賽核心評審維度速查標籤 -->
-          <div class="judges-grid-cards">
-            <!-- 1. 課綱指標對齊 -->
-            <div class="judges-metric-card">
-              <div class="judges-metric-header">
-                <span class="j-icon">🏛️</span>
-                <strong>108 雙課綱深度對齊</strong>
-              </div>
-              <p>完整對應普通數學領綱 <strong>n-II-1 ~ n-II-9</strong>，同時實質嵌入特殊需求領域課綱指標（<strong>特學1-Ⅱ-1、特學1-Ⅱ-5、生活實作策略</strong>）。</p>
-            </div>
-
-            <!-- 2. C-R-A 教學法 -->
-            <div class="judges-metric-card">
-              <div class="judges-metric-header">
-                <span class="j-icon">🪜</span>
-                <strong>C-R-A 具體到抽象鷹架</strong>
-              </div>
-              <p>每個單元均配備「具體操作物 (錢幣/量筒/切盤) ➔ 圖像半具體 ➔ 抽象符號」之三階循序教學法，降低工作記憶負荷。</p>
-            </div>
-
-            <!-- 3. 提示階層三段消褪 -->
-            <div class="judges-metric-card">
-              <div class="judges-metric-header">
-                <span class="j-icon">🎚️</span>
-                <strong>提示階層消褪 (Fading)</strong>
-              </div>
-              <p>提供 Level 1 全色彩高亮 ➔ Level 2 黑白對齊線 ➔ Level 3 純淨獨立檢測，協助教師逐步調整支持程度；成效仍須以實際作答與操作證據確認。</p>
-            </div>
-
-            <!-- 4. UDL 通用設計與輔具 -->
-            <div class="judges-metric-card">
-              <div class="judges-metric-header">
-                <span class="j-icon">♿</span>
-                <strong>身障輔具科技與 UDL</strong>
-              </div>
-              <p>內建「單鍵微動開關掃描模式 (Switch Access)」、「閱讀聚焦導引尺」、「全題目注音標楷體」與「自閉症低感官刺激模式」。</p>
-            </div>
-
-            <!-- 5. 邊講邊揭示思維外顯化 -->
-            <div class="judges-metric-card">
-              <div class="judges-metric-header">
-                <span class="j-icon">🗣️</span>
-                <strong>邊講邊揭示思維外顯化</strong>
-              </div>
-              <p>嚴格杜絕冰冷靜態答案！直式、乘法面積與除法平分一律「由問號佔位，隨朗讀解說逐步點亮答案」，引導步驟化後設認知。</p>
-            </div>
-
-            <!-- 6. 正向增強與情緒同理 -->
-            <div class="judges-metric-card">
-              <div class="judges-metric-header">
-                <span class="j-icon">⭐</span>
-                <strong>無標籤化代幣與同理擁抱</strong>
-              </div>
-              <p>5 位學童無障礙標籤存摺、答對五彩紙花慶祝、答錯無倒扣給予溫暖擁抱詞，並附 舒適吸吐光環與可選音效冷靜通道。</p>
-            </div>
-          </div>
+          <p style="color:#334155; line-height:1.8;">以三年級數學學習需求為中心，提供可選擇的視覺、語音與操作支持。以下依雲林縣 115 學年度修正版計畫的數位化媒材組整理；功能展示與學生實際成效分開呈現。</p>
+          <div class="evidence-table"><table><caption>數位化媒材組評選對照</caption><thead><tr><th>評選面向</th><th>比重</th><th>網站可查看的內容</th></tr></thead><tbody>
+          <tr><td>學習目標明確</td><td>20%</td><td>九單元學習任務、可調整目標草案與課綱對照。</td></tr>
+          <tr><td>教案設計正確</td><td>20%</td><td>先備檢核、具體到抽象教學、合作任務與評量流程；需由教師複核教學內容。</td></tr>
+          <tr><td>操控簡易</td><td>20%</td><td>單元選取、大字與清楚對比、語音、鍵盤與可選輔助工具。</td></tr>
+          <tr><td>設計完整</td><td>20%</td><td>教學流程與使用說明、課堂教具、練習、學習單、本機觀察與匯出。</td></tr>
+          <tr><td>設計趣味</td><td>20%</td><td>原創動物互動、生活情境、合作角色及分組遊戲；可切換低刺激模式。</td></tr>
+          </tbody></table></div>
+          <p style="color:#334155; line-height:1.8;">AI 備課提示詞可由教師複製到所使用的 AI 工具，經人工檢核後使用。平台目前以預設教材、規則型提示及裝置語音運作；未直接連線生成式 AI。實際試教成效請以匿名化的操作、口述及作答紀錄佐證，不以虛構範例替代。</p>
+          <p><a href="https://education.ylc.edu.tw/News_Content.aspx?n=1334&amp;s=399803" target="_blank" rel="noopener noreferrer">雲林縣 115 學年度官方公告與修正版計畫</a></p>
 
           <!-- 現場即時快速驗證展示專區 -->
           <div style="background:#f1f5f9; border-radius:14px; padding:16px; margin:20px 0;">

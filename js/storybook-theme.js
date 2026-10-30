@@ -23,8 +23,8 @@
     return `<svg class="sketch-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${outlines[name] || outlines.book}</svg>`;
   }
   function character(id) {
-    const type = { lele: 'red', foxie: 'yellow', bobo: 'purple', tuzi: 'winged' }[id] || 'red';
-    return window.PikminGarden?.character(type) || '';
+    const type = { lele: 'rabbit', foxie: 'fox', bobo: 'bear', tuzi: 'cat' }[id] || 'rabbit';
+    return window.AnimalGarden?.character(type) || '';
   }
   window.StorybookTheme = { icon, character };
   document.addEventListener('DOMContentLoaded', () => {

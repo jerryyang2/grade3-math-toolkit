@@ -9,7 +9,7 @@ body.storybook-site, body.storybook-game {
   --text-muted: #344d3e;
   --border-color: #789374;
   color: var(--sb-ink);
-  background-color: #f4f8ec;
+  background-color: #fff7e3;
 }
 .storybook-site .header-container { display: grid; grid-template-areas: 'brand tools tokens'; grid-template-columns: minmax(220px,1fr) auto auto; }
 .storybook-site .brand-section { grid-area: brand; min-width: 0; }
@@ -33,11 +33,11 @@ body.storybook-site, body.storybook-game {
 .storybook-greet { font-size: 1rem; font-weight: 800; color: #174d2e; background: #fff; border: 2px solid #557c5b; }
 .storybook-greet span { font-size: inherit; }
 .storybook-greet:hover, .storybook-greet[aria-pressed='true'] { color: #fff; background: #21663d; border-color: #174b2c; }
-.storybook-site .pikmin-scene { display: block; height: auto; margin: 0 0 0 8px; }
-.pikmin-stage { position: relative; height: 230px; }
-.pikmin-stage .pikmin-garden-ground { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.pikmin-stage .pikmin-garden { inset: 0; }
-.storybook-site .pikmin-scene .storybook-speech { position: relative; inset: auto; display: block; max-width: 100%; margin-top: 3px; transform: none; color: #193d2a; background: #fff; border: 2px solid #6d9272; box-shadow: none; padding: 7px 10px; font-size: 1rem; font-weight: 700; line-height: 1.6; }
+.storybook-site .animal-scene { display: block; height: auto; margin: 0 0 0 8px; }
+.animal-stage { position: relative; height: 230px; }
+.animal-stage .animal-garden-ground { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.animal-stage .animal-garden { inset: 0; }
+.storybook-site .animal-scene .storybook-speech { position: relative; inset: auto; display: block; max-width: 100%; margin-top: 3px; transform: none; color: #193d2a; background: #fff; border: 2px solid #6d9272; box-shadow: none; padding: 7px 10px; font-size: 1rem; font-weight: 700; line-height: 1.6; }
 .storybook-site .lesson-quick-picker label { font-size: 1.0625rem; color: #1c4229; }
 .lesson-quick-picker label span { color: #3c5133; font-size: 1rem; letter-spacing: .025em; }
 .storybook-site .lesson-quick-picker select { font-size: 1.125rem; height: auto; min-height: 50px; color: #172f25; border: 2px solid #658065; }
@@ -106,10 +106,10 @@ body.storybook-site, body.storybook-game {
   .storybook-welcome h2 { font-size: clamp(1.75rem,5.7vw,2.3rem); }
   .storybook-welcome p { max-width: none; }
   .storybook-eyebrow { font-size: 1rem; margin-bottom: 8px; }
-  .storybook-site .pikmin-scene { margin: 0; align-self: start; }
-  .pikmin-stage { height: 230px; }
-  .pikmin-stage .pikmin-garden-ground { width: 125%; left: -12%; object-fit: fill; }
-  .storybook-site .pikmin-scene .storybook-speech { padding: 7px; font-size: 1rem; }
+  .storybook-site .animal-scene { margin: 0; align-self: start; }
+  .animal-stage { height: 230px; }
+  .animal-stage .animal-garden-ground { width: 125%; left: -12%; object-fit: fill; }
+  .storybook-site .animal-scene .storybook-speech { padding: 7px; font-size: 1rem; }
   .storybook-site .storybook-launch { margin: 0 -3px; padding: 10px; gap: 10px; }
   .storybook-site .lesson-quick-picker { flex-direction: column; align-items: stretch; gap: 6px; }
   .storybook-site .lesson-quick-picker label { display: block; font-size: 1rem; white-space: normal; }
@@ -133,7 +133,7 @@ body.storybook-site, body.storybook-game {
 .storybook-site.high-contrast-mode :is(.question-text,.option-btn .option-text) { color: #fff; }
 .storybook-site.high-contrast-mode :is(input,select,textarea).form-control, .storybook-site.high-contrast-mode .practice-settings-grid :is(input,select), .storybook-site.high-contrast-mode .evidence-toolbar select { background: #18181b; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode .storybook-start { background: #facc15; color: #111; }
-.storybook-site.high-contrast-mode .pikmin-scene .storybook-speech { color: #fff; background: #18181b; border-color: #facc15; }
+.storybook-site.high-contrast-mode .animal-scene .storybook-speech { color: #fff; background: #18181b; border-color: #facc15; }
 .storybook-site.calm-focus-mode .storybook-welcome { background: #edf4e5; border-color: #688364; }
 .storybook-site.calm-focus-mode .storybook-welcome :is(h2,em,p,.storybook-eyebrow) { color: #214a2e; }
 .storybook-site.high-contrast-mode .storybook-welcome :is(h2,em,p,.storybook-eyebrow) { color: #fff; }
@@ -155,5 +155,5 @@ body.storybook-site, body.storybook-game {
 @media (max-width: 360px) {
   .storybook-site .storybook-welcome { grid-template-columns: minmax(0,1fr); }
   .storybook-welcome h2 { font-size: 2rem; }
-  .pikmin-stage { height: 200px; }
+  .animal-stage { height: 200px; }
 }

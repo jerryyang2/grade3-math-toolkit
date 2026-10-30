@@ -1,0 +1,171 @@
+/* 森林數學探險站：鮮明的色塊與清楚的教學路線。 */
+body.storybook-site,body.storybook-game { background-color:#fff7e3; }
+.storybook-site .main-nav { border-bottom:2px solid #46674c; }
+.storybook-site .nav-tab.active { background:#175f68; border-color:#10454c; }
+.storybook-site .nav-tab:hover:not(.active) { background:#ffedbd; }
+.storybook-site .storybook-welcome { background:linear-gradient(110deg,#ffd16b 0 47%,#74c4da 47% 100%); border:2px solid #57754c; border-radius:24px; box-shadow:0 5px 0 #dbc78e; padding:24px 28px 0; }
+.storybook-welcome::before { border-color:#fff9; }
+.storybook-welcome h2 { font-family:var(--font-base); font-size:clamp(2.5rem,4vw,3.4rem); line-height:1.25; color:#173f30; letter-spacing:-.025em; }
+.storybook-welcome h2 em { color:#91380f; letter-spacing:-.035em; }
+.storybook-welcome h2 em::after { border-color:#bc5f25; }
+.storybook-eyebrow { display:inline-flex; width:fit-content; padding:4px 10px; background:#1d5a3a; color:#fff; border-radius:6px; font-size:1rem; letter-spacing:.04em; }
+.storybook-eyebrow::before { display:none; }
+.storybook-welcome p { font-weight:600; color:#2e432e; }
+.storybook-greet { color:#174b2e; border:2px solid #356541; background:#fffaf0; padding:8px 14px; }
+.storybook-greet:hover,.storybook-greet[aria-pressed='true'] { background:#1d5a3a; color:#fff; }
+.storybook-site .storybook-launch { border:2px solid #477957; border-bottom:0; background:#fffef8; box-shadow:0 -4px 0 #fff9; margin-top:16px; padding:12px 16px; }
+.storybook-site .storybook-start { background:#f8a545; border-color:#8f4c13; color:#372405; box-shadow:0 3px 0 #af6825; }
+.storybook-site .storybook-start:hover { background:#ffc56c; }
+.home-mission { margin:24px 0; padding:22px; background:#214e5b; color:#fff; border:2px solid #183b44; border-radius:18px; box-shadow:0 4px 0 #b6c7b5; }
+.home-section-heading { display:flex; gap:16px; align-items:center; justify-content:space-between; }
+.home-kicker { color:#ffe8a8; font-size:1rem; font-weight:800; letter-spacing:.06em; }
+.home-section-heading h2 { font-size:1.65rem; line-height:1.4; margin:7px 0; color:#fff; }
+.home-unit-stamp { flex-shrink:0; background:#ffda83; color:#51380d; padding:8px 14px; border:1px solid #78501d; border-radius:8px; font-size:1rem; font-weight:900; transform:rotate(3deg); }
+.storybook-site .home-mission > p { color:#fff; margin:2px 0 18px; }
+.home-path-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.home-path-card { display:flex; flex-direction:column; gap:8px; position:relative; padding:18px; border:2px solid #fff6; border-radius:12px; color:#233d2b; font:inherit; text-align:left; text-decoration:none; cursor:pointer; transition:transform .18s,box-shadow .18s; }
+.home-path-card:hover { transform:translateY(-4px); box-shadow:0 5px 0 #122f3c; }
+.home-path-tool { background:#fff0c7; }
+.home-path-practice { background:#e1f0cd; }
+.home-path-share { background:#ffe1cc; }
+.home-step { color:#716032; font-size:2rem; font-weight:900; line-height:1; }
+.home-path-card strong { display:flex; justify-content:space-between; gap:8px; font-size:1.25rem; color:#20402d; }
+.home-path-card strong > span { font-size:1.35rem; }
+.storybook-site .home-path-card p { color:#334d38; margin:0 0 7px; }
+.home-card-action { font-size:1rem; color:#234e32; font-weight:800; padding-top:8px; border-top:1px solid #6f815c80; margin-top:auto; }
+.storybook-site .unit-card-picker { margin:0 0 20px; padding:16px; border:2px solid #6c7f45; border-radius:18px; background:#f5f0d3; box-shadow:0 4px 0 #d0c79c; }
+.storybook-site .unit-card-picker > summary { padding:0 0 6px; color:#294329; }
+.unit-card-picker > summary strong { font-size:1.5rem; }
+.unit-card-picker > summary > span { margin-left:16px; color:#4c5e3c; font-size:1rem; }
+.storybook-site .unit-selector-grid { margin:14px 0 2px; gap:12px; }
+.storybook-site .unit-card-btn { --unit-color:#ae7928; --unit-tint:#fff1c9; padding:15px; background:var(--unit-tint); border:2px solid var(--unit-color); border-bottom-width:5px; border-radius:12px; box-shadow:none; }
+.storybook-site .unit-card-btn:nth-child(3n+2) { --unit-color:#4f8061; --unit-tint:#e1efda; background:var(--unit-tint); }
+.storybook-site .unit-card-btn:nth-child(3n) { --unit-color:#4d8198; --unit-tint:#deeff6; background:var(--unit-tint); }
+.storybook-site .unit-card-btn:nth-child(n+4):nth-child(-n+6) { --unit-color:#b27154; --unit-tint:#ffeadc; background:var(--unit-tint); }
+.storybook-site .unit-card-btn:nth-child(n+7) { --unit-color:#826e9a; --unit-tint:#efe6f5; background:var(--unit-tint); }
+.storybook-site .unit-card-btn.active { background:#175f68; border:3px solid #10454c; border-bottom-width:5px; }
+.storybook-site .unit-card-btn.active :is(.unit-title-text,.unit-story-label,.unit-num-badge) { color:#fff !important; }
+.storybook-site .unit-card-btn.active .sketch-icon { color:#fff; }
+.storybook-site .unit-title-text { margin-top:4px; font-size:1.25rem; font-weight:900; line-height:1.4; }
+.unit-current { display:none; font-size:1rem; padding:2px 6px; background:#fff; color:#17545c; border-radius:4px; font-weight:800; }
+.unit-card-btn.active .unit-current { display:inline-block; }
+.home-teacher-strip { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:16px; margin-bottom:20px; border:2px solid #68885e; border-radius:12px; background:#e5efd6; }
+.home-teacher-strip strong { color:#274b30; margin-right:8px; font-size:1.125rem; }
+.home-teacher-strip button { color:#1e4c30; background:#fffef8; border:1px solid #5c7a51; border-radius:7px; padding:8px 12px; font:inherit; font-size:1rem; font-weight:700; min-height:44px; cursor:pointer; }
+.home-teacher-strip button:hover { background:#ffe6a1; }
+.storybook-site .mascot-companion-card { background:#e2edca !important; border:2px solid #6a874b !important; }
+.lesson-guide-dialog { width:min(920px,calc(100% - 24px)); max-height:90dvh; padding:0; margin:auto; color:#203b2b; background:#fffdf5; border:3px solid #335f43; border-radius:16px; font-family:var(--font-base); font-size:17px; line-height:1.8; }
+.lesson-guide-dialog::backdrop { background:#102b35b8; }
+.lesson-guide-header { display:flex; align-items:start; justify-content:space-between; gap:16px; padding:20px; background:#214e5b; color:#fff; }
+.lesson-guide-header span { color:#ffe3a0; font-size:16px; }
+.lesson-guide-header h2 { color:#fff; font-size:1.5rem; line-height:1.5; }
+.lesson-guide-dialog form { margin:0; }
+.lesson-guide-dialog button { font:inherit; font-weight:700; border:2px solid #4c7952; background:#fff; color:#244a2d; border-radius:8px; padding:8px 14px; min-height:44px; cursor:pointer; }
+.lesson-guide-dialog .guide-close { color:#fff; border-color:#fff9; background:transparent; }
+.lesson-guide-body { padding:22px; }
+.lesson-guide-body h3 { color:#1c5437; font-size:1.25rem; margin:18px 0 8px; border-bottom:2px solid #b6c795; }
+.lesson-guide-body p { margin:8px 0; }
+.lesson-guide-body ul,.lesson-guide-body ol:not(.guide-phases) { padding-left:25px; }
+.guide-notice { padding:10px 14px; background:#fff0bf; border-left:5px solid #b58528; color:#624618; }
+.guide-codes { font-size:16px; color:#3d5c43; }
+.guide-phases { list-style:none; padding:0; display:grid; gap:10px; }
+.guide-phases li { display:grid; grid-template-columns:85px 1fr; gap:12px; background:#edf4e3; padding:12px; border:1px solid #9db48a; border-radius:8px; }
+.guide-phases li > span { color:#1e5e37; font-weight:800; }
+.guide-phases p { margin:3px 0 0; }
+.guide-roles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.guide-roles article { background:#e4f0f4; border:1px solid #7eabb5; border-radius:8px; padding:12px; }
+.ai-planning { margin-top:20px; padding:14px; border:2px solid #6d8993; border-radius:10px; background:#edf4f7; }
+.ai-planning summary { font-weight:800; cursor:pointer; }
+.ai-planning textarea { width:100%; padding:12px; border:2px solid #6d8993; background:#fff; color:#203b2b; font-size:16px; line-height:1.7; resize:vertical; }
+.lesson-guide-footer { display:flex; gap:10px; flex-wrap:wrap; padding:14px 20px; background:#e7efdc; border-top:1px solid #9eb28f; }
+.lesson-guide-footer form { margin-left:auto; }
+@media (max-width:900px) { .home-path-grid { gap:10px; } .home-path-card { padding:14px; } .home-section-heading h2 { font-size:1.4rem; } }
+@media (max-width:700px) {
+  .storybook-site .storybook-welcome { grid-template-columns:minmax(0,1fr); padding:18px 16px 0; background:#ffd16b; }
+  .storybook-welcome h2 { font-size:2.25rem; }
+  .storybook-welcome p { max-width:none; }
+  .storybook-welcome-copy { padding-bottom:0; }
+  .storybook-welcome-actions { margin-top:8px; }
+  .storybook-site .animal-scene { margin:0 -7px; border:1px solid #5b99a5; border-radius:14px; padding:5px 8px 8px; background:#74c4da; }
+  .animal-stage { height:160px; }
+  .animal-stage .animal-garden-ground { width:100%; left:0; object-fit:fill; }
+  .animal-garden .animal-friend { --size:52px; }
+  .animal-garden.is-gathered .animal-friend { --size:53px; }
+  .storybook-site .animal-scene .storybook-speech { margin-top:0; }
+  .storybook-site .storybook-launch { margin-top:4px; border-radius:9px 9px 0 0; }
+  .home-mission { margin:18px 0; padding:14px; }
+  .home-section-heading { align-items:start; gap:8px; }
+  .home-kicker { font-size:1rem; letter-spacing:0; }
+  .home-unit-stamp { padding:5px 8px; }
+  .home-path-grid { grid-template-columns:minmax(0,1fr); }
+  .home-path-card { display:grid; grid-template-columns:40px minmax(0,1fr); gap:5px 10px; }
+  .home-step { grid-row:1 / 4; font-size:1.8rem; }
+  .home-path-card p,.home-card-description,.home-card-action { grid-column:2; }
+  .home-path-card strong { font-size:1.2rem; }
+  .storybook-site .unit-card-picker { padding:14px; }
+  .unit-card-picker > summary strong { font-size:1.35rem; }
+  .unit-card-picker > summary > span { display:block; margin:5px 0; }
+  .storybook-site .unit-selector-grid { grid-template-columns:minmax(0,1fr); }
+  .storybook-site .unit-card-btn { padding:12px; }
+  .home-teacher-strip { gap:8px; padding:12px; }
+  .home-teacher-strip strong { width:100%; }
+  .home-teacher-strip button { flex:1 1 130px; }
+  .lesson-guide-header,.lesson-guide-body { padding:15px; }
+  .lesson-guide-header h2 { font-size:1.25rem; }
+  .guide-phases li { grid-template-columns:1fr; gap:3px; }
+  .guide-roles { grid-template-columns:1fr; }
+}
+.calm-focus-mode .home-path-card:hover { transform:none; }
+.storybook-site.calm-focus-mode .storybook-welcome { background:#edf4e5; }
+.storybook-site.high-contrast-mode { background:#000; }
+.storybook-site.high-contrast-mode .storybook-welcome { background:#18181b; border-color:#facc15; }
+.storybook-site.high-contrast-mode .storybook-eyebrow { color:#fff; background:#18181b; }
+.storybook-site.high-contrast-mode :is(.home-mission,.home-path-card,.home-teacher-strip,.unit-card-picker,.unit-card-btn,.animal-scene,.lesson-guide-dialog) { color:#fff; background:#18181b; border-color:#facc15; }
+.storybook-site.high-contrast-mode :is(.home-path-card strong,.home-path-card p,.home-card-action,.home-step,.home-teacher-strip strong,.unit-card-picker > summary > span,.home-section-heading h2,.home-mission > p) { color:#fff; }
+.storybook-site.high-contrast-mode .nav-tab.active { color:#111; background:#facc15; }
+.storybook-site.high-contrast-mode .unit-card-btn.active { color:#111; background:#facc15; }
+.storybook-site.high-contrast-mode .unit-card-btn.active :is(.unit-title-text,.unit-story-label,.unit-num-badge) { color:#111 !important; }
+.storybook-site.high-contrast-mode .home-unit-stamp { color:#111; background:#facc15; }
+.storybook-site.high-contrast-mode .home-teacher-strip button { color:#fff; background:#18181b; border-color:#facc15; }
+.storybook-site.high-contrast-mode .lesson-guide-dialog :is(h3,p,li,textarea,.guide-codes) { color:#fff; }
+.storybook-site.high-contrast-mode .lesson-guide-dialog :is(.guide-notice,.guide-phases li,.guide-roles article,.ai-planning,textarea,.lesson-guide-footer) { background:#18181b; border-color:#facc15; }
+@media print {
+  .home-mission,.home-teacher-strip,.unit-card-picker { display:none !important; }
+  body.printing-lesson-guide > :not(#lesson-guide-dialog) { display:none !important; }
+  body.printing-lesson-guide { display:block; background:#fff !important; color:#000; }
+  body.printing-lesson-guide #lesson-guide-dialog { position:static; display:block; max-height:none; overflow:visible; width:100%; margin:0; padding:0; border:0; font-size:12pt; background:#fff; color:#000; }
+  .printing-lesson-guide .lesson-guide-header { background:#fff; color:#000; padding:0 0 12px; }
+  .printing-lesson-guide .lesson-guide-header :is(h2,span) { color:#000; }
+  .printing-lesson-guide :is(.lesson-guide-header form,.lesson-guide-footer,.ai-planning) { display:none; }
+  .printing-lesson-guide .lesson-guide-body { padding:0; }
+  .printing-lesson-guide :is(section,.guide-phases li,.guide-roles article) { break-inside:avoid; }
+  .printing-lesson-guide dialog::backdrop { display:none; }
+}
+.storybook-greet { display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:999px; white-space:nowrap; }
+.storybook-greet svg { width:22px; height:22px; flex:0 0 22px; fill:currentColor; stroke:none; }
+@media print {
+  .printing-lesson-guide #lesson-guide-dialog :is(h2,h3,p,li,strong,span) { color:#000 !important; }
+  .printing-lesson-guide #lesson-guide-dialog :is(section,.guide-phases li,.guide-roles article,.guide-notice) { background:#fff !important; border-color:#777 !important; }
+}
+
+@media (max-width:700px) {
+  .animal-rabbit { --x:15%; --y:3%; } .animal-fox { --x:38%; --y:3%; } .animal-bear { --x:61%; --y:3%; } .animal-cat { --x:84%; --y:3%; }
+  .animal-owl { --x:8%; --y:52%; } .animal-hedgehog { --x:29%; --y:52%; } .animal-panda { --x:50%; --y:52%; } .animal-duck { --x:71%; --y:52%; } .animal-otter { --x:92%; --y:52%; }
+}
+
+.storybook-site .home-card-description { display:block; color:#334d38; font-size:17px; line-height:1.8; margin:0 0 7px; }
+.storybook-site.high-contrast-mode .home-card-description { color:#fff; }
+.storybook-site.high-contrast-mode .guide-phases li > span { color:#facc15; }
+.storybook-site.high-contrast-mode #judges-showcase-modal :is(h2,p,strong,table,th,td,caption) { color:#fff !important; }
+.storybook-site.high-contrast-mode #judges-showcase-modal .kid-modal-card, .storybook-site.high-contrast-mode #judges-showcase-modal div[style*='background'] { background:#18181b !important; }
+.storybook-site.high-contrast-mode #judges-showcase-modal a { color:#fde68a; }
+#judges-showcase-modal :is(th,td) { padding:10px; border-bottom:1px solid #7f927b; font-size:16px; }
+#judges-showcase-modal #btn-close-judges-modal { min-height:44px; min-width:44px; }
+.storybook-site.high-contrast-mode .unit-card-btn :is(.unit-title-text,.unit-story-label,.unit-num-badge) { color:#fff !important; }
+.storybook-site.high-contrast-mode .unit-card-btn.active :is(.unit-title-text,.unit-story-label,.unit-num-badge) { color:#111 !important; }
+.storybook-site.high-contrast-mode .unit-card-btn.active .sketch-icon { color:#111; }
+.calm-focus-mode .home-mission { background:#edf4e5; border-color:#70866b; color:#24452e; box-shadow:none; }
+.calm-focus-mode .home-mission :is(.home-section-heading h2,.home-kicker), .storybook-site.calm-focus-mode .home-mission > p { color:#24452e; }
+.calm-focus-mode .home-path-card { background:#fff; border-color:#8b9e82; box-shadow:none; }
+.storybook-site.high-contrast-mode .home-mission { background:#18181b; border-color:#facc15; }
+.storybook-site.high-contrast-mode .home-mission :is(.home-section-heading h2,.home-kicker), .storybook-site.high-contrast-mode .home-mission > p { color:#fff; }

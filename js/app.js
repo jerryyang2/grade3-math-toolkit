@@ -252,9 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.unitNavList.innerHTML = NANI_G3S1_DATA.units.map(unit => {
       const theme = UNIT_THEMES[unit.id] || { icon: '📐', theme: '趣味數學探索', color: '#4f46e5' };
       return `
-        <button class="unit-card-btn ${unit.id === AppState.currentUnitId ? 'active' : ''}" data-unit-id="${unit.id}">
+        <button class="unit-card-btn ${unit.id === AppState.currentUnitId ? 'active' : ''}" data-unit-id="${unit.id}" aria-pressed="${unit.id === AppState.currentUnitId}">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="unit-num-badge">探索 ${String(unit.number).padStart(2, '0')}</span>
+            <span class="unit-num-badge">探索 ${String(unit.number).padStart(2, '0')}</span><span class="unit-current">正在探索</span>
             ${window.StorybookTheme?.icon(unit.id) || ''}
           </div>
           <span class="unit-title-text">${unit.title}</span>
@@ -279,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     AppState.currentScaffoldStep = 0; // 重置步驟精靈至第一步
     document.querySelectorAll('.unit-card-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.unitId === uid);
+      b.setAttribute('aria-pressed', String(b.dataset.unitId === uid));
     });
     renderUnitDetail(uid);
     if (elements.practiceUnitSelect) {
@@ -312,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderUnitDetail(uid) {
     const unit = NANI_G3S1_DATA.units.find(u => u.id === uid);
     if (!unit || !elements.unitDetailContainer) return;
+    window.ForestHome?.render(unit);
 
     const specialNeedsBadges = unit.specialNeedsCodes.map(code => {
       const info = getSpecialNeedsDetail(code);

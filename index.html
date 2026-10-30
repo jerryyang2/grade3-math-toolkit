@@ -7,8 +7,8 @@
   <meta name="description" content="學習教室三年級上學期數學備課平台，深度結合南一版三上數學教材、108普通數學課綱、十二年國教特殊教育課程實施規範（課程調整四向度）、特殊需求領域課綱（學習策略與生活管理）、C-R-A具體教學鷹架、TTS語音朗讀與IEP隨堂質性評量。">
   
   <!-- 依據規範標準引入專屬設計主題 Favicon -->
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=clear-20261031">
-  <link rel="apple-touch-icon" href="favicon.svg?v=clear-20261031">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=forest-20261031">
+  <link rel="apple-touch-icon" href="favicon.svg?v=forest-20261031">
 
   <!-- 引入 字嗨注音標楷 (Bpmf Zihi Kai Std) 開源注音字型 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
@@ -18,9 +18,10 @@
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/floating-tools.css">
   <link rel="stylesheet" href="css/teaching-workflow.css?v=20261031-teaching-2">
-  <link rel="stylesheet" href="css/storybook-theme.css?v=clear-20261031">
-  <link rel="stylesheet" href="css/pikmin-garden.css?v=clear-20261031">
-  <link rel="stylesheet" href="css/readability.css?v=clear-20261031">
+  <link rel="stylesheet" href="css/storybook-theme.css?v=forest-20261031">
+  <link rel="stylesheet" href="css/animal-garden.css?v=forest-20261031">
+  <link rel="stylesheet" href="css/readability.css?v=forest-20261031">
+  <link rel="stylesheet" href="css/forest-home.css?v=forest-20261031">
 </head>
 <body class="storybook-site">
   <!-- 無障礙跳至主要內容 -->
@@ -30,7 +31,7 @@
   <header class="app-header" role="banner">
     <div class="header-container">
       <div class="brand-section">
-        <img src="favicon.svg?v=clear-20261031" alt="數學小探險：葉芽與數學積木" class="brand-logo" width="48" height="48">
+        <img src="favicon.svg?v=forest-20261031" alt="數學小探險：葉芽與數學積木" class="brand-logo" width="48" height="48">
         <div>
           <h1 class="brand-title">
             數學小探險
@@ -83,7 +84,7 @@
                 <span class="menu-item-icon" style="background:#fef3c7; color:#b45309;">🕹️</span>
                 <div class="menu-item-content">
                   <div class="menu-item-title">單鍵微動開關輔具</div>
-                  <div class="menu-item-desc">重度肢障/腦麻專用自動掃描模式 (空白鍵選取)</div>
+                  <div class="menu-item-desc">自動掃描可操作項目，使用空白鍵選取</div>
                 </div>
               </button>
 
@@ -92,7 +93,7 @@
                 <span class="menu-item-icon" style="background:#f3e8ff; color:#7e22ce;">📏</span>
                 <div class="menu-item-content">
                   <div class="menu-item-title">視線專注閱讀聚焦尺</div>
-                  <div class="menu-item-desc">ADHD 與學障專用視線聚焦遮罩</div>
+                  <div class="menu-item-desc">遮蔽干擾區域，協助跟讀與定位</div>
                 </div>
               </button>
 
@@ -196,31 +197,41 @@
       
       <section class="storybook-welcome" aria-labelledby="storybook-title">
         <div class="storybook-welcome-copy">
-          <span class="storybook-eyebrow">皮克敏探險手帳</span>
-          <h2 id="storybook-title">小小隊伍，<br><em>大大發現。</em></h2>
-          <p>跟著皮克敏，數一數、分一分，一起找答案。</p>
+          <span class="storybook-eyebrow">森林數學探險站</span>
+          <h2 id="storybook-title">小小探險家，<br><em>今天玩什麼？</em></h2>
+          <p>動手玩數學，讓想法看得見。</p>
           <div class="storybook-welcome-actions">
-            <button type="button" id="storybook-greet" class="storybook-greet" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h7l4-4v12l-4-4H4Zm14-3q6 5 0 10M20 3l2-2M20 21l2 2"/></svg><span>吹哨集合</span></button>
+            <button type="button" id="storybook-greet" class="storybook-greet" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="6" cy="8" rx="2" ry="3"/><ellipse cx="12" cy="5" rx="2" ry="3"/><ellipse cx="18" cy="8" rx="2" ry="3"/><path d="M5 18c0-4 4-7 7-7s7 3 7 7c0 5-5 1-7 1s-7 4-7-1Z"/></svg><span>夥伴集合</span></button>
           </div>
         </div>
-        <figure class="storybook-art pikmin-scene decorative-item" aria-label="皮克敏數學花園">
-          <div class="pikmin-stage">
-          <img class="pikmin-garden-ground" src="assets/pikmin/garden.svg?v=clear-20261031" width="640" height="320" alt="" aria-hidden="true">
-          <div id="pikmin-garden" class="pikmin-garden" role="group" aria-label="九種皮克敏小隊，點擊角色打招呼"></div>
+        <figure class="storybook-art animal-scene decorative-item" aria-label="森林動物數學花園">
+          <div class="animal-stage">
+          <img class="animal-garden-ground" src="assets/animals/garden.svg?v=forest-20261031" width="640" height="320" alt="" aria-hidden="true">
+          <div id="animal-garden" class="animal-garden" role="group" aria-label="九位動物夥伴，點擊角色打招呼"></div>
           </div>
-          <figcaption id="storybook-speech" class="storybook-speech" role="status" aria-live="polite">點點皮克敏，打個招呼！</figcaption>
+          <figcaption id="storybook-speech" class="storybook-speech" role="status" aria-live="polite">點點小動物，打個招呼！</figcaption>
         </figure>
         <div class="storybook-launch">
           <div class="lesson-quick-picker"><label for="lesson-unit-quick-select"><span>準備出發</span>今天探索哪一站？</label><select id="lesson-unit-quick-select" class="form-control"></select></div>
           <a class="storybook-start" href="#unit-detail-container">開始動手玩 <span aria-hidden="true">↓</span></a>
         </div>
       </section>
-      <details class="unit-card-picker"><summary>查看全部 9 個探索單元</summary>
+      <section class="home-mission" aria-labelledby="home-mission-title">
+        <div class="home-section-heading"><div><span class="home-kicker">TODAY’S MISSION · 今天的任務</span><h2 id="home-mission-title">一起探索：<span id="home-unit-name">數到 10000</span></h2></div><span class="home-unit-stamp" id="home-unit-number">探索 01</span></div>
+        <p id="home-unit-goal">用錢幣和位值表，讀出並比較 10000 以內的數。</p>
+        <div class="home-path-grid">
+          <a class="home-path-card home-path-tool" href="#unit-detail-container" aria-label="打開本單元教具" aria-describedby="home-concrete-goal"><span class="home-step">01</span><strong>動手玩教具 <span aria-hidden="true">↗</span></strong><p id="home-concrete-goal">放一放、換一換，用操作找出規律。</p><span class="home-card-action">打開本單元操作台 →</span></a>
+          <button type="button" class="home-path-card home-path-practice" data-home-tab="practice" aria-label="開始本單元練習" aria-describedby="home-practice-description"><span class="home-step">02</span><strong>來試一試 <span aria-hidden="true">↗</span></strong><span class="home-card-description" id="home-practice-description">依自己的步調練習。遇到困難，可以聽念題、看提示。</span><span class="home-card-action">開始本單元練習 →</span></button>
+          <button type="button" class="home-path-card home-path-share" data-home-action="guide" aria-label="合作任務與教學流程" aria-describedby="home-share-description"><span class="home-step">03</span><strong>一起說方法 <span aria-hidden="true">↗</span></strong><span class="home-card-description" id="home-share-description">輪流當操作員、說明員和檢查員，把發現分享給夥伴。</span><span class="home-card-action">打開合作任務與教學流程 →</span></button>
+        </div>
+      </section>
+      <details class="unit-card-picker" open><summary><strong>九站數學探索地圖</strong><span>選一站，和動物夥伴一起學</span></summary>
       <div class="unit-selector-grid" id="unit-nav-list">
         <!-- 由 JavaScript 動態生成單元按鈕（含普通課綱代號與特需課綱指標） -->
       </div>
       </details>
 
+      <aside class="home-teacher-strip" aria-label="教師備課與活動捷徑"><strong>老師的備課角落</strong><button type="button" data-home-action="guide">教學流程與使用說明</button><button type="button" data-home-action="briefing">60 秒備課卡</button><button type="button" data-home-action="worksheet">列印學習單</button><button type="button" data-home-tab="battle">分組搶答</button><button type="button" data-home-tab="arcade">互動遊戲</button><button type="button" data-home-tab="iep">學習觀察</button></aside>
       <!-- 當前選取單元的教學鷹架與教具展示 -->
       <div id="unit-detail-container">
         <!-- 由 JavaScript 動態掛載該單元之 108 特教課綱四向度調整、C-R-A 鷹架、障別教學建議與操作教具 -->
@@ -711,22 +722,23 @@
     </section>
 
   </main>
-  <footer class="theme-credit">皮克敏同人學習主題 · 角色原作：<a href="https://pikmin.nintendo.com/" target="_blank" rel="noopener noreferrer">Nintendo</a></footer>
+  <footer class="theme-credit">森林動物小隊・一起把數學玩懂</footer>
 
   <!-- 腳本載入順序：資料庫 ➔ 音效與語音 ➔ 聲光特效與吉祥物 ➔ 雙人搶答擂台 ➔ 9大教具 ➔ 特教工具箱 ➔ 旗艦競賽功能 ➔ 主應用程式 -->
   <script src="js/data.js?v=20261031-teaching"></script>
   <script src="js/audio.js?v=20261031-teaching"></script>
-  <script src="js/confetti-effects.js?v=clear-20261031"></script>
+  <script src="js/confetti-effects.js?v=forest-20261031"></script>
   <script src="js/battle.js?v=20261031-teaching"></script>
   <script src="js/manipulatives.js?v=20261031-teaching"></script>
-  <script src="js/teacher-tools.js?v=clear-20261031"></script>
-  <script src="js/contest-features.js?v=clear-20261031"></script>
+  <script src="js/teacher-tools.js?v=forest-20261031"></script>
+  <script src="js/contest-features.js?v=forest-20261031"></script>
   <script src="js/learning-records.js?v=20261031-teaching"></script>
   <script src="js/number-line.js?v=20261031-teaching"></script>
   <script src="js/geometry-shapes.js?v=20261031-teaching"></script>
-  <script src="js/pikmin-garden.js?v=clear-20261031"></script>
-  <script src="js/storybook-theme.js?v=clear-20261031"></script>
-  <script src="js/app.js?v=clear-20261031"></script>
+  <script src="js/animal-garden.js?v=forest-20261031"></script>
+  <script src="js/storybook-theme.js?v=forest-20261031"></script>
+  <script src="js/forest-home.js?v=forest-20261031"></script>
+  <script src="js/app.js?v=forest-20261031"></script>
   <script src="js/floating-tools.js?v=20261031-teaching"></script>
 </body>
 </html>

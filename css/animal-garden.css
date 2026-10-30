@@ -1,0 +1,54 @@
+/* 原創森林動物小隊；身形、耳朵、尾巴與動作各有不同。 */
+.storybook-site .animal-scene { position: relative; }
+.animal-garden { position: absolute; inset: 0; z-index: 1; }
+.animal-friend { --size: 76px; position: absolute; left: var(--x); bottom: var(--y); width: var(--size); height: calc(var(--size) * 1.25); padding: 0; background: none; border: 0; border-radius: 35%; cursor: pointer; transform: translateX(-50%); transition: left .9s ease-in-out,bottom .9s ease-in-out; -webkit-tap-highlight-color: transparent; }
+.animal-friend:hover { filter: drop-shadow(0 2px 2px #fff9); }
+.animal-friend:focus-visible { outline: 3px solid #235fb7 !important; outline-offset: 3px !important; }
+.animal-character { width: 100%; height: 100%; display: block; overflow: visible; }
+.animal-body { transform-origin: 60px 138px; animation: animal-sway 4.6s ease-in-out infinite; animation-delay: calc(var(--order,0) * -.4s); }
+.animal-eyes { transform-origin: 60px 70px; animation: animal-blink 7s linear infinite; animation-delay: calc(var(--order,0) * -.7s); }
+.animal-tail { transform-origin: 84px 120px; animation: animal-wag 3.6s ease-in-out infinite; }
+.animal-paw { transform-origin: 36px 105px; animation: animal-wave 4.8s ease-in-out infinite; }
+.animal-wing { transform-origin: 30px 83px; animation: animal-flap 4.4s ease-in-out infinite; }
+.animal-wing-right { transform-origin: 91px 83px; animation-direction: reverse; }
+.animal-rabbit { --x: 17%; --y: 8%; }
+.animal-fox { --x: 36%; --y: 9%; }
+.animal-bear { --x: 55%; --y: 8%; --size: 82px; }
+.animal-cat { --x: 75%; --y: 8%; }
+.animal-owl { --x: 83%; --y: 54%; --size: 64px; }
+.animal-hedgehog { --x: 29%; --y: 38%; --size: 64px; }
+.animal-panda { --x: 57%; --y: 36%; --size: 68px; }
+.animal-duck { --x: 9%; --y: 38%; --size: 64px; }
+.animal-otter { --x: 88%; --y: 23%; --size: 64px; }
+.animal-bear .animal-body { animation-duration: 6s; }
+.animal-rabbit .animal-body { animation-name: animal-hop; }
+.animal-owl .animal-body { animation-name: animal-hover; }
+.animal-duck .animal-body { animation-duration: 3.3s; }
+.animal-garden.is-gathered .animal-friend { left: calc(8% + var(--order) * 10.5%); bottom: 16%; --size: 59px; }
+.animal-garden .is-cheering .animal-body { animation: animal-cheer .75s ease-out; }
+.storybook-site .mascot-avatar-circle { width: 86px; height: 102px; padding: 0; }
+.storybook-site .mascot-switch-btn .animal-character { width: 36px; height: 42px; pointer-events: none; }
+.storybook-site .mascot-switch-btn { width: 46px; height: 46px; flex: 0 0 46px; transform: none; transition: background-color .15s,border-color .15s; }
+.storybook-site .mascot-switch-btn:is(:hover,.active) { transform: none; }
+@keyframes animal-sway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) translateY(-2px); } }
+@keyframes animal-hop { 0%,65%,100% { transform: translateY(0); } 75% { transform: translateY(-6px); } 85% { transform: translateY(0); } }
+@keyframes animal-hover { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes animal-blink { 0%,44%,47%,100% { transform: scaleY(1); } 45.5% { transform: scaleY(.1); } }
+@keyframes animal-wag { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(7deg); } }
+@keyframes animal-wave { 0%,60%,100% { transform: rotate(0); } 75% { transform: rotate(-16deg); } 85% { transform: rotate(4deg); } }
+@keyframes animal-flap { 0%,60%,100% { transform: rotate(0); } 75% { transform: rotate(12deg); } }
+@keyframes animal-cheer { 0%,100% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-15px) rotate(-6deg); } 70% { transform: translateY(-3px) rotate(4deg); } }
+@media (max-width:1000px) and (min-width:701px) { .animal-friend { --size:64px; } .animal-bear { --size:72px; } }
+@media (max-width:700px) {
+  .animal-friend,.animal-bear,.animal-owl,.animal-hedgehog,.animal-panda,.animal-duck,.animal-otter { --size:48px; }
+  .animal-rabbit { --x:16%; --y:3%; } .animal-fox { --x:48%; --y:8%; } .animal-bear { --x:80%; --y:3%; }
+  .animal-cat { --x:18%; --y:34%; } .animal-owl { --x:50%; --y:37%; } .animal-hedgehog { --x:82%; --y:34%; }
+  .animal-panda { --x:80%; --y:65%; } .animal-duck { --x:48%; --y:63%; } .animal-otter { --x:16%; --y:65%; }
+  .animal-garden.is-gathered .animal-friend { --size:45px; left:var(--x); bottom:var(--y); }
+  .storybook-site .mascot-avatar-circle { width:60px; height:76px; }
+  .storybook-site .mascot-switcher-mini { margin-left:0; }
+}
+.calm-focus-mode .animal-scene { display:none !important; }
+.calm-focus-mode .animal-character *, .calm-focus-mode .animal-friend { animation:none !important; transition:none !important; }
+.high-contrast-mode .animal-friend:focus-visible { outline-color:#facc15 !important; }
+@media (prefers-reduced-motion:reduce) { .animal-character *, .animal-friend { animation:none !important; transition:none !important; } }
