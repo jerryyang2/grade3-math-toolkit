@@ -1,0 +1,131 @@
+/* 獨立命名，讓首頁與五個遊戲共用，不影響教材版面。 */
+.mft-ui, .mft-editor, .mft-toast {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #24324b;
+  text-align: left;
+  letter-spacing: normal;
+}
+.mft-ui *, .mft-editor * { box-sizing: border-box; }
+.mft-ui {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 2147483002;
+  max-width: calc(100vw - 16px);
+  isolation: isolate;
+}
+.mft-ui [hidden], .mft-toast[hidden], .mft-unavailable { display: none !important; }
+.mft-ui button, .mft-editor button {
+  appearance: none;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin: 0;
+  text-transform: none;
+}
+.mft-ui button:focus-visible, .mft-editor button:focus-visible, .mft-editor input:focus-visible {
+  outline: 3px solid #818cf8;
+  outline-offset: 3px;
+}
+.mft-ui button:disabled { cursor: default; opacity: .36; }
+.mft-ui button svg { width: 21px; height: 21px; flex: 0 0 auto; }
+.mft-launcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 10px 17px 10px 10px;
+  border-radius: 19px;
+  background: #25264b;
+  color: #fff;
+  box-shadow: 0 8px 26px #27255730, 0 0 0 4px #ffffffd9;
+}
+.mft-launcher:hover { background: #37376c; }
+.mft-launcher > span:nth-child(2) { font-size: 15px; line-height: 1.35; }
+.mft-launcher small { display: block; margin-top: 3px; color: #c7d2fe; font-size: 11px; font-weight: 500; }
+.mft-launch-icon { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 12px; background: #ffffff18; color: #e0e7ff; }
+.mft-launch-count { border-radius: 50%; min-width: 23px; padding: 2px 6px; background: #e0e7ff; color: #3730a3; font-size: 12px; }
+.mft-panel {
+  width: 530px;
+  max-width: calc(100vw - 16px);
+  max-height: min(520px, calc(100dvh - 24px));
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #c7d2fe;
+  border-radius: 22px;
+  box-shadow: 0 16px 60px #1e1b4b24, 0 0 0 4px #ffffffd9;
+}
+.mft-header { display: flex; align-items: center; gap: 10px; padding: 14px 15px 12px; border-bottom: 1px solid #e9edf5; background: #f8f9ff; border-radius: 22px 22px 0 0; }
+.mft-heading { flex: 1; }
+.mft-heading strong { display: block; color: #272557; font-size: 17px; font-weight: 800; }
+.mft-heading span { color: #7b859a; font-size: 12px; }
+.mft-move, .mft-icon-button { display: grid; place-items: center; min-width: 44px; height: 44px; border-radius: 12px; background: #eaeef8; color: #67748e; }
+.mft-move { cursor: grab !important; touch-action: none; }
+.mft-dragging .mft-move { cursor: grabbing !important; background: #dfe5fc; }
+.mft-icon-button { background: #fff; border-color: #e4e8f4 !important; }
+.mft-body { padding: 14px 15px 10px; }
+.mft-tool-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.mft-tool { display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 45px; padding: 9px 8px; border-radius: 12px; background: #f5f7fb; color: #52617b; border-color: #e7ebf3 !important; white-space: nowrap; }
+.mft-tool:hover { background: #eef2ff; color: #4338ca; }
+.mft-tool[data-tool="pen"] { color: #d54553; background: #fff5f5; border-color: #ffe3e6 !important; }
+.mft-tool[data-tool="highlight"] { color: #ad6819; background: #fffaf0; border-color: #fae8bd !important; }
+.mft-tool[data-tool="text"] { color: #8951c0; background: #faf6ff; border-color: #eedfff !important; }
+.mft-tool[data-tool="rect"], .mft-tool[data-tool="arrow"] { color: #356cc8; background: #f3f7ff; border-color: #dfeaff !important; }
+.mft-tool[data-tool="ellipse"] { color: #26875a; background: #f0faf4; border-color: #d6efe0 !important; }
+.mft-tool[aria-pressed="true"], .mft-actions [aria-pressed="true"] { background: #3730a3; color: #fff; border-color: #3730a3 !important; box-shadow: 0 3px 9px #3730a329; }
+.mft-next-number { display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 4px; background: #e0e7ff; color: #4338ca; border-radius: 6px; font-size: 11px; }
+.mft-settings { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 13px 0; padding: 11px 12px; border-radius: 12px; background: #f8f9fc; }
+.mft-colors { display: flex; gap: 9px; }
+.mft-swatch { width: 30px; height: 30px; min-height: 30px; border-radius: 50%; background: var(--swatch); position: relative; }
+.mft-swatch::before { content: ""; position: absolute; inset: -4px; border-radius: 50%; }
+.mft-swatch[aria-pressed="true"] { outline: 2px solid #334155; outline-offset: 3px; }
+.mft-swatch[aria-pressed="true"]::after { content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 15px; font-weight: 900; }
+.mft-width { display: flex; align-items: center; gap: 8px; min-width: 0; color: #6b768a; font-size: 12px; font-weight: 600; }
+.mft-width input { width: 90px; min-width: 45px; accent-color: #6366f1; margin: 0; cursor: pointer; }
+.mft-width output { min-width: 17px; color: #4338ca; font-variant-numeric: tabular-nums; }
+.mft-actions { display: flex; gap: 5px; padding-top: 12px; border-top: 1px solid #edf0f6; }
+.mft-actions button { display: flex; flex: 1; gap: 5px; justify-content: center; align-items: center; padding: 9px 4px; min-height: 44px; border-radius: 10px; background: #f3f5f9; color: #59677f; font-size: 12px; white-space: nowrap; }
+.mft-actions button svg { width: 17px; height: 17px; }
+.mft-actions button:hover:not(:disabled) { background: #e9edf6; }
+.mft-actions .mft-clear { color: #dc3853; background: #fff1f3; }
+.mft-actions .mft-capture { color: #fff; background: #256e63; }
+.mft-actions .mft-capture:hover:not(:disabled) { background: #1d5b52; }
+.mft-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 11px; font-size: 11px; color: #6366b0; }
+.mft-count { white-space: nowrap; color: #7c879c; }
+.mft-note { margin: 5px 0 0; color: #8a93a4; font-size: 10px; font-weight: 400; }
+.mft-overlay { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2147483000; overflow: hidden; pointer-events: none; user-select: none; }
+.mft-overlay.mft-drawing { pointer-events: auto; cursor: crosshair; touch-action: none; }
+.mft-overlay[data-tool="text"] { cursor: text; }
+.mft-overlay[data-tool="eraser"] { cursor: cell; }
+.mft-overlay text { user-select: none; }
+.mft-editor { position: fixed; z-index: 2147483003; width: 280px; max-width: calc(100vw - 16px); padding: 15px; background: #fff; border: 1px solid #c7d2fe; border-radius: 16px; box-shadow: 0 8px 35px #1e1b4b30; }
+.mft-editor label { display: block; font-weight: 700; color: #373069; }
+.mft-editor input { width: 100%; box-sizing: border-box; display: block; margin: 8px 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 9px; font: inherit; color: #1e293b; background: #fff; }
+.mft-editor > div { display: flex; gap: 8px; }
+.mft-editor button { min-height: 38px; border-radius: 9px; padding: 7px 12px; color: #fff; background: #4338ca; }
+.mft-editor [data-cancel] { color: #64748b; background: #f1f5f9; }
+.mft-toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 2147483004; max-width: calc(100vw - 30px); padding: 11px 18px; border-radius: 12px; background: #27334a; box-shadow: 0 4px 20px #0f172a20; color: #fff; font-size: 13px; pointer-events: none; }
+.mft-capturing { visibility: hidden !important; }
+@media (max-width: 560px) {
+  .mft-ui { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
+  .mft-panel { width: 360px; border-radius: 18px; }
+  .mft-header { padding: 10px; border-radius: 18px 18px 0 0; }
+  .mft-heading strong { font-size: 16px; }
+  .mft-heading span { font-size: 11px; }
+  .mft-body { padding: 11px; }
+  .mft-tool-grid { gap: 6px; }
+  .mft-tool { flex-direction: column; gap: 3px; font-size: 12px; padding: 7px 4px; min-height: 57px; position: relative; }
+  .mft-next-number { position: absolute; right: 3px; top: 3px; min-width: 16px; height: 16px; font-size: 9px; }
+  .mft-settings { flex-wrap: wrap; justify-content: center; gap: 13px; padding: 10px; }
+  .mft-swatch { width: 28px; height: 28px; }
+  .mft-colors { gap: 13px; }
+  .mft-width { flex: 1 0 100%; justify-content: center; }
+  .mft-width input { width: 170px; }
+  .mft-actions button { flex-direction: column; gap: 4px; font-size: 10px; padding: 7px 3px; }
+  .mft-note { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .mft-ui * { transition: none !important; animation: none !important; } }
+@media print { .mft-ui, .mft-overlay, .mft-editor, .mft-toast { display: none !important; } }
