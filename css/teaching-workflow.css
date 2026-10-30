@@ -1,4 +1,5 @@
 .practice-settings { margin-bottom: 18px; border: 1px solid #c7d2fe; }
+.switch-access-mode #math-floating-tools { display: none !important; }
 .lesson-quick-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
 .lesson-quick-picker label { font-weight: 800; color: #3730a3; }
 .lesson-quick-picker select { flex: 1; min-width: 220px; min-height: 48px; }

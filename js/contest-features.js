@@ -38,6 +38,8 @@
 
     start() {
       this.isActive = true;
+      window.MathFloatingTools?.close();
+      document.body.classList.add('switch-access-mode');
       if (this.widgetEl) this.widgetEl.style.display = 'flex';
       const btn = document.getElementById('btn-tool-switch-access');
       if (btn) btn.classList.add('active');
@@ -53,6 +55,7 @@
 
     stop() {
       this.isActive = false;
+      document.body.classList.remove('switch-access-mode');
       this.stopScanning();
       this.clearHighlights();
       if (this.widgetEl) this.widgetEl.style.display = 'none';
