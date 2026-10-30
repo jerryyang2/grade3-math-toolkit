@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>三四位數直式加減 · 清爽學障友善園地</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            thCol: '#E11D48', // 千位: 柔和玫瑰紅
+            huCol: '#2563EB', // 百位: 舒適蔚藍
+            teCol: '#D97706', // 十位: 暖琥珀橘
+            unCol: '#059669', // 個位: 自然翡翠綠
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* 乾淨俐落的退位劃線 */
+    .slashed-digit {
+      position: relative;
+      display: inline-block;
+    }
+    .slashed-digit::after {
+      content: '';
+      position: absolute;
+      left: 15%;
+      top: 50%;
+      width: 70%;
+      height: 2.5px;
+      background-color: #EF4444;
+      transform: rotate(-30deg);
+      border-radius: 9999px;
+    }
+    /* 當前運算位的清爽聚焦微光，不花俏且目標明確 */
+    .column-focus {
+      background-color: #FFFFFF !important;
+      box-shadow: 0 0 0 3px #6366F1, 0 8px 16px -4px rgba(99, 102, 241, 0.15) !important;
+      transform: translateY(-2px);
+      z-index: 10;
+    }
+    /* 非焦點欄位柔和淡化，避免干擾注意力 */
+    .column-dim {
+      opacity: 0.35;
+      filter: grayscale(10%);
+    }
+    /* 隱藏原生 number spinner */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+
+  <!-- 引入標準主題 Favicon 與字嗨注音標楷開源字型 (RULE規範與特教友善) -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="apple-touch-icon" href="../../favicon.svg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
+  <style>
+    .font-zihi { font-family: 'Bpmf Zihi Kai Std', '字嗨注音標楷', 'DFKai-SB', serif !important; }
+  </style>
+
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-indigo-100">
+
+<!-- 南一三上數學備課平台專屬全域導航頂欄 (優化整合) -->
+<nav class="sp-ed-game-navbar" style="position:sticky;top:0;left:0;right:0;z-index:99999;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #e2e8f0;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);font-family:system-ui,-apple-system,sans-serif;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="../../index.html" onclick="if(window.parent && window.parent !== window){window.parent.postMessage('close-game-modal','*'); return false;}" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #4f46e5, #4338ca);color:#ffffff;font-weight:800;font-size:0.95rem;padding:6px 16px;border-radius:12px;box-shadow:0 3px 0 #312e81;transition:all 0.15s;">
+      ⬅ 返回三上數學備課平台
+    </a>
+    <span style="font-weight:800;color:#1e1b4b;font-size:1.05rem;display:none;" class="sm:inline">南一三上數學 🎪 互動遊戲冒險館</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen();}" style="cursor:pointer;background:#f1f5f9;border:1px solid #cbd5e1;padding:6px 14px;border-radius:10px;font-weight:700;font-size:0.85rem;color:#475569;">
+      ⛶ 全螢幕投影
+    </button>
+  </div>
+</nav>
+
+
+  <!-- Minimalist Top Navigation -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 px-4 sm:px-8 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand & Clean Tag -->
+      <div class="flex items-center space-x-2.5">
+        <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-lg border border-indigo-100 shadow-sm">
+          ✏️
+        </span>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold text-slate-800 tracking-tight">
+            三四位數加減法
+          </h1>
+          <p class="text-[11px] font-semibold text-slate-400">大字體 · 位值分色 · 專注引導</p>
+        </div>
+      </div>
+
+      <!-- Action Utilities (Stars, Voice, Sound, Scratchpad) -->
+      <div class="flex items-center space-x-2">
+        <!-- Star Badge -->
+        <div class="flex items-center space-x-1.5 bg-amber-50/80 border border-amber-200 px-3 py-1.5 rounded-full text-amber-900">
+          <span class="text-sm">⭐</span>
+          <span id="star-count" class="font-extrabold text-sm">0</span>
+        </div>
+
+        <!-- Read Aloud (TTS) -->
+        <button onclick="speakCurrentQuestion()" class="p-2 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs flex items-center gap-1 transition-colors" title="朗讀題目與解題說明">
+          <span class="text-sm">🔊</span>
+          <span class="hidden sm:inline">讀題目</span>
+        </button>
+
+        <!-- Scratchpad Toggle -->
+        <button onclick="toggleScratchpad()" class="p-2 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs flex items-center gap-1 transition-colors" title="開啟草稿紙">
+          <span class="text-sm">📝</span>
+          <span class="hidden sm:inline">草稿紙</span>
+        </button>
+
+        <!-- Sound Toggle -->
+        <button onclick="toggleSound()" id="sound-btn" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm transition-colors" title="開關音效">
+          <span id="sound-icon">🔔</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- Clean Segmented Topic Selector -->
+    <div class="bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap sm:flex-nowrap gap-1">
+      <button onclick="selectTopic('3add')" id="tab-3add" class="flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all text-indigo-700 bg-indigo-50 border border-indigo-200/80 shadow-xs">
+        三位數加法
+      </button>
+      <button onclick="selectTopic('3sub')" id="tab-3sub" class="flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 rounded-xl transition-all">
+        三位數減法
+      </button>
+      <button onclick="selectTopic('4add')" id="tab-4add" class="flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 rounded-xl transition-all">
+        四位數加法
+      </button>
+      <button onclick="selectTopic('4sub')" id="tab-4sub" class="flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 rounded-xl transition-all">
+        四位數減法
+      </button>
+      <button onclick="selectTopic('zeroSub')" id="tab-zeroSub" class="flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 rounded-xl transition-all">
+        中間有0減法
+      </button>
+    </div>
+
+    <!-- Main Clean Working Stage -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+      
+      <!-- LEFT: Clean Vertical Math Workspace (7 cols) -->
+      <div class="md:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col items-center relative">
+        
+        <!-- Workspace Subheader: Title & Refresh -->
+        <div class="w-full flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+          <div class="flex items-center space-x-2">
+            <span id="topic-title-badge" class="font-extrabold text-sm text-slate-700">三位數進位加法</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-semibold">直式對齊</span>
+          </div>
+          <button onclick="newQuestion()" class="text-xs font-extrabold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1 active:scale-95">
+            <span>換一題</span>
+            <span>🔄</span>
+          </button>
+        </div>
+
+        <!-- Place-Value Labels (千, 百, 十, 個) -->
+        <div class="w-full max-w-[320px] grid grid-cols-5 text-center font-extrabold text-xs sm:text-sm mb-2 select-none tracking-wide">
+          <span class="text-slate-300"></span>
+          <span class="text-thCol py-1">千位</span>
+          <span class="text-huCol py-1">百位</span>
+          <span class="text-teCol py-1">十位</span>
+          <span class="text-unCol py-1">個位</span>
+        </div>
+
+        <!-- Vertical Math Grid Box (Spacious, clean, uncluttered) -->
+        <div id="vertical-board" class="w-full max-w-[320px] font-mono text-3xl sm:text-4xl font-extrabold select-none space-y-1">
+          <!-- Dynamically Rendered by JS -->
+        </div>
+
+        <!-- Gentle Spoken Hint Bar at Bottom of Stage -->
+        <div id="column-visual-hint" class="w-full mt-6 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-600 text-xs sm:text-sm font-semibold flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">💡</span>
+            <span id="hint-text">從最右邊的「綠色個位」開始計算喔！</span>
+          </div>
+          <button onclick="speakCurrentHint()" class="shrink-0 text-xs px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-700 font-bold transition-colors">
+            🔊 聽提示
+          </button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Step-by-Step Prompt & Soft Tactile Keypad (5 cols) -->
+      <div class="md:col-span-5 space-y-4">
+        
+        <!-- Step Task Card -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+          
+          <!-- Column Step Pill & Quick Expression -->
+          <div class="flex items-center justify-between">
+            <span id="step-badge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              個位運算
+            </span>
+            <span id="step-math-preview" class="font-mono text-xs font-bold text-slate-400">
+              <!-- Expression preview -->
+            </span>
+          </div>
+
+          <!-- Question prompt spoken out clearly -->
+          <div id="step-prompt-text" class="text-base font-bold text-slate-700 leading-relaxed min-h-[44px]">
+            <!-- Dynamic step question -->
+          </div>
+
+          <!-- Answer Input Display & Confirm Button -->
+          <div class="flex items-center space-x-2 pt-1">
+            <input type="number" id="keypad-input" readonly placeholder="請點按鈕" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-2.5 px-3 text-center font-mono text-3xl font-extrabold text-slate-800 placeholder:text-slate-300 placeholder:text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+            <button onclick="confirmCurrentInput()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-sm transition-all active:scale-95 shrink-0">
+              送出 ✔
+            </button>
+          </div>
+
+          <!-- Carry / Regroup Selector if required in this step -->
+          <div id="carry-prompt-box" class="hidden p-3 bg-rose-50/70 border border-rose-200 rounded-2xl text-xs font-bold text-rose-900 space-y-2">
+            <div class="flex items-center gap-1.5 text-rose-700">
+              <span>滿十了！要記得進位嗎？</span>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="setStepCarry(1)" id="btn-carry-yes" class="flex-1 py-1.5 bg-rose-600 text-white rounded-xl font-extrabold text-xs transition-colors">
+                進位 +1
+              </button>
+              <button onclick="setStepCarry(0)" id="btn-carry-no" class="flex-1 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors">
+                不進位
+              </button>
+            </div>
+          </div>
+
+          <!-- Gentle Feedback Alert -->
+          <div id="step-feedback" class="hidden p-3 rounded-xl text-xs sm:text-sm font-semibold border transition-all"></div>
+        </div>
+
+        <!-- Soft Tactile Clean Keypad (Dyscalculia friendly) -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm">
+          <div class="grid grid-cols-3 gap-2 text-2xl font-extrabold font-mono text-slate-700">
+            <button onclick="pressKey(1)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">1</button>
+            <button onclick="pressKey(2)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">2</button>
+            <button onclick="pressKey(3)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">3</button>
+            <button onclick="pressKey(4)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">4</button>
+            <button onclick="pressKey(5)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">5</button>
+            <button onclick="pressKey(6)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">6</button>
+            <button onclick="pressKey(7)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">7</button>
+            <button onclick="pressKey(8)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">8</button>
+            <button onclick="pressKey(9)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">9</button>
+            <button onclick="clearKey()" class="py-3 bg-slate-100 text-slate-500 hover:bg-slate-200 rounded-2xl border border-slate-200/80 text-sm font-sans font-bold active:scale-95 transition-all">清空</button>
+            <button onclick="pressKey(0)" class="py-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/80 active:scale-95 transition-all">0</button>
+            <button onclick="backspaceKey()" class="py-3 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-2xl border border-slate-200/80 text-lg font-sans active:scale-95 transition-all">⌫</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Clean Handwriting Scratchpad Drawer -->
+  <div id="scratchpad-modal" class="fixed inset-x-0 bottom-0 z-40 transform translate-y-full transition-transform duration-300 ease-out bg-white border-t border-slate-200 shadow-2xl rounded-t-3xl max-w-3xl mx-auto">
+    <div class="p-4 space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+        <div class="flex items-center space-x-2">
+          <span class="text-base">📝</span>
+          <span class="font-extrabold text-slate-700 text-sm">手寫草稿板（可直接在此計算、劃記）</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="setPenColor('#2563EB')" class="w-6 h-6 rounded-full bg-blue-600 border border-white shadow-xs focus:scale-110"></button>
+          <button onclick="setPenColor('#E11D48')" class="w-6 h-6 rounded-full bg-rose-600 border border-white shadow-xs focus:scale-110"></button>
+          <button onclick="setPenColor('#059669')" class="w-6 h-6 rounded-full bg-emerald-600 border border-white shadow-xs focus:scale-110"></button>
+          <button onclick="clearScratchpad()" class="text-xs font-semibold px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg">清空</button>
+          <button onclick="toggleScratchpad()" class="text-xs font-semibold px-2.5 py-1 bg-slate-800 text-white hover:bg-slate-700 rounded-lg">收合 ✕</button>
+        </div>
+      </div>
+      <div class="w-full h-52 sm:h-64 bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden cursor-crosshair relative">
+        <canvas id="scratchpad-canvas" class="w-full h-full block"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+     * 1. GENTLE AUDIO SYNTHESIS (Tone.js)
+     * Warm, calming marimba notes; NO jarring buzzers or alarms
+     * ========================================================= */
+    let isSoundOn = true;
+    let toneReady = false;
+    let marimbaSynth = null;
+    let bellSynth = null;
+
+    async function initTone() {
+      if (toneReady) return;
+      try {
+        await Tone.start();
+        marimbaSynth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: "sine" },
+          envelope: { attack: 0.005, decay: 0.2, sustain: 0.02, release: 0.25 }
+        }).toDestination();
+        marimbaSynth.volume.value = -9;
+
+        bellSynth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: "triangle" },
+          envelope: { attack: 0.01, decay: 0.35, sustain: 0.05, release: 0.6 }
+        }).toDestination();
+        bellSynth.volume.value = -7;
+
+        toneReady = true;
+      } catch (e) {
+        console.warn("Audio Context setup pending user gesture", e);
+      }
+    }
+
+    function toggleSound() {
+      isSoundOn = !isSoundOn;
+      const icon = document.getElementById('sound-icon');
+      if (isSoundOn) {
+        icon.textContent = '🔔';
+        playNote('click');
+      } else {
+        icon.textContent = '🔕';
+      }
+    }
+
+    function playNote(type) {
+      if (!isSoundOn) return;
+      if (!toneReady) initTone();
+
+      try {
+        const now = Tone.now();
+        if (type === 'tap') {
+          if (marimbaSynth) marimbaSynth.triggerAttackRelease("C5", "32n", now);
+        } else if (type === 'click') {
+          if (marimbaSynth) marimbaSynth.triggerAttackRelease("E5", "32n", now);
+        } else if (type === 'stepOk') {
+          if (marimbaSynth) {
+            marimbaSynth.triggerAttackRelease("G4", "16n", now);
+            marimbaSynth.triggerAttackRelease("C5", "16n", now + 0.07);
+          }
+        } else if (type === 'carry' || type === 'borrow') {
+          if (bellSynth) {
+            bellSynth.triggerAttackRelease("E5", "16n", now);
+            bellSynth.triggerAttackRelease("B5", "16n", now + 0.08);
+          }
+        } else if (type === 'gentleRetry') {
+          if (marimbaSynth) {
+            marimbaSynth.triggerAttackRelease("E4", "16n", now);
+            marimbaSynth.triggerAttackRelease("C4", "16n", now + 0.09);
+          }
+        } else if (type === 'complete') {
+          if (bellSynth) {
+            bellSynth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "8n", now);
+          }
+        }
+      } catch (err) {
+        console.error("Audio error", err);
+      }
+    }
+
+    window.addEventListener('click', () => { if (!toneReady) initTone(); }, { once: true });
+
+    /* =========================================================
+     * 2. SPEECH SYNTHESIS (Web Speech API TTS)
+     * ========================================================= */
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'zh-TW';
+      utter.rate = 0.88; // Gentle, clear pacing
+      utter.pitch = 1.02;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function speakCurrentQuestion() {
+      if (!currentProblem) return;
+      const opWord = currentProblem.op === '+' ? '加' : '減';
+      const sentence = `題目是：${currentProblem.num1} ${opWord} ${currentProblem.num2}。我們從個位開始算喔！`;
+      speakText(sentence);
+    }
+
+    function speakCurrentHint() {
+      const hint = document.getElementById('hint-text').innerText;
+      speakText(hint);
+    }
+
+    /* =========================================================
+     * 3. PROBLEM GENERATOR: 3 & 4 DIGIT ADD / SUB / ZERO REGROW
+     * ========================================================= */
+    let currentTopic = '3add';
+    let currentProblem = null;
+    let focusColIndex = 3; // 0: 千, 1: 百, 2: 十, 3: 個
+    let starScore = 0;
+
+    let intermediateDigits = ['', '', '', '']; // [千, 百, 十, 個]
+    let carryMarkers = [0, 0, 0, 0];          // +1 above column
+    let modifiedTopDigits = [null, null, null, null]; // Borrow modified digits
+    let selectedCarry = 0;
+
+    function selectTopic(topic) {
+      playNote('click');
+      currentTopic = topic;
+
+      const topics = ['3add', '3sub', '4add', '4sub', 'zeroSub'];
+      topics.forEach(t => {
+        const tab = document.getElementById(`tab-${t}`);
+        if (t === topic) {
+          tab.className = "flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all text-indigo-700 bg-indigo-50 border border-indigo-200/80 shadow-xs";
+        } else {
+          tab.className = "flex-1 min-w-[120px] py-2 px-3 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 rounded-xl transition-all";
+        }
+      });
+
+      newQuestion();
+    }
+
+    function generateMathProblem(type) {
+      let n1, n2, op, ans;
+
+      if (type === '3add') {
+        op = '+';
+        n1 = Math.floor(Math.random() * 500) + 265;
+        const u1 = n1 % 10;
+        const u2 = Math.floor(Math.random() * 4) + (10 - u1);
+        const t2 = Math.floor(Math.random() * 6) + 3;
+        const h2 = Math.floor(Math.random() * 3) + 1;
+        n2 = h2 * 100 + t2 * 10 + Math.min(9, u2);
+        ans = n1 + n2;
+      } else if (type === '3sub') {
+        op = '-';
+        n1 = Math.floor(Math.random() * 500) + 430;
+        const u1 = n1 % 10;
+        const u2 = Math.min(9, u1 + Math.floor(Math.random() * 4) + 2);
+        const t2 = Math.floor(Math.random() * 3) + 1;
+        const h2 = Math.floor(Math.random() * 2) + 1;
+        n2 = h2 * 100 + t2 * 10 + u2;
+        if (n2 >= n1) n2 = n1 - 128;
+        ans = n1 - n2;
+      } else if (type === '4add') {
+        op = '+';
+        n1 = Math.floor(Math.random() * 4200) + 2450;
+        n2 = Math.floor(Math.random() * 3500) + 1680;
+        if ((n1 % 10) + (n2 % 10) < 10) {
+          n2 += (10 - ((n1 % 10) + (n2 % 10)));
+        }
+        ans = n1 + n2;
+      } else if (type === '4sub') {
+        op = '-';
+        n1 = Math.floor(Math.random() * 4000) + 4800;
+        n2 = Math.floor(Math.random() * 2800) + 1450;
+        if ((n1 % 10) >= (n2 % 10)) {
+          n1 = n1 - (n1 % 10) + 2;
+          n2 = n2 - (n2 % 10) + 7;
+        }
+        ans = n1 - n2;
+      } else {
+        // Zero-regrouping (中間有0)
+        op = '-';
+        const presets = [
+          () => {
+            const h = Math.floor(Math.random() * 5) + 4;
+            return [h * 100 + Math.floor(Math.random() * 5) + 1, Math.floor(Math.random() * 200) + 188];
+          },
+          () => {
+            const thousands = [1000, 2000, 3000];
+            return [thousands[Math.floor(Math.random() * thousands.length)], Math.floor(Math.random() * 450) + 245];
+          },
+          () => {
+            const th = Math.floor(Math.random() * 3) + 2;
+            return [th * 1000 + Math.floor(Math.random() * 6) + 1, Math.floor(Math.random() * 1200) + 1175];
+          }
+        ];
+        const pair = presets[Math.floor(Math.random() * presets.length)]();
+        n1 = pair[0];
+        n2 = pair[1];
+        if (n2 >= n1) n2 = n1 - 185;
+        ans = n1 - n2;
+      }
+
+      const d1 = String(n1).padStart(4, '0').split('').map(Number);
+      const d2 = String(n2).padStart(4, '0').split('').map(Number);
+
+      return {
+        num1: n1,
+        num2: n2,
+        op: op,
+        answer: ans,
+        d1: d1,
+        d2: d2,
+      };
+    }
+
+    function newQuestion() {
+      playNote('click');
+      currentProblem = generateMathProblem(currentTopic);
+      focusColIndex = 3; // Always start from units (個位)
+      intermediateDigits = ['', '', '', ''];
+      carryMarkers = [0, 0, 0, 0];
+      modifiedTopDigits = [...currentProblem.d1];
+      selectedCarry = 0;
+
+      const titles = {
+        '3add': '三位數進位加法',
+        '3sub': '三位數借位減法',
+        '4add': '四位數大數加法',
+        '4sub': '四位數大數減法',
+        'zeroSub': '中間有0減法專題'
+      };
+      document.getElementById('topic-title-badge').textContent = titles[currentTopic];
+      document.getElementById('keypad-input').value = '';
+      hideFeedback();
+
+      renderVerticalBoard();
+      updateStepPrompt();
+    }
+
+    /* =========================================================
+     * 4. RENDER VERTICAL STAGE (Minimal, High-Contrast)
+     * ========================================================= */
+    function renderVerticalBoard() {
+      const stage = document.getElementById('vertical-board');
+      const { num1, num2, op, d1 } = currentProblem;
+      const s1 = String(num1).padStart(4, ' ');
+      const s2 = String(num2).padStart(4, ' ');
+
+      // Gentle column color borders
+      const colBorderColors = [
+        'border-rose-200 text-thCol',
+        'border-blue-200 text-huCol',
+        'border-amber-200 text-teCol',
+        'border-emerald-200 text-unCol'
+      ];
+
+      // 1. Carry markers row (+1)
+      let carryRow = `<div class="grid grid-cols-5 text-center text-xs font-extrabold text-rose-600 mb-1 h-6"><span></span>`;
+      for (let i = 0; i < 4; i++) {
+        const val = carryMarkers[i];
+        carryRow += `
+          <div class="flex items-center justify-center">
+            ${val > 0 ? `<span class="bg-rose-500 text-white px-2 py-0.5 rounded-full shadow-xs text-[11px]">+1</span>` : ''}
+          </div>
+        `;
+      }
+      carryRow += `</div>`;
+
+      // 2. Top Operand Row (Clean with slashed numbers if borrowed)
+      let row1 = `<div class="grid grid-cols-5 text-center gap-1.5 py-1"><span></span>`;
+      for (let i = 0; i < 4; i++) {
+        const isFocus = focusColIndex === i;
+        const isDim = focusColIndex !== i;
+        const origChar = s1[i] !== ' ' ? s1[i] : '';
+        const curVal = modifiedTopDigits[i];
+        const wasBorrowed = curVal !== null && curVal !== d1[i];
+
+        row1 += `
+          <div class="h-14 sm:h-16 flex flex-col items-center justify-center rounded-2xl border ${colBorderColors[i]} bg-slate-50/50 ${isFocus ? 'column-focus' : ''} ${isDim ? 'column-dim' : ''} transition-all relative">
+            ${wasBorrowed ? `
+              <span class="text-[11px] font-bold text-rose-600 absolute -top-2.5 bg-white px-1.5 rounded-md border border-rose-200">${curVal}</span>
+              <span class="slashed-digit text-slate-300 text-xl">${origChar}</span>
+            ` : `
+              <span>${origChar}</span>
+            `}
+          </div>
+        `;
+      }
+      row1 += `</div>`;
+
+      // 3. Second Operand Row (with Operator)
+      let row2 = `<div class="grid grid-cols-5 text-center gap-1.5 py-1">
+        <div class="h-14 sm:h-16 flex items-center justify-center rounded-2xl text-slate-400 font-extrabold text-2xl">
+          ${op}
+        </div>`;
+      for (let i = 0; i < 4; i++) {
+        const isFocus = focusColIndex === i;
+        const isDim = focusColIndex !== i;
+        const char = s2[i] !== ' ' ? s2[i] : '';
+
+        row2 += `
+          <div class="h-14 sm:h-16 flex items-center justify-center rounded-2xl border ${colBorderColors[i]} bg-slate-50/50 ${isFocus ? 'column-focus' : ''} ${isDim ? 'column-dim' : ''} transition-all">
+            <span>${char}</span>
+          </div>
+        `;
+      }
+      row2 += `</div>`;
+
+      // 4. Horizontal Line
+      const separator = `<div class="h-[2px] bg-slate-300 rounded-full my-2"></div>`;
+
+      // 5. Answer result boxes
+      let ansRow = `<div class="grid grid-cols-5 text-center gap-1.5 py-1"><span></span>`;
+      for (let i = 0; i < 4; i++) {
+        const isFocus = focusColIndex === i;
+        const val = intermediateDigits[i];
+
+        ansRow += `
+          <div class="h-14 sm:h-16 flex items-center justify-center rounded-2xl border-2 ${isFocus ? 'border-indigo-600 bg-indigo-50/30 text-indigo-900 shadow-xs' : 'border-slate-200 bg-white text-slate-800'} transition-all">
+            <span>${val !== '' ? val : (isFocus ? '?' : '')}</span>
+          </div>
+        `;
+      }
+      ansRow += `</div>`;
+
+      stage.innerHTML = carryRow + row1 + row2 + separator + ansRow;
+    }
+
+    /* =========================================================
+     * 5. STEP-BY-STEP PROMPT CONTROLLER
+     * ========================================================= */
+    function updateStepPrompt() {
+      const colNames = ['千位', '百位', '十位', '個位'];
+      const colBadgeClasses = [
+        'bg-rose-50 text-thCol border-rose-200',
+        'bg-blue-50 text-huCol border-blue-200',
+        'bg-amber-50 text-teCol border-amber-200',
+        'bg-emerald-50 text-unCol border-emerald-200'
+      ];
+
+      const currentName = colNames[focusColIndex];
+      const badge = document.getElementById('step-badge');
+      badge.className = `text-xs font-extrabold px-3 py-1 rounded-full border ${colBadgeClasses[focusColIndex]}`;
+      badge.textContent = `現在算：${currentName}`;
+
+      const promptText = document.getElementById('step-prompt-text');
+      const mathPreview = document.getElementById('step-math-preview');
+      const hintText = document.getElementById('hint-text');
+      const carryBox = document.getElementById('carry-prompt-box');
+      carryBox.classList.add('hidden');
+
+      const { op, d2 } = currentProblem;
+      const v1 = modifiedTopDigits[focusColIndex];
+      const v2 = d2[focusColIndex];
+      const carryIn = carryMarkers[focusColIndex];
+
+      if (op === '+') {
+        const sum = v1 + v2 + carryIn;
+        mathPreview.textContent = `${v1} + ${v2} ${carryIn > 0 ? `+ 1` : ''} = ${sum}`;
+
+        if (sum >= 10) {
+          carryBox.classList.remove('hidden');
+          selectedCarry = 1;
+          updateCarryButtonStyles();
+        } else {
+          selectedCarry = 0;
+        }
+
+        promptText.innerHTML = `
+          計算${currentName}：<span class="font-extrabold text-indigo-600">${v1} + ${v2}${carryIn > 0 ? ' + 1' : ''}</span> 是多少？<br>
+          <span class="text-xs text-slate-400 font-medium">請在下方填��${currentName}要寫下的數字</span>
+        `;
+        hintText.innerHTML = `算算看：${v1} + ${v2}${carryIn > 0 ? ' + 1' : ''} = <strong>${sum}</strong>。${sum >= 10 ? '滿十了，要進位到左邊！' : '寫下答案即可！'}`;
+
+      } else {
+        mathPreview.textContent = `${v1} - ${v2}`;
+
+        if (v1 < v2) {
+          promptText.innerHTML = `
+            ${currentName}的 <span class="text-rose-600">${v1}</span> 不夠減 <span class="text-slate-700">${v2}</span>！<br>
+            向左邊借 1 當 10，變成 <span class="font-bold text-emerald-600">${v1 + 10} - ${v2}</span> 是多少？
+          `;
+          hintText.innerHTML = `不夠減！向左邊借 1 當 10，變成 ${v1 + 10} - ${v2} = <strong>${(v1 + 10) - v2}</strong>！`;
+        } else {
+          promptText.innerHTML = `
+            計算${currentName}：<span class="font-extrabold text-indigo-600">${v1} - ${v2}</span> 是多少？
+          `;
+          hintText.innerHTML = `直接相減：${v1} - ${v2} = <strong>${v1 - v2}</strong>。`;
+        }
+      }
+
+      document.getElementById('keypad-input').value = '';
+    }
+
+    function setStepCarry(val) {
+      playNote('click');
+      selectedCarry = val;
+      updateCarryButtonStyles();
+    }
+
+    function updateCarryButtonStyles() {
+      const btnYes = document.getElementById('btn-carry-yes');
+      const btnNo = document.getElementById('btn-carry-no');
+      if (selectedCarry === 1) {
+        btnYes.className = "flex-1 py-1.5 bg-rose-600 text-white rounded-xl font-extrabold text-xs";
+        btnNo.className = "flex-1 py-1.5 bg-white border border-slate-200 text-slate-500 rounded-xl font-medium text-xs";
+      } else {
+        btnYes.className = "flex-1 py-1.5 bg-white border border-slate-200 text-slate-500 rounded-xl font-medium text-xs";
+        btnNo.className = "flex-1 py-1.5 bg-indigo-600 text-white rounded-xl font-extrabold text-xs";
+      }
+    }
+
+    /* =========================================================
+     * 6. TOUCH KEYPAD CONTROLS
+     * ========================================================= */
+    function pressKey(num) {
+      playNote('tap');
+      const input = document.getElementById('keypad-input');
+      if (input.value.length < 2) {
+        input.value += num;
+      }
+    }
+
+    function clearKey() {
+      playNote('tap');
+      document.getElementById('keypad-input').value = '';
+    }
+
+    function backspaceKey() {
+      playNote('tap');
+      const input = document.getElementById('keypad-input');
+      input.value = input.value.slice(0, -1);
+    }
+
+    /* =========================================================
+     * 7. ANSWER EVALUATION & BORROW MECHANICS
+     * ========================================================= */
+    function confirmCurrentInput() {
+      const input = document.getElementById('keypad-input');
+      const val = parseInt(input.value, 10);
+
+      if (isNaN(val)) {
+        showFeedback("請點下方數字鍵盤輸入答案喔！", "warn");
+        speakText("請點按鈕輸入數字喔！");
+        return;
+      }
+
+      const { op, d2 } = currentProblem;
+      const v1 = modifiedTopDigits[focusColIndex];
+      const v2 = d2[focusColIndex];
+      const carryIn = carryMarkers[focusColIndex];
+
+      if (op === '+') {
+        const total = v1 + v2 + carryIn;
+        const expectedDigit = total % 10;
+        const shouldCarry = total >= 10 ? 1 : 0;
+
+        if (val === expectedDigit) {
+          if (shouldCarry === 1 && selectedCarry !== 1) {
+            playNote('gentleRetry');
+            showFeedback(`數字正確！但 ${total} 滿十要勾選「進位 +1」喔！`, "warn");
+            speakText(`滿十要記得勾選進位喔！`);
+            return;
+          }
+
+          playNote('stepOk');
+          if (shouldCarry === 1) {
+            playNote('carry');
+            if (focusColIndex > 0) {
+              carryMarkers[focusColIndex - 1] = 1;
+            }
+          }
+          intermediateDigits[focusColIndex] = val;
+          advanceStepSuccess();
+
+        } else {
+          playNote('gentleRetry');
+          showFeedback(`再算一次看看喔！${v1} + ${v2}${carryIn > 0 ? '+1' : ''} = ${total}，個位寫 ${expectedDigit}！`, "warn");
+          speakText(`沒關係，再算算看，個位寫 ${expectedDigit} 喔！`);
+        }
+
+      } else {
+        // Subtraction
+        let available = v1;
+        let didBorrow = false;
+
+        if (v1 < v2) {
+          available = v1 + 10;
+          didBorrow = true;
+        }
+
+        const expected = available - v2;
+
+        if (val === expected) {
+          playNote('stepOk');
+          if (didBorrow) {
+            playNote('borrow');
+            executeBorrowFromLeft(focusColIndex);
+          }
+          intermediateDigits[focusColIndex] = val;
+          advanceStepSuccess();
+        } else {
+          playNote('gentleRetry');
+          showFeedback(`想一想：${available} - ${v2} 是多少呢？再試試看！`, "warn");
+          speakText(`${available} 減 ${v2}，再試一次看看喔！`);
+        }
+      }
+    }
+
+    // Executes borrowing from the nearest non-zero column
+    function executeBorrowFromLeft(fromCol) {
+      let p = fromCol - 1;
+      while (p >= 0 && modifiedTopDigits[p] === 0) {
+        p--;
+      }
+
+      if (p >= 0) {
+        modifiedTopDigits[p] -= 1;
+        for (let k = p + 1; k < fromCol; k++) {
+          modifiedTopDigits[k] = 9;
+        }
+        modifiedTopDigits[fromCol] += 10;
+      }
+    }
+
+    function advanceStepSuccess() {
+      renderVerticalBoard();
+
+      const nextCol = focusColIndex - 1;
+      const isDone = (nextCol < 0) || (nextCol === 0 && modifiedTopDigits[0] === 0 && currentProblem.d2[0] === 0 && carryMarkers[0] === 0);
+
+      if (isDone) {
+        if (currentProblem.op === '+' && carryMarkers[0] > 0 && intermediateDigits[0] === '') {
+          intermediateDigits[0] = carryMarkers[0];
+        }
+
+        renderVerticalBoard();
+        playNote('complete');
+        starScore += 1;
+        document.getElementById('star-count').textContent = starScore;
+
+        showFeedback(`🎉 太棒了！算出了正確答案：${currentProblem.answer}！獲得一顆星星 ⭐`, "success");
+        speakText(`太棒了！算出了正確答案：${currentProblem.answer}！`);
+
+      } else {
+        focusColIndex = nextCol;
+        showFeedback(`算對了！換下一位數囉！`, "success");
+        renderVerticalBoard();
+        updateStepPrompt();
+      }
+    }
+
+    function showFeedback(msg, type) {
+      const box = document.getElementById('step-feedback');
+      box.classList.remove('hidden');
+      if (type === 'success') {
+        box.className = "p-3 rounded-xl text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200";
+      } else {
+        box.className = "p-3 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200";
+      }
+      box.textContent = msg;
+    }
+
+    function hideFeedback() {
+      const box = document.getElementById('step-feedback');
+      box.classList.add('hidden');
+    }
+
+    /* =========================================================
+     * 8. HANDWRITING SCRATCHPAD CANVAS
+     * ========================================================= */
+    let isScratchpadOpen = false;
+    let canvas = document.getElementById('scratchpad-canvas');
+    let ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let penColor = '#2563EB';
+
+    function toggleScratchpad() {
+      playNote('click');
+      const modal = document.getElementById('scratchpad-modal');
+      isScratchpadOpen = !isScratchpadOpen;
+      if (isScratchpadOpen) {
+        modal.classList.remove('translate-y-full');
+        resizeScratchpad();
+      } else {
+        modal.classList.add('translate-y-full');
+      }
+    }
+
+    function resizeScratchpad() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = penColor;
+    }
+
+    function setPenColor(color) {
+      playNote('tap');
+      penColor = color;
+      ctx.strokeStyle = color;
+    }
+
+    function clearScratchpad() {
+      playNote('tap');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    });
+
+    window.addEventListener('pointerup', () => { isDrawing = false; });
+    window.addEventListener('resize', () => { if (isScratchpadOpen) resizeScratchpad(); });
+
+    /* =========================================================
+     * 9. INITIALIZATION
+     * ========================================================= */
+    window.onload = function() {
+      newQuestion();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>學習教室數學樂園</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tone.js for Web Audio Synthesis (Sound Effects Only) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  
+  <!-- Canvas Confetti for celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* 國小標準注音排版規範 */
+    ruby {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: bottom;
+      align-items: center;
+      margin: 0 1.5px;
+      line-height: 1.15;
+    }
+    rt {
+      font-size: 0.55em;
+      font-weight: 700;
+      color: #0284c7;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* 捲軸美化 */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* A4 列印標準樣式規範 */
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm 8mm 10mm;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 11pt;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .a4-page-container {
+        page-break-after: always !important;
+        break-after: page !important;
+        min-height: 278mm !important;
+        height: 278mm !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      rt {
+        color: #334155 !important;
+      }
+    }
+  </style>
+
+  <!-- 引入標準主題 Favicon 與字嗨注音標楷開源字型 (RULE規範與特教友善) -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="apple-touch-icon" href="../../favicon.svg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
+  <style>
+    .font-zihi { font-family: 'Bpmf Zihi Kai Std', '字嗨注音標楷', 'DFKai-SB', serif !important; }
+  </style>
+
+</head>
+
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-200">
+
+<!-- 南一三上數學備課平台專屬全域導航頂欄 (優化整合) -->
+<nav class="sp-ed-game-navbar" style="position:sticky;top:0;left:0;right:0;z-index:99999;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #e2e8f0;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);font-family:system-ui,-apple-system,sans-serif;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="../../index.html" onclick="if(window.parent && window.parent !== window){window.parent.postMessage('close-game-modal','*'); return false;}" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #4f46e5, #4338ca);color:#ffffff;font-weight:800;font-size:0.95rem;padding:6px 16px;border-radius:12px;box-shadow:0 3px 0 #312e81;transition:all 0.15s;">
+      ⬅ 返回三上數學備課平台
+    </a>
+    <span style="font-weight:800;color:#1e1b4b;font-size:1.05rem;display:none;" class="sm:inline">南一三上數學 🎪 互動遊戲冒險館</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen();}" style="cursor:pointer;background:#f1f5f9;border:1px solid #cbd5e1;padding:6px 14px;border-radius:10px;font-weight:700;font-size:0.85rem;color:#475569;">
+      ⛶ 全螢幕投影
+    </button>
+  </div>
+</nav>
+
+
+  <!-- 頂部功能導覽列 -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-200">
+          <i class="fa-solid fa-shapes text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            學習教室數學樂園
+          </h1>
+          <p class="text-[11px] sm:text-xs text-slate-500 font-medium hidden sm:block">個別化適性出題與互動練習系統</p>
+        </div>
+      </div>
+
+      <!-- 右側動作列：語速、星星成就計數、列印 -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 語音朗讀語速切換 -->
+        <button onclick="toggleSpeechRate()" id="btnSpeechRate"
+          class="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+          <i class="fa-solid fa-gauge-high text-sky-500"></i>
+          <span id="speechRateLabel" class="hidden md:inline">正常語速</span>
+        </button>
+
+        <!-- 星星成就計數 -->
+        <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm shadow-xs">
+          <i class="fa-solid fa-star text-amber-500 animate-pulse"></i>
+          <span id="starCounter">0</span>
+          <span class="text-xs font-semibold text-amber-700 hidden sm:inline">顆星</span>
+        </div>
+
+        <!-- 列印學習單按鈕 -->
+        <button onclick="openPrintModal()" 
+          class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-black transition flex items-center gap-1.5 shadow-sm shadow-emerald-200 active:scale-95 cursor-pointer">
+          <i class="fa-solid fa-print"></i>
+          <span>列印學習單</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主操作舞台 -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6 no-print">
+
+    <!-- 左側：教學出題控制台 (4 欄寬) -->
+    <aside class="lg:col-span-4 space-y-4">
+      <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200">
+
+        <!-- 出題模式切換：純計算 vs 情境文字題 -->
+        <div class="mb-4 bg-sky-50/70 border-2 border-sky-300 rounded-2xl p-3">
+          <label class="block text-xs font-black text-sky-950 mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-calculator text-sky-600 text-sm"></i>
+            請選擇【出題模式】：
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="btnModePureCalc" onclick="switchMode('pure_calc')"
+              class="py-2.5 px-2 rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs transition flex flex-col items-center justify-center cursor-pointer">
+              <span class="text-xs sm:text-sm">🧮 純計算題</span>
+              <span class="text-[10px] font-normal text-slate-500">零文字 • 純算式練習</span>
+            </button>
+            <button type="button" id="btnModeStory" onclick="switchMode('story')"
+              class="py-2.5 px-2 rounded-xl border-2 border-sky-600 bg-sky-600 text-white font-black text-xs transition flex flex-col items-center justify-center shadow-sm cursor-pointer">
+              <span class="text-xs sm:text-sm">📖 情境文字題</span>
+              <span class="text-[10px] font-normal opacity-90">生活情境 • 關鍵字提示</span>
+            </button>
+          </div>
+          <input type="hidden" id="currentCalculationMode" value="story">
+        </div>
+
+        <!-- 作答題型切換：選擇題 vs 填充題 vs 綜合作答 -->
+        <div class="mb-4 bg-indigo-50/70 border-2 border-indigo-300 rounded-2xl p-3">
+          <label class="block text-xs font-black text-indigo-950 mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-square-pen text-indigo-600 text-sm"></i>
+            請選擇【作答題型】：
+          </label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <button type="button" id="btnAnsTypeChoice" onclick="switchAnswerFormat('choice')"
+              class="py-2 px-1 rounded-xl border-2 border-indigo-600 bg-indigo-600 text-white font-black text-xs transition flex flex-col items-center justify-center shadow-sm cursor-pointer">
+              <span class="text-xs">🔘 選擇題</span>
+              <span class="text-[9px] font-normal opacity-90">三選一</span>
+            </button>
+            <button type="button" id="btnAnsTypeFill" onclick="switchAnswerFormat('fill')"
+              class="py-2 px-1 rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs transition flex flex-col items-center justify-center cursor-pointer">
+              <span class="text-xs">✍️ 填充題</span>
+              <span class="text-[9px] font-normal text-slate-500">直接填答</span>
+            </button>
+            <button type="button" id="btnAnsTypeComp" onclick="switchAnswerFormat('comprehensive')"
+              class="py-2 px-1 rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs transition flex flex-col items-center justify-center cursor-pointer">
+              <span class="text-xs">📝 綜合作答</span>
+              <span class="text-[9px] font-normal text-slate-500">列式＋求答</span>
+            </button>
+          </div>
+          <input type="hidden" id="currentAnswerFormat" value="choice">
+        </div>
+
+        <!-- 年級選單與題數選單 -->
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-xs font-black text-slate-700 mb-1">學生年段：</label>
+            <select id="gradeSelect" onchange="handleGradeChange()"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-sky-400">
+              <option value="1">低年級 (1-2年級)</option>
+              <option value="2" selected>中年級 (3-4年級)</option>
+              <option value="3">高年級 (5-6年級)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-black text-slate-700 mb-1">練習題數：</label>
+            <select id="countSelect"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-sky-400">
+              <option value="5" selected>5 題 (一頁舒適大空間)</option>
+              <option value="10">10 題 (精熟鞏固)</option>
+              <option value="15">15 題 (進階挑戰)</option>
+              <option value="20">20 題 (綜合大測驗)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 常用核心單元快��點選 -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-bold text-slate-600" id="quickTopicLabel">
+              ⚡ 常用核心單元快速點選：
+            </label>
+            <span class="text-[10px] text-sky-600 font-bold" id="gradeDomainBadge">中年級核心單元</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5" id="quickTopicContainer">
+            <!-- 動態注入單元按鈕 -->
+          </div>
+        </div>
+
+        <!-- 出題主表單 -->
+        <form id="generatorForm" onsubmit="handleGenerate(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-black text-slate-700 mb-1">
+              教學主題（手動輸入或點選上方即刻更換）：
+            </label>
+            <div class="relative">
+              <input type="text" id="topicInput" required value="二位數乘以二位數"
+                placeholder="例如：二位數乘以二位數、三位數除以一位數、長方形周長面積..."
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs sm:text-sm font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-sky-400 focus:bg-white transition">
+            </div>
+          </div>
+
+          <!-- 鷹架支援開關 -->
+          <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200 space-y-2">
+            <span class="text-xs font-black text-slate-700 block">個別化教學鷹架支援：</span>
+            
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="checkZhuyin" onchange="toggleZhuyinOption(this.checked)"
+                class="w-4 h-4 rounded text-sky-600 focus:ring-sky-400 border-slate-300">
+              <span class="text-xs font-bold text-slate-700">題目自動標註注音符號（低年級��議開啟）</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="checkConcreteVisuals" checked
+                class="w-4 h-4 rounded text-sky-600 focus:ring-sky-400 border-slate-300">
+              <span class="text-xs font-bold text-slate-700">提供千百十個位值圖解 / 周長面積公式圖示</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="checkStepHints" checked
+                class="w-4 h-4 rounded text-sky-600 focus:ring-sky-400 border-slate-300">
+              <span class="text-xs font-bold text-slate-700">內建階梯式拆解步驟小提示</span>
+            </label>
+          </div>
+
+          <!-- 產題按鈕 -->
+          <button type="submit" id="btnGenerate"
+            class="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white rounded-2xl font-black text-sm transition shadow-md shadow-sky-200 flex items-center justify-center gap-2 active:scale-98 cursor-pointer">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>生成個別化練習題</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- 課堂便籤卡 -->
+      <div class="bg-amber-50/80 border border-amber-200 rounded-3xl p-4 text-xs text-amber-900 leading-relaxed">
+        <div class="font-black flex items-center gap-1.5 text-amber-800 mb-1">
+          <i class="fa-solid fa-chalkboard-user text-amber-600"></i>
+          <span>學習教室 • 教學提醒：</span>
+        </div>
+        <p class="font-medium">
+          系統已全面測試與驗證各單元！涵蓋乘法（二乘二、三乘一、三乘二）、除法（二除一、三除一、三除二）、幾何面積周長（正/長方形、三角形/梯形）、四則運算、四位數加減、分數、小數、時間時刻與公因數公倍數。點擊��何單元都會即時精準出題！
+        </p>
+      </div>
+    </aside>
+
+    <!-- 右側：學生互動操作區 (8 欄寬) -->
+    <section class="lg:col-span-8 space-y-4">
+      
+      <!-- 數位計算小白板（學生操作區） -->
+      <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-pen-nib"></i>
+            </span>
+            <div>
+              <h2 class="text-sm font-black text-slate-800">數位計算小白板（學生操作區）</h2>
+              <p class="text-[11px] text-slate-400 font-medium">支援手寫直式、畫長方形/正方形邊長、千百十個位值小棒</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1 sm:gap-2">
+            <!-- 筆刷顏色與工具 -->
+            <button onclick="setWhiteboardTool('pen', '#0284c7')" title="藍筆"
+              class="w-7 h-7 rounded-lg bg-sky-600 text-white flex items-center justify-center text-xs shadow-xs active:scale-95 cursor-pointer"></button>
+            <button onclick="setWhiteboardTool('pen', '#1e293b')" title="黑筆"
+              class="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs shadow-xs active:scale-95 cursor-pointer"></button>
+            <button onclick="setWhiteboardTool('pen', '#e11d48')" title="紅筆"
+              class="w-7 h-7 rounded-lg bg-rose-600 text-white flex items-center justify-center text-xs shadow-xs active:scale-95 cursor-pointer"></button>
+            <button onclick="setWhiteboardTool('eraser')" id="btnEraser" title="橡皮擦"
+              class="px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 cursor-pointer">
+              <i class="fa-solid fa-eraser"></i>
+            </button>
+            <button onclick="clearWhiteboard()" title="清除畫布"
+              class="px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-rose-50 text-rose-600 text-xs font-bold cursor-pointer">
+              <i class="fa-solid fa-trash-can"></i> 清除
+            </button>
+          </div>
+        </div>
+
+        <!-- 常用具體圖章 -->
+        <div class="flex items-center gap-1.5 mb-2 pb-2 border-b border-slate-100 overflow-x-auto text-xs">
+          <span class="text-slate-400 font-bold shrink-0 text-[11px]">快速操作圖章：</span>
+          <button onclick="stampOnBoard('🟦')" class="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 hover:bg-slate-100 text-xs cursor-pointer">🟦 方塊</button>
+          <button onclick="stampOnBoard('🍎')" class="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 hover:bg-slate-100 text-xs cursor-pointer">🍎 蘋果</button>
+          <button onclick="stampOnBoard('🟡')" class="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 hover:bg-slate-100 text-xs cursor-pointer">🟡 圓點</button>
+          <button onclick="stampOnBoard('🔟')" class="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 hover:bg-slate-100 text-xs cursor-pointer">🔟 十點棒</button>
+          <button onclick="stampOnBoard('📏')" class="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 hover:bg-slate-100 text-xs cursor-pointer">📏 直尺</button>
+          <button onclick="stampOnBoard('⭐')" class="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 hover:bg-slate-100 text-xs cursor-pointer">⭐ 星星</button>
+        </div>
+
+        <!-- 畫布本體 -->
+        <div class="relative w-full h-40 sm:h-48 bg-slate-50/70 border-2 border-dashed border-slate-200 rounded-2xl overflow-hidden touch-none">
+          <canvas id="whiteboardCanvas" class="w-full h-full cursor-crosshair"></canvas>
+          <div id="whiteboardEmptyTip" class="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-bold text-slate-300">
+            <span>✏️ 在此自由書寫直式、畫長寬邊長對齊、分組圖解或記錄思考歷程...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 練習題清單容器 -->
+      <div id="questionsSection" class="space-y-4">
+        <!-- 頂部狀態列 -->
+        <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-sky-100 text-sky-800 rounded-full font-black text-xs" id="currentTopicBadge">
+              二位數乘以二位數
+            </span>
+            <span class="text-xs font-bold text-slate-500" id="progressText">
+              正在準備題目...
+            </span>
+          </div>
+          <div class="text-xs font-bold text-slate-400" id="typeIndicator">
+            情境題 • 選擇題
+          </div>
+        </div>
+
+        <!-- 題目卡片注入容器 -->
+        <div id="questionsContainer" class="space-y-4">
+          <!-- 動態注入題目卡片 -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- A4 列印預覽 Modal -->
+  <div id="printModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto no-print">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl flex flex-col max-h-[95vh] border border-slate-200 overflow-hidden">
+      
+      <!-- 視窗抬頭控制列 -->
+      <div class="p-4 bg-slate-800 text-white flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-sm sm:text-base tracking-wide">A4 數學練習單預覽與列印</h3>
+            <p class="text-[11px] text-slate-300">學習教室標準格式 • 自動帶入當天日期與計算區位值對齊格</p>
+          </div>
+        </div>
+
+        <!-- 版型切換開關 (每頁 5 題 vs 10 題) -->
+        <div class="flex items-center bg-slate-700 p-1 rounded-xl gap-1">
+          <button onclick="changePrintDensity(5)" id="btnDensity5"
+            class="px-3 py-1 rounded-lg text-xs font-black transition bg-emerald-500 text-white shadow-xs cursor-pointer">
+            📄 每頁 5 題 (加大計算區)
+          </button>
+          <button onclick="changePrintDensity(10)" id="btnDensity10"
+            class="px-3 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition cursor-pointer">
+            📑 每頁 10 題 (精巧雙欄省紙)
+          </button>
+        </div>
+
+        <button onclick="closePrintModal()" class="w-8 h-8 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- 預覽主紙張顯示區 (模擬 A4 紙張外觀) -->
+      <div class="flex-1 overflow-y-auto bg-slate-200 p-4 sm:p-6 flex flex-col items-center" id="printSheetBody">
+        <!-- 動態注入多頁 A4 頁面 -->
+      </div>
+
+      <!-- 底部列印動作按鈕 -->
+      <div class="p-4 bg-white border-t border-slate-200 flex items-center justify-between flex-wrap gap-3">
+        <div class="text-xs text-slate-500 font-bold">
+          <i class="fa-solid fa-circle-check text-emerald-500"></i> 已套用標準 A4 縱向規格，列印時將自動隱藏介面按鈕
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="copyWorksheetText()"
+            class="px-3.5 py-2 rounded-xl border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-regular fa-copy"></i> 複製文字題目
+          </button>
+          <button onclick="printInNewWindow()"
+            class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-black transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 新分頁列印
+          </button>
+          <button onclick="window.print()"
+            class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-emerald-200 cursor-pointer">
+            <i class="fa-solid fa-print"></i> 直接列印
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 提示框 -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 hidden transform transition-all duration-300">
+    <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-bold border border-slate-700">
+      <i class="fa-solid fa-circle-info text-sky-400"></i>
+      <span id="toastMsg">提示訊息</span>
+    </div>
+  </div>
+
+  <script>
+    // 全域狀態機
+    const state = {
+      mode: 'story',           // 'pure_calc' 或 'story'
+      answerFormat: 'choice',   // 'choice' (選擇), 'fill' (填充), 'comprehensive' (綜合作答)
+      grade: '2',              // '1' (低), '2' (中), '3' (高)
+      stars: 0,
+      speechRate: 0.9,
+      questions: [],
+      currentTopic: "二位數乘以二位數",
+      answeredMap: {},
+      whiteboardMode: 'pen',
+      penColor: '#1e293b',
+      isDrawing: false,
+      lastX: 0,
+      lastY: 0,
+      printDensity: 5,
+      enableZhuyin: false
+    };
+
+    let synth = null;
+    let isToneReady = false;
+
+    // 常用國小數學注音辭典
+    const zhuyinDict = {
+      "大": "ㄉㄚˋ", "埤": "ㄆㄧˊ", "國": "ㄍㄨㄛˊ", "小": "ㄒㄧㄠˇ", "學": "ㄒㄩㄝˊ",
+      "校": "ㄒㄧㄠˋ", "班": "ㄅㄢ", "級": "ㄐㄧˊ", "名": "ㄇㄧㄥˊ", "座": "ㄗㄨㄛˋ",
+      "號": "ㄏㄠˋ", "日": "ㄖˋ", "期": "ㄑㄧˊ", "一": "ㄧ", "二": "ㄦˋ", "三": "ㄙㄢ",
+      "四": "ㄙˋ", "五": "ㄨˇ", "六": "ㄌㄧㄡˋ", "七": "ㄑㄧ", "八": "ㄅㄚ", "九": "ㄐㄧㄡˇ",
+      "十": "ㄕˊ", "百": "ㄅㄞˇ", "千": "ㄑㄧㄢ", "萬": "ㄨㄢˋ", "個": "ㄍㄜ˙",
+      "長": "ㄔㄤˊ", "方": "ㄈㄤ", "形": "ㄒㄧㄥˊ", "正": "ㄓㄥˋ", "邊": "ㄅㄧㄢ",
+      "周": "ㄓㄡ", "面": "ㄇㄧㄢˋ", "積": "ㄐㄧ", "寬": "ㄎㄨㄢ", "公": "ㄍㄨㄥ",
+      "分": "ㄈㄣ", "尺": "ㄔˇ", "厘": "ㄌㄧˊ", "米": "ㄇㄧˇ", "平": "ㄆㄧㄥˊ",
+      "加": "ㄐㄧㄚ", "減": "ㄐㄧㄢˇ", "乘": "ㄔㄥˊ", "除": "ㄔㄨˊ", "等": "ㄉㄥˇ", "於": "ㄩˊ",
+      "合": "ㄏㄜˊ", "共": "ㄍㄨㄥˋ", "全": "ㄑㄩㄢˊ", "部": "ㄅㄨˋ", "剩": "ㄕㄥˋ", "下": "ㄒㄧㄚˋ",
+      "多": "ㄉㄨㄛ", "少": "ㄕㄠˇ", "比": "ㄅㄧˇ", "還": "ㄏㄞˊ", "有": "ㄧㄡˇ", "買": "ㄇㄞˇ",
+      "賣": "ㄇㄞˋ", "請": "ㄑㄧㄥˇ", "問": "ㄨㄣˋ", "算": "ㄙㄨㄢˋ", "式": "ㄕˋ", "答": "ㄉㄚˊ",
+      "案": "ㄢˋ", "第": "ㄉㄧˋ", "題": "ㄊㄧˊ", "練": "ㄌㄧㄢˋ", "習": "ㄒㄧˊ",
+      "時": "ㄕˊ", "鐘": "ㄓㄨㄥ", "點": "ㄉㄧㄢˇ", "半": "ㄅㄢˋ", "秒": "ㄇㄧㄠˇ",
+      "包": "ㄅㄠ", "盒": "ㄏㄜˊ", "瓶": "ㄆㄧㄥˊ", "塊": "ㄎㄨㄞˋ", "元": "ㄩㄢˊ", "錢": "ㄑㄧㄢˊ",
+      "梯": "ㄊㄧ", "底": "ㄉㄧˇ", "高": "ㄍㄠ", "速": "ㄙㄨˋ", "度": "ㄉㄨˋ"
+    };
+
+    // 完整 26 個國小數學課綱單元完整對照清單
+    const curriculumTopics = {
+      "1": {
+        domain: "低年級 (1-2年級)",
+        pure_calc: [
+          "10以內合成分解",
+          "20以內進位加法",
+          "20以內退位減法",
+          "二位數不進位加減",
+          "二位數進退位加減",
+          "九九乘法表算式"
+        ],
+        story: [
+          "10以內吃點心加減",
+          "買文具認識錢幣換算",
+          "看時鐘整點與半點",
+          "排隊比長短比多少",
+          "分糖果乘法倍數"
+        ]
+      },
+      "2": {
+        domain: "中年級 (3-4年級)",
+        pure_calc: [
+          "二位數乘以二位數",
+          "三位數乘以一位數",
+          "二位數乘一位數",
+          "三位數乘以二位數",
+          "多位數除法運算",
+          "二位數除以一位數",
+          "三位數除以一位數",
+          "三位數除以二位數",
+          "長方形與正方形周長面積",
+          "四位數加減法",
+          "同分母分數加減",
+          "一位小數加減法"
+        ],
+        story: [
+          "二位數乘以二位數生活題",
+          "三位數乘以一位數採購題",
+          "長方形正方形花圃周長面積",
+          "多位數除法生活題",
+          "二位數除以一位數平分",
+          "三位數除以一位數包裝",
+          "三位數除以二位數裝箱",
+          "四位數圖書館圖書加減",
+          "吃披薩同分母分數",
+          "跑步量身高小數計算",
+          "搭火車時間與時刻長度"
+        ]
+      },
+      "3": {
+        domain: "高年級 (5-6年級)",
+        pure_calc: [
+          "三位數乘以二位數",
+          "兩步驟整數��則混合運算",
+          "三角形與平行四邊形面積",
+          "梯形面積公式計算",
+          "異分母分數加減",
+          "分數乘以整數",
+          "小數乘法與除法",
+          "求最大公因數與最小公倍數"
+        ],
+        story: [
+          "三位數乘以二位數全校訂購",
+          "買文具兩步驟四則運算",
+          "菜園三角形與梯形面積",
+          "烘焙蛋糕異分母分數",
+          "操場跑步速度距離時間",
+          "班級投票比與百分率"
+        ]
+      }
+    };
+
+    // 音效初始化 (Web Audio API)
+    function initToneAudio() {
+      if (!isToneReady && window.Tone) {
+        Tone.start();
+        synth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: "sine" },
+          envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 0.8 }
+        }).toDestination();
+        synth.volume.value = -8;
+        isToneReady = true;
+      }
+    }
+
+    function playSuccessSound() {
+      try {
+        initToneAudio();
+        if (synth) {
+          const now = Tone.now();
+          synth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "8n", now);
+        }
+      } catch (e) {}
+    }
+
+    function playTryAgainSound() {
+      try {
+        initToneAudio();
+        if (synth) {
+          const now = Tone.now();
+          synth.triggerAttackRelease(["E4", "C4"], "8n", now);
+        }
+      } catch (e) {}
+    }
+
+    function speakText(rawText) {
+      if (!('speechSynthesis' in window)) {
+        showToast("您的瀏覽器不支援語音朗讀功能");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const cleanText = rawText.replace(/[\(\)\（\）]/g, '')
+                               .replace(/\+/g, '加')
+                               .replace(/\-/g, '減')
+                               .replace(/×/g, '乘以')
+                               .replace(/÷/g, '除以')
+                               .replace(/=/g, '等於')
+                               .replace(/\//g, '分之');
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      utter.lang = 'zh-TW';
+      utter.rate = state.speechRate;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function toggleSpeechRate() {
+      if (state.speechRate === 0.9) {
+        state.speechRate = 0.65;
+        document.getElementById('speechRateLabel').innerText = "慢速朗讀";
+        showToast("已切換為【慢速清晰朗讀】模式");
+      } else {
+        state.speechRate = 0.9;
+        document.getElementById('speechRateLabel').innerText = "正常語速";
+        showToast("已切換為【正常語速】模式");
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastMsg');
+      text.innerText = msg;
+      toast.classList.remove('hidden');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => toast.classList.add('hidden'), 2500);
+    }
+
+    // 視窗初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuickTopics();
+      initWhiteboard();
+      handleGenerate(null);
+
+      const topicInput = document.getElementById('topicInput');
+      if (topicInput) {
+        topicInput.addEventListener('change', () => handleGenerate(null));
+        topicInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleGenerate(null);
+          }
+        });
+      }
+    });
+
+    // 出題模式切換
+    function switchMode(newMode) {
+      state.mode = newMode;
+      document.getElementById('currentCalculationMode').value = newMode;
+      
+      const btnPure = document.getElementById('btnModePureCalc');
+      const btnStory = document.getElementById('btnModeStory');
+
+      if (newMode === 'pure_calc') {
+        btnPure.className = "py-2.5 px-2 rounded-xl border-2 border-sky-600 bg-sky-600 text-white font-black text-xs transition flex flex-col items-center justify-center shadow-sm cursor-pointer";
+        btnStory.className = "py-2.5 px-2 rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs transition flex flex-col items-center justify-center cursor-pointer";
+        showToast("已切換為【🧮 純計算題模式】");
+      } else {
+        btnStory.className = "py-2.5 px-2 rounded-xl border-2 border-sky-600 bg-sky-600 text-white font-black text-xs transition flex flex-col items-center justify-center shadow-sm cursor-pointer";
+        btnPure.className = "py-2.5 px-2 rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs transition flex flex-col items-center justify-center cursor-pointer";
+        showToast("已切換為【📖 情境文字題模式】");
+      }
+
+      renderQuickTopics();
+      handleGenerate(null);
+    }
+
+    // 作答題型切換
+    function switchAnswerFormat(format) {
+      state.answerFormat = format;
+      document.getElementById('currentAnswerFormat').value = format;
+
+      const choiceBtn = document.getElementById('btnAnsTypeChoice');
+      const fillBtn = document.getElementById('btnAnsTypeFill');
+      const compBtn = document.getElementById('btnAnsTypeComp');
+
+      const activeClass = "py-2 px-1 rounded-xl border-2 border-indigo-600 bg-indigo-600 text-white font-black text-xs transition flex flex-col items-center justify-center shadow-sm cursor-pointer";
+      const inactiveClass = "py-2 px-1 rounded-xl border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs transition flex flex-col items-center justify-center cursor-pointer";
+
+      choiceBtn.className = (format === 'choice') ? activeClass : inactiveClass;
+      fillBtn.className = (format === 'fill') ? activeClass : inactiveClass;
+      compBtn.className = (format === 'comprehensive') ? activeClass : inactiveClass;
+
+      if (format === 'choice') showToast("已切換為【🔘 選擇題】");
+      else if (format === 'fill') showToast("已切換為【✍️ 填充題】");
+      else showToast("已切換為【📝 綜合作答】");
+
+      if (state.questions.length > 0) {
+        renderQuestions({ unitName: state.currentTopic, questions: state.questions });
+      }
+    }
+
+    // 年段切換處理
+    function handleGradeChange() {
+      const g = document.getElementById('gradeSelect').value;
+      state.grade = g;
+      const zhuyinCheck = document.getElementById('checkZhuyin');
+      if (g === "1") {
+        zhuyinCheck.checked = true;
+        state.enableZhuyin = true;
+      } else {
+        zhuyinCheck.checked = false;
+        state.enableZhuyin = false;
+      }
+      renderQuickTopics();
+      const config = curriculumTopics[g] || curriculumTopics["2"];
+      const defaultTopic = (config[state.mode] && config[state.mode][0]) || "二位數乘以二位數";
+      document.getElementById('topicInput').value = defaultTopic;
+      handleGenerate(null);
+    }
+
+    // 渲染快捷單元按鈕
+    function renderQuickTopics() {
+      const container = document.getElementById('quickTopicContainer');
+      const grade = state.grade || "2";
+      const mode = state.mode || "story";
+      const config = curriculumTopics[grade] || curriculumTopics["2"];
+      
+      document.getElementById('gradeDomainBadge').innerText = config.domain;
+      container.innerHTML = '';
+
+      const topics = config[mode] || [];
+      topics.forEach(t => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.className = "px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-bold rounded-lg border border-sky-200 transition cursor-pointer";
+        btn.innerText = t;
+        btn.onclick = () => {
+          document.getElementById('topicInput').value = t;
+          handleGenerate(null);
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function toggleZhuyinOption(checked) {
+      state.enableZhuyin = checked;
+      if (state.questions.length > 0) {
+        renderQuestions({ unitName: state.currentTopic, questions: state.questions });
+      }
+    }
+
+    // 注音拼音套用標籤
+    function applyZhuyinMarkup(text) {
+      if (!text) return "";
+      let result = "";
+      for (const char of text) {
+        if (zhuyinDict[char]) {
+          result += `<ruby>${char}<rt>${zhuyinDict[char]}</rt></ruby>`;
+        } else {
+          result += char;
+        }
+      }
+      return result;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '&quot;');
+    }
+
+    function escapeQuote(str) {
+      if (!str) return '';
+      return String(str).replace(/'/g, "\\'");
+    }
+
+    function formatQuestionHtml(text, keywords = [], useZhuyin = true) {
+      let safeText = escapeHtml(text);
+      if (keywords && keywords.length > 0) {
+        keywords.forEach(kw => {
+          const regex = new RegExp(`(${kw})`, 'g');
+          safeText = safeText.replace(regex, `<span class="bg-amber-200 text-amber-950 px-1 py-0.5 rounded font-black">$1</span>`);
+        });
+      }
+      if (useZhuyin) return applyZhuyinMarkup(safeText);
+      return safeText;
+    }
+
+    function handleGenerate(event) {
+      if (event) event.preventDefault();
+      const topic = document.getElementById('topicInput').value.trim() || "二位數乘以二位數";
+      const count = parseInt(document.getElementById('countSelect').value, 10) || 5;
+      const grade = document.getElementById('gradeSelect').value;
+      const isPure = (state.mode === 'pure_calc');
+
+      state.currentTopic = topic;
+      const btn = document.getElementById('btnGenerate');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>正在生成題目...</span>`;
+      }
+
+      setTimeout(() => {
+        try {
+          const generatedData = generateElementaryMathQuestions(topic, count, grade, isPure);
+          state.questions = generatedData.questions;
+          renderQuestions(generatedData);
+          showToast(`已生成 ${count} 題【${topic}】！`);
+        } catch (err) {
+          console.error("生成題目發生錯誤：", err);
+          showToast("題目已更新！");
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>生成個別化練習題</span>`;
+          }
+        }
+      }, 50);
+    }
+
+    // ==========================================
+    // 核心數學出題引擎 (全面單元嚴格防衝突與防重複)
+    // ==========================================
+    function generateElementaryMathQuestions(topic, count, grade, isPure) {
+      const list = [];
+      const t = topic.toLowerCase().trim();
+      const usedSignatures = new Set();
+
+      // 單元精準關鍵字匹配
+      const isTime = t.includes("時間") || t.includes("時刻") || t.includes("火車") || t.includes("時鐘") || t.includes("整點") || t.includes("半點") || t.includes("時長");
+      const isMoney = !isTime && (t.includes("錢幣") || t.includes("買文具") || t.includes("元") || t.includes("購物"));
+      const isQueue = !isTime && !isMoney && (t.includes("排隊") || t.includes("比長短") || t.includes("比多少"));
+      const isTriangleOrTrapezoid = !isTime && (t.includes("三角形") || t.includes("梯形") || t.includes("平行四邊形") || t.includes("菜園三角形"));
+      const isPerimeterOrArea = !isTime && !isTriangleOrTrapezoid && (t.includes("周長") || t.includes("面積") || t.includes("長方形") || t.includes("正方形") || t.includes("花圃"));
+      
+      // 乘法精確層級判定
+      const isThreeByOne = !isTime && !isTriangleOrTrapezoid && !isPerimeterOrArea && 
+                           (t.includes("三位數乘一位數") || t.includes("三位數乘以一位數") || t.includes("3位數乘1位數") || t.includes("3位數乘以1位數") || (t.includes("三位數") && (t.includes("乘一位數") || t.includes("乘以一位數"))));
+      const isThreeByTwo = !isTime && !isTriangleOrTrapezoid && !isPerimeterOrArea && 
+                           (t.includes("三位數乘二位數") || t.includes("三位數乘以二位數") || t.includes("3位數乘2位數") || t.includes("3位數乘以2位數") || (t.includes("三位數") && (t.includes("乘二位數") || t.includes("乘以二位數"))));
+      const isTwoByTwo = !isTime && !isTriangleOrTrapezoid && !isPerimeterOrArea && !isThreeByOne && !isThreeByTwo && 
+                         (t.includes("二位數乘二位數") || t.includes("二位數乘以二位數") || t.includes("兩位數乘兩位數") || t.includes("2位數乘2位數"));
+      const isTwoByOne = !isTime && !isTriangleOrTrapezoid && !isPerimeterOrArea && !isThreeByOne && !isThreeByTwo && !isTwoByTwo && 
+                         (t.includes("二位數乘一位數") || t.includes("二位數乘以一位數") || t.includes("兩位數乘一位數") || t.includes("2位數乘1位數"));
+      const isNineNine = !isTime && !isTriangleOrTrapezoid && !isPerimeterOrArea && !isThreeByOne && !isThreeByTwo && !isTwoByTwo && !isTwoByOne && 
+                         (t.includes("九九乘法") || t.includes("乘法表") || t.includes("分糖果乘法"));
+
+      // 除法精確層級判定
+      const isDivThreeByTwo = !isTime && (t.includes("三位數除以二位數") || t.includes("三位數除二位數") || t.includes("裝箱"));
+      const isDivThreeByOne = !isTime && !isDivThreeByTwo && (t.includes("三位數除以一位數") || t.includes("三位數除一位數") || t.includes("包裝"));
+      const isDivTwoByOne = !isTime && !isDivThreeByTwo && !isDivThreeByOne && (t.includes("二位數除以一位數") || t.includes("二位數除一位數") || t.includes("平分"));
+      const isGeneralDivision = !isTime && !isDivThreeByTwo && !isDivThreeByOne && !isDivTwoByOne && (t.includes("多位數除法") || t.includes("除法"));
+
+      // 高階運算、公因數公倍數、分數、小數、速率、比率
+      const isGcdLcm = t.includes("最大公因數") || t.includes("最小公倍數") || t.includes("公因數") || t.includes("公倍數");
+      const isSpeed = t.includes("速度") || t.includes("速率") || t.includes("跑步速度");
+      const isRatio = t.includes("百分率") || t.includes("比與") || t.includes("投票比");
+      const isMixedOp = !isTime && (t.includes("兩步驟") || t.includes("四則") || t.includes("混合"));
+      const isFractionTimesInt = t.includes("分數乘以整數");
+      const isDiffDenominator = t.includes("異分母") || t.includes("烘焙蛋糕");
+      const isFraction = !isFractionTimesInt && !isDiffDenominator && t.includes("分數");
+      const isDecimalMulDiv = t.includes("小數乘法") || t.includes("小數除法");
+      const isDecimal = !isDecimalMulDiv && t.includes("小數");
+      
+      const isFourDigit = !isTime && !isPerimeterOrArea && !isTriangleOrTrapezoid && (t.includes("四位數") || t.includes("圖書館"));
+      const isBasic10 = t.includes("10以內") || t.includes("合成分解") || t.includes("吃點心");
+      const isBasic20Add = t.includes("20以內進位");
+      const isBasic20Sub = t.includes("20以內退位");
+
+      for (let i = 1; i <= count; i++) {
+        let qText = "", ans = "", expectedFormula = "", hint = "", visual = "", options = [], signature = "";
+        let attempts = 0;
+
+        // 1. 二位數乘以二位數
+        if (isTwoByTwo) {
+          let a, b, numAns;
+          do {
+            attempts++;
+            a = Math.floor(Math.random() * 75) + 15;
+            b = Math.floor(Math.random() * 60) + 14;
+            if (a % 10 === 0) a += Math.floor(Math.random() * 7) + 2;
+            if (b % 10 === 0) b += Math.floor(Math.random() * 7) + 2;
+            signature = `2x2_${a}*${b}`;
+          } while (usedSignatures.has(signature) && attempts < 100);
+          usedSignatures.add(signature);
+
+          numAns = a * b;
+          ans = String(numAns);
+          expectedFormula = `${a}*${b}`;
+          const ones = b % 10, tens = Math.floor(b / 10);
+          const part1 = a * ones, part2 = a * (tens * 10);
+
+          if (isPure) {
+            qText = `${a} × ${b} ＝ (    )`;
+            hint = `二位數直式步驟：
+① 先算 ${a} × 個位 ${ones} ＝ ${part1}
+② 再算 ${a} × 十位 ${tens}0 ＝ ${part2}
+③ 兩者相加：${part1} ＋ ${part2} ＝ ${numAns}`;
+            visual = `直式分解：(${a} × ${ones}) ＋ (${a} × ${tens * 10}) ＝ ${numAns}`;
+          } else {
+            const scenarios = [
+              { text: `學校禮堂舉辦全校才藝發表會，禮堂每排擺放了 ${a} 張椅子，總共整齊排了 ${b} 排，請問禮堂一共可以容納多少張椅子？`, icon: "🪑" },
+              { text: `社區在地農產產銷班採收優質酸菜，每箱裝入 ${a} 包真空包裝酸菜，今天上午共裝箱封裝了 ${b} 箱，請問一共包裝了幾包酸菜？`, icon: "🥬" },
+              { text: `體育課健康體能測驗，小明練習跳繩平均每分鐘可以跳 ${a} 下，他堅持連續跳了 ${b} 分鐘，請問小明一共跳了多少下？`, icon: "🏃" },
+              { text: `學校每週推行健康飲品，營養午餐配送一箱裝有 ${a} 瓶新鮮鮮奶，今天全校各班一共配送了 ${b} 箱，請問全部共有多少瓶鮮奶？`, icon: "🥛" },
+              { text: `美勞教室補充粉彩畫紙，每包大包裝粉彩紙內有 ${a} 張，美勞老師為各年級一共訂購了 ${b} 包，請問一共有多少張粉彩紙？`, icon: "🎨" },
+              { text: `班級推廣寒暑假共讀計畫，小華每天認真閱讀課外橋樑書 ${a} 頁，連續堅持看了 ${b} 天，請問小華這段時間一共看了多少頁書？`, icon: "📖" },
+              { text: `學校食農教育開心農場，一畦田整齊種植了 ${a} 株高麗菜幼苗，三四年級同學一共開闢整理了 ${b} 畦田，請問總共種植了幾株幼苗？`, icon: "🌱" },
+              { text: `學校響應環境保護愛地球活動，全校每個班級收集廢乾電池，平均一個班級收集了 ${a} 顆，全校共有 ${b} 個班��參與，請問全校一共回收了多少顆廢乾電池？`, icon: "🔋" }
+            ];
+            const sc = scenarios[(i - 1) % scenarios.length];
+            qText = sc.text;
+            hint = `每份有 ${a}，共有 ${b} 份。
+直式乘法算式：${a} × ${b} ＝ ${numAns}`;
+            visual = `${sc.icon} ${a} × ${b} ＝ ${numAns}`;
+          }
+          options = [ans, String(numAns + a), String(Math.max(100, numAns - b * 2))];
+        }
+        // 2. 三位數乘以一位數
+        else if (isThreeByOne) {
+          let a, b, numAns;
+          do {
+            attempts++;
+            a = Math.floor(Math.random() * 830) + 115;
+            b = Math.floor(Math.random() * 8) + 2;
+            signature = `3x1_${a}*${b}`;
+          } while (usedSignatures.has(signature) && attempts < 100);
+          usedSignatures.add(signature);
+
+          numAns = a * b;
+          ans = String(numAns);
+          expectedFormula = `${a}*${b}`;
+          if (isPure) {
+            qText = `${a} × ${b} ＝ (    )`;
+            hint = `三位數乘一位數直式步驟：
+個位、十位、百位依序與 ${b} 相乘，並注意逢十進位！最終等於 ${numAns}。`;
+            visual = `✖️ (${Math.floor(a/100)*100}×${b}) + (${Math.floor((a%100)/10)*10}×${b}) + (${a%10}×${b}) ＝ ${numAns}`;
+          } else {
+            qText = `學校為充實閱讀圖書，每套經典兒童繪本特價 ${a} 元，學校一共採購了 ${b} 套，請問總共需要支付多少元？`;
+            hint = `單價 × 數量 ＝ 總價。算式：${a} × ${b} ＝ ${numAns}`;
+            visual = `📚 每套 ${a} 元 × ${b} 套 ＝ ${numAns} 元`;
+          }
+          options = [ans, String(numAns + a), String(Math.max(100, numAns - a))];
+        }
+        // 3. 三位數乘以二位數
+        else if (isThreeByTwo) {
+          let a, b, numAns;
+          do {
+            attempts++;
+            a = Math.floor(Math.random() * 750) + 125;
+            b = Math.floor(Math.random() * 60) + 15;
+            signature = `3x2_${a}*${b}`;
+          } while (usedSignatures.has(signature) && attempts < 100);
+          usedSignatures.add(signature);
+
+          numAns = a * b;
+          ans = String(numAns);
+          expectedFormula = `${a}*${b}`;
+          const ones = b % 10, tens = Math.floor(b / 10);
+          if (isPure) {
+            qText = `${a} × ${b} ＝ (    )`;
+            hint = `三位數乘二位數：① 先算 ${a} × ${ones} ＝ ${a * ones}；② 再算 ${a} × ${tens}0 ＝ ${a * tens * 10}；③ 相加得 ${numAns}。`;
+            visual = `✖️ 直式兩層積相加：${a * ones} ＋ ${a * tens * 10} ＝ ${numAns}`;
+          } else {
+            qText = `全校訂購校慶紀念運動服，全套運動服每套 ${a} 元，全校一共訂購了 ${b} 套，請問總共需要支付多少元？`;
+            hint = `單價 × 數量 ＝ 總金額。算式：${a} × ${b} ＝ ${numAns}`;
+            visual = `👕 每套 ${a} 元 × ${b} 套 ＝ ${numAns} 元`;
+          }
+          options = [ans, String(numAns + a), String(Math.max(1000, numAns - a))];
+        }
+        // 4. 二位數乘一位數
+        else if (isTwoByOne) {
+          let a, b, numAns;
+          do {
+            attempts++;
+            a = Math.floor(Math.random() * 80) + 15;
+            b = Math.floor(Math.random() * 8) + 2;
+            signature = `2x1_${a}*${b}`;
+          } while (usedSignatures.has(signature) && attempts < 100);
+          usedSignatures.add(signature);
+
+          numAns = a * b;
+          ans = String(numAns);
+          expectedFormula = `${a}*${b}`;
+          if (isPure) {
+            qText = `${a} × ${b} ＝ (    )`;
+            hint = `二位數乘一位數直式：個位先乘 ${b}，十位再乘 ${b}，滿十向前進位！`;
+            visual = `✖️ ${a} × ${b} ＝ ${numAns}`;
+          } else {
+            qText = `一盒彩色水彩筆有 ${a} 枝，美術老師為班級分組買了 ${b} 盒，請問全部一共有多少枝水彩筆？`;
+            hint = `每盒 ${a} 枝，買了 ${b} 盒。算式：${a} × ${b} ＝ ${numAns}`;
+            visual = `🖍️ ${a} × ${b} ＝ ${numAns} 枝`;
+          }
+          options = [ans, String(numAns + b), String(Math.max(10, numAns - a))];
+        }
+        // 5. 九九乘法表
+        else if (isNineNine) {
+          let a, b, numAns;
+          do {
+            attempts++;
+            a = Math.floor(Math.random() * 8) + 2;
+            b = Math.floor(Math.random() * 8) + 2;
+            signature = `99_${a}*${b}`;
+          } while (usedSignatures.has(signature) && attempts < 100);
+          usedSignatures.add(signature);
+
+          numAns = a * b;
+          ans = String(numAns);
+          expectedFormula = `${a}*${b}`;
+          if (isPure) {
+            qText = `${a} × ${b} ＝ (    )`;
+            hint = `背誦九九乘法表口訣：${a} 乘以 ${b} 得多少？`;
+            visual = `✖️ ${a} 的 ${b} 倍是 ${numAns}`;
+          } else {
+            qText = `老師將糖果分給小朋友，一包糖果裝有 ${a} 顆，桌上一共擺了 ${b} 包，請問共有幾顆糖果？`;
+            hint = `一包 ${a} 顆，共有 ${b} 包。算式：${a} × ${b} ＝ ${numAns}`;
+            visual = `🍬 ${a} × ${b} ＝ ${numAns} 顆`;
+          }
+          options = [ans, String(numAns + a), String(Math.max(2, numAns - b))];
+        }
+        // 6. 多位數除法運算 (二除一、三除一、三除二)
+        else if (isDivThreeByTwo || isDivThreeByOne || isDivTwoByOne || isGeneralDivision) {
+          let a, b, q, r;
+          do {
+            attempts++;
+            if (isDivThreeByTwo) {
+              b = Math.floor(Math.random() * 24) + 12; // 12 ~ 35
+              q = Math.floor(Math.random() * 25) + 10;
+              r = (attempts % 2 === 0) ? Math.floor(Math.random() * (b - 1)) + 1 : 0;
+            } else if (isDivThreeByOne) {
+              b = Math.floor(Math.random() * 8) + 2;   // 2 ~ 9
+              q = Math.floor(Math.random() * 80) + 15;
+              r = (attempts % 2 === 0) ? Math.floor(Math.random() * (b - 1)) + 1 : 0;
+            } else if (isDivTwoByOne) {
+              b = Math.floor(Math.random() * 8) + 2;   // 2 ~ 9
+              q = Math.floor(Math.random() * 8) + 3;
+              r = (attempts % 2 === 0) ? Math.floor(Math.random() * (b - 1)) + 1 : 0;
+            } else {
+              b = (i % 2 === 0) ? (Math.floor(Math.random() * 8) + 2) : (Math.floor(Math.random() * 20) + 11);
+              q = Math.floor(Math.random() * 30) + 10;
+              r = (attempts % 2 === 0) ? Math.floor(Math.random() * (b - 1)) + 1 : 0;
+            }
+            a = (b * q) + r;
+            signature = `div_${a}_div_${b}`;
+          } while (usedSignatures.has(signature) && attempts < 100);
+          usedSignatures.add(signature);
+
+          ans = r > 0 ? `${q} ⋯ ${r}` : String(q);
+          expectedFormula = `${a}/${b}`;
+
+          if (isPure) {
+            qText = `${a} ÷ ${b} ＝ (    )`;
+            hint = `除法步驟：一估、二乘、三減、四比！餘數一定要比除數 ${b} 小。結果：${ans}`;
+            visual = `➗ 驗算：${b} × ${q} ${r > 0 ? '＋ ' + r : ''} ＝ ${a}`;
+          } else {
+            qText = `學校愛心志工準備了 ${a} 顆包子，每 ${b} 顆裝成一盒，請問可以裝滿幾盒？${r > 0 ? '還剩下幾顆包子？' : ''}`;
+            hint = `平分用除法：${a} ÷ ${b} ＝ ${ans}。商為裝滿盒數，餘數為剩下顆數。`;
+            visual = `🥟 ${a} ÷ ${b} ＝ ${ans}`;
+          }
+          const fake1 = r > 0 ? `${q + 1} ⋯ ${r}` : String(q + 2);
+          const fake2 = r > 0 ? `${Math.max(1, q - 1)} ⋯ ${r === 1 ? 2 : r - 1}` : String(Math.max(1, q - 2));
+          options = [ans, fake1, fake2];
+        }
+        // 7. 長方形與正方形周長面積
+        else if (isPerimeterOrArea) {
+          const subType = (i % 4);
+          if (subType === 0) {
+            let length = Math.floor(Math.random() * 15) + 6, width = Math.floor(Math.random() * 8) + 3;
+            if (width >= length) length = width + 3;
+            ans = String(length * width);
+            expectedFormula = `${length}*${width}`;
+            qText = isPure ? `長方形長 ${length} 公分，寬 ${width} 公分，面積 ＝ (    ) 平方公分` : `校園開闢了一塊長方形草皮，長 ${length} 公尺，寬 ${width} 公尺，請問這塊草皮的面積是多少平方公尺？`;
+            hint = `長方形面積 ＝ 長 × 寬 ＝ ${length} × ${width} ＝ ${ans}`;
+            visual = `🟦 長 ${length} × 寬 ${width} ➜ 面積 ${ans}`;
+            options = [ans, String(parseInt(ans) + length), String(Math.max(10, parseInt(ans) - width))];
+          } else if (subType === 1) {
+            let length = Math.floor(Math.random() * 16) + 8, width = Math.floor(Math.random() * 8) + 4;
+            if (width >= length) length = width + 3;
+            ans = String((length + width) * 2);
+            expectedFormula = `(${length}+${width})*2`;
+            qText = isPure ? `長方形長 ${length} 公分，寬 ${width} 公分，周長 ＝ (    ) 公��` : `在長方形公佈欄四周貼上一圈防撞保護條，公佈欄長 ${length} 公寸，寬 ${width} 公寸，請問保護條共需多長？`;
+            hint = `長方形周長 ＝ (長 ＋ 寬) × 2 ＝ (${length} ＋ ${width}) × 2 ＝ ${ans}`;
+            visual = `📏 周長 ＝ (${length} ＋ ${width}) × 2 ＝ ${ans}`;
+            options = [ans, String(parseInt(ans) + 4), String(Math.max(10, parseInt(ans) - 4))];
+          } else if (subType === 2) {
+            let side = Math.floor(Math.random() * 12) + 4;
+            ans = String(side * side);
+            expectedFormula = `${side}*${side}`;
+            qText = isPure ? `正方形邊長 ${side} 公分，面積 ＝ (    ) 平方公分` : `一張邊長 ${side} 公分的正方形色紙，請問這張色紙的面積是多少平方公分？`;
+            hint = `正方形面積 ＝ 邊長 × 邊長 ＝ ${side} × ${side} ＝ ${ans}`;
+            visual = `🟩 邊長 ${side} cm × ${side} cm ＝ ${ans}`;
+            options = [ans, String(parseInt(ans) + side), String(Math.max(8, parseInt(ans) - side))];
+          } else {
+            let side = Math.floor(Math.random() * 18) + 5;
+            ans = String(side * 4);
+            expectedFormula = `${side}*4`;
+            qText = isPure ? `正方形邊長 ${side} 公分，周長 ＝ (    ) 公分` : `一塊正方形安全地磚邊長 ${side} 公分，若沿著四周圍一圈警示線，共需要幾公分？`;
+            hint = `正方形周長 ＝ 邊長 × 4 ＝ ${side} × 4 ＝ ${ans}`;
+            visual = `📐 四邊總和 ＝ ${side} × 4 ＝ ${ans}`;
+            options = [ans, String(parseInt(ans) + 4), String(Math.max(8, parseInt(ans) - 4))];
+          }
+        }
+        // 8. 三角形、梯形與平行四邊形面積
+        else if (isTriangleOrTrapezoid) {
+          const subType = (i % 3);
+          if (subType === 0) {
+            let base = (Math.floor(Math.random() * 8) + 3) * 2, height = Math.floor(Math.random() * 12) + 5;
+            ans = String((base * height) / 2);
+            expectedFormula = `(${base}*${height})/2`;
+            qText = isPure ? `三角形底長 ${base} 公分，高 ${height} 公分，面積 ＝ (    ) 平方公分` : `開心農場有一塊三角形蔬菜苗圃，底長 ${base} 公尺，高 ${height} 公尺，請問面積是多少平方公尺？`;
+            hint = `��角形面積 ＝ 底 × 高 ÷ 2 ＝ ${base} × ${height} ÷ 2 ＝ ${ans}`;
+            visual = `📐 三角形面積 ＝ ${ans}`;
+            options = [ans, String(parseInt(ans) + base), String(Math.max(6, parseInt(ans) - height))];
+          } else if (subType === 1) {
+            let topBase = Math.floor(Math.random() * 6) + 4, bottomBase = topBase + Math.floor(Math.random() * 6) + 2;
+            let height = (Math.floor(Math.random() * 5) + 2) * 2;
+            ans = String(((topBase + bottomBase) * height) / 2);
+            expectedFormula = `(${topBase}+${bottomBase})*${height}/2`;
+            qText = isPure ? `梯形上底 ${topBase} 公分，下底 ${bottomBase} 公分，高 ${height} 公分，面積 ＝ (    ) 平方公分` : `花園裡有一塊梯形景觀花圃，上底 ${topBase} 公尺，下底 ${bottomBase} 公尺，高 ${height} 公尺，請問面積是多少平方公尺？`;
+            hint = `梯形面積 ＝ (上底 ＋ 下底) × 高 ÷ 2 ＝ (${topBase} ＋ ${bottomBase}) × ${height} ÷ 2 ＝ ${ans}`;
+            visual = `⏢ 梯形面積 ＝ ${ans}`;
+            options = [ans, String(parseInt(ans) + height), String(Math.max(8, parseInt(ans) - topBase))];
+          } else {
+            let base = Math.floor(Math.random() * 12) + 6, height = Math.floor(Math.random() * 9) + 4;
+            ans = String(base * height);
+            expectedFormula = `${base}*${height}`;
+            qText = isPure ? `平行四邊形底長 ${base} 公分，高 ${height} 公分，面積 ＝ (    ) 平方公分` : `自然教室門口的平行四邊形展示花台，底長 ${base} 公寸，高 ${height} 公寸，請問面積是多少平方公寸？`;
+            hint = `平行四邊形面積 ＝ 底 × 高 ＝ ${base} × ${height} ＝ ${ans}`;
+            visual = `▰ 平行四邊形面積 ＝ ${ans}`;
+            options = [ans, String(parseInt(ans) + base), String(Math.max(10, parseInt(ans) - height))];
+          }
+        }
+        // 9. 搭火車時間與時刻長度
+        else if (isTime) {
+          const subType = (i % 2);
+          if (subType === 0) {
+            let startH = Math.floor(Math.random() * 3) + 8, startM = [10, 15, 20, 30][Math.floor(Math.random() * 4)];
+            let durM = [25, 35, 45, 50][Math.floor(Math.random() * 4)];
+            let totalM = startM + durM, endH = startH + Math.floor(totalM / 60), endM = totalM % 60;
+            ans = `${durM}分鐘`;
+            expectedFormula = `${endH}:${endM < 10 ? '0' + endM : endM}-${startH}:${startM < 10 ? '0' + startM : startM}`;
+            const startStr = `上午 ${startH} 時 ${startM} 分`, endStr = `上午 ${endH} 時 ${endM < 10 ? '0' + endM : endM} 分`;
+            qText = isPure ? `${endStr} － ${startStr} ＝ (    ) 分鐘` : `小華搭乘火車，火車在 ${startStr} 出發，並在 ${endStr} 準時抵達台中站，請問這趟火車共行駛了多久時間？`;
+            hint = `經過時間 ＝ 到達時刻 － 出發時刻。算式：${endH}時${endM}分 － ${startH}時${startM}分 ＝ ${durM}分鐘`;
+            visual = `🚂 出發 ${startH}:${startM} ──(行駛 ${durM} 分鐘)──> 抵達 ${endH}:${endM < 10 ? '0' + endM : endM}`;
+            options = [ans, `${durM + 10}分鐘`, `${Math.max(10, durM - 10)}分鐘`];
+          } else {
+            let startH = Math.floor(Math.random() * 3) + 1, startM = [15, 20, 30][Math.floor(Math.random() * 3)];
+            let durM = [25, 30, 45][Math.floor(Math.random() * 3)];
+            let totalM = startM + durM, endH = startH + Math.floor(totalM / 60), endM = totalM % 60;
+            const endMStr = endM < 10 ? '0' + endM : endM;
+            ans = `下午${endH}時${endMStr}分`;
+            expectedFormula = `${startH}:${startM}+${durM}`;
+            const startStr = `下午 ${startH} 時 ${startM} 分`;
+            qText = isPure ? `${startStr} ＋ ${durM} 分鐘 ＝ 下午 (    ) 時 (    ) 分` : `校外教學遊覽車於 ${startStr} 出發，行駛 ${durM} 分鐘後到達目的地，請問會在下午幾時幾分到達？`;
+            hint = `到達時刻 ＝ 出發時刻 ＋ 經過時間。算式：${startH}時${startM}分 ＋ ${durM}分 ＝ ${endH}時${endMStr}分`;
+            visual = `🚌 出發 ${startStr} ＋ 車程 ${durM} 分 ＝ ${ans} 到達`;
+            options = [ans, `下午${endH}時${(endM + 15) % 60}分`, `下午${endH + 1}時${(endM + 30) % 60}分`];
+          }
+        }
+        // 10. 兩步驟整數四則混合運算 (含先乘除後加減與括號)
+        else if (isMixedOp) {
+          const type = (i % 3);
+          if (type === 0) {
+            let a = Math.floor(Math.random() * 30) + 10, b = Math.floor(Math.random() * 8) + 2, c = Math.floor(Math.random() * 20) + 5;
+            let numAns = a * b - c;
+            ans = String(numAns);
+            expectedFormula = `${a}*${b}-${c}`;
+            qText = isPure ? `${a} × ${b} － ${c} ＝ (    )` : `文具店每支鋼珠筆 ${a} 元，小明買了 ${b} 支，使用折價券折抵 ${c} 元，請問小明最後實付多少元？`;
+            hint = `四則運算規則：先乘除，後加減！先算 ${a} × ${b} ＝ ${a * b}，再減 ${c} ＝ ${numAns}`;
+            visual = `🧮 ${a} × ${b} － ${c} ＝ ${a * b} － ${c} ＝ ${numAns}`;
+            options = [ans, String(numAns + 10), String(numAns - 10)];
+          } else if (type === 1) {
+            let a = Math.floor(Math.random() * 50) + 30, b = Math.floor(Math.random() * 20) + 10, c = Math.floor(Math.random() * 6) + 2;
+            let numAns = (a + b) * c;
+            ans = String(numAns);
+            expectedFormula = `(${a}+${b})*${c}`;
+            qText = isPure ? `( ${a} ＋ ${b} ) × ${c} ＝ (    )` : `哥哥有 ${a} 元，弟弟有 ${b} 元，媽媽給他們的零用錢是兩個人總和的 ${c} 倍，請問媽媽給了多少元？`;
+            hint = `有括號的要先���括號裡！先算 ${a} ＋ ${b} ＝ ${a + b}，再乘以 ${c} ＝ ${numAns}`;
+            visual = `🧮 (${a} ＋ ${b}) × ${c} ＝ ${a + b} × ${c} ＝ ${numAns}`;
+            options = [ans, String(numAns + 20), String(numAns - 20)];
+          } else {
+            let c = Math.floor(Math.random() * 6) + 3, q = Math.floor(Math.random() * 15) + 5;
+            let divident = c * q, a = Math.floor(Math.random() * 40) + 20;
+            let numAns = a + q;
+            ans = String(numAns);
+            expectedFormula = `${a}+${divident}/${c}`;
+            qText = isPure ? `${a} ＋ ${divident} ÷ ${c} ＝ (    )` : `小芳原有 ${a} 顆彈珠，老師把 ${divident} 顆彈珠平分給 ${c} 位同學，小芳拿到自己的那一份後，現在共有幾顆？`;
+            hint = `先乘除後加減！先算 ${divident} ÷ ${c} ＝ ${q}，再算 ${a} ＋ ${q} ＝ ${numAns}`;
+            visual = `🧮 ${a} ＋ (${divident} ÷ ${c}) ＝ ${a} ＋ ${q} ＝ ${numAns}`;
+            options = [ans, String(numAns + 5), String(Math.max(1, numAns - 5))];
+          }
+        }
+        // 11. 分數運算 (同分母、異分母、分數乘以整數)
+        else if (isFractionTimesInt || isDiffDenominator || isFraction) {
+          if (isFractionTimesInt) {
+            let den = [3, 4, 5, 6, 8][Math.floor(Math.random() * 5)];
+            let num = Math.floor(Math.random() * (den - 1)) + 1;
+            let mult = Math.floor(Math.random() * 4) + 2;
+            let resNum = num * mult;
+            ans = `${resNum}/${den}`;
+            expectedFormula = `(${num}/${den})*${mult}`;
+            qText = isPure ? `${num}/${den} × ${mult} ＝ (    )` : `一杯果汁容量是 ${num}/${den} 公升，調配 ${mult} 杯一共需要多少公升果汁？`;
+            hint = `分數乘以整數：分子與整數相乘，分母不變！
+算式：(${num} × ${mult}) / ${den} ＝ ${resNum}/${den}`;
+            visual = `🍹 ${num}/${den} × ${mult} ＝ ${resNum}/${den}`;
+            options = [ans, `${resNum + 1}/${den}`, `${Math.max(1, resNum - 1)}/${den}`];
+          } else if (isDiffDenominator) {
+            let den1 = 4, den2 = 2; // 異分母通分
+            ans = `3/4`;
+            expectedFormula = `1/4+1/2`;
+            qText = isPure ? `1/4 ＋ 1/2 ＝ (    )` : `烘焙做蛋糕用了 1/4 包麵粉，做餅乾用了 1/2 包麵粉，請問一共���了幾包麵粉？`;
+            hint = `異分母分數相加要先通分！1/2 ＝ 2/4，所以 1/4 ＋ 2/4 ＝ 3/4`;
+            visual = `🍰 1/4 ＋ 2/4 ＝ 3/4`;
+            options = ["3/4", "2/6", "1/4"];
+          } else {
+            let den = [5, 6, 7, 8, 9, 10][Math.floor(Math.random() * 6)];
+            let num1 = Math.floor(Math.random() * (den - 2)) + 1;
+            let num2 = Math.floor(Math.random() * (den - num1 - 1)) + 1;
+            let sum = num1 + num2;
+            ans = `${sum}/${den}`;
+            expectedFormula = `${num1}/${den}+${num2}/${den}`;
+            qText = isPure ? `${num1}/${den} ＋ ${num2}/${den} ＝ (    )` : `吃披薩時，小明吃了 ${num1}/${den} 個，小華吃了 ${num2}/${den} 個，兩人一共吃了幾個披薩？`;
+            hint = `同分母分數相加，分母保持不變，分子相加！${num1} ＋ ${num2} ＝ ${sum}`;
+            visual = `🍕 ${num1}/${den} ＋ ${num2}/${den} ＝ ${sum}/${den}`;
+            options = [ans, `${sum + 1}/${den}`, `${Math.max(1, sum - 1)}/${den}`];
+          }
+        }
+        // 12. 小數運算 (加減、乘除)
+        else if (isDecimal || isDecimalMulDiv) {
+          if (isDecimalMulDiv) {
+            let a = (Math.floor(Math.random() * 30) + 12) / 10;
+            let b = Math.floor(Math.random() * 5) + 2;
+            let numAns = Math.round(a * b * 10) / 10;
+            ans = String(numAns);
+            expectedFormula = `${a}*${b}`;
+            qText = isPure ? `${a} × ${b} ＝ (    )` : `一條緞帶長度是 ${a} 公尺，包裝 ${b} 盒禮物一共需要幾公尺的緞帶？`;
+            hint = `小數乘法：先當作整數相乘，再依照小數位數點上小數點！`;
+            visual = `📏 ${a} × ${b} ＝ ${numAns}`;
+            options = [ans, String(Math.round((numAns + 0.5) * 10) / 10), String(Math.max(0.1, Math.round((numAns - 0.5) * 10) / 10))];
+          } else {
+            let a = (Math.floor(Math.random() * 40) + 15) / 10;
+            let b = (Math.floor(Math.random() * 25) + 11) / 10;
+            let numAns = Math.round((a + b) * 10) / 10;
+            ans = String(numAns);
+            expectedFormula = `${a}+${b}`;
+            qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `小強的身高是 ${a} 公尺，站在高 ${b} 公尺的木箱上，現在離地總高度是多少公尺？`;
+            hint = `小數加法：小數點一定要對齊！`;
+            visual = `🧍 ${a} ＋ ${b} ＝ ${numAns}`;
+            options = [ans, String(Math.round((numAns + 1) * 10) / 10), String(Math.max(0.2, Math.round((numAns - 1) * 10) / 10))];
+          }
+        }
+        // 13. 最大公因數與最小公倍數 (動態防重複演算法)
+        else if (isGcdLcm) {
+          const calcGcd = (x, y) => { while (y) { let temp = y; y = x % y; x = temp; } return x; };
+          const calcLcm = (x, y) => (x * y) / calcGcd(x, y);
+
+          let isGcdQuestion = true;
+          if (t.includes("公倍數") && !t.includes("公因數")) {
+            isGcdQuestion = false;
+          } else if (t.includes("公因數") && !t.includes("公倍數")) {
+            isGcdQuestion = true;
+          } else {
+            isGcdQuestion = (i % 2 === 1);
+          }
+
+          let numA, numB, correctVal;
+
+          if (isGcdQuestion) {
+            do {
+              attempts++;
+              const gcdFactor = [2, 3, 4, 5, 6, 7, 8][Math.floor(Math.random() * 7)];
+              const coprimePairs = [
+                [2, 3], [3, 4], [2, 5], [3, 5], [4, 5], 
+                [3, 7], [4, 7], [5, 6], [5, 7], [5, 8], [7, 9]
+              ];
+              const pair = coprimePairs[Math.floor(Math.random() * coprimePairs.length)];
+              numA = gcdFactor * pair[0];
+              numB = gcdFactor * pair[1];
+              correctVal = calcGcd(numA, numB);
+              signature = `gcd_${Math.min(numA, numB)}_${Math.max(numA, numB)}`;
+            } while (usedSignatures.has(signature) && attempts < 100);
+            usedSignatures.add(signature);
+
+            ans = String(correctVal);
+            expectedFormula = `gcd(${numA},${numB})`;
+
+            if (isPure) {
+              qText = `求 ${numA} 與 ${numB} 的最大公因數 ＝ (    )`;
+              hint = `短除法步驟：
+找出能同時整除 ${numA} 和 ${numB} 的公因數，連續相除直到兩數互質為止。
+因此 ${numA} 與 ${numB} 的最大公因數是 ${correctVal}。`;
+              visual = `🔢 ${numA} 的因數中與 ${numB} 共同最大的數是 ${correctVal}`;
+            } else {
+              const gcdScenarios = [
+                `老師有 ${numA} 顆紅蘋果和 ${numB} 顆黃西洋梨，想要平分裝在禮盒裡，每盒水果的蘋果數量一樣多，西洋梨數量也一樣多，請問最多可以裝成幾盒？`,
+                `學校美勞教室有一條長 ${numA} 公分的紅緞帶和一條長 ${numB} 公分的藍緞帶，老師想將它們剪成每段一樣長的小緞帶且都沒有剩下，請問每段小緞帶最長可以是幾公分？`,
+                `小學園遊會佈置，六年級班上有 ${numA} 朵黃玫瑰與 ${numB} 朵紅鬱金香，要平分包紮成花束，每束裡面的花朵種類與數量都要相同，請問最多可以包成幾束花？`,
+                `木工教室有兩塊木板，長度分別是 ${numA} 公分與 ${numB} 公分，師傅要把它們鋸成等長的小木條且不剩餘，請問小木條最長可以是幾公分？`
+              ];
+              qText = gcdScenarios[(i - 1) % gcdScenarios.length];
+              hint = `平分求最多盒數/最長長度用「最大公因數」！
+求 ${numA} 與 ${numB} 的最大公因數 ＝ ${correctVal}`;
+              visual = `🎁 最大公因數 gcd(${numA}, ${numB}) ＝ ${correctVal}`;
+            }
+            options = [ans, String(correctVal + 1), String(Math.max(1, correctVal - 1))];
+          } else {
+            do {
+              attempts++;
+              const candidates = [
+                [3, 4], [4, 6], [6, 8], [6, 9], [8, 10], 
+                [8, 12], [9, 12], [10, 15], [12, 15], [12, 16],
+                [14, 21], [15, 20], [6, 10], [9, 15], [4, 10]
+              ];
+              const pair = candidates[Math.floor(Math.random() * candidates.length)];
+              numA = pair[0];
+              numB = pair[1];
+              correctVal = calcLcm(numA, numB);
+              signature = `lcm_${Math.min(numA, numB)}_${Math.max(numA, numB)}`;
+            } while (usedSignatures.has(signature) && attempts < 100);
+            usedSignatures.add(signature);
+
+            ans = String(correctVal);
+            expectedFormula = `lcm(${numA},${numB})`;
+
+            if (isPure) {
+              qText = `求 ${numA} 與 ${numB} 的最小公倍數 ＝ (    )`;
+              hint = `找兩數公倍數中最小的數：
+${numA} 的倍數：${numA}, ${numA*2}, ${numA*3}...
+${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
+共同出現的第一個最小倍數是 ${correctVal}。`;
+              visual = `🔢 lcm(${numA}, ${numB}) ＝ ${correctVal}`;
+            } else {
+              const lcmScenarios = [
+                `市區公車藍線每 ${numA} 分鐘發一班車，綠線每 ${numB} 分鐘發一班車，上午 8 點兩公車同時從總站發車後，最快幾分鐘後兩車會再次同時發車？`,
+                `小明沿著操場慢跑一圈需要 ${numA} 分鐘，小華慢跑一圈需要 ${numB} 分鐘，兩人同時從起點出發，最快幾分鐘後兩人會在起點再次相遇？`,
+                `活動中心的彩燈，紅燈每 ${numA} 秒閃爍一次，綠燈每 ${numB} 秒閃爍一次，同時閃爍後，最少要經過幾秒兩種燈會再次同時閃爍？`,
+                `小明每隔 ${numA} 天去一次圖書館借書，小強每隔 ${numB} 天去一次圖書館，今天星期天兩人同時在圖書館相遇，最快幾天後兩人會再次在圖書館相遇？`
+              ];
+              qText = lcmScenarios[(i - 1) % lcmScenarios.length];
+              hint = `循環週期再次相遇求「最小公倍數」！
+求 ${numA} 與 ${numB} 的最小公倍數 ＝ ${correctVal}`;
+              visual = `🚌 最小公��數 lcm(${numA}, ${numB}) ＝ ${correctVal}`;
+            }
+            options = [ans, String(correctVal + numA), String(Math.max(2, correctVal - numB))];
+          }
+        }
+        // 14. 速率、距離與時間
+        else if (isSpeed) {
+          let speed = Math.floor(Math.random() * 3) + 4; // 4 ~ 6 m/s
+          let time = [10, 15, 20][Math.floor(Math.random() * 3)];
+          let dist = speed * time;
+          ans = `${dist}公尺`;
+          expectedFormula = `${speed}*${time}`;
+          qText = isPure ? `秒速 ${speed} 公尺，跑 ${time} 秒，行駛距離 ＝ (    ) 公尺` : `操場體育課測驗跑步，小明跑步的秒速是 ${speed} 公尺，他跑了 ${time} 秒，請問一共跑了多少公尺？`;
+          hint = `距離 ＝ 速度 × 時間。算式：${speed} × ${time} ＝ ${dist} 公尺`;
+          visual = `🏃 速度 ${speed} m/s × 時間 ${time} s ＝ ${dist} m`;
+          options = [ans, `${dist + 10}公尺`, `${Math.max(10, dist - 10)}公尺`];
+        }
+        // 15. 比與百分率
+        else if (isRatio) {
+          ans = "75%";
+          expectedFormula = "15/20";
+          qText = isPure ? `15 ÷ 20 化為百分率 ＝ (    )` : `班級幹部投票共有 20 票，小華獲得了 15 票，請問小華的得票率是百分之多少？`;
+          hint = `得票數 ÷ 總票數 ＝ 15 ÷ 20 ＝ 0.75 ＝ 75%`;
+          visual = `📊 15 / 20 ＝ 75%`;
+          options = ["75%", "60%", "80%"];
+        }
+        // 16. 錢幣換算與買文具 (低年級)
+        else if (isMoney) {
+          let a = Math.floor(Math.random() * 4) + 1; // 幾十元
+          let b = Math.floor(Math.random() * 8) + 1;
+          let total = a * 10 + b;
+          ans = `${total}元`;
+          expectedFormula = `${a}*10+${b}`;
+          qText = isPure ? `${a} 個十元和 ${b} 個一元合起來是 (    ) 元` : `小明買了一支鉛筆花了 ${a} 個十元銅板和 ${b} 個一元銅板，請問這支鉛筆多少元？`;
+          hint = `${a} 個十元是 ${a * 10} 元，加上 ${b} 個一元就是 ${total} 元！`;
+          visual = `🪙 ${a * 10} ＋ ${b} ＝ ${total} 元`;
+          options = [ans, `${total + 10}元`, `${Math.max(5, total - 5)}元`];
+        }
+        // 17. 排隊比長短比多少 (低年級)
+        else if (isQueue) {
+          let a = Math.floor(Math.random() * 6) + 7;
+          let b = Math.floor(Math.random() * 4) + 2;
+          let diff = a - b;
+          ans = `${diff}個`;
+          expectedFormula = `${a}-${b}`;
+          qText = isPure ? `${a} 比 ${b} 多 (    )` : `排隊量體溫，紅隊有 ${a} 個人，藍隊有 ${b} 個人，請問紅隊比藍隊多幾個人？`;
+          hint = `比多少用減法！大數減小數：${a} － ${b} ＝ ${diff}`;
+          visual = `👥 ${a} － ${b} ＝ ${diff}`;
+          options = [ans, `${diff + 2}個`, `${Math.max(1, diff - 1)}個`];
+        }
+        // 18. 10以內合成分解
+        else if (isBasic10) {
+          let a = Math.floor(Math.random() * 4) + 2, b = Math.floor(Math.random() * 4) + 2;
+          let sum = a + b;
+          ans = String(sum);
+          expectedFormula = `${a}+${b}`;
+          qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `盤子裡原本有 ${a} 塊小餅乾，媽媽又放了 ${b} 塊，現在一共有幾塊餅乾？`;
+          hint = `合起來用加法：${a} ＋ ${b} ＝ ${sum}`;
+          visual = `🍪 ${a} ＋ ${b} ＝ ${sum}`;
+          options = [ans, String(sum + 1), String(Math.max(1, sum - 1))];
+        }
+        // 19. 20以內進位加法
+        else if (isBasic20Add) {
+          let a = Math.floor(Math.random() * 4) + 7, b = Math.floor(Math.random() * 4) + 6;
+          let sum = a + b;
+          ans = String(sum);
+          expectedFormula = `${a}+${b}`;
+          qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `樹上有 ${a} 隻小鳥，又飛來了 ${b} 隻，現在一共有幾隻小鳥？`;
+          hint = `湊十法：先將 ${a} 湊成 10！${a} ＋ ${b} ＝ ${sum}`;
+          visual = `🐦 ${a} ＋ ${b} ＝ ${sum}`;
+          options = [ans, String(sum + 1), String(sum - 1)];
+        }
+        // 20. 20以內退位減法
+        else if (isBasic20Sub) {
+          let b = Math.floor(Math.random() * 5) + 5;
+          let diff = Math.floor(Math.random() * 5) + 3;
+          let a = b + diff;
+          ans = String(diff);
+          expectedFormula = `${a}-${b}`;
+          qText = isPure ? `${a} － ${b} ＝ (    )` : `小芳有 ${a} 顆草莓，吃掉了 ${b} 顆，還剩下幾顆草莓？`;
+          hint = `破十法：10 減 ${b} 剩下 ${10 - b}，再加上個位數得 ${diff}`;
+          visual = `🍓 ${a} － ${b} ＝ ${diff}`;
+          options = [ans, String(diff + 1), String(Math.max(1, diff - 1))];
+        }
+        // 21. 四位數加減法
+        else if (isFourDigit) {
+          let isMinus = t.includes("減") || (i % 2 === 0);
+          let a = Math.floor(Math.random() * 6500) + 1800, b = Math.floor(Math.random() * 4200) + 1150;
+          let big = Math.max(a, b), small = Math.min(a, b);
+          if (isMinus) {
+            let numAns = big - small;
+            ans = String(numAns);
+            expectedFormula = `${big}-${small}`;
+            qText = isPure ? `${big} － ${small} ＝ (    )` : `愛心存摺原本有 ${big} 元，採購體育用品花了 ${small} 元，請問現在還剩下多少元？`;
+            hint = `四位數直式減法：千、百、十、個位垂直對齊。算式：${big} － ${small} ＝ ${numAns}`;
+            visual = `💰 原有 ${big} 元 － 花費 ${small} 元 ＝ 剩餘 ${numAns} 元`;
+            options = [ans, String(numAns + 100), String(Math.max(10, numAns - 100))];
+          } else {
+            let numAns = a + b;
+            ans = String(numAns);
+            expectedFormula = `${a}+${b}`;
+            qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `圖書館一樓有 ${a} 本書，二樓有 ${b} 本書，請問全館一共有多少本書？`;
+            hint = `四位數直式加法：位值對齊相加。算式：${a} ＋ ${b} ＝ ${numAns}`;
+            visual = `📚 ${a} ＋ ${b} ＝ ${numAns}`;
+            options = [ans, String(numAns + 100), String(numAns - 100)];
+          }
+        }
+        // 22. 預設二位數加減
+        else {
+          let isMinus = t.includes("減") || (i % 2 === 0);
+          let a = Math.floor(Math.random() * 65) + 18, b = Math.floor(Math.random() * 45) + 11;
+          let big = Math.max(a, b), small = Math.min(a, b);
+          if (isMinus) {
+            let numAns = big - small;
+            ans = String(numAns);
+            expectedFormula = `${big}-${small}`;
+            qText = isPure ? `${big} － ${small} ＝ (    )` : `操場上有 ${big} 位同學，有 ${small} 位同學回教室了，請問操場上還剩下幾位同學？`;
+            hint = `直式減法：個位減個位，十位減十位。算式：${big} － ${small} ＝ ${numAns}`;
+            visual = `🏃 ${big} － ${small} ＝ ${numAns}`;
+            options = [ans, String(numAns + 10), String(Math.max(1, numAns - 10))];
+          } else {
+            let numAns = a + b;
+            ans = String(numAns);
+            expectedFormula = `${a}+${b}`;
+            qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `志工媽媽上午包了 ${a} 顆粽子，下午又包了 ${b} 顆，請問一共包了幾顆粽子？`;
+            hint = `直式加法：位值對齊相加。算式：${a} ＋ ${b} ＝ ${numAns}`;
+            visual = `🍙 ${a} ＋ ${b} ＝ ${numAns}`;
+            options = [ans, String(numAns + 10), String(numAns - 10)];
+          }
+        }
+
+        // 確保選項不重複
+        let cleanOpts = Array.from(new Set(options.map(String)));
+        while (cleanOpts.length < 3) {
+          const fallbackVal = parseInt(ans) ? String(parseInt(ans) + cleanOpts.length * 5) : ans + "!";
+          cleanOpts.push(fallbackVal);
+        }
+        cleanOpts.sort(() => Math.random() - 0.5);
+
+        list.push({
+          id: i,
+          text: qText,
+          correctAnswer: String(ans),
+          expectedFormula: expectedFormula,
+          options: cleanOpts,
+          hint: hint,
+          visualRepresentation: visual,
+          keywords: [
+            "全部", "一共", "剩下", "面積", "周長", "平方公分", "平方公尺", "平方公寸",
+            "合起來", "幾點", "幾分", "行駛", "小時", "分鐘", "經過", "售價", "訂購",
+            "排", "箱", "瓶", "包", "張", "頁", "株", "袋", "每排", "每箱", "每天",
+            "每分鐘", "底長", "下底", "上底", "高", "平分", "平均", "裝滿", "還剩下",
+            "商", "餘數", "百分率", "最大公因數", "最小公倍數", "通分", "速度"
+          ],
+          praise: "太厲害了！題目概念與計算完全正確！"
+        });
+      }
+
+      return {
+        unitName: topic,
+        questions: list
+      };
+    }
+
+    function renderQuestions(data) {
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = '';
+
+      document.getElementById('currentTopicBadge').innerText = data.unitName || '數學練習';
+      document.getElementById('progressText').innerText = `共 ${data.questions.length} 題 • 累積成就星星中`;
+      
+      let typeLabel = '選擇題';
+      if (state.answerFormat === 'fill') typeLabel = '填充題';
+      if (state.answerFormat === 'comprehensive') typeLabel = '綜合作答題';
+      document.getElementById('typeIndicator').innerText = `${state.mode === 'pure_calc' ? '純計算' : '情境題'} • ${typeLabel}`;
+
+      state.answeredMap = {};
+
+      data.questions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200 transition space-y-4";
+        card.id = `qCard_${q.id}`;
+
+        const isPureCalc = (state.mode === 'pure_calc');
+        const formattedQuestion = isPureCalc
+          ? `<span class="text-xl sm:text-2xl font-black text-sky-900 tracking-wider font-mono">${escapeHtml(q.text)}</span>`
+          : formatQuestionHtml(q.text, q.keywords, state.enableZhuyin);
+
+        let inputAreaHtml = '';
+
+        if (state.answerFormat === 'choice') {
+          inputAreaHtml = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1" id="optsContainer_${q.id}">
+              ${q.options.map(opt => `
+                <button onclick="selectOption(${q.id}, '${escapeQuote(opt)}', '${escapeQuote(q.correctAnswer)}', '${escapeQuote(q.praise)}')" 
+                  class="opt-btn-${q.id} p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-sky-400 hover:bg-sky-50/60 text-slate-800 font-black text-base sm:text-lg transition text-center shadow-xs active:scale-95 cursor-pointer">
+                  ${state.enableZhuyin && !isPureCalc ? formatQuestionHtml(opt, [], true) : escapeHtml(opt)}
+                </button>
+              `).join('')}
+            </div>
+          `;
+        } else if (state.answerFormat === 'fill') {
+          inputAreaHtml = `
+            <div class="pt-2 bg-indigo-50/60 p-4 rounded-2xl border border-indigo-100 flex flex-wrap items-center gap-3">
+              <span class="text-sm font-black text-indigo-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-pen-clip text-indigo-600"></i> 請輸入計算答案：
+              </span>
+              <div class="flex items-center gap-2 flex-1 min-w-[200px]">
+                <input type="text" id="fillInput_${q.id}" 
+                  onkeydown="if(event.key==='Enter') submitFillAnswer(${q.id}, '${escapeQuote(q.correctAnswer)}', '${escapeQuote(q.praise)}')"
+                  placeholder="輸入數值答案..."
+                  class="flex-1 px-4 py-2 rounded-xl border-2 border-indigo-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 text-base sm:text-lg font-black text-slate-800 tracking-wide outline-hidden bg-white shadow-inner">
+                <button onclick="submitFillAnswer(${q.id}, '${escapeQuote(q.correctAnswer)}', '${escapeQuote(q.praise)}')"
+                  class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-black transition shadow-md flex items-center gap-1 active:scale-95 cursor-pointer">
+                  <i class="fa-solid fa-check"></i> 檢查
+                </button>
+              </div>
+            </div>
+          `;
+        } else {
+          inputAreaHtml = `
+            <div class="pt-2 bg-purple-50/70 p-4 rounded-2xl border border-purple-200 space-y-3">
+              <div class="flex items-center justify-between text-xs font-black text-purple-950">
+                <span class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-file-signature text-purple-600"></i> 請自行列出算式並算出答：
+                </span>
+                <span class="text-purple-600 text-[11px]">可在上方小白板先寫直式或畫圖對齊</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                <div class="sm:col-span-7 flex items-center gap-2">
+                  <span class="text-xs font-black text-slate-700 shrink-0">① 算式：</span>
+                  <input type="text" id="compFormula_${q.id}" 
+                    placeholder="例如：${escapeHtml(q.expectedFormula) || '48 * 23'}"
+                    class="flex-1 px-3.5 py-2 rounded-xl border-2 border-purple-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 text-sm font-bold bg-white outline-hidden">
+                </div>
+                <div class="sm:col-span-5 flex items-center gap-2">
+                  <span class="text-xs font-black text-slate-700 shrink-0">② 答：</span>
+                  <input type="text" id="compAnswer_${q.id}" 
+                    onkeydown="if(event.key==='Enter') submitCompAnswer(${q.id}, '${escapeQuote(q.correctAnswer)}', '${escapeQuote(q.expectedFormula)}', '${escapeQuote(q.praise)}')"
+                    placeholder="算出結果..."
+                    class="flex-1 px-3.5 py-2 rounded-xl border-2 border-purple-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 text-sm font-black bg-white outline-hidden">
+                  <button onclick="submitCompAnswer(${q.id}, '${escapeQuote(q.correctAnswer)}', '${escapeQuote(q.expectedFormula)}', '${escapeQuote(q.praise)}')"
+                    class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-black transition shadow-sm cursor-pointer shrink-0">
+                    送出
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center font-black text-sm shadow-xs">
+                ${idx + 1}
+              </span>
+              <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
+                ${isPureCalc ? '純算式' : '情境題'} • ${state.answerFormat === 'choice' ? '選擇題' : (state.answerFormat === 'fill' ? '填充題' : '綜合作答')}
+              </span>
+            </div>
+
+            <button onclick="speakText('${escapeQuote(q.text)}')" 
+              class="px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-600 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-sky-100 cursor-pointer">
+              <i class="fa-solid fa-volume-high"></i>
+              <span>朗讀題目</span>
+            </button>
+          </div>
+
+          <div class="text-base sm:text-lg text-slate-800 font-bold bg-slate-50/70 p-4 rounded-2xl border border-slate-100 leading-relaxed">
+            ${formattedQuestion}
+          </div>
+
+          ${q.visualRepresentation ? `
+            <div class="bg-amber-50/70 p-3 rounded-2xl border border-amber-200 flex items-center gap-2 text-sm text-amber-900 font-medium">
+              <span class="text-base">💡</span>
+              <div>
+                <span class="font-bold text-xs text-amber-700">具體示意：</span>
+                <span class="text-xs sm:text-sm font-bold ml-1">${q.visualRepresentation}</span>
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- 輸入/選擇作答區 -->
+          ${inputAreaHtml}
+
+          <!-- 回饋與解說方塊 -->
+          <div id="feedbackBox_${q.id}" class="hidden p-4 rounded-2xl transition-all text-xs sm:text-sm font-bold"></div>
+
+          <!-- 提示收合欄 -->
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-400">
+            <button onclick="toggleHint(${q.id})" class="text-amber-600 hover:text-amber-700 font-bold flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-lightbulb"></i>
+              <span>需要解題小提示嗎？</span>
+            </button>
+            <div id="hintBox_${q.id}" class="hidden text-amber-800 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200 font-medium whitespace-pre-line">
+              ${escapeHtml(q.hint)}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectOption(qId, selected, correct, praise) {
+      const feedback = document.getElementById(`feedbackBox_${qId}`);
+      feedback.classList.remove('hidden');
+
+      if (selected === correct) {
+        playSuccessSound();
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+        if (!state.answeredMap[qId]) {
+          state.stars += 1;
+          document.getElementById('starCounter').innerText = state.stars;
+          state.answeredMap[qId] = true;
+        }
+        feedback.className = "p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2 font-bold";
+        feedback.innerHTML = `
+          <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+          <div>
+            <span>${praise || '太厲害了！完全答對！'}</span>
+            <span class="text-xs text-emerald-600 block mt-0.5">獲得成就星星 ⭐ +1！繼續保持！</span>
+          </div>
+        `;
+      } else {
+        playTryAgainSound();
+        feedback.className = "p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-center gap-2 font-bold";
+        feedback.innerHTML = `
+          <i class="fa-solid fa-face-smile text-rose-400 text-lg"></i>
+          <div>
+            <span>差一點點喔！再算一次看看！</span>
+            <span class="text-xs text-rose-600 block mt-0.5">💡 可以先在上方「數位計算小白板」畫畫看或寫直式喔！</span>
+          </div>
+        `;
+      }
+    }
+
+    function submitFillAnswer(qId, correctAnswer, praise) {
+      const input = document.getElementById(`fillInput_${qId}`);
+      if (!input) return;
+      const userVal = input.value.trim();
+      if (!userVal) {
+        showToast("請先輸入答案再點擊檢查喔！");
+        input.focus();
+        return;
+      }
+
+      const cleanUser = userVal.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
+      const cleanCorrect = correctAnswer.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
+      
+      const isRight = (cleanUser === cleanCorrect) || 
+                      (cleanUser.replace(/[^0-9\/\.餘%]/g, '') === cleanCorrect.replace(/[^0-9\/\.餘%]/g, '') && cleanCorrect.length > 0) ||
+                      (cleanUser.replace(/[^0-9]/g, '') === cleanCorrect.replace(/[^0-9]/g, '') && !cleanCorrect.includes('餘') && !cleanCorrect.includes('/'));
+      
+      const feedback = document.getElementById(`feedbackBox_${qId}`);
+      feedback.classList.remove('hidden');
+
+      if (isRight) {
+        playSuccessSound();
+        confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+        if (!state.answeredMap[qId]) {
+          state.stars += 1;
+          document.getElementById('starCounter').innerText = state.stars;
+          state.answeredMap[qId] = true;
+        }
+        input.classList.remove('border-rose-400', 'bg-rose-50');
+        input.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+        feedback.className = "p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2 font-bold";
+        feedback.innerHTML = `
+          <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+          <div>
+            <span>${praise || '太厲害了！完全答對！'}</span>
+            <span class="text-xs text-emerald-600 block mt-0.5">答案就是 <b>${escapeHtml(correctAnswer)}</b>！獲得成就星星 ⭐ +1！</span>
+          </div>
+        `;
+      } else {
+        playTryAgainSound();
+        input.classList.add('border-rose-400', 'bg-rose-50');
+        feedback.className = "p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-center gap-2 font-bold";
+        feedback.innerHTML = `
+          <i class="fa-solid fa-face-smile text-rose-400 text-lg"></i>
+          <div>
+            <span>差一點點喔！再算一次看看！</span>
+            <span class="text-xs text-rose-600 block mt-0.5">💡 檢查小數點、單位、或餘數表示（如 12 ⋯ 3）！</span>
+          </div>
+        `;
+        input.focus();
+      }
+    }
+
+    function submitCompAnswer(qId, correctAnswer, expectedFormula, praise) {
+      const formulaInput = document.getElementById(`compFormula_${qId}`);
+      const answerInput = document.getElementById(`compAnswer_${qId}`);
+      if (!formulaInput || !answerInput) return;
+
+      const userFormula = formulaInput.value.trim();
+      const userAns = answerInput.value.trim();
+
+      if (!userFormula) {
+        showToast("請記得填寫①算式喔！");
+        formulaInput.focus();
+        return;
+      }
+      if (!userAns) {
+        showToast("請記得填寫②答的數值喔！");
+        answerInput.focus();
+        return;
+      }
+
+      const cleanUserAns = userAns.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
+      const cleanCorrectAns = correctAnswer.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
+      
+      const isAnsRight = (cleanUserAns === cleanCorrectAns) || 
+                         (cleanUserAns.replace(/[^0-9餘\/\.%]/g, '') === cleanCorrectAns.replace(/[^0-9餘\/\.%]/g, '') && cleanCorrectAns.length > 0) ||
+                         (cleanUserAns.replace(/[^0-9]/g, '') === cleanCorrectAns.replace(/[^0-9]/g, '') && !cleanCorrectAns.includes('餘') && !cleanCorrectAns.includes('/'));
+
+      const feedback = document.getElementById(`feedbackBox_${qId}`);
+      feedback.classList.remove('hidden');
+
+      if (isAnsRight) {
+        playSuccessSound();
+        confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 } });
+        if (!state.answeredMap[qId]) {
+          state.stars += 1;
+          document.getElementById('starCounter').innerText = state.stars;
+          state.answeredMap[qId] = true;
+        }
+        feedback.className = "p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2 font-bold";
+        feedback.innerHTML = `
+          <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+          <div>
+            <span>${praise || '算式列得好，答案也完全正確！太棒了！'}</span>
+            <span class="text-xs text-emerald-600 block mt-0.5">完整解題歷程，獲得成就星星 ⭐ +1！</span>
+          </div>
+        `;
+      } else {
+        playTryAgainSound();
+        feedback.className = "p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-center gap-2 font-bold";
+        feedback.innerHTML = `
+          <i class="fa-solid fa-face-smile text-rose-400 text-lg"></i>
+          <div>
+            <span>答的部分差一點點喔！請檢查公式與計算！</span>
+            <span class="text-xs text-rose-600 block mt-0.5">💡 您的算式是 ${escapeHtml(userFormula)}，再仔細計算一次！</span>
+          </div>
+        `;
+        answerInput.focus();
+      }
+    }
+
+    function toggleHint(qId) {
+      const hb = document.getElementById(`hintBox_${qId}`);
+      if (hb) hb.classList.toggle('hidden');
+    }
+
+    function initWhiteboard() {
+      const canvas = document.getElementById('whiteboardCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * (window.devicePixelRatio || 1);
+        canvas.height = rect.height * (window.devicePixelRatio || 1);
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      }
+
+      function start(e) {
+        state.isDrawing = true;
+        const pos = getPos(e);
+        state.lastX = pos.x;
+        state.lastY = pos.y;
+        document.getElementById('whiteboardEmptyTip').classList.add('hidden');
+      }
+
+      function draw(e) {
+        if (!state.isDrawing) return;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(state.lastX, state.lastY);
+        ctx.lineTo(pos.x, pos.y);
+
+        if (state.whiteboardMode === 'eraser') {
+          ctx.strokeStyle = '#f8fafc';
+          ctx.lineWidth = 22;
+        } else {
+          ctx.strokeStyle = state.penColor;
+          ctx.lineWidth = 3.5;
+        }
+        ctx.stroke();
+        state.lastX = pos.x;
+        state.lastY = pos.y;
+      }
+
+      function stop() { state.isDrawing = false; }
+
+      canvas.addEventListener('mousedown', start);
+      canvas.addEventListener('mousemove', draw);
+      window.addEventListener('mouseup', stop);
+
+      canvas.addEventListener('touchstart', start, { passive: true });
+      canvas.addEventListener('touchmove', draw, { passive: true });
+      window.addEventListener('touchend', stop);
+    }
+
+    function setWhiteboardTool(mode, color = '#1e293b') {
+      state.whiteboardMode = mode;
+      state.penColor = color;
+    }
+
+    function clearWhiteboard() {
+      const canvas = document.getElementById('whiteboardCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('whiteboardEmptyTip').classList.remove('hidden');
+    }
+
+    function stampOnBoard(emoji) {
+      const canvas = document.getElementById('whiteboardCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      document.getElementById('whiteboardEmptyTip').classList.add('hidden');
+      
+      const rx = Math.random() * (canvas.width / (window.devicePixelRatio||1) - 60) + 20;
+      const ry = Math.random() * (canvas.height / (window.devicePixelRatio||1) - 60) + 30;
+      ctx.font = '26px sans-serif';
+      ctx.fillText(emoji, rx, ry);
+    }
+
+    function openPrintModal() {
+      if (state.questions.length === 0) {
+        const sample = generateElementaryMathQuestions(state.currentTopic || "二位數乘以二位數", 5, state.grade || "2", state.mode === 'pure_calc');
+        state.questions = sample.questions;
+        state.currentTopic = sample.unitName;
+        renderQuestions(sample);
+      }
+      renderPrintSheetModal();
+      document.getElementById('printModal').classList.remove('hidden');
+    }
+
+    function closePrintModal() {
+      document.getElementById('printModal').classList.add('hidden');
+    }
+
+    function changePrintDensity(density) {
+      state.printDensity = density;
+      const btn5 = document.getElementById('btnDensity5');
+      const btn10 = document.getElementById('btnDensity10');
+      if (density === 5) {
+        btn5.className = "px-3 py-1 rounded-lg text-xs font-black transition bg-emerald-500 text-white shadow-xs cursor-pointer";
+        btn10.className = "px-3 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition cursor-pointer";
+        showToast("已切換為【每頁 5 題】加大計算區");
+      } else {
+        btn10.className = "px-3 py-1 rounded-lg text-xs font-black transition bg-emerald-500 text-white shadow-xs cursor-pointer";
+        btn5.className = "px-3 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition cursor-pointer";
+        showToast("已切換為【每頁 10 題】精巧雙欄");
+      }
+      renderPrintSheetModal();
+    }
+
+    function renderPrintSheetModal() {
+      const container = document.getElementById('printSheetBody');
+      const questions = state.questions || [];
+      const density = state.printDensity;
+      const totalPages = Math.ceil(questions.length / density) || 1;
+      const isPureCalc = (state.mode === 'pure_calc');
+
+      const today = new Date();
+      const rocYear = today.getFullYear() - 1911;
+      const month = today.getMonth() + 1;
+      const day = today.getDate();
+      const formattedDate = `民國 ${rocYear} 年 ${month} 月 ${day} 日`;
+
+      let pagesHtml = '';
+
+      for (let p = 0; p < totalPages; p++) {
+        const pageQuestions = questions.slice(p * density, (p + 1) * density);
+        const pageNum = p + 1;
+
+        let contentHtml = '';
+
+        if (density === 5) {
+          contentHtml = `
+            <div class="flex-1 flex flex-col justify-between space-y-3 my-2">
+              ${pageQuestions.map((q, idx) => {
+                const qNum = (p * 5) + idx + 1;
+                const formattedQ = isPureCalc
+                  ? `<span class="text-xl font-black text-slate-900 tracking-wider font-mono">${escapeHtml(q.text)}</span>`
+                  : (state.enableZhuyin ? applyZhuyinMarkup(q.text) : escapeHtml(q.text));
+
+                let answerLineHtml = '';
+                if (state.answerFormat === 'choice') {
+                  answerLineHtml = `
+                    <div class="grid grid-cols-3 gap-2.5 pl-8 mb-2">
+                      ${q.options.map(opt => `
+                        <div class="border border-slate-300 rounded-xl py-1 px-2 text-xs sm:text-sm text-center font-bold bg-slate-50/80">
+                          ( &nbsp; ) ${state.enableZhuyin && !isPureCalc ? applyZhuyinMarkup(opt) : escapeHtml(opt)}
+                        </div>
+                      `).join('')}
+                    </div>
+                  `;
+                } else if (state.answerFormat === 'fill') {
+                  answerLineHtml = `
+                    <div class="flex items-center justify-between pl-8 pr-3 mb-2 text-sm font-bold text-slate-900">
+                      <span class="text-slate-500 font-semibold text-xs">請將計算結果填入答題處：</span>
+                      <div class="text-base font-black border-b-2 border-slate-900 px-4 py-0.5 min-w-[140px] text-center">
+                        答：( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
+                      </div>
+                    </div>
+                  `;
+                } else {
+                  answerLineHtml = `
+                    <div class="pl-8 pr-3 mb-2 space-y-1.5 text-sm font-bold text-slate-900">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-black text-slate-800 shrink-0">算式：</span>
+                        <div class="border-b-2 border-slate-400 flex-1 h-5"></div>
+                      </div>
+                      <div class="flex items-center justify-end gap-2">
+                        <span class="text-xs font-black text-slate-800 shrink-0">答：</span>
+                        <div class="border-b-2 border-slate-900 min-w-[150px] text-center font-black h-5">
+                          ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }
+
+                return `
+                  <div class="border-2 border-slate-300 rounded-2xl p-3 bg-white flex flex-col justify-between flex-1 text-slate-900 min-h-[44mm]">
+                    <div class="flex items-start gap-2.5 mb-1.5">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-xs shrink-0 mt-0.5 shadow-xs">
+                        ${qNum}
+                      </span>
+                      <div class="text-sm sm:text-base font-bold flex-1 leading-relaxed">
+                        ${formattedQ}
+                      </div>
+                    </div>
+
+                    ${answerLineHtml}
+
+                    <div class="pl-8 flex-1 min-h-[22mm]">
+                      <div class="border border-dashed border-sky-300 rounded-xl h-full min-h-[22mm] bg-sky-50/20 p-2 flex flex-col justify-between relative">
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 font-bold border-b border-dashed border-sky-200/60 pb-1">
+                          <span>✏️ 計算區（直式運算 / 邊長對齊 / 位值對位）：</span>
+                          <span class="text-sky-700 font-mono text-[10px] tracking-widest font-black">【學習教室】</span>
+                        </div>
+                        <div class="flex-1 grid grid-cols-4 divide-x divide-dashed divide-sky-300/40 opacity-35 pointer-events-none">
+                          <div class="h-full flex items-start justify-center text-[9px] text-slate-400 pt-0.5">千</div>
+                          <div class="h-full flex items-start justify-center text-[9px] text-slate-400 pt-0.5">百</div>
+                          <div class="h-full flex items-start justify-center text-[9px] text-slate-400 pt-0.5">十</div>
+                          <div class="h-full flex items-start justify-center text-[9px] text-slate-400 pt-0.5">個</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        } else {
+          contentHtml = `
+            <div class="flex-1 grid grid-cols-2 gap-3.5 my-2">
+              ${pageQuestions.map((q, idx) => {
+                const qNum = (p * 10) + idx + 1;
+                const formattedQ = isPureCalc
+                  ? `<span class="text-base font-black text-slate-900 tracking-wider font-mono">${escapeHtml(q.text)}</span>`
+                  : (state.enableZhuyin ? applyZhuyinMarkup(q.text) : escapeHtml(q.text));
+
+                let answerLineHtml = '';
+                if (state.answerFormat === 'choice') {
+                  answerLineHtml = `
+                    <div class="flex items-center justify-around gap-1 text-[11px] font-bold bg-slate-50 p-1 rounded-lg border border-slate-200 mb-1">
+                      ${q.options.map(opt => `
+                        <span>( ) ${state.enableZhuyin && !isPureCalc ? applyZhuyinMarkup(opt) : escapeHtml(opt)}</span>
+                      `).join('')}
+                    </div>
+                  `;
+                } else if (state.answerFormat === 'fill') {
+                  answerLineHtml = `
+                    <div class="flex items-center justify-between text-xs font-bold px-1 mb-1">
+                      <span class="text-slate-400 text-[10px]">填答：</span>
+                      <span class="border-b border-slate-900 px-3 font-mono font-black text-xs">
+                        答：( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
+                      </span>
+                    </div>
+                  `;
+                } else {
+                  answerLineHtml = `
+                    <div class="space-y-1 text-xs font-bold px-1 mb-1">
+                      <div class="flex items-center gap-1 text-[11px]">
+                        <span class="text-slate-500 shrink-0">式：</span>
+                        <div class="border-b border-slate-400 flex-1 h-3.5"></div>
+                      </div>
+                      <div class="flex items-center justify-end gap-1 text-[11px]">
+                        <span class="text-slate-500 shrink-0">答：</span>
+                        <span class="border-b border-slate-900 px-3 font-mono font-black text-xs">
+                          ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )
+                        </span>
+                      </div>
+                    </div>
+                  `;
+                }
+
+                return `
+                  <div class="border-2 border-slate-300 rounded-2xl p-2.5 bg-white flex flex-col justify-between text-slate-900 min-h-[42mm]">
+                    <div>
+                      <div class="flex items-start gap-1.5 mb-1">
+                        <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[11px] shrink-0 mt-0.5">
+                          ${qNum}
+                        </span>
+                        <div class="text-xs font-bold leading-snug flex-1">
+                          ${formattedQ}
+                        </div>
+                      </div>
+
+                      ${answerLineHtml}
+                    </div>
+
+                    <div class="border border-dashed border-sky-300 rounded-lg min-h-[17mm] flex-1 bg-sky-50/20 p-1 flex flex-col justify-between">
+                      <div class="flex justify-between items-center text-[10px] text-slate-500 font-semibold">
+                        <span>直式計算區</span>
+                        <span class="text-[9px] text-sky-700 font-mono tracking-tight">千 百 十 個</span>
+                      </div>
+                      <div class="w-full flex-1 grid grid-cols-4 divide-x divide-dashed divide-sky-200/50 my-0.5 opacity-30">
+                        <div></div><div></div><div></div><div></div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        let modeDesc = '選擇題';
+        if (state.answerFormat === 'fill') modeDesc = '填充題';
+        if (state.answerFormat === 'comprehensive') modeDesc = '綜合作答';
+
+        pagesHtml += `
+          <div class="a4-page-container bg-white shadow-xl p-6 sm:p-7 rounded-2xl mb-8 max-w-[210mm] w-full border border-slate-200 flex flex-col justify-between min-h-[285mm]">
+            <!-- 頁首抬頭與當天日期 -->
+            <div class="border-b-2 border-slate-900 pb-2 mb-1 flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h2 class="text-lg font-black text-slate-900 tracking-wide">學習教室數學練習單</h2>
+                <p class="text-xs text-slate-600 font-bold mt-0.5">單元：${state.currentTopic || '數學個別化練習'} (${isPureCalc ? '純算式' : '情境題'} • ${modeDesc})</p>
+              </div>
+              <div class="text-xs text-slate-800 flex items-center gap-3 font-bold flex-wrap">
+                <span class="text-sky-900 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">📅 日期：${formattedDate}</span>
+                <span>班級：________</span>
+                <span>姓名：________</span>
+                <span>座號：____</span>
+              </div>
+            </div>
+
+            <!-- 本頁題目清單 -->
+            ${contentHtml}
+
+            <!-- 頁尾 -->
+            <div class="border-t-2 border-slate-300 pt-2 mt-2 flex items-center justify-between text-[11px] text-slate-500 font-bold">
+              <span>學習教室 • 個別化適性教學資源</span>
+              <span>第 ${pageNum} 頁 / 共 ${totalPages} 頁</span>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = pagesHtml;
+    }
+
+    function printInNewWindow() {
+      const printContents = document.getElementById('printSheetBody').innerHTML;
+      const win = window.open('', '_blank');
+      if (!win) {
+        showToast("彈出視窗被瀏���器阻擋，請使用「直接列印」");
+        return;
+      }
+      win.document.write(`<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>學習教室數學練習單</title>
+  <link rel="icon" type="image/svg+xml" href="${new URL('../../favicon.svg', window.location.href).href}">
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <style>
+    @page { size: A4 portrait; margin: 8mm 10mm 8mm 10mm; }
+    body { background: #ffffff !important; color: #000000 !important; font-family: system-ui, -apple-system, sans-serif; }
+    .a4-page-container {
+      page-break-after: always !important;
+      break-after: page !important;
+      min-height: 278mm !important;
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    ruby { display: inline-flex; flex-direction: column; vertical-align: bottom; align-items: center; margin: 0 1px; }
+    rt { font-size: 0.55em; font-weight: bold; color: #334155; line-height: 1; }
+  </style>
+</head>
+<body onload="window.print();" class="p-0 m-0">
+  ${printContents}
+</body>
+</html>`);
+      win.document.close();
+    }
+
+    function copyWorksheetText() {
+      if (!state.questions || state.questions.length === 0) {
+        showToast("目前尚無題目可複製");
+        return;
+      }
+      let text = `【學習教室數學練習單】
+單元：${state.currentTopic}
+
+`;
+      state.questions.forEach((q, idx) => {
+        text += `${idx + 1}. ${q.text}
+`;
+        if (state.answerFormat === 'choice') {
+          text += `   選項：${q.options.join('   ')}
+`;
+        } else if (state.answerFormat === 'comprehensive') {
+          text += `   算式：________________
+   答：________________
+`;
+        } else {
+          text += `   答：________________
+`;
+        }
+        text += `
+`;
+      });
+
+      const temp = document.createElement('textarea');
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      try {
+        document.execCommand('copy');
+        showToast("已成功複製題目文字！可直接貼上至 Word 或 LINE");
+      } catch (err) {
+        showToast("複製失敗，請手動複製");
+      }
+      document.body.removeChild(temp);
+    }
+  </script>
+</body>
+</html>

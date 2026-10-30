@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>國小中年級數學雙雄爭霸戰</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas-confetti for celebrating victory -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts: 圓體與街機競速感字型 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            kids: ['Zen Maru Gothic', 'Fredoka', 'sans-serif'],
+            fun: ['Mochiy Pop One', 'Zen Maru Gothic', 'sans-serif']
+          },
+          colors: {
+            teamBlue: '#0096C7',
+            teamBlueDark: '#023E8A',
+            teamRed: '#E63946',
+            teamRedDark: '#9B1D20',
+            arenaBg: '#0F172A',
+            goldYellow: '#FFD166'
+          },
+          keyframes: {
+            shake: {
+              '0%, 100%': { transform: 'translateX(0)' },
+              '20%, 60%': { transform: 'translateX(-8px)' },
+              '40%, 80%': { transform: 'translateX(8px)' }
+            },
+            pulseScore: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.2)' }
+            }
+          },
+          animation: {
+            shake: 'shake 0.4s ease-in-out',
+            pulseScore: 'pulseScore 0.3s ease-out'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Zen Maru Gothic', 'Fredoka', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    /* 遊戲對決街機 3D 按鈕質感 - 緊湊版本 */
+    .btn-3d-cyan {
+      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+      box-shadow: 0 3px 0 #0369A1, 0 5px 10px rgba(2, 132, 199, 0.3);
+      transition: all 0.08s ease;
+    }
+    .btn-3d-cyan:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #0369A1;
+    }
+
+    .btn-3d-crimson {
+      background: linear-gradient(180deg, #FB7185 0%, #E11D48 100%);
+      box-shadow: 0 3px 0 #9F1239, 0 5px 10px rgba(225, 29, 72, 0.3);
+      transition: all 0.08s ease;
+    }
+    .btn-3d-crimson:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #9F1239;
+    }
+
+    .btn-3d-gold {
+      background: linear-gradient(180deg, #FFE066 0%, #F59E0B 100%);
+      box-shadow: 0 4px 0 #B45309, 0 6px 12px rgba(245, 158, 11, 0.35);
+      transition: all 0.08s ease;
+    }
+    .btn-3d-gold:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #B45309;
+    }
+
+    /* 競技場立體外框 - 緊湊版 */
+    .arena-board {
+      background: #FFFFFF;
+      border: 3px solid #FCD34D;
+      box-shadow: 0 6px 0 #D97706, 0 12px 18px -4px rgba(0, 0, 0, 0.25);
+      border-radius: 20px;
+    }
+
+    .team-card-blue {
+      background: linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 100%);
+      border: 2px solid #38BDF8;
+      box-shadow: 0 4px 0 #0284C7;
+    }
+
+    .team-card-red {
+      background: linear-gradient(180deg, #FFF1F2 0%, #FFE4E6 100%);
+      border: 2px solid #FB7185;
+      box-shadow: 0 4px 0 #E11D48;
+    }
+
+    /* 科技感對戰背景紋理 */
+    .bg-game-pattern {
+      background-color: #0b1120;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(244, 63, 94, 0.18) 0%, transparent 45%),
+        radial-gradient(rgba(255, 255, 255, 0.07) 1.5px, transparent 0);
+      background-size: 100% 100%, 100% 100%, 28px 28px;
+    }
+
+    #scratchCanvas {
+      touch-action: none;
+    }
+
+    /* 語音朗讀動態呼吸動畫 */
+    @keyframes pulseSpeak {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+    }
+    .speaking-glow {
+      animation: pulseSpeak 1.2s infinite;
+      border-color: #F59E0B !important;
+      background-color: #FEF3C7 !important;
+    }
+  </style>
+
+  <!-- 引入標準主題 Favicon 與字嗨注音標楷開源字型 (RULE規範與特教友善) -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="apple-touch-icon" href="../../favicon.svg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
+  <style>
+    .font-zihi { font-family: 'Bpmf Zihi Kai Std', '字嗨注音標楷', 'DFKai-SB', serif !important; }
+  </style>
+
+</head>
+<body class="bg-game-pattern h-screen max-h-screen overflow-hidden text-slate-800 flex flex-col items-center justify-between p-1.5 sm:p-2.5 box-border">
+
+<!-- 南一三上數學備課平台專屬全域導航頂欄 (優化整合) -->
+<nav class="sp-ed-game-navbar" style="position:sticky;top:0;left:0;right:0;z-index:99999;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #e2e8f0;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);font-family:system-ui,-apple-system,sans-serif;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="../../index.html" onclick="if(window.parent && window.parent !== window){window.parent.postMessage('close-game-modal','*'); return false;}" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #4f46e5, #4338ca);color:#ffffff;font-weight:800;font-size:0.95rem;padding:6px 16px;border-radius:12px;box-shadow:0 3px 0 #312e81;transition:all 0.15s;">
+      ⬅ 返回三上數學備課平台
+    </a>
+    <span style="font-weight:800;color:#1e1b4b;font-size:1.05rem;display:none;" class="sm:inline">南一三上數學 🎪 互動遊戲冒險館</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen();}" style="cursor:pointer;background:#f1f5f9;border:1px solid #cbd5e1;padding:6px 14px;border-radius:10px;font-weight:700;font-size:0.85rem;color:#475569;">
+      ⛶ 全螢幕投影
+    </button>
+  </div>
+</nav>
+
+
+  <!-- 頂部計分板與拔河拉力條 (高度精簡緊湊版) -->
+  <header class="w-full max-w-5xl bg-slate-900/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border-2 border-amber-400 shadow-lg flex-shrink-0 flex flex-col space-y-1">
+    <div class="flex items-center justify-between w-full">
+      
+      <!-- 藍隊分數資訊 -->
+      <div class="flex items-center space-x-2">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center text-xl sm:text-2xl border border-white/60 shadow">
+          🦕
+        </div>
+        <div>
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-black text-cyan-300">隊伍 A</span>
+            <span class="text-[9px] bg-cyan-500/30 text-cyan-200 px-1 rounded font-mono hidden md:inline">A S D F</span>
+          </div>
+          <div class="text-xs sm:text-sm font-black text-white font-kids leading-none">閃電暴龍</div>
+          <div class="text-base sm:text-lg font-fun text-yellow-300 drop-shadow flex items-center leading-none mt-0.5">
+            <span id="scoreA">0</span><span class="text-[9px] ml-0.5 text-yellow-100 font-bold">分</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中間 VS、單元切換、計時器與工具列 -->
+      <div class="flex flex-col items-center">
+        <div class="flex items-center space-x-1">
+          <span class="text-base sm:text-xl font-fun text-amber-400 italic font-black drop-shadow">⚡ VS 🔥</span>
+        </div>
+        <div class="flex items-center space-x-1 mt-0.5 flex-wrap justify-center gap-1">
+          <button onclick="openUnitModal()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 px-2.5 py-0.5 rounded-lg font-black text-[11px] shadow transition flex items-center space-x-1 border border-amber-200">
+            <span>🎯</span>
+            <span id="currentUnitDisplay" class="max-w-[130px] sm:max-w-none truncate">九九乘法快問快答</span>
+            <span>▾</span>
+          </button>
+          
+          <!-- 節奏時間長度選擇器 -->
+          <div class="relative inline-block">
+            <select id="timerModeSelect" onchange="changeTimerSetting(this.value)" class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-[11px] px-2 py-0.5 rounded-lg border border-slate-700 cursor-pointer focus:outline-none">
+              <option value="25">⏱️ 25秒</option>
+              <option value="15" selected>⏱️ 15秒</option>
+              <option value="8">⏱️ 8秒</option>
+              <option value="0">⏳ 不限時</option>
+            </select>
+          </div>
+
+          <button onclick="toggleScratchpad()" id="scratchpadBtn" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2 py-0.5 rounded-lg font-bold text-[11px] border border-slate-700 transition flex items-center space-x-0.5">
+            <span>✏️</span>
+            <span>草稿板</span>
+          </button>
+
+          <button onclick="toggleAudio()" id="soundToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-amber-300 px-2 py-0.5 rounded-lg font-bold text-[11px] border border-slate-700 transition">
+            🔊
+          </button>
+        </div>
+      </div>
+
+      <!-- 紅隊分數資訊 -->
+      <div class="flex items-center space-x-2 text-right flex-row-reverse space-x-reverse">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-rose-400 to-red-600 rounded-xl flex items-center justify-center text-xl sm:text-2xl border border-white/60 shadow">
+          🦅
+        </div>
+        <div>
+          <div class="flex items-center justify-end space-x-1">
+            <span class="text-[9px] bg-rose-500/30 text-rose-200 px-1 rounded font-mono hidden md:inline">H J K L</span>
+            <span class="text-[10px] font-black text-rose-300">隊伍 B</span>
+          </div>
+          <div class="text-xs sm:text-sm font-black text-white font-kids leading-none">烈焰鳳凰</div>
+          <div class="text-base sm:text-lg font-fun text-yellow-300 drop-shadow flex items-center justify-end leading-none mt-0.5">
+            <span id="scoreB">0</span><span class="text-[9px] ml-0.5 text-yellow-100 font-bold">分</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 雙方拔河對決能量條 -->
+    <div class="w-full">
+      <div class="flex justify-between text-[10px] font-bold text-slate-300 mb-0.5 px-0.5">
+        <span class="text-cyan-400 leading-tight" id="comboTagA">⚡ 暴龍佔領度</span>
+        <span class="text-amber-300 font-black text-[10px] leading-tight" id="tugInfo">雙隊即時搶答！</span>
+        <span class="text-rose-400 leading-tight" id="comboTagB">烈焰佔領度 🔥</span>
+      </div>
+      <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex border border-slate-700 p-0.5">
+        <div id="tugBarBlue" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-l-full transition-all duration-300" style="width: 50%;"></div>
+        <div id="tugBarRed" class="bg-gradient-to-r from-rose-400 to-red-600 h-full rounded-r-full transition-all duration-300" style="width: 50%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主對抗競技場：中央題目看板 + 左右兩隊選項面板 (自適應單頁填滿) -->
+  <main class="w-full max-w-5xl flex-grow flex flex-col justify-between items-center relative my-1 min-h-0 overflow-hidden">
+    
+    <div class="w-full flex-grow flex flex-col justify-between space-y-1.5 min-h-0">
+      
+      <!-- 中央共同題目展覽看板 (高度緊湊微調) -->
+      <div class="arena-board w-full p-2 sm:p-3 flex flex-col items-center relative flex-shrink-0">
+        <div class="w-full flex justify-between items-center mb-1 pb-1 border-b border-slate-100">
+          <div class="flex items-center space-x-1.5 flex-wrap">
+            <span class="text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full" id="unitBadge">
+              單元載入中...
+            </span>
+            <span class="text-[10px] font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300">
+              100 分奪冠 🏆
+            </span>
+            <span class="text-[9px] font-bold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full" id="qCounterDisplay">
+              第 1 題
+            </span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <button onclick="readQuestionTTS()" id="ttsBtn" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-lg transition flex items-center space-x-1 border border-slate-200">
+              <span id="ttsIcon">🔊</span>
+              <span id="ttsText">唸題目</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-row items-center w-full gap-2.5 sm:gap-3.5">
+          <!-- 題目向量插圖區 (精簡高度) -->
+          <div class="w-28 sm:w-40 h-20 sm:h-24 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center p-1 relative shadow-inner flex-shrink-0" id="illustrationBox">
+            <!-- SVG 動態插圖 -->
+          </div>
+
+          <!-- 題目文字與引導提示 -->
+          <div class="flex-grow text-left overflow-hidden">
+            <h2 class="text-sm sm:text-base md:text-lg font-black text-slate-800 leading-snug tracking-wide line-clamp-2" id="questionTitle">
+              題目載入中...
+            </h2>
+            <div class="mt-1 flex items-center justify-start space-x-1.5">
+              <span class="text-[11px] text-amber-800 font-bold bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg truncate" id="questionHint">
+                提示載入中...
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 內建手寫/列直式草稿板 (緊湊縮小) -->
+        <div id="scratchpadArea" class="w-full mt-1.5 p-1.5 bg-slate-900 rounded-xl border-2 border-amber-400 hidden flex flex-col">
+          <div class="flex flex-wrap justify-between items-center mb-1 text-white text-[11px] px-1 font-bold gap-1">
+            <span class="flex items-center space-x-1">
+              <span>📝</span>
+              <span>雙隊演算板（手指/滑鼠直式驗算）</span>
+            </span>
+            <div class="flex items-center space-x-1">
+              <div class="flex items-center bg-slate-800 p-0.5 rounded-lg border border-slate-700 space-x-1">
+                <button onclick="setScratchColor('#38BDF8')" id="penColorBlue" class="w-4 h-4 rounded bg-cyan-400 border border-white/60 ring-2 ring-white" title="暴龍藍筆"></button>
+                <button onclick="setScratchColor('#FB7185')" id="penColorRed" class="w-4 h-4 rounded bg-rose-400 border border-transparent" title="鳳凰粉筆"></button>
+                <button onclick="setScratchColor('#FACC15')" id="penColorYellow" class="w-4 h-4 rounded bg-yellow-400 border border-transparent" title="重點黃筆"></button>
+                <button onclick="setScratchColor('#0F172A', true)" id="penEraser" class="px-1 rounded text-[9px] bg-slate-700 text-slate-200" title="橡皮擦">擦</button>
+              </div>
+              <button onclick="clearScratchpad()" class="bg-rose-600 hover:bg-rose-500 text-white px-1.5 py-0.5 rounded text-[10px] font-black">
+                清空
+              </button>
+              <button onclick="toggleScratchpad()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-1.5 py-0.5 rounded text-[10px]">
+                ✕
+              </button>
+            </div>
+          </div>
+          <canvas id="scratchCanvas" class="w-full h-24 bg-slate-950 rounded-lg cursor-crosshair border border-slate-700"></canvas>
+        </div>
+
+        <!-- 全局題目即時廣播通知 -->
+        <div id="matchAnnouncement" class="mt-1 w-full hidden rounded-lg p-1 text-center text-xs font-black transition-all">
+        </div>
+
+        <!-- 補答倒數計時進度條 -->
+        <div id="roundTimerWrap" class="w-full hidden mt-1 flex flex-col items-center">
+          <div class="w-full flex justify-between text-[10px] font-black text-amber-600 mb-0.5 px-0.5">
+            <span id="roundTimerText">⏳ 另一隊補答時間充裕，請仔細驗算：</span>
+            <span id="roundTimerSec" class="font-mono text-xs text-rose-600 font-black">15s</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden border border-amber-300">
+            <div id="roundTimerBar" class="h-full bg-gradient-to-r from-amber-400 to-rose-500 rounded-full transition-all duration-200" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 左右兩隊伍同時作答控制台 (極致緊湊高彈性空間) -->
+      <div class="grid grid-cols-2 gap-2 sm:gap-3 w-full flex-grow min-h-0">
+        
+        <!-- 左隊：閃電暴龍隊面板 -->
+        <div class="team-card-blue rounded-2xl p-2 sm:p-2.5 flex flex-col justify-between min-h-0" id="panelA">
+          <div class="flex justify-between items-center mb-1">
+            <div class="flex items-center space-x-1">
+              <span class="text-base">🦕</span>
+              <span class="font-black text-xs sm:text-sm text-cyan-950 font-kids">閃電暴龍隊</span>
+            </div>
+            <span id="statusBadgeA" class="text-[10px] font-black px-2 py-0.5 rounded-full bg-cyan-200 text-cyan-900 leading-none">
+              搶答 ⚡
+            </span>
+          </div>
+
+          <!-- 藍隊選項按鈕列表 (高度縮減適配) -->
+          <div class="grid grid-cols-1 gap-1.5 flex-grow justify-center my-0.5" id="optionsContainerA">
+            <!-- JS 動態生成 -->
+          </div>
+
+          <div id="feedbackA" class="text-[11px] font-black min-h-[16px] text-center text-cyan-900 leading-tight"></div>
+        </div>
+
+        <!-- 右隊：烈焰鳳凰隊面板 -->
+        <div class="team-card-red rounded-2xl p-2 sm:p-2.5 flex flex-col justify-between min-h-0" id="panelB">
+          <div class="flex justify-between items-center mb-1">
+            <div class="flex items-center space-x-1">
+              <span class="text-base">🦅</span>
+              <span class="font-black text-xs sm:text-sm text-rose-950 font-kids">烈焰鳳凰隊</span>
+            </div>
+            <span id="statusBadgeB" class="text-[10px] font-black px-2 py-0.5 rounded-full bg-rose-200 text-rose-900 leading-none">
+              搶答 🔥
+            </span>
+          </div>
+
+          <!-- 紅隊選項按鈕列表 (高度縮減適配) -->
+          <div class="grid grid-cols-1 gap-1.5 flex-grow justify-center my-0.5" id="optionsContainerB">
+            <!-- JS 動態生成 -->
+          </div>
+
+          <div id="feedbackB" class="text-[11px] font-black min-h-[16px] text-center text-rose-900 leading-tight"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 底部控制按鈕列 (精簡留白) -->
+    <div class="w-full flex justify-between items-center mt-1 px-1 flex-shrink-0">
+      <div class="text-[10px] text-slate-400 font-bold hidden sm:block">
+        💡 首殺 +15 分，補答 +8 分；答錯扣 2 分並鎖定選項繼續作答！
+      </div>
+
+      <div class="flex space-x-1.5 ml-auto">
+        <button onclick="skipToNextQuestion()" class="flex items-center space-x-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg border border-slate-700 transition active:scale-95 text-[11px]">
+          <span>⏩</span>
+          <span>換下一題</span>
+        </button>
+        <button onclick="resetMatch()" class="flex items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-lg shadow border border-rose-400 transition active:scale-95 text-[11px]">
+          <span>🔄</span>
+          <span>重開</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 彈出視窗：國小中年級完整教學單元清單 (含三年級與四年級分類) -->
+  <div id="unitModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border-4 border-amber-400 rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[90vh] flex flex-col">
+      <button onclick="closeUnitModal()" class="absolute top-4 right-4 w-9 h-9 bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 rounded-full font-bold flex items-center justify-center text-lg transition">
+        ✕
+      </button>
+      
+      <div class="text-center mb-4">
+        <span class="bg-amber-100 text-amber-900 font-black text-xs px-3 py-1 rounded-full border border-amber-300">教育部 108 課綱核心學習領域</span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-800 font-kids mt-1">選擇數學競賽單元（中年級）</h3>
+        <p class="text-xs sm:text-sm text-slate-500 font-bold">點選想要挑戰的單元，立即開始雙隊對決！</p>
+        
+        <!-- 年級快速分類按鈕 -->
+        <div class="flex items-center justify-center space-x-2 mt-3 flex-wrap gap-1">
+          <button onclick="filterGrade('all')" id="gradeFilterAll" class="px-3 py-1 text-xs font-black rounded-full bg-amber-400 text-slate-900 shadow-sm border border-amber-500 transition">全部單元 (24)</button>
+          <button onclick="filterGrade('3-easy')" id="gradeFilter3Easy" class="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition">🌱 三年級基礎簡單 (5)</button>
+          <button onclick="filterGrade('3')" id="gradeFilter3" class="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition">三年級完整 (17)</button>
+          <button onclick="filterGrade('4')" id="gradeFilter4" class="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition">四年級進階 (7)</button>
+        </div>
+      </div>
+
+      <!-- 單元卡片捲動區 -->
+      <div class="overflow-y-auto space-y-3 pr-1.5 flex-grow" id="unitListContainer">
+        <!-- JS 動態生成所有單元卡片 -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-200 text-center">
+        <button onclick="closeUnitModal()" class="btn-3d-gold px-8 py-2.5 rounded-2xl font-black text-slate-950 text-sm">
+          回到對決賽場 ⚔️
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 獲勝頒獎盛大結算彈窗 -->
+  <div id="winnerModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-lg z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border-5 border-amber-400 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl text-center relative animate-pulseScore">
+      <div class="text-6xl mb-2" id="winnerEmoji">🏆</div>
+      <div class="text-xs font-black px-3 py-1 rounded-full inline-block mb-1" id="winnerTag">勝利者誕生</div>
+      <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-fun mb-2" id="winnerTitle">閃電暴龍隊 奪冠！</h2>
+      <p class="text-sm font-bold text-slate-600 mb-5" id="winnerSubtitle">率先奪得 100 分，榮登國小中年級數學王者！👑</p>
+
+      <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-5 flex justify-around items-center">
+        <div>
+          <div class="text-xs text-slate-500 font-bold">暴龍隊總分</div>
+          <div class="text-2xl font-fun text-cyan-600 font-black" id="winScoreA">100</div>
+        </div>
+        <div class="text-2xl font-black text-slate-300">VS</div>
+        <div>
+          <div class="text-xs text-slate-500 font-bold">烈焰隊總分</div>
+          <div class="text-2xl font-fun text-rose-600 font-black" id="winScoreB">85</div>
+        </div>
+      </div>
+
+      <!-- 比賽戰況精準結算數據 -->
+      <div class="grid grid-cols-2 gap-2 text-[11px] mb-5 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-left font-bold text-slate-700">
+        <div class="border-r border-slate-200 pr-2">
+          <div class="text-cyan-700 font-black">🦕 暴龍隊表現：</div>
+          <div>👑 率先搶答：<span id="statFirstA" class="font-mono text-cyan-800">0</span> 次</div>
+          <div>🔥 最高連擊：<span id="statComboA" class="font-mono text-cyan-800">0</span> 連勝</div>
+        </div>
+        <div class="pl-2">
+          <div class="text-rose-700 font-black">🦅 烈焰隊表現：</div>
+          <div>👑 率先搶答：<span id="statFirstB" class="font-mono text-rose-800">0</span> 次</div>
+          <div>🔥 最高連擊：<span id="statComboB" class="font-mono text-rose-800">0</span> 連勝</div>
+        </div>
+      </div>
+
+      <button onclick="restartMatchAfterWin()" class="w-full btn-3d-gold py-3 rounded-2xl font-black text-slate-950 text-base shadow-lg">
+        再來一場雙隊大決鬥！⚡
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 遊戲音效引擎 (Web Audio API)
+    // ==========================================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('soundToggleBtn');
+      btn.innerText = soundEnabled ? '🔊' : '🔇';
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        if (type === 'first_correct') {
+          // 首殺號角 (明亮大三和弦)
+          const freqs = [523.25, 659.25, 783.99, 1046.50];
+          freqs.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+            gain.gain.setValueAtTime(0.25, now + idx * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.06);
+            osc.stop(now + idx * 0.06 + 0.2);
+          });
+        } else if (type === 'second_correct') {
+          // 堅持答對輕快雙音
+          [659.25, 880].forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.2);
+          });
+        } else if (type === 'wrong') {
+          // 答錯雙重濁音
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.exponentialRampToValueAtTime(90, now + 0.22);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'turn') {
+          // 換題水滴彈跳音
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'tick') {
+          // 倒數緊湊木魚滴答聲
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(800, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'fanfare') {
+          // 獲勝大慶典
+          const notes = [523.25, 523.25, 523.25, 659.25, 783.99, 1046.5];
+          const times = [0, 0.1, 0.2, 0.3, 0.45, 0.65];
+          notes.forEach((f, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, now + times[i]);
+            gain.gain.setValueAtTime(0.22, now + times[i]);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + times[i]);
+            osc.stop(now + times[i] + 0.3);
+          });
+        }
+      } catch (e) {
+        console.warn('Audio error:', e);
+      }
+    }
+
+    // ==========================================
+    // 輔助數學隨機與工具函數
+    // ==========================================
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function randChoice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    function gcd(a, b) {
+      return b === 0 ? a : gcd(b, a % b);
+    }
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+    function generateSmartDistractors(correctVal, count = 3, deltaRange = [1, 20]) {
+      const distSet = new Set();
+      const offsets = [-10, 10, -1, 1, -2, 2, -5, 5, -20, 20, -100, 100];
+      for (let offset of shuffleArray(offsets)) {
+        const cand = correctVal + offset;
+        if (cand > 0 && cand !== correctVal) {
+          distSet.add(cand);
+          if (distSet.size >= count) break;
+        }
+      }
+      while (distSet.size < count) {
+        const diff = randInt(deltaRange[0], deltaRange[1]) * (Math.random() < 0.5 ? -1 : 1);
+        const cand = correctVal + diff;
+        if (cand > 0 && cand !== correctVal) {
+          distSet.add(cand);
+        }
+      }
+      return Array.from(distSet);
+    }
+
+    // ==========================================
+    // 視覺 SVG 原創圖解庫
+    // ==========================================
+    function getSvgGraphic(type) {
+      if (type === 'ruler') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="20" y="40" width="160" height="40" rx="6" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
+            <line x1="30" y1="40" x2="30" y2="60" stroke="#854D0E" stroke-width="2.5"/>
+            <text x="30" y="75" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">0</text>
+            <line x1="60" y1="40" x2="60" y2="60" stroke="#854D0E" stroke-width="2.5"/>
+            <text x="60" y="75" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">1</text>
+            <line x1="90" y1="40" x2="90" y2="60" stroke="#854D0E" stroke-width="2.5"/>
+            <text x="90" y="75" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">2</text>
+            <line x1="120" y1="40" x2="120" y2="60" stroke="#854D0E" stroke-width="2.5"/>
+            <text x="120" y="75" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">3</text>
+            <line x1="150" y1="40" x2="150" y2="60" stroke="#854D0E" stroke-width="2.5"/>
+            <text x="150" y="75" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">4cm</text>
+            <rect x="30" y="24" width="75" height="8" fill="#38BDF8" rx="2"/>
+            <polygon points="105,24 115,28 105,32" fill="#F43F5E"/>
+            <text x="100" y="105" font-size="11" font-weight="bold" fill="#0369A1" text-anchor="middle">1 公分 (cm) = 10 毫米 (mm)</text>
+          </svg>
+        `;
+      } else if (type === 'circleRadius') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <circle cx="100" cy="55" r="42" fill="#E0F2FE" stroke="#0284C7" stroke-width="3"/>
+            <circle cx="100" cy="55" r="4" fill="#E11D48"/>
+            <text x="94" y="50" font-size="10" font-weight="900" fill="#E11D48">圓心</text>
+            <line x1="100" y1="55" x2="142" y2="55" stroke="#0284C7" stroke-width="3"/>
+            <text x="121" y="49" font-size="10" font-weight="bold" fill="#0369A1" text-anchor="middle">半徑</text>
+            <line x1="58" y1="55" x2="100" y2="55" stroke="#94A3B8" stroke-width="2" stroke-dasharray="3,3"/>
+            <text x="100" y="110" font-size="11" font-weight="900" fill="#047857" text-anchor="middle">直徑 = 半徑 × 2</text>
+          </svg>
+        `;
+      } else if (type === 'cashier') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="35" y="25" width="130" height="65" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="3"/>
+            <rect x="50" y="38" width="100" height="25" rx="5" fill="#1E293B"/>
+            <text x="100" y="55" font-size="14" font-weight="900" fill="#34D399" text-anchor="middle">$ 找錢與估算</text>
+            <circle cx="70" cy="74" r="6" fill="#FBBF24" stroke="#D97706"/>
+            <circle cx="90" cy="74" r="6" fill="#FBBF24" stroke="#D97706"/>
+            <circle cx="110" cy="74" r="6" fill="#FBBF24" stroke="#D97706"/>
+            <text x="100" y="108" font-size="11" font-weight="bold" fill="#B45309" text-anchor="middle">付款金額 - 價格 = 找回零錢</text>
+          </svg>
+        `;
+      } else if (type === 'divisionBox') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="30" y="25" width="140" height="65" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="3"/>
+            <text x="55" y="60" font-size="16" font-weight="900" fill="#0369A1">除數</text>
+            <text x="90" y="62" font-size="22" font-weight="900" fill="#E11D48">÷</text>
+            <text x="135" y="60" font-size="16" font-weight="900" fill="#0369A1">被除</text>
+            <text x="100" y="106" font-size="11" font-weight="900" fill="#B91C1C" text-anchor="middle">⚠️ 餘數一定要比除數小！</text>
+          </svg>
+        `;
+      } else if (type === 'multiplyVertical') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="40" y="20" width="120" height="70" rx="10" fill="#F0FDF4" stroke="#22C55E" stroke-width="3"/>
+            <text x="110" y="42" font-size="16" font-weight="900" fill="#15803D" text-anchor="end">2 4 8</text>
+            <text x="75" y="62" font-size="16" font-weight="900" fill="#DC2626">×</text>
+            <text x="110" y="62" font-size="16" font-weight="900" fill="#15803D" text-anchor="end">6</text>
+            <line x1="55" y1="68" x2="125" y2="68" stroke="#16A34A" stroke-width="2"/>
+            <text x="100" y="106" font-size="11" font-weight="bold" fill="#15803D" text-anchor="middle">個位算起，滿十向前進位！</text>
+          </svg>
+        `;
+      } else if (type === 'pizza') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <circle cx="100" cy="55" r="42" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+            <line x1="100" y1="13" x2="100" y2="97" stroke="#FFF" stroke-width="2"/>
+            <line x1="58" y1="55" x2="142" y2="55" stroke="#FFF" stroke-width="2"/>
+            <line x1="70" y1="25" x2="130" y2="85" stroke="#FFF" stroke-width="2"/>
+            <line x1="70" y1="85" x2="130" y2="25" stroke="#FFF" stroke-width="2"/>
+            <text x="100" y="110" font-size="11" font-weight="bold" fill="#B45309" text-anchor="middle">平分成幾等份：分母在下、分子在上</text>
+          </svg>
+        `;
+      } else if (type === 'triangle') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <polygon points="100,20 45,90 155,90" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
+            <text x="100" y="65" font-size="13" font-weight="bold" fill="#854D0E" text-anchor="middle">內角和 = 180°</text>
+            <text x="100" y="108" font-size="11" font-weight="bold" fill="#047857" text-anchor="middle">等腰三角形兩底角相等</text>
+          </svg>
+        `;
+      } else if (type === 'simpleClock') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <circle cx="100" cy="55" r="42" fill="#FFF7ED" stroke="#EA580C" stroke-width="3.5"/>
+            <text x="100" y="27" font-size="9" font-weight="900" fill="#C2410C" text-anchor="middle">12</text>
+            <text x="135" y="58" font-size="9" font-weight="900" fill="#C2410C" text-anchor="middle">3</text>
+            <text x="100" y="90" font-size="9" font-weight="900" fill="#C2410C" text-anchor="middle">6</text>
+            <text x="65" y="58" font-size="9" font-weight="900" fill="#C2410C" text-anchor="middle">9</text>
+            <circle cx="100" cy="55" r="3.5" fill="#1E293B"/>
+            <line x1="100" y1="55" x2="100" y2="33" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/>
+            <line x1="100" y1="55" x2="118" y2="65" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
+            <text x="100" y="110" font-size="10.5" font-weight="900" fill="#9A3412" text-anchor="middle">短針看時(小時)，長針看分(分鐘)</text>
+          </svg>
+        `;
+      } else if (type === 'compareCrocodile') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="25" y="25" width="60" height="55" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="3"/>
+            <text x="55" y="60" font-size="18" font-weight="900" fill="#0369A1" text-anchor="middle">百 位</text>
+            <path d="M95,38 L115,52 L95,66" fill="none" stroke="#F59E0B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="120" y="25" width="60" height="55" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="3"/>
+            <text x="150" y="60" font-size="18" font-weight="900" fill="#B45309" text-anchor="middle">百 位</text>
+            <text x="100" y="108" font-size="11" font-weight="900" fill="#047857" text-anchor="middle">開口朝向比較大的數 (大於 >)</text>
+          </svg>
+        `;
+      } else if (type === 'meterRuler') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="20" y="35" width="160" height="35" rx="8" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
+            <line x1="35" y1="35" x2="35" y2="52" stroke="#854D0E" stroke-width="2.5"/>
+            <line x1="75" y1="35" x2="75" y2="48" stroke="#854D0E" stroke-width="1.5"/>
+            <line x1="115" y1="35" x2="115" y2="52" stroke="#854D0E" stroke-width="2.5"/>
+            <line x1="155" y1="35" x2="155" y2="48" stroke="#854D0E" stroke-width="1.5"/>
+            <text x="35" y="64" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">0m</text>
+            <text x="115" y="64" font-size="9" font-weight="900" fill="#854D0E" text-anchor="middle">1m</text>
+            <text x="100" y="106" font-size="11" font-weight="900" fill="#15803D" text-anchor="middle">1 公尺 (m) = 100 公分 (cm)</text>
+          </svg>
+        `;
+      } else if (type === 'basicFraction') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="35" y="25" width="130" height="55" rx="8" fill="#FFF" stroke="#4F46E5" stroke-width="3"/>
+            <rect x="35" y="25" width="32.5" height="55" rx="6" fill="#818CF8"/>
+            <line x1="67.5" y1="25" x2="67.5" y2="80" stroke="#4F46E5" stroke-width="2"/>
+            <line x1="100" y1="25" x2="100" y2="80" stroke="#4F46E5" stroke-width="2"/>
+            <line x1="132.5" y1="25" x2="132.5" y2="80" stroke="#4F46E5" stroke-width="2"/>
+            <text x="100" y="106" font-size="11" font-weight="900" fill="#4338CA" text-anchor="middle">平分成 4 份，塗了 1 份是 1/4</text>
+          </svg>
+        `;
+      } else if (type === 'timesTable') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="35" y="22" width="130" height="65" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="3"/>
+            <text x="100" y="52" font-size="20" font-weight="900" fill="#D97706" text-anchor="middle">9 × 9 乘法表</text>
+            <text x="100" y="75" font-size="14" font-weight="900" fill="#2563EB" text-anchor="middle">二七 14、八九 72</text>
+            <text x="100" y="108" font-size="11" font-weight="900" fill="#047857" text-anchor="middle">掌握乘法口訣，算數神速！</text>
+          </svg>
+        `;
+      } else if (type === 'rectangle') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <rect x="40" y="28" width="120" height="55" rx="6" fill="#DCFCE7" stroke="#16A34A" stroke-width="3"/>
+            <text x="100" y="60" font-size="12" font-weight="bold" fill="#166534" text-anchor="middle">長 × 寬 = 面積</text>
+            <text x="100" y="105" font-size="11" font-weight="bold" fill="#0369A1" text-anchor="middle">周長 = (長 + 寬) × 2</text>
+          </svg>
+        `;
+      } else if (type === 'clockRightAngle') {
+        return `
+          <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+            <circle cx="100" cy="55" r="40" fill="#FFF" stroke="#6366F1" stroke-width="4"/>
+            <circle cx="100" cy="55" r="4" fill="#1E293B"/>
+            <line x1="100" y1="55" x2="100" y2="25" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="100" y1="55" x2="130" y2="55" stroke="#EF4444" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="100" y="110" font-size="11" font-weight="bold" fill="#4338CA" text-anchor="middle">鐘面一大格是 30 度 (360° ÷ 12)</text>
+          </svg>
+        `;
+      }
+      return `
+        <svg viewBox="0 0 200 120" class="w-full h-full max-h-36">
+          <circle cx="100" cy="55" r="40" fill="#FEF3C7" stroke="#F59E0B" stroke-width="3"/>
+          <text x="100" y="68" font-size="30" text-anchor="middle">🧮</text>
+          <text x="100" y="110" font-size="11" font-weight="bold" fill="#B45309" text-anchor="middle">中年級數學挑戰</text>
+        </svg>
+      `;
+    }
+
+    // ==========================================
+    // 完整 24 個中年級教學單元與動態出題引擎
+    // ==========================================
+    const MATH_UNITS = [
+      // === 三年級基礎簡單單元 (5 個) ===
+      {
+        id: "g3_times_table",
+        name: "九九乘法快問快答 (簡單)",
+        grade: "三年級 (簡單)",
+        gradeKey: "3-easy",
+        desc: "2~9乘法口訣、乘法表基本運算、倍數口訣生活速算",
+        icon: "⚡",
+        generate() {
+          const a = randInt(2, 9);
+          const b = randInt(2, 9);
+          const ans = a * b;
+          const type = randInt(1, 2);
+          if (type === 1) {
+            return {
+              title: `口訣速算：「${a} × ${b}」等於多少？`,
+              hint: `背背看乘法口訣：${a} 的 ${b} 倍是多少？`,
+              svg: "timesTable",
+              correct: `${ans}`,
+              distractors: generateSmartDistractors(ans, 3, [1, 9]).map(v => `${v}`),
+              expl: `${a} × ${b} = ${ans}！九九乘法熟練就能秒答！`
+            };
+          } else {
+            return {
+              title: `一排有 ${a} 張椅子，排了 ${b} 排，共有幾張椅子？`,
+              hint: `乘法算式：每排張數 × 排數 = ${a} × ${b}！`,
+              svg: "timesTable",
+              correct: `${ans} 張`,
+              distractors: generateSmartDistractors(ans, 3, [2, 8]).map(v => `${v} 張`),
+              expl: `${a} × ${b} = ${ans} 張椅子！`
+            };
+          }
+        }
+      },
+      {
+        id: "g3_compare_numbers",
+        name: "三位數比大小與位值 (簡單)",
+        grade: "三年級 (簡單)",
+        gradeKey: "3-easy",
+        desc: "千以內數的大小比較、百位十位個位位值辨識、填入 > 或 <",
+        icon: "🐊",
+        generate() {
+          const type = randInt(1, 2);
+          if (type === 1) {
+            const h1 = randInt(2, 8);
+            const h2 = randChoice([h1 - 1, h1 + 1, h1]);
+            const num1 = h1 * 100 + randInt(10, 99);
+            let num2 = (h2 === h1) ? h1 * 100 + randInt(10, 99) : h2 * 100 + randInt(10, 99);
+            if (num1 === num2) num2 += 5;
+            const isGreater = num1 > num2;
+            const correctSign = isGreater ? ">" : "<";
+            return {
+              title: `在空格中填入正確符號：${num1}  □  ${num2}`,
+              hint: `先比較「百位數」，百位相同再比「十位數」，開口朝向比較大的數！`,
+              svg: "compareCrocodile",
+              correct: `${num1} ${correctSign} ${num2}`,
+              distractors: [
+                `${num1} ${isGreater ? "<" : ">"} ${num2}`,
+                `${num1} = ${num2}`,
+                `無法比較`
+              ],
+              expl: `${num1} 比 ${num2} ${isGreater ? '大' : '小'}，所以填入「${correctSign}」！`
+            };
+          } else {
+            const h = randInt(2, 9);
+            const t = randInt(1, 9);
+            const o = randInt(0, 9);
+            const total = h * 100 + t * 10 + o;
+            return {
+              title: `「${h} 個百、${t} 個十和 ${o} 個一」合起來是多少？`,
+              hint: `百位是 ${h}、十位是 ${t}、個位是 ${o}！`,
+              svg: "compareCrocodile",
+              correct: `${total}`,
+              distractors: [`${h}${o}${t}`, `${h * 10 + t}${o}`, `${total + 10}`],
+              expl: `${h}個百是${h * 100}，${t}個十是${t * 10}，${o}個一是${o}，合起來是 ${total}！`
+            };
+          }
+        }
+      },
+      {
+        id: "g3_meter_cm",
+        name: "公尺與公分換算 (簡單)",
+        grade: "三年級 (簡單)",
+        gradeKey: "3-easy",
+        desc: "1 公尺 = 100 公分、生活物品長度判斷、公尺公分基礎換算",
+        icon: "📏",
+        generate() {
+          const type = randInt(1, 2);
+          if (type === 1) {
+            const m = randInt(1, 6);
+            const cm = randInt(5, 95);
+            const totalCm = m * 100 + cm;
+            return {
+              title: `教室的黑板長「${m} 公尺 ${cm} 公分」，換算成「公分」是多少？`,
+              hint: `1 公尺 (m) = 100 公分 (cm)！${m} 公尺就是 ${m * 100} 公分！`,
+              svg: "meterRuler",
+              correct: `${totalCm} 公分`,
+              distractors: [`${m * 10 + cm} 公分`, `${totalCm + 10} 公分`, `${m * 1000 + cm} 公分`],
+              expl: `${m} 公尺 = ${m * 100} 公分，加上 ${cm} 公分 = ${totalCm} 公分！`
+            };
+          } else {
+            const m = randInt(1, 5);
+            const cm = randInt(10, 80);
+            const rawCm = m * 100 + cm;
+            return {
+              title: `小樹苗高 ${rawCm} 公分，換算成「幾公尺幾公分」是多少？`,
+              hint: `每滿 100 公分就可以換成 1 公尺！`,
+              svg: "meterRuler",
+              correct: `${m} 公尺 ${cm} 公分`,
+              distractors: [
+                `${m + 1} 公尺 ${cm} 公分`,
+                `${m} 公尺 ${cm + 10} 公分`,
+                `${Math.floor(rawCm / 10)} 公尺 ${rawCm % 10} 公分`
+              ],
+              expl: `${rawCm} 公分 = ${m} 公尺 ${cm} 公分！`
+            };
+          }
+        }
+      },
+      {
+        id: "g3_clock_reading",
+        name: "看時鐘讀時間與半點 (簡單)",
+        grade: "三年級 (簡單)",
+        gradeKey: "3-easy",
+        desc: "短針看時、長針看分、幾點鐘與幾點半的辨認",
+        icon: "⏰",
+        generate() {
+          const hour = randInt(1, 12);
+          const isHalf = Math.random() < 0.5;
+          const timeText = isHalf ? `${hour} 點半 (${hour}:30)` : `${hour} 點整 (${hour}:00)`;
+          const hintText = isHalf ? `長針指在 6 表示 30 分（半點），短針在 ${hour} 和 ${hour % 12 + 1} 中間！` : `長針指在 12 表示整點，短針指在 ${hour}！`;
+          return {
+            title: isHalf 
+              ? `時鐘的「長針指在 6、短針指在 ${hour} 和 ${hour % 12 + 1} 的正中間」，現在是幾點幾分？`
+              : `時鐘的「長針指在 12、短針剛好指在 ${hour}」，現在是幾點幾分？`,
+            hint: hintText,
+            svg: "simpleClock",
+            correct: timeText,
+            distractors: [
+              isHalf ? `${hour % 12 + 1} 點半 (${hour % 12 + 1}:30)` : `${hour % 12 + 1} 點整 (${hour % 12 + 1}:00)`,
+              isHalf ? `${hour} 點 6 分 (${hour}:06)` : `${hour} 點 12 分 (${hour}:12)`,
+              `${(hour + 2) % 12 || 12} 點整`
+            ],
+            expl: `${hintText} 正確答案是 ${timeText}！`
+          };
+        }
+      },
+      {
+        id: "g3_basic_fractions",
+        name: "幾分之幾的基礎認識 (簡單)",
+        grade: "三年級 (簡單)",
+        gradeKey: "3-easy",
+        desc: "平分的概念、認識分子與分母、幾分之幾的圖形意義",
+        icon: "🍰",
+        generate() {
+          const denom = randChoice([2, 3, 4, 6, 8]);
+          const num = randInt(1, denom - 1);
+          const item = randChoice(["一個披薩", "一條蛋糕", "一張色紙", "一塊餅乾"]);
+          return {
+            title: `把${item}「平分成 ${denom} 等份」，其中的 ${num} 份是幾分之幾？`,
+            hint: `分母是平分成的總份數（在下方），分子是拿走的份數（在上方）！`,
+            svg: "basicFraction",
+            correct: `${num}/${denom}`,
+            distractors: [
+              `${denom}/${num}`,
+              `${num + 1}/${denom}`,
+              `1/${denom}`
+            ].filter((v, i, a) => a.indexOf(v) === i && v !== `${num}/${denom}`).slice(0, 3),
+            expl: `平分成 ${denom} 等份，所以分母是 ${denom}；拿了 ${num} 份，所以分子是 ${num}，記作 ${num}/${denom}！`
+          };
+        }
+      },
+
+      // === 三年級進階與標準單元 (12 個) ===
+      {
+        id: "grade3_estimation",
+        name: "千以內估算與生活購物",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "百位數加減、三位數估算到十位與百位、購物付款與找錢計算",
+        icon: "🏪",
+        generate() {
+          const type = randInt(1, 3);
+          if (type === 1) {
+            const price = randInt(25, 88) * 10;
+            const pay = price <= 500 ? 500 : 1000;
+            const change = pay - price;
+            const item = randChoice(["一雙運動鞋", "一套故事書", "一個小書包", "一輛遙控賽車"]);
+            return {
+              title: `小明買了${item}花了 ${price} 元，他付了一張 ${pay} 元鈔票，老闆應該找給他多少元？`,
+              hint: `找錢算式：付出的錢 - 物品價格 = ${pay} - ${price}！`,
+              svg: "cashier",
+              correct: `${change} 元`,
+              distractors: [`${change + 10} 元`, `${change - 10} 元`, `${pay - price + 100} 元`],
+              expl: `${pay} - ${price} = ${change} 元！`
+            };
+          } else if (type === 2) {
+            const n1 = randInt(210, 480);
+            const n2 = randInt(110, 390);
+            const r1 = Math.round(n1 / 100) * 100;
+            const r2 = Math.round(n2 / 100) * 100;
+            const approxSum = r1 + r2;
+            return {
+              title: `文具店上午賣出 ${n1} 枝鉛筆，下午賣出 ${n2} 枝。如果「先取概數到百位」再來估算，大約共賣出幾枝鉛筆？`,
+              hint: `${n1} 的百位概數約為 ${r1}，${n2} 的百位概數約為 ${r2}！`,
+              svg: "cashier",
+              correct: `大約 ${approxSum} 枝`,
+              distractors: [`���約 ${approxSum + 100} 枝`, `大約 ${approxSum - 100} 枝`, `大約 ${approxSum + 200} 枝`],
+              expl: `${n1} 約為 ${r1}，${n2} 約為 ${r2}，${r1} + ${r2} = ${approxSum} 枝！`
+            };
+          } else {
+            const a = randInt(350, 750);
+            const b = randInt(120, a - 60);
+            const diff = a - b;
+            return {
+              title: `農場採收了 ${a} 顆蘋果和 ${b} 顆橘子，蘋果比橘子多幾顆？`,
+              hint: `大數減小數：${a} - ${b} = ？`,
+              svg: "cashier",
+              correct: `${diff} 顆`,
+              distractors: generateSmartDistractors(diff, 3, [5, 25]).map(v => `${v} 顆`),
+              expl: `${a} - ${b} = ${diff} 顆！`
+            };
+          }
+        }
+      },
+      {
+        id: "grade3_multiplication",
+        name: "乘法直式 (二三位數乘一位數)",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "二位數乘一位數、三位數乘一位數、連續進位與生活倍數應用",
+        icon: "✖️",
+        generate() {
+          const type = randInt(1, 2);
+          if (type === 1) {
+            const tens = randInt(24, 88);
+            const multiplier = randInt(3, 9);
+            const ans = tens * multiplier;
+            return {
+              title: `一盒巧克力有 ${tens} 顆，買了 ${multiplier} 盒，總共有多少顆巧克力？`,
+              hint: `直式乘法：${tens} × ${multiplier}，先算個位再算十位，滿十進位！`,
+              svg: "multiplyVertical",
+              correct: `${ans} 顆`,
+              distractors: generateSmartDistractors(ans, 3, [5, 20]).map(v => `${v} 顆`),
+              expl: `${tens} × ${multiplier} = ${ans} 顆！`
+            };
+          } else {
+            const hundreds = randInt(120, 380);
+            const multiplier = randInt(2, 6);
+            const ans = hundreds * multiplier;
+            return {
+              title: `遊樂園一張門票賣 ${hundreds} 元，買了 ${multiplier} 張門票要付多少元？`,
+              hint: `計算：${hundreds} × ${multiplier} = ？`,
+              svg: "multiplyVertical",
+              correct: `${ans.toLocaleString()} 元`,
+              distractors: generateSmartDistractors(ans, 3, [20, 80]).map(v => `${v.toLocaleString()} 元`),
+              expl: `${hundreds} × ${multiplier} = ${ans.toLocaleString()} 元！`
+            };
+          }
+        }
+      },
+      {
+        id: "grade3_division",
+        name: "除法入門與餘數",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "二三位數除以一位數、商與餘數、餘數必小於除數的驗算觀念",
+        icon: "➗",
+        generate() {
+          const type = randInt(1, 3);
+          if (type === 1) {
+            const divisor = randInt(3, 8);
+            const quotient = randInt(6, 18);
+            const remainder = randInt(1, divisor - 1);
+            const total = divisor * quotient + remainder;
+            return {
+              title: `老師有 ${total} 顆糖果，平分給 ${divisor} 個小朋友，每人分得幾顆？還剩下幾顆？`,
+              hint: `${total} ÷ ${divisor} = 商 ... 餘數？`,
+              svg: "divisionBox",
+              correct: `${quotient} 顆，剩下 ${remainder} 顆`,
+              distractors: [
+                `${quotient} 顆，剩下 ${remainder + 1} 顆`,
+                `${quotient + 1} 顆，剩下 ${remainder} 顆`,
+                `${quotient - 1} 顆，剩下 ${divisor - 1} 顆`
+              ],
+              expl: `${total} ÷ ${divisor} = ${quotient} 餘 ${remainder}！`
+            };
+          } else if (type === 2) {
+            const boxCap = randInt(4, 8);
+            const fullBoxes = randInt(5, 12);
+            const leftOver = randInt(1, boxCap - 1);
+            const totalItems = boxCap * fullBoxes + leftOver;
+            const needBoxes = fullBoxes + 1;
+            return {
+              title: `工廠做了 ${totalItems} 顆蛋糕，每 ${boxCap} 顆裝一盒，剩下的也要裝成一盒，最少需要幾個盒子才能全部裝完？`,
+              hint: `剩下的 ${leftOver} 顆也需要再多準備一個盒子（進一法）！`,
+              svg: "divisionBox",
+              correct: `${needBoxes} 個盒子`,
+              distractors: [`${fullBoxes} 個盒子`, `${fullBoxes + 2} 個盒子`, `${boxCap} 個盒子`],
+              expl: `${totalItems} ÷ ${boxCap} = ${fullBoxes} 餘 ${leftOver} 顆，多出的也需一盒，共需 ${needBoxes} 盒！`
+            };
+          } else {
+            const divisor = randInt(4, 9);
+            return {
+              title: `當除數是「${divisor}」時，餘數最大可能是多少？`,
+              hint: `除法鐵則：餘數一定要比除數小（餘數 < 除數）！`,
+              svg: "divisionBox",
+              correct: `${divisor - 1}`,
+              distractors: [`${divisor}`, `${divisor + 1}`, `${divisor - 2}`],
+              expl: `餘數必須小於除數，除數是 ${divisor}，因此最大餘數是 ${divisor - 1}！`
+            };
+          }
+        }
+      },
+      {
+        id: "grade3_millimeter",
+        name: "毫米與長度公分毫米換算",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "認識毫米 (mm)、公分與毫米的換算、尺規精密量測與長度加減",
+        icon: "📏",
+        generate() {
+          const type = randInt(1, 3);
+          if (type === 1) {
+            const cm = randInt(2, 18);
+            const mm = randInt(1, 9);
+            const totalMm = cm * 10 + mm;
+            return {
+              title: `「${cm} 公分 ${mm} 毫米」等於多少毫米 (mm)？`,
+              hint: `1 公分 (cm) = 10 毫米 (mm)！`,
+              svg: "ruler",
+              correct: `${totalMm} 毫米`,
+              distractors: [`${cm * 100 + mm} 毫米`, `${cm * 10} 毫米`, `${totalMm + 10} 毫米`],
+              expl: `${cm} 公分 = ${cm * 10} 毫米，加上 ${mm} 毫米 = ${totalMm} 毫米！`
+            };
+          } else if (type === 2) {
+            const cm = randInt(3, 24);
+            const mm = randInt(2, 9);
+            const rawMm = cm * 10 + mm;
+            return {
+              title: `鉛筆的長度量出來是 ${rawMm} 毫米，換算成「幾公分幾毫米」是多少？`,
+              hint: `每滿 10 毫米可以換成 1 公分！`,
+              svg: "ruler",
+              correct: `${cm} 公分 ${mm} 毫米`,
+              distractors: [
+                `${cm - 1} 公分 ${mm} 毫米`,
+                `${cm} 公分 0 毫米`,
+                `${Math.floor(rawMm / 100)} 公分 ${rawMm % 100} 毫米`
+              ],
+              expl: `${rawMm} 毫米 = ${cm} 公分 ${mm} 毫米！`
+            };
+          } else {
+            const cm1 = randInt(3, 8);
+            const mm1 = randInt(4, 8);
+            const cm2 = randInt(2, 5);
+            const mm2 = randInt(1, 4);
+            const totalMm = (cm1 * 10 + mm1) + (cm2 * 10 + mm2);
+            const ansCm = Math.floor(totalMm / 10);
+            const ansMm = totalMm % 10;
+            return {
+              title: `紅緞帶長 ${cm1} 公分 ${mm1} 毫米，藍緞帶長 ${cm2} 公分 ${mm2} 毫米，兩條接起來共多長？`,
+              hint: `毫米加毫米滿 10 要進位 1 公分！`,
+              svg: "ruler",
+              correct: `${ansCm} 公分 ${ansMm} 毫米`,
+              distractors: [
+                `${cm1 + cm2} 公分 ${mm1 + mm2} 毫米`,
+                `${ansCm + 1} 公分 ${ansMm} 毫米`,
+                `${ansCm} 公分 ${Math.max(1, ansMm - 2)} 毫米`
+              ],
+              expl: `${cm1}公分${mm1}毫米 + ${cm2}公分${mm2}毫米 = ${ansCm} 公分 ${ansMm} 毫米！`
+            };
+          }
+        }
+      },
+      {
+        id: "grade3_circle",
+        name: "圓、圓心、半徑與直徑",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "圓的要素、圓心、半徑與直徑的 2 倍關係、圓規的使用",
+        icon: "⭕",
+        generate() {
+          const type = randInt(1, 3);
+          if (type === 1) {
+            const r = randInt(3, 18);
+            const d = r * 2;
+            return {
+              title: `一個圓的「半徑」是 ${r} 公分，請問它的「直徑」是多少公分？`,
+              hint: `直徑是半徑的 2 倍（直徑 = 半徑 × 2）！`,
+              svg: "circleRadius",
+              correct: `${d} 公分`,
+              distractors: [`${r + 2} 公分`, `${r} 公分`, `${d + 2} 公分`],
+              expl: `直徑 = 半徑 × 2 = ${r} × 2 = ${d} 公分！`
+            };
+          } else if (type === 2) {
+            const d = randChoice([6, 8, 10, 12, 14, 16, 18, 20]);
+            const r = d / 2;
+            return {
+              title: `小華想用圓規畫出一個「直徑」為 ${d} 公分的圓，他的圓規兩腳張開的距離應該量幾公分？`,
+              hint: `圓規兩腳張開的距離就是圓的「半徑」！半徑 = 直徑 ÷ 2！`,
+              svg: "circleRadius",
+              correct: `${r} 公分`,
+              distractors: [`${d} 公分`, `${r + 1} 公分`, `${Math.max(1, r - 1)} 公分`],
+              expl: `圓規張開的寬度是半徑，半徑 = 直徑 ÷ 2 = ${d} ÷ 2 = ${r} 公分！`
+            };
+          } else {
+            return {
+              title: `在同一個圓當中，通過圓心並且兩端都在圓周上的線段，叫做什麼？`,
+              hint: `它是圓裡面最長的一條線段！`,
+              svg: "circleRadius",
+              correct: `直徑`,
+              distractors: [`半徑`, `圓心`, `周長`],
+              expl: `通過圓心且兩端都在圓周上的線段叫做「直徑」！`
+            };
+          }
+        }
+      },
+      {
+        id: "fractions",
+        name: "分數的認識與同分母加減",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "真分數、假分數、帶分數與同分母加減法",
+        icon: "🍕",
+        generate() {
+          const type = randInt(1, 3);
+          if (type === 1) {
+            const denom = randChoice([5, 6, 7, 8, 9, 10]);
+            const n1 = randInt(1, denom - 3);
+            const n2 = randInt(1, denom - n1 - 1);
+            const sumN = n1 + n2;
+            return {
+              title: `一盒月餅平分成 ${denom} 塊，小明吃了 ${n1}/${denom} 盒，小美吃了 ${n2}/${denom} 盒，兩人共吃了幾盒月餅？`,
+              hint: `同分母相加：分母不變，分子相加（${n1} + ${n2}）！`,
+              svg: "pizza",
+              correct: `${sumN}/${denom} 盒`,
+              distractors: [`${sumN}/${denom * 2} 盒`, `${sumN + 1}/${denom} 盒`, `${Math.abs(n1 - n2)}/${denom} 盒`],
+              expl: `${n1}/${denom} + ${n2}/${denom} = ${sumN}/${denom} 盒，分母保持不變！`
+            };
+          } else if (type === 2) {
+            const denom = randChoice([3, 4, 5, 6, 7]);
+            const whole = randInt(2, 4);
+            const rem = randInt(1, denom - 1);
+            const num = whole * denom + rem;
+            return {
+              title: `將假分數「${num}/${denom}」換成帶分數，正確是多少？`,
+              hint: `${num} ÷ ${denom}，商是整數部分，餘數是分子！`,
+              svg: "pizza",
+              correct: `${whole} 又 ${rem}/${denom}`,
+              distractors: [
+                `${whole} 又 ${Math.max(1, rem - 1)}/${denom}`,
+                `${whole + 1} 又 ${rem}/${denom}`,
+                `${whole} 又 ${rem}/${denom + 1}`
+              ],
+              expl: `${num} ÷ ${denom} = ${whole} 餘 ${rem}，所以是 ${whole} 又 ${rem}/${denom}！`
+            };
+          } else {
+            const denom = randChoice([4, 5, 6, 8]);
+            const whole = randInt(2, 5);
+            const num = randInt(1, denom - 1);
+            const improperNum = whole * denom + num;
+            return {
+              title: `將帶分數「${whole} 又 ${num}/${denom}」換成假分數是多少？`,
+              hint: `分子 = 整數 × 分母 + 分子：(${whole} × ${denom} + ${num})！`,
+              svg: "pizza",
+              correct: `${improperNum}/${denom}`,
+              distractors: [
+                `${whole * denom}/${denom}`,
+                `${improperNum + 2}/${denom}`,
+                `${improperNum - 2}/${denom}`
+              ],
+              expl: `${whole} × ${denom} + ${num} = ${improperNum}，所以是 ${improperNum}/${denom}！`
+            };
+          }
+        }
+      },
+      {
+        id: "decimals",
+        name: "一位小數的認識與加減",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "一位小數、十分位概念、生活小數直式加減與公尺換算",
+        icon: "🪙",
+        generate() {
+          const a = (randInt(15, 65) / 10).toFixed(1);
+          const b = (randInt(11, 48) / 10).toFixed(1);
+          const sum = (parseFloat(a) + parseFloat(b)).toFixed(1);
+          return {
+            title: `計算「${a} + ${b}」的結果是多少？`,
+            hint: `直式相加時，小數點一定要對齊！`,
+            svg: "cashier",
+            correct: `${sum}`,
+            distractors: [
+              `${(parseFloat(sum) + 0.2).toFixed(1)}`,
+              `${(parseFloat(sum) - 0.2).toFixed(1)}`,
+              `${(parseFloat(a) * 10 + parseFloat(b) * 10)}`
+            ],
+            expl: `${a} + ${b} = ${sum}！`
+          };
+        }
+      },
+      {
+        id: "angle_triangle",
+        name: "角與三角形 (直角與銳角鈍角)",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "直角、銳角、鈍角、三角形內角和 180° 與等腰三角形",
+        icon: "📐",
+        generate() {
+          const a1 = randInt(40, 75);
+          const a2 = randInt(35, 75);
+          const a3 = 180 - a1 - a2;
+          return {
+            title: `一個三角形其中兩個角分別是 ${a1}° 和 ${a2}°，第三個角是多少度？`,
+            hint: `三角形三個內角相加等於 180°！`,
+            svg: "triangle",
+            correct: `${a3}°`,
+            distractors: [`${a3 + 10}°`, `${a3 - 10}°`, `${180 - a1}°`],
+            expl: `180° - ${a1}° - ${a2}° = ${a3}°！`
+          };
+        }
+      },
+      {
+        id: "area_perimeter",
+        name: "長方形與正方形周長",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "周長的意義、長方形與正方形周長公式計算",
+        icon: "⬛",
+        generate() {
+          const len = randInt(6, 18);
+          const wid = randInt(3, len - 2);
+          const peri = (len + wid) * 2;
+          return {
+            title: `一個長方形花圃，長是 ${len} 公尺、寬是 ${wid} 公尺，它的「周長」是多少公尺？`,
+            hint: `周長 = (長 + 寬) × 2！`,
+            svg: "rectangle",
+            correct: `${peri} 公尺`,
+            distractors: [`${len * wid} 公尺`, `${len + wid} 公尺`, `${peri + 4} 公尺`],
+            expl: `周長 = (${len} + ${wid}) × 2 = ${peri} 公尺！`
+          };
+        }
+      },
+      {
+        id: "time_measurement",
+        name: "時間與時刻的加減",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "日日時分秒換算、跨時電影時刻與生活作息時間計算",
+        icon: "⏳",
+        generate() {
+          const startH = randInt(1, 4);
+          const startM = randInt(10, 40);
+          const durH = 1;
+          const durM = randInt(25, 45);
+          const totalM = startM + durM;
+          const endH = startH + durH + Math.floor(totalM / 60);
+          const endM = totalM % 60;
+          return {
+            title: `卡通在下午 ${startH} 點 ${startM} 分開始，片長 ${durH} 小時 ${durM} 分鐘，結束時間是下午幾點幾分？`,
+            hint: `滿 60 分鐘要記得向小時進 1 小時！`,
+            svg: "clockRightAngle",
+            correct: `下午 ${endH} 點 ${endM < 10 ? '0' + endM : endM} 分`,
+            distractors: [
+              `下午 ${endH - 1} 點 ${endM < 10 ? '0' + endM : endM} 分`,
+              `下午 ${endH} 點 ${(endM + 15) % 60} 分`,
+              `下午 ${endH + 1} 點 ${endM < 10 ? '0' + endM : endM} 分`
+            ],
+            expl: `${startH}時${startM}分 + ${durH}時${durM}分 = 下午 ${endH} 點 ${endM < 10 ? '0' + endM : endM} 分！`
+          };
+        }
+      },
+      {
+        id: "four_ops",
+        name: "四則運算 (萬以內加減與乘除)",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "四位數加減、三位數乘除、乘除先算後加減",
+        icon: "🧮",
+        generate() {
+          const a = randInt(12, 45) * 10;
+          const b = randInt(11, 25);
+          const ans = a * b;
+          return {
+            title: `文具行進貨 ${a} 盒彩色筆，每盒裝 ${b} 支，總共有多少支彩色筆？`,
+            hint: `利用乘法直式計算：${a} × ${b} = ？`,
+            svg: "multiplyVertical",
+            correct: `${ans.toLocaleString()} 支`,
+            distractors: generateSmartDistractors(ans, 3, [50, 200]).map(v => `${v.toLocaleString()} 支`),
+            expl: `${a} × ${b} = ${ans.toLocaleString()} 支！`
+          };
+        }
+      },
+      {
+        id: "g3_weight_capacity",
+        name: "重量與容量 (公斤公克與公升毫升)",
+        grade: "三年級",
+        gradeKey: "3",
+        desc: "1 公斤 = 1000 公克、1 公升 = 1000 毫升、生活量感換算",
+        icon: "⚖️",
+        generate() {
+          const kg = randInt(2, 8);
+          const g = randInt(120, 850);
+          const totalG = kg * 1000 + g;
+          return {
+            title: `一袋大米重「${kg} 公斤 ${g} 公克」，換算成「公克」總共是多少？`,
+            hint: `1 公斤 = 1000 公克，${kg} 公斤就是 ${kg * 1000} 公克！`,
+            svg: "cashier",
+            correct: `${totalG.toLocaleString()} 公克`,
+            distractors: [
+              `${(kg * 100 + g).toLocaleString()} 公克`,
+              `${(totalG + 100).toLocaleString()} 公克`,
+              `${(kg * 10000 + g).toLocaleString()} 公克`
+            ],
+            expl: `${kg} 公斤 = ${kg * 1000} 公克，加上 ${g} 公克 = ${totalG.toLocaleString()} 公克！`
+          };
+        }
+      },
+
+      // === 四年級單元 (共 7 個) ===
+      {
+        id: "big_numbers",
+        name: "一億以內的大數與位值",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "千、萬、十萬、百萬、千萬與億的位值概念、讀法與大小比較",
+        icon: "💎",
+        generate() {
+          const qWan = randInt(1000, 9999);
+          const qGe = randInt(10, 990);
+          const totalNum = qWan * 10000 + qGe;
+          return {
+            title: `「${qWan} 萬加上 ${qGe}」寫成阿拉伯數字是多少？`,
+            hint: `注意萬位與百位之間的「0」，它是八位數！`,
+            svg: "cashier",
+            correct: `${totalNum}`,
+            distractors: [`${qWan}${qGe}`, `${qWan}0${qGe}`, `${qWan * 10000 + qGe * 10}`],
+            expl: `${qWan} 萬是 ${qWan}0000，加上 ${qGe} 就是 ${totalNum}！`
+          };
+        }
+      },
+      {
+        id: "order_brackets",
+        name: "整數四則與括號運算律",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "括號先算、先乘除後加減、乘法分配律與結合律",
+        icon: "⚙️",
+        generate() {
+          const a = randInt(200, 500);
+          const b = randInt(60, 150);
+          const c = randInt(15, 45);
+          const inner = b - c;
+          const ans = a - inner;
+          return {
+            title: `算式「${a} - (${b} - ${c})」正確的計算結果是多少？`,
+            hint: `小括號裡面最優先計算：${b} - ${c}！`,
+            svg: "multiplyVertical",
+            correct: `${ans}`,
+            distractors: [`${a - b - c}`, `${ans + 20}`, `${a - b + 50}`],
+            expl: `小括號先算：${b} - ${c} = ${inner}，再算 ${a} - ${inner} = ${ans}！`
+          };
+        }
+      },
+      {
+        id: "factors_multiples",
+        name: "因數與倍數入門",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "因數的意義、整除檢查、公因數與公倍數基礎",
+        icon: "🔢",
+        generate() {
+          const a = randChoice([6, 8, 12, 16, 20]);
+          const b = randChoice([12, 18, 24, 30, 36]);
+          const ans = gcd(a, b);
+          return {
+            title: `請問 ${a} 和 ${b} 的「最大公因數」是多少？`,
+            hint: `找出兩人共同的因數中最大的一個！`,
+            svg: "divisionBox",
+            correct: `${ans}`,
+            distractors: [`${ans * 2}`, `${Math.max(1, Math.floor(ans / 2))}`, `${ans + 1}`].filter(v => v !== `${ans}`).slice(0, 3),
+            expl: `${a} 與 ${b} 的最大公因數是 ${ans}！`
+          };
+        }
+      },
+      {
+        id: "equivalent_fractions",
+        name: "等值分數與異分母比較",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "等值分數的發現、擴分概念與分數乘以整數",
+        icon: "🍰",
+        generate() {
+          const n = randChoice([2, 3, 4]);
+          const d = randChoice([5, 7, 9]);
+          const mult = randChoice([2, 3, 4]);
+          const eqN = n * mult;
+          const eqD = d * mult;
+          return {
+            title: `分數「${n}/${d}」和下列哪一個分數是一樣大的（等值分數）？`,
+            hint: `分子與分母同時乘以相同的倍數（同乘 ${mult}）！`,
+            svg: "pizza",
+            correct: `${eqN}/${eqD}`,
+            distractors: [`${eqN}/${eqD + 2}`, `${eqN + 1}/${eqD}`, `${n + mult}/${d + mult}`],
+            expl: `${n}/${d} 分子分母同乘以 ${mult} 等於 ${eqN}/${eqD}！`
+          };
+        }
+      },
+      {
+        id: "quadrilaterals",
+        name: "四邊形與垂直平行",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "平行線、互相垂直、平行四邊形、菱形與梯形特性",
+        icon: "🔷",
+        generate() {
+          return {
+            title: `在同一個平面上，兩條直線「永不相交且距離處處相等」，這兩條直線的關係是？`,
+            hint: `像鐵軌一樣永遠保持相同寬度！`,
+            svg: "rectangle",
+            correct: `互相平行`,
+            distractors: [`互相垂直`, `互相交叉`, `互相重疊`],
+            expl: `兩條直線永不相交且距離相等，即為「互相平行」！`
+          };
+        }
+      },
+      {
+        id: "cube_cuboid",
+        name: "立方公分與長方體體積",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "1 立方公分積木堆疊、長方體與正方體長×寬×高公式",
+        icon: "📦",
+        generate() {
+          const l = randInt(4, 8);
+          const w = randInt(3, 5);
+          const h = randInt(2, 4);
+          const vol = l * w * h;
+          return {
+            title: `一個長方體積木盒，長 ${l} 公分、寬 ${w} 公分、高 ${h} 公分，體積是多少立方公分？`,
+            hint: `體積公式：長 × 寬 × 高！`,
+            svg: "rectangle",
+            correct: `${vol} 立方公分`,
+            distractors: [`${l * w + h} 立方公分`, `${vol + 10} 立方公分`, `${(l + w + h) * 2} 立方公分`],
+            expl: `長方體體積 = ${l} × ${w} × ${h} = ${vol} 立方公分！`
+          };
+        }
+      },
+      {
+        id: "statistics_chart",
+        name: "長條圖與折線統計圖",
+        grade: "四年級",
+        gradeKey: "4",
+        desc: "長條圖數量高低判讀、折線圖起伏趨勢與省略符號",
+        icon: "📊",
+        generate() {
+          const unit = randChoice([5, 10, 20]);
+          const grids = randInt(4, 8);
+          const ans = unit * grids;
+          return {
+            title: `長條圖縱軸每一大格代表 ${unit} 人，某項目的長條剛好對齊第 ${grids} 大格，代表有幾個人？`,
+            hint: `每一大格 ${unit} 人，共 ${grids} 大格：${unit} × ${grids} = ？`,
+            svg: "rectangle",
+            correct: `${ans} 人`,
+            distractors: [`${ans - unit} 人`, `${ans + unit} 人`, `${grids * 10} 人`],
+            expl: `${unit} × ${grids} = ${ans} 人！`
+          };
+        }
+      }
+    ];
+
+    // ==========================================
+    // 雙隊伍狀態與作答控制
+    // ==========================================
+    let currentUnitIndex = 0;
+    let scoreTeamA = 0;
+    let scoreTeamB = 0;
+    let comboStreakA = 0;
+    let comboStreakB = 0;
+    let maxComboA = 0;
+    let maxComboB = 0;
+    let firstKillCountA = 0;
+    let firstKillCountB = 0;
+    const TARGET_WIN_SCORE = 100;
+    let currentFilterGrade = 'all';
+
+    let roundBufferDuration = 15;
+    let countdownRemaining = 15;
+    let countdownInterval = null;
+
+    let questionNumberCount = 0;
+    let recentQuestionSignatures = [];
+    const MAX_RECENT_CACHE = 15;
+    let activeQuestionData = null;
+
+    let roundState = {
+      teamAFinished: false,
+      teamBFinished: false,
+      firstWinner: null,
+      wrongOptionsA: [],
+      wrongOptionsB: []
+    };
+
+    let transitionTimer = null;
+
+    // 草稿板畫筆設定
+    let scratchColor = '#38BDF8';
+    let isEraserMode = false;
+
+    function getNextUniqueQuestion() {
+      const unit = MATH_UNITS[currentUnitIndex];
+      let attempts = 0;
+      let q = null;
+      let signature = '';
+
+      while (attempts < 20) {
+        attempts++;
+        q = unit.generate();
+        signature = `${q.title}__${q.correct}`;
+        if (!recentQuestionSignatures.includes(signature)) {
+          break;
+        }
+      }
+
+      recentQuestionSignatures.push(signature);
+      if (recentQuestionSignatures.length > MAX_RECENT_CACHE) {
+        recentQuestionSignatures.shift();
+      }
+
+      const rawOptions = [q.correct, ...q.distractors];
+      const shuffledOptions = shuffleArray(rawOptions);
+      const correctIndex = shuffledOptions.indexOf(q.correct);
+
+      return {
+        title: q.title,
+        hint: q.hint,
+        svg: q.svg,
+        options: shuffledOptions,
+        correct: correctIndex,
+        expl: q.expl
+      };
+    }
+
+    function loadNextQuestion() {
+      if (transitionTimer) {
+        clearTimeout(transitionTimer);
+        transitionTimer = null;
+      }
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+
+      questionNumberCount++;
+      activeQuestionData = getNextUniqueQuestion();
+
+      roundState = {
+        teamAFinished: false,
+        teamBFinished: false,
+        firstWinner: null,
+        wrongOptionsA: [],
+        wrongOptionsB: []
+      };
+
+      const timerWrap = document.getElementById('roundTimerWrap');
+      if (timerWrap) timerWrap.classList.add('hidden');
+
+      const announce = document.getElementById('matchAnnouncement');
+      announce.classList.add('hidden');
+      announce.innerText = '';
+
+      const unit = MATH_UNITS[currentUnitIndex];
+      document.getElementById('unitBadge').innerText = `${unit.icon} ${unit.name} (${unit.grade})`;
+      document.getElementById('currentUnitDisplay').innerText = unit.name;
+      document.getElementById('qCounterDisplay').innerText = `第 ${questionNumberCount} 題・動態生成`;
+
+      document.getElementById('questionTitle').innerText = activeQuestionData.title;
+      document.getElementById('questionHint').innerText = `💡 提示：${activeQuestionData.hint}`;
+      document.getElementById('illustrationBox').innerHTML = getSvgGraphic(activeQuestionData.svg);
+
+      resetTeamPanel('A');
+      resetTeamPanel('B');
+      renderTeamOptions('A');
+      renderTeamOptions('B');
+    }
+
+    function resetTeamPanel(team) {
+      const isTeamA = team === 'A';
+      const badge = document.getElementById(isTeamA ? 'statusBadgeA' : 'statusBadgeB');
+      const feedback = document.getElementById(isTeamA ? 'feedbackA' : 'feedbackB');
+
+      badge.className = isTeamA 
+        ? "text-xs font-black px-2.5 py-0.5 rounded-full bg-cyan-200 text-cyan-900"
+        : "text-xs font-black px-2.5 py-0.5 rounded-full bg-rose-200 text-rose-900";
+      badge.innerText = isTeamA ? "等待搶答 ⚡" : "等待搶答 🔥";
+      feedback.innerHTML = "";
+    }
+
+    function renderTeamOptions(team) {
+      if (!activeQuestionData) return;
+      const isTeamA = team === 'A';
+      const container = document.getElementById(isTeamA ? 'optionsContainerA' : 'optionsContainerB');
+      container.innerHTML = '';
+
+      const keyHints = isTeamA ? ['A', 'S', 'D', 'F'] : ['H', 'J', 'K', 'L'];
+      const isFinished = isTeamA ? roundState.teamAFinished : roundState.teamBFinished;
+      const wrongList = isTeamA ? roundState.wrongOptionsA : roundState.wrongOptionsB;
+
+      activeQuestionData.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        const isWrong = wrongList.includes(idx);
+        const isCorrectChoice = isFinished && idx === activeQuestionData.correct;
+
+        if (isFinished) {
+          if (isCorrectChoice) {
+            btn.className = "w-full py-1.5 sm:py-2 px-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-between shadow bg-emerald-500 text-white border-2 border-emerald-600";
+            btn.innerHTML = `<span>✓ 答對</span><span class="truncate px-1">${optText}</span><span>🎉</span>`;
+          } else {
+            btn.className = "w-full py-1.5 sm:py-2 px-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-between bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed opacity-60";
+            btn.innerHTML = `<span>${keyHints[idx]}</span><span class="truncate px-1">${optText}</span><span>-</span>`;
+          }
+          btn.disabled = true;
+        } else if (isWrong) {
+          btn.className = "w-full py-1.5 sm:py-2 px-2.5 rounded-xl font-bold text-[11px] sm:text-xs flex items-center justify-between bg-rose-100 text-rose-500 border-2 border-rose-300 cursor-not-allowed opacity-70 line-through";
+          btn.innerHTML = `<span>✕ 錯誤</span><span class="truncate px-1">${optText}</span><span>重選</span>`;
+          btn.disabled = true;
+        } else {
+          const colorClass = isTeamA ? 'btn-3d-cyan text-white' : 'btn-3d-crimson text-white';
+          btn.className = `${colorClass} w-full py-1.5 sm:py-2 px-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-between shadow-sm active:scale-95 transition`;
+          btn.innerHTML = `
+            <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black font-mono shadow-inner">${keyHints[idx]}</span>
+            <span class="flex-grow text-center truncate px-1">${optText}</span>
+            <span class="text-[10px] opacity-75">🎯</span>
+          `;
+          btn.onclick = () => handleAnswerSelect(team, idx);
+        }
+
+        container.appendChild(btn);
+      });
+    }
+
+    function handleAnswerSelect(team, selectedIdx) {
+      if (!activeQuestionData) return;
+      const isTeamA = team === 'A';
+      if ((isTeamA && roundState.teamAFinished) || (!isTeamA && roundState.teamBFinished)) return;
+
+      const qData = activeQuestionData;
+      const feedbackEl = document.getElementById(isTeamA ? 'feedbackA' : 'feedbackB');
+      const badgeEl = document.getElementById(isTeamA ? 'statusBadgeA' : 'statusBadgeB');
+      const panelEl = document.getElementById(isTeamA ? 'panelA' : 'panelB');
+
+      if (selectedIdx === qData.correct) {
+        const isFirst = roundState.firstWinner === null;
+        if (isFirst) {
+          roundState.firstWinner = team;
+          if (isTeamA) {
+            comboStreakA++;
+            comboStreakB = 0;
+            firstKillCountA++;
+            if (comboStreakA > maxComboA) maxComboA = comboStreakA;
+          } else {
+            comboStreakB++;
+            comboStreakA = 0;
+            firstKillCountB++;
+            if (comboStreakB > maxComboB) maxComboB = comboStreakB;
+          }
+        }
+
+        if (isTeamA) roundState.teamAFinished = true;
+        else roundState.teamBFinished = true;
+
+        const wrongCount = isTeamA ? roundState.wrongOptionsA.length : roundState.wrongOptionsB.length;
+        let points = isFirst ? 15 : 8;
+        if (wrongCount > 0) points = Math.max(5, points - 2);
+
+        const currentCombo = isTeamA ? comboStreakA : comboStreakB;
+        if (isFirst && currentCombo >= 2) {
+          points += Math.min(5, currentCombo);
+        }
+
+        if (isTeamA) scoreTeamA += points;
+        else scoreTeamB += points;
+
+        updateTugAndScoreUI();
+
+        if (isFirst) {
+          playSound('first_correct');
+          badgeEl.className = "text-xs font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 animate-bounce";
+          const comboTxt = currentCombo >= 2 ? ` 🔥${currentCombo}連勝！` : '';
+          badgeEl.innerText = `👑 搶先首殺 (+${points}分)${comboTxt}`;
+          feedbackEl.innerHTML = `<span class="text-emerald-700 font-black">🎉 神速答對！獲得 +${points} 分！${comboTxt}</span>`;
+
+          const announce = document.getElementById('matchAnnouncement');
+          announce.classList.remove('hidden');
+          announce.className = `mt-2 w-full p-2 rounded-xl text-center text-xs sm:text-sm font-black border-2 animate-bounce ${
+            isTeamA ? 'bg-cyan-100 border-cyan-400 text-cyan-950' : 'bg-rose-100 border-rose-400 text-rose-950'
+          }`;
+          announce.innerHTML = `⚡ ${isTeamA ? '閃電暴龍隊' : '烈焰鳳凰隊'} 率先答對首殺！${comboTxt} 另一隊請把握補答時間！`;
+
+          confetti({
+            particleCount: 25 + (currentCombo * 5),
+            spread: 50,
+            origin: { x: isTeamA ? 0.3 : 0.7, y: 0.6 }
+          });
+        } else {
+          playSound('second_correct');
+          badgeEl.className = "text-xs font-black px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900";
+          badgeEl.innerText = `✓ 堅持答對 (+${points}分)`;
+          feedbackEl.innerHTML = `<span class="text-emerald-700">👏 厲害！驗算成功獲得 +${points} 分！</span>`;
+        }
+
+        renderTeamOptions(team);
+
+        if (scoreTeamA >= TARGET_WIN_SCORE || scoreTeamB >= TARGET_WIN_SCORE) {
+          setTimeout(triggerChampionWin, 500);
+          return;
+        }
+
+        checkRoundAdvancement();
+
+      } else {
+        playSound('wrong');
+
+        if (isTeamA) {
+          comboStreakA = 0;
+          if (!roundState.wrongOptionsA.includes(selectedIdx)) roundState.wrongOptionsA.push(selectedIdx);
+          scoreTeamA = Math.max(0, scoreTeamA - 2);
+        } else {
+          comboStreakB = 0;
+          if (!roundState.wrongOptionsB.includes(selectedIdx)) roundState.wrongOptionsB.push(selectedIdx);
+          scoreTeamB = Math.max(0, scoreTeamB - 2);
+        }
+
+        panelEl.classList.remove('animate-shake');
+        void panelEl.offsetWidth;
+        panelEl.classList.add('animate-shake');
+
+        updateTugAndScoreUI();
+
+        badgeEl.className = "text-xs font-black px-2.5 py-0.5 rounded-full bg-rose-200 text-rose-900";
+        badgeEl.innerText = "算錯囉！繼續算 ✕";
+        feedbackEl.innerHTML = `<span class="text-rose-600">💥 扣 2 分！該選項已打叉，請在剩下選項中重試！</span>`;
+
+        renderTeamOptions(team);
+      }
+    }
+
+    function checkRoundAdvancement() {
+      if (!activeQuestionData) return;
+      const qData = activeQuestionData;
+
+      if (roundState.teamAFinished && roundState.teamBFinished) {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        const timerWrap = document.getElementById('roundTimerWrap');
+        if (timerWrap) timerWrap.classList.add('hidden');
+
+        const announce = document.getElementById('matchAnnouncement');
+        announce.classList.remove('hidden');
+        announce.className = "mt-2 w-full p-2.5 rounded-xl text-center text-xs sm:text-sm font-black bg-emerald-100 border-2 border-emerald-500 text-emerald-950";
+        announce.innerHTML = `🎉 太棒了！兩隊皆成功攻克！<br><span class="text-xs font-bold text-emerald-800">${qData.expl}</span>`;
+
+        transitionTimer = setTimeout(() => {
+          advanceNextQuestion();
+        }, 3200);
+        return;
+      }
+
+      if (roundState.firstWinner && !countdownInterval && roundBufferDuration > 0) {
+        startGraceCountdown();
+      }
+    }
+
+    function startGraceCountdown() {
+      countdownRemaining = roundBufferDuration;
+      const timerWrap = document.getElementById('roundTimerWrap');
+      const bar = document.getElementById('roundTimerBar');
+      const secText = document.getElementById('roundTimerSec');
+      
+      timerWrap.classList.remove('hidden');
+      secText.innerText = `${countdownRemaining}s`;
+      bar.style.width = '100%';
+
+      countdownInterval = setInterval(() => {
+        countdownRemaining--;
+        secText.innerText = `${countdownRemaining}s`;
+        const pct = Math.max(0, (countdownRemaining / roundBufferDuration) * 100);
+        bar.style.width = `${pct}%`;
+
+        if (countdownRemaining <= 3 && countdownRemaining > 0) {
+          playSound('tick');
+        }
+
+        if (countdownRemaining <= 0) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+          timerWrap.classList.add('hidden');
+
+          const announce = document.getElementById('matchAnnouncement');
+          announce.classList.remove('hidden');
+          announce.className = "mt-2 w-full p-2 rounded-xl text-center text-xs sm:text-sm font-black bg-amber-100 border border-amber-400 text-amber-950";
+          announce.innerHTML = `⌛ 補答時間到！正確答案是：<strong>${activeQuestionData.options[activeQuestionData.correct]}</strong><br><span class="text-xs">${activeQuestionData.expl}</span>`;
+
+          transitionTimer = setTimeout(() => {
+            advanceNextQuestion();
+          }, 3000);
+        }
+      }, 1000);
+    }
+
+    function advanceNextQuestion() {
+      playSound('turn');
+      loadNextQuestion();
+    }
+
+    function skipToNextQuestion() {
+      advanceNextQuestion();
+    }
+
+    function updateTugAndScoreUI() {
+      document.getElementById('scoreA').innerText = scoreTeamA;
+      document.getElementById('scoreB').innerText = scoreTeamB;
+
+      const tagA = document.getElementById('comboTagA');
+      const tagB = document.getElementById('comboTagB');
+      tagA.innerHTML = comboStreakA >= 2 ? `⚡ 暴龍佔領度 <span class="bg-cyan-500 text-white px-1.5 py-0.2 rounded-full text-[10px] animate-pulse">🔥 ${comboStreakA}連勝</span>` : `⚡ 暴龍佔領度`;
+      tagB.innerHTML = comboStreakB >= 2 ? `<span class="bg-rose-500 text-white px-1.5 py-0.2 rounded-full text-[10px] animate-pulse">🔥 ${comboStreakB}連勝</span> 烈焰佔領度 🔥` : `烈焰佔領度 🔥`;
+
+      const diff = scoreTeamA - scoreTeamB;
+      let pctA = 50 + Math.round(diff / 2);
+      pctA = Math.max(10, Math.min(90, pctA));
+      const pctB = 100 - pctA;
+
+      document.getElementById('tugBarBlue').style.width = `${pctA}%`;
+      document.getElementById('tugBarRed').style.width = `${pctB}%`;
+
+      const tugInfo = document.getElementById('tugInfo');
+      if (scoreTeamA > scoreTeamB) {
+        tugInfo.innerText = `⚡ 暴龍隊領先 ${scoreTeamA - scoreTeamB} 分！`;
+      } else if (scoreTeamB > scoreTeamA) {
+        tugInfo.innerText = `🔥 烈焰隊領先 ${scoreTeamB - scoreTeamA} 分！`;
+      } else {
+        tugInfo.innerText = `同屏雙隊即時搶答！平分秋色`;
+      }
+    }
+
+    function changeTimerSetting(val) {
+      roundBufferDuration = parseInt(val, 10);
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+      document.getElementById('roundTimerWrap').classList.add('hidden');
+    }
+
+    // ==========================================
+    // 實體鍵盤快捷支援
+    // ==========================================
+    window.addEventListener('keydown', (e) => {
+      if (!document.getElementById('unitModal').classList.contains('hidden') ||
+          !document.getElementById('winnerModal').classList.contains('hidden')) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+      if (key === 'a') handleAnswerSelect('A', 0);
+      else if (key === 's') handleAnswerSelect('A', 1);
+      else if (key === 'd') handleAnswerSelect('A', 2);
+      else if (key === 'f') handleAnswerSelect('A', 3);
+
+      else if (key === 'h' || key === '1') handleAnswerSelect('B', 0);
+      else if (key === 'j' || key === '2') handleAnswerSelect('B', 1);
+      else if (key === 'k' || key === '3') handleAnswerSelect('B', 2);
+      else if (key === 'l' || key === '4') handleAnswerSelect('B', 3);
+    });
+
+    // ==========================================
+    // 單元選單與年級篩選
+    // ==========================================
+    function openUnitModal() {
+      playSound('turn');
+      renderUnitList();
+      document.getElementById('unitModal').classList.remove('hidden');
+    }
+
+    function closeUnitModal() {
+      document.getElementById('unitModal').classList.add('hidden');
+    }
+
+    function filterGrade(gradeKey) {
+      currentFilterGrade = gradeKey;
+      const mapping = {
+        'all': 'gradeFilterAll',
+        '3-easy': 'gradeFilter3Easy',
+        '3': 'gradeFilter3',
+        '4': 'gradeFilter4'
+      };
+      Object.keys(mapping).forEach(k => {
+        const btn = document.getElementById(mapping[k]);
+        if (k === gradeKey) {
+          btn.className = "px-3 py-1 text-xs font-black rounded-full bg-amber-400 text-slate-900 shadow-sm border border-amber-500 transition";
+        } else {
+          btn.className = "px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition";
+        }
+      });
+      renderUnitList();
+    }
+
+    function selectUnit(idx) {
+      currentUnitIndex = idx;
+      closeUnitModal();
+      resetMatch();
+    }
+
+    function renderUnitList() {
+      const container = document.getElementById('unitListContainer');
+      container.innerHTML = '';
+
+      MATH_UNITS.forEach((unit, idx) => {
+        if (currentFilterGrade === '3-easy' && unit.gradeKey !== '3-easy') return;
+        if (currentFilterGrade === '3' && unit.gradeKey !== '3' && unit.gradeKey !== '3-easy') return;
+        if (currentFilterGrade === '4' && unit.gradeKey !== '4') return;
+
+        const isCurrent = idx === currentUnitIndex;
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-2xl border-2 transition cursor-pointer flex items-center justify-between ${
+          isCurrent 
+            ? 'bg-amber-50 border-amber-500 shadow-md ring-2 ring-amber-400/50' 
+            : 'bg-white border-slate-200 hover:border-amber-300 hover:bg-slate-50'
+        }`;
+        card.onclick = () => selectUnit(idx);
+        card.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <span class="text-2xl">${unit.icon}</span>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="font-black text-sm text-slate-800">${unit.name}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                  unit.gradeKey === '3-easy' ? 'bg-emerald-100 text-emerald-800' :
+                  unit.gradeKey === '3' ? 'bg-sky-100 text-sky-800' : 'bg-purple-100 text-purple-800'
+                }">${unit.grade}</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">${unit.desc}</p>
+            </div>
+          </div>
+          <span class="text-xs font-black ${isCurrent ? 'text-amber-600 font-bold' : 'text-slate-400'}">
+            ${isCurrent ? '進行中 ⚔️' : '選擇 ➔'}
+          </span>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function triggerChampionWin() {
+      playSound('fanfare');
+      const isWinnerA = scoreTeamA >= TARGET_WIN_SCORE;
+      const winnerModal = document.getElementById('winnerModal');
+      const winnerTitle = document.getElementById('winnerTitle');
+      const winnerEmoji = document.getElementById('winnerEmoji');
+      const winnerTag = document.getElementById('winnerTag');
+      const winnerSubtitle = document.getElementById('winnerSubtitle');
+
+      winnerModal.classList.remove('hidden');
+
+      if (isWinnerA) {
+        winnerEmoji.innerText = '🦕👑';
+        winnerTitle.innerText = '閃電暴龍隊 奪得冠軍！';
+        winnerTitle.className = 'text-2xl sm:text-3xl font-black text-cyan-600 font-fun mb-2';
+        winnerTag.className = 'text-xs font-black px-3 py-1 rounded-full inline-block mb-1 bg-cyan-100 text-cyan-800 border border-cyan-300';
+        winnerTag.innerText = 'TEAM A 勝利';
+        winnerSubtitle.innerText = '暴龍隊率先衝破 100 分大關，榮登國小數學之王！⚡';
+      } else {
+        winnerEmoji.innerText = '🦅👑';
+        winnerTitle.innerText = '烈焰鳳凰隊 奪得冠軍！';
+        winnerTitle.className = 'text-2xl sm:text-3xl font-black text-rose-600 font-fun mb-2';
+        winnerTag.className = 'text-xs font-black px-3 py-1 rounded-full inline-block mb-1 bg-rose-100 text-rose-800 border border-rose-300';
+        winnerTag.innerText = 'TEAM B 勝利';
+        winnerSubtitle.innerText = '鳳凰隊率先衝破 100 分大關，稱霸國小數學競技場！🔥';
+      }
+
+      document.getElementById('winScoreA').innerText = scoreTeamA;
+      document.getElementById('winScoreB').innerText = scoreTeamB;
+
+      document.getElementById('statFirstA').innerText = firstKillCountA;
+      document.getElementById('statComboA').innerText = maxComboA;
+      document.getElementById('statFirstB').innerText = firstKillCountB;
+      document.getElementById('statComboB').innerText = maxComboB;
+
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.5 }
+      });
+    }
+
+    function restartMatchAfterWin() {
+      document.getElementById('winnerModal').classList.add('hidden');
+      resetMatch();
+    }
+
+    function resetMatch() {
+      playSound('turn');
+      scoreTeamA = 0;
+      scoreTeamB = 0;
+      comboStreakA = 0;
+      comboStreakB = 0;
+      maxComboA = 0;
+      maxComboB = 0;
+      firstKillCountA = 0;
+      firstKillCountB = 0;
+      questionNumberCount = 0;
+      recentQuestionSignatures = [];
+      updateTugAndScoreUI();
+      loadNextQuestion();
+    }
+
+    // ==========================================
+    // 語音朗讀題目 (TTS 強化版)
+    // ==========================================
+    function readQuestionTTS() {
+      initAudio();
+      playSound('turn');
+      const btn = document.getElementById('ttsBtn');
+      const icon = document.getElementById('ttsIcon');
+      const text = document.getElementById('ttsText');
+
+      if ('speechSynthesis' in window && activeQuestionData) {
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(activeQuestionData.title + '。' + activeQuestionData.hint);
+        utterance.lang = 'zh-TW';
+        utterance.rate = 0.92;
+
+        const voices = window.speechSynthesis.getVoices();
+        const twVoice = voices.find(v => v.lang.includes('zh-TW') || v.lang.includes('cmn-Hant-TW') || v.name.includes('Taiwan') || v.name.includes('Yating') || v.name.includes('Mei-Jia'));
+        if (twVoice) utterance.voice = twVoice;
+
+        utterance.onstart = () => {
+          btn.classList.add('speaking-glow');
+          icon.innerText = '🗣️';
+          text.innerText = '朗讀中...';
+        };
+
+        utterance.onend = () => {
+          btn.classList.remove('speaking-glow');
+          icon.innerText = '🔊';
+          text.innerText = '唸題目';
+        };
+
+        utterance.onerror = () => {
+          btn.classList.remove('speaking-glow');
+          icon.innerText = '🔊';
+          text.innerText = '唸題目';
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // ==========================================
+    // 內建草稿塗鴉板功能 (雙色對戰畫筆與橡皮擦)
+    // ==========================================
+    let scratchpadVisible = false;
+    let isDrawing = false;
+    let sCtx = null;
+
+    function toggleScratchpad() {
+      scratchpadVisible = !scratchpadVisible;
+      const area = document.getElementById('scratchpadArea');
+      if (scratchpadVisible) {
+        area.classList.remove('hidden');
+        setupScratchCanvas();
+      } else {
+        area.classList.add('hidden');
+      }
+    }
+
+    function setScratchColor(color, isEraser = false) {
+      scratchColor = color;
+      isEraserMode = isEraser;
+      ['penColorBlue', 'penColorRed', 'penColorYellow', 'penEraser'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('ring-2', 'ring-white');
+      });
+      if (isEraser) {
+        document.getElementById('penEraser')?.classList.add('ring-2', 'ring-white');
+      } else if (color === '#38BDF8') {
+        document.getElementById('penColorBlue')?.classList.add('ring-2', 'ring-white');
+      } else if (color === '#FB7185') {
+        document.getElementById('penColorRed')?.classList.add('ring-2', 'ring-white');
+      } else if (color === '#FACC15') {
+        document.getElementById('penColorYellow')?.classList.add('ring-2', 'ring-white');
+      }
+    }
+
+    function setupScratchCanvas() {
+      const canvas = document.getElementById('scratchCanvas');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 135;
+      sCtx = canvas.getContext('2d');
+      sCtx.lineCap = 'round';
+      sCtx.lineJoin = 'round';
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches[0]) {
+          return {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top
+          };
+        }
+        return {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        };
+      }
+
+      function startDraw(e) {
+        isDrawing = true;
+        const pos = getPos(e);
+        sCtx.beginPath();
+        sCtx.moveTo(pos.x, pos.y);
+        sCtx.strokeStyle = isEraserMode ? '#020617' : scratchColor;
+        sCtx.lineWidth = isEraserMode ? 14 : 3;
+        e.preventDefault();
+      }
+      function draw(e) {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+        sCtx.lineTo(pos.x, pos.y);
+        sCtx.stroke();
+        e.preventDefault();
+      }
+      function endDraw() {
+        isDrawing = false;
+      }
+
+      canvas.onmousedown = startDraw;
+      canvas.onmousemove = draw;
+      window.onmouseup = endDraw;
+
+      canvas.ontouchstart = startDraw;
+      canvas.ontouchmove = draw;
+      canvas.ontouchend = endDraw;
+    }
+
+    function clearScratchpad() {
+      const canvas = document.getElementById('scratchCanvas');
+      if (sCtx && canvas) {
+        sCtx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // 初始化啟動
+    window.onload = function () {
+      updateTugAndScoreUI();
+      loadNextQuestion();
+    };
+  </script>
+</body>
+</html>

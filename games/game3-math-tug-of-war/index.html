@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>拔河數學大對決 | Math Tug of War</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', '"Fredoka"', 'sans-serif'],
+            display: ['"Fredoka"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          animation: {
+            'bounce-gentle': 'bounceGentle 1.6s infinite ease-in-out',
+            'pulse-fast': 'pulse 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'shake': 'shake 0.4s ease-in-out',
+            'pull-effort-blue': 'pullEffortBlue 1.1s ease-in-out infinite',
+            'pull-effort-red': 'pullEffortRed 1.1s ease-in-out infinite',
+            'sound-wave': 'soundWave 0.6s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            bounceGentle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            shake: {
+              '0%, 100%': { transform: 'translateX(0)' },
+              '20%, 60%': { transform: 'translateX(-6px)' },
+              '40%, 80%': { transform: 'translateX(6px)' },
+            },
+            pullEffortBlue: {
+              '0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
+              '50%': { transform: 'translateX(-5px) rotate(-1.5deg)' },
+            },
+            pullEffortRed: {
+              '0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
+              '50%': { transform: 'translateX(5px) rotate(1.5deg)' },
+            },
+            soundWave: {
+              '0%': { height: '4px' },
+              '100%': { height: '16px' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      touch-action: manipulation;
+      background: #f1f5f9;
+    }
+    .arena-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    }
+    .answer-btn {
+      transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .answer-btn:active {
+      transform: scale(0.93);
+    }
+    .char-group {
+      transform-origin: bottom center;
+      transition: transform 0.25s ease-out;
+    }
+    .pull-flash-blue {
+      transform: translateX(-20px) scale(1.02);
+    }
+    .pull-flash-red {
+      transform: translateX(20px) scale(1.02);
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      animation: fall 3s linear forwards;
+    }
+  </style>
+
+  <!-- 引入標準主題 Favicon 與字嗨注音標楷開源字型 (RULE規範與特教友善) -->
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="apple-touch-icon" href="../../favicon.svg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
+  <style>
+    .font-zihi { font-family: 'Bpmf Zihi Kai Std', '字嗨注音標楷', 'DFKai-SB', serif !important; }
+  </style>
+
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden">
+
+<!-- 南一三上數學備課平台專屬全域導航頂欄 (優化整合) -->
+<nav class="sp-ed-game-navbar" style="position:sticky;top:0;left:0;right:0;z-index:99999;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #e2e8f0;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);font-family:system-ui,-apple-system,sans-serif;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="../../index.html" onclick="if(window.parent && window.parent !== window){window.parent.postMessage('close-game-modal','*'); return false;}" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #4f46e5, #4338ca);color:#ffffff;font-weight:800;font-size:0.95rem;padding:6px 16px;border-radius:12px;box-shadow:0 3px 0 #312e81;transition:all 0.15s;">
+      ⬅ 返回三上數學備課平台
+    </a>
+    <span style="font-weight:800;color:#1e1b4b;font-size:1.05rem;display:none;" class="sm:inline">南一三上數學 🎪 互動遊戲冒險館</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}else{document.exitFullscreen();}" style="cursor:pointer;background:#f1f5f9;border:1px solid #cbd5e1;padding:6px 14px;border-radius:10px;font-weight:700;font-size:0.85rem;color:#475569;">
+      ⛶ 全螢幕投影
+    </button>
+  </div>
+</nav>
+
+
+  <header class="w-full bg-white/95 backdrop-blur border-b border-slate-200 px-3 sm:px-4 py-2.5 shadow-sm sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl sm:text-3xl">🪢</span>
+        <div>
+          <h1 class="text-base sm:text-lg md:text-xl font-black text-slate-800 tracking-tight leading-none flex items-center gap-1.5">
+            數學拔河大對決
+            <span class="text-[11px] bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full border border-rose-300">國��� 3v3 競賽版</span>
+          </h1>
+          <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">國小 108 課綱 3v3 熱血心算！答對前拉，連對爆發！</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons & Verified Music Controller -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2">
+        <!-- BGM Track Selector & Equalizer -->
+        <div class="flex items-center bg-rose-50 border border-rose-200 rounded-xl px-2.5 py-1 gap-1.5 shadow-inner">
+          <div id="soundWaveIcon" class="flex items-end gap-0.5 h-4 w-3.5 mr-0.5">
+            <span class="w-1 bg-rose-500 rounded-full animate-sound-wave" style="animation-delay: 0.1s"></span>
+            <span class="w-1 bg-rose-500 rounded-full animate-sound-wave" style="animation-delay: 0.3s"></span>
+            <span class="w-1 bg-rose-500 rounded-full animate-sound-wave" style="animation-delay: 0.2s"></span>
+          </div>
+
+          <label for="bgmSelect" class="text-xs text-rose-700 font-bold hidden md:inline">戰歌:</label>
+          <select id="bgmSelect" class="bg-transparent text-xs font-black text-rose-800 focus:outline-none cursor-pointer">
+            <option value="guyongzhe">🔥 孤勇者 (陳奕迅)</option>
+            <option value="apt">🕺 APT. (Rosé & Bruno)</option>
+            <option value="kemusan">💃 科目三 (電音版)</option>
+            <option value="doraemon">🔔 哆啦A夢主題曲 (經典版)</option>
+          </select>
+          
+          <button id="bgmToggleBtn" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition flex items-center text-xs font-black shadow-sm" title="點擊切換音樂播放/暫停">
+            <span id="bgmIcon" class="mr-1">🎵</span>
+            <span id="bgmStatusText" class="text-[11px]">播放中</span>
+          </button>
+        </div>
+
+        <button id="soundToggleBtn" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1 text-xs sm:text-sm font-bold" title="切換作答音效">
+          <span id="soundIcon">🔊</span>
+          <span class="text-xs hidden md:inline">音效開</span>
+        </button>
+        <button id="ruleBtn" class="p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition flex items-center gap-1 text-xs sm:text-sm font-bold">
+          <span>📖</span>
+          <span class="text-xs hidden md:inline">玩法</span>
+        </button>
+        <button id="navSettingsBtn" class="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 transition flex items-center gap-1 text-xs sm:text-sm font-bold">
+          <span>⚙️</span>
+          <span class="text-xs hidden md:inline">設定</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="setupScreen" class="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 flex flex-col justify-center items-center">
+    <div class="w-full bg-white rounded-3xl shadow-xl border border-slate-200 p-5 md:p-8">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-100 text-4xl mb-2 shadow-inner">
+          🏆
+        </div>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-800">學校數學 3v3 拔河大對決！</h2>
+        <p class="text-slate-500 text-xs sm:text-sm mt-1">涵蓋國小一至六年級 108 課綱知識點，自由自訂題型與挑戰模式</p>
+      </div>
+
+      <!-- Settings Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        <!-- Mode Select -->
+        <div class="lg:col-span-4 space-y-3.5">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
+              <span>🎮</span> 對戰模式
+            </label>
+            <div class="grid grid-cols-2 gap-2.5">
+              <button type="button" data-mode="ai" class="mode-select-btn active p-3 rounded-2xl border-2 border-blue-500 bg-blue-50 text-blue-800 font-bold text-left transition flex flex-col items-start justify-between h-22">
+                <span class="text-2xl">🤖 vs 👤</span>
+                <div>
+                  <div class="text-sm font-black">單人對戰 AI</div>
+                  <div class="text-[11px] text-blue-600 font-normal">電腦陪練心算</div>
+                </div>
+              </button>
+              <button type="button" data-mode="pvp" class="mode-select-btn p-3 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-left transition flex flex-col items-start justify-between h-22">
+                <span class="text-2xl">👥 雙人同機</span>
+                <div>
+                  <div class="text-sm font-black">紅藍實體 PK</div>
+                  <div class="text-[11px] text-slate-500 font-normal">電子白板 / 同桌對抗</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- AI difficulty -->
+          <div id="aiDiffWrapper" class="pt-0.5">
+            <label class="block text-xs font-bold text-slate-600 mb-1.5 flex items-center justify-between">
+              <span>AI 電腦思考時間</span>
+              <span class="text-[10px] text-emerald-600 font-semibold">特教友善</span>
+            </label>
+            <div class="grid grid-cols-2 gap-1.5 text-xs">
+              <button type="button" data-aidiff="support" class="ai-diff-btn active py-2 px-1.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black text-center">🌱 學障慢速 (18-28秒)</button>
+              <button type="button" data-aidiff="easy" class="ai-diff-btn py-2 px-1.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">溫和慢速 (10-16秒)</button>
+              <button type="button" data-aidiff="normal" class="ai-diff-btn py-2 px-1.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">中年級同學 (6-10秒)</button>
+              <button type="button" data-aidiff="hard" class="ai-diff-btn py-2 px-1.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">高年級快手 (3-5秒)</button>
+            </div>
+          </div>
+
+          <!-- Match Duration -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">競賽 / 思考時限</label>
+            <div class="grid grid-cols-3 gap-1.5 text-xs">
+              <button type="button" data-duration="unlimited" class="duration-btn active py-2 px-1 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black text-center">∞ 無限時</button>
+              <button type="button" data-duration="300" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">300秒(5分)</button>
+              <button type="button" data-duration="180" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">180秒(3分)</button>
+              <button type="button" data-duration="120" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">120秒(推薦)</button>
+              <button type="button" data-duration="90" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">90秒</button>
+              <button type="button" data-duration="60" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">60秒(競速)</button>
+            </div>
+          </div>
+
+          <!-- Friendly Mode Toggle -->
+          <div class="p-2.5 rounded-2xl bg-amber-50/80 border border-amber-200 flex items-center justify-between">
+            <div class="pr-2">
+              <div class="text-xs font-black text-amber-900 flex items-center gap-1">
+                <span>🛡️</span> 特教無挫折模式
+              </div>
+              <div class="text-[10px] text-amber-700">答錯不倒退扣分、延長檢視答案時間</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="friendlyModeToggle" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+            </label>
+          </div>
+
+          <!-- Grade Level Select -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">題目難度梯度</label>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button type="button" data-level="easy" class="level-btn active py-2 px-1 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-800 font-bold text-center text-xs transition">
+                低年級
+              </button>
+              <button type="button" data-level="mid" class="level-btn py-2 px-1 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-center text-xs transition">
+                中年級
+              </button>
+              <button type="button" data-level="hard" class="level-btn py-2 px-1 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-center text-xs transition">
+                高年級
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 108 Curriculum Math Operations Grid -->
+        <div class="lg:col-span-8 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="block text-sm font-bold text-slate-700 flex items-center gap-2">
+              <span>📚</span> 國小階段題型（可多選組合）
+            </label>
+            <button type="button" id="toggleAllOpsBtn" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-1 rounded-lg transition">
+              ✨ 全選 / 重置
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs">
+            <button type="button" data-op="add" class="op-btn active p-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-left transition">
+              <div class="font-black text-sm">➕ 加法運算</div>
+              <span class="text-[10px] text-emerald-600 font-normal">1~3年級 基礎加��</span>
+            </button>
+
+            <button type="button" data-op="sub" class="op-btn active p-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-left transition">
+              <div class="font-black text-sm">➖ 減法運算</div>
+              <span class="text-[10px] text-emerald-600 font-normal">1~3年級 借位減法</span>
+            </button>
+
+            <button type="button" data-op="mul" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">✖️ 乘法九九</div>
+              <span class="text-[10px] text-slate-500 font-normal">2~4年級 乘法表</span>
+            </button>
+
+            <button type="button" data-op="div" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">➗ 整數除���</div>
+              <span class="text-[10px] text-slate-500 font-normal">3~5年級 九九整除</span>
+            </button>
+
+            <button type="button" data-op="box" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">❓ 算式填空</div>
+              <span class="text-[10px] text-slate-500 font-normal">1~4年級 加減互逆</span>
+            </button>
+
+            <button type="button" data-op="mixed" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">🧮 四則混合</div>
+              <span class="text-[10px] text-slate-500 font-normal">3~6年級 先乘除後加減</span>
+            </button>
+
+            <button type="button" data-op="fraction" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">🥧 國小分數</div>
+              <span class="text-[10px] text-slate-500 font-normal">3~6年級 同分母相加</span>
+            </button>
+
+            <button type="button" data-op="decimal" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">🔢 小數加減</div>
+              <span class="text-[10px] text-slate-500 font-normal">3~5年級 一至二位小數</span>
+            </button>
+
+            <button type="button" data-op="factor" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">🧩 因數與倍數</div>
+              <span class="text-[10px] text-slate-500 font-normal">5~6年級 公因數與公倍數</span>
+            </button>
+
+            <button type="button" data-op="time" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">⏰ 時間與鐘面</div>
+              <span class="text-[10px] text-slate-500 font-normal">2~4年級 時分秒換算</span>
+            </button>
+
+            <button type="button" data-op="geometry" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">📏 幾何周長面積</div>
+              <span class="text-[10px] text-slate-500 font-normal">3~6年級 邊長與角度</span>
+            </button>
+
+            <button type="button" data-op="word" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
+              <div class="font-black text-sm">📖 生活應用素養</div>
+              <span class="text-[10px] text-slate-500 font-normal">1~6年級 找零平分打折</span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span class="font-bold">比賽獲勝：</span>
+            <span>答對前拉＋連對強拉！將紅標拉過獲勝線，或 60 秒倒數佔優者勝出！</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Button -->
+      <button id="startGameBtn" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xl shadow-lg shadow-emerald-500/25 transform active:scale-[0.98] transition flex items-center justify-center gap-3">
+        <span>🚩</span>
+        <span>進入 3v3 賽場！鳴笛出戰！</span>
+      </button>
+    </div>
+  </main>
+
+  <main id="gameScreen" class="flex-1 w-full max-w-5xl mx-auto px-2 sm:px-4 py-2 flex flex-col justify-between hidden">
+    
+    <!-- TOP HUD -->
+    <div class="w-full bg-white/95 rounded-2xl border border-slate-200 shadow-sm px-6 py-2.5 mb-3 flex items-center justify-between">
+      <!-- Team 1 / Blue -->
+      <div class="flex flex-col items-start min-w-[90px]">
+        <span class="text-sm sm:text-base font-black text-blue-700 tracking-tight">Team 1 (藍隊 3人)</span>
+        <span id="blueScoreDisplay" class="text-2xl sm:text-3xl font-black text-blue-600 font-display leading-tight">0</span>
+      </div>
+
+      <!-- Match Timer in Center -->
+      <div class="flex items-center space-x-1.5 bg-sky-50 border border-sky-200 px-4 py-1.5 rounded-full">
+        <span class="text-sky-600 text-lg">🕒</span>
+        <span id="matchTimerDisplay" class="font-display font-black text-xl sm:text-2xl text-sky-600 tracking-wider tabular-nums">
+          01:00
+        </span>
+      </div>
+
+      <!-- Team 2 / Red -->
+      <div class="flex flex-col items-end min-w-[90px]">
+        <span id="redTeamLabel" class="text-sm sm:text-base font-black text-red-700 tracking-tight">Team 2 (紅隊 3人)</span>
+        <span id="redScoreDisplay" class="text-2xl sm:text-3xl font-black text-red-600 font-display leading-tight">0</span>
+      </div>
+    </div>
+
+    <!-- TUG OF WAR BATTLEFIELD STAGE (3 vs 3 CUTE ELEMENTARY STUDENTS) -->
+    <div class="w-full arena-box rounded-3xl p-2 sm:p-4 overflow-hidden relative mb-3">
+      
+      <div class="relative w-full h-56 sm:h-72 md:h-80 flex items-center justify-center overflow-hidden">
+        <!-- Center dashed line -->
+        <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-0 border-r-2 border-dashed border-slate-400/80 z-0 pointer-events-none"></div>
+
+        <!-- Win threshold lines -->
+        <div class="absolute inset-x-8 bottom-3 flex justify-between pointer-events-none opacity-40 text-[11px] font-bold">
+          <span class="text-blue-600 border-l-2 border-blue-600 pl-1.5">藍隊獲勝線</span>
+          <span class="text-red-600 border-r-2 border-red-600 pr-1.5">紅隊獲勝線</span>
+        </div>
+
+        <!-- MOVING BATTLE RIG -->
+        <div id="ropeRig" class="relative w-full max-w-4xl h-full flex items-center justify-center transition-transform duration-300 ease-out z-10" style="transform: translateX(0px);">
+          
+          <svg viewBox="0 0 940 320" class="w-full h-full select-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="blueShirtGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#1d4ed8"/>
+              </linearGradient>
+              <linearGradient id="redShirtGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ef4444"/>
+                <stop offset="100%" stop-color="#b91c1c"/>
+              </linearGradient>
+            </defs>
+
+            <!-- 6 GROUND SHADOWS -->
+            <ellipse cx="110" cy="275" rx="38" ry="7" fill="#cbd5e1" opacity="0.6"/>
+            <ellipse cx="220" cy="275" rx="38" ry="7" fill="#cbd5e1" opacity="0.6"/>
+            <ellipse cx="330" cy="275" rx="38" ry="7" fill="#cbd5e1" opacity="0.6"/>
+            <ellipse cx="610" cy="275" rx="38" ry="7" fill="#cbd5e1" opacity="0.6"/>
+            <ellipse cx="720" cy="275" rx="38" ry="7" fill="#cbd5e1" opacity="0.6"/>
+            <ellipse cx="830" cy="275" rx="38" ry="7" fill="#cbd5e1" opacity="0.6"/>
+
+            <!-- THE CONTINUOUS TUG ROPE -->
+            <path d="M 40,255 Q 65,210 110,198 L 470,192 L 830,198 Q 875,210 900,255" 
+                  stroke="#1e293b" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- CENTER RED RIBBON / ARROW FLAG -->
+            <g id="svgCenterMarker" transform="translate(470, 192)">
+              <path d="M -4,0 L 4,0 L 7,32 L 0,24 L -7,32 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="5" fill="#dc2626"/>
+            </g>
+
+            <!-- ================= BLUE TEAM (LEFT: 3 STUDENTS) ================= -->
+            <g id="blueTeamSvgGroup" class="char-group animate-pull-effort-blue">
+              
+              <!-- BLUE PULLER 1 (LEFT-BACK: Boy Student #1) -->
+              <g id="bluePuller1">
+                <path d="M 100,210 L 75,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 75,253 L 68,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 52,275 L 84,275 Q 86,265 71,264 L 58,264 Z" fill="#2563eb" stroke="#1e40af" stroke-width="1.5"/>
+
+                <path d="M 120,210 L 145,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 145,253 L 154,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 140,275 L 175,275 Q 178,265 160,264 L 146,264 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+
+                <path d="M 88,198 L 135,206 L 130,224 L 80,218 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M 80,148 L 136,158 L 126,204 L 82,200 Z" fill="url(#blueShirtGrad)" stroke="#1d4ed8" stroke-width="2"/>
+                <rect x="96" y="166" width="20" height="15" rx="3" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+                <text x="106" y="178" font-family="'Fredoka', sans-serif" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">1</text>
+
+                <!-- Collar -->
+                <path d="M 100,132 L 100,150 L 116,150 L 116,132 Z" fill="#fed7aa"/>
+                <path d="M 92,146 Q 107,153 122,148 L 120,154 Q 107,158 90,152 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+
+                <!-- Head, Hair, Face -->
+                <circle cx="108" cy="115" r="21" fill="#fed7aa"/>
+                <ellipse cx="118" cy="122" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+                <path d="M 88,118 C 85,96 96,88 112,88 C 128,88 134,98 132,112 C 127,106 120,105 114,110 C 108,106 100,106 94,112 Z" fill="#334155"/>
+                <circle cx="96" cy="117" r="4.5" fill="#fed7aa" stroke="#fba772" stroke-width="1.2"/>
+                <ellipse cx="118" cy="113" rx="3.5" ry="4.5" fill="#0f172a"/>
+                <circle cx="119" cy="111" r="1.5" fill="#ffffff"/>
+                <path d="M 113,106 L 123,108" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 114,124 Q 120,128 125,123" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                <path d="M 115,158 Q 140,172 178,194" stroke="#3b82f6" stroke-width="16" stroke-linecap="round"/>
+                <circle cx="180" cy="195" r="7.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+              </g>
+
+              <!-- BLUE PULLER 2 (MIDDLE: Ponytail Student #2) -->
+              <g id="bluePuller2">
+                <path d="M 210,210 L 185,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 185,253 L 178,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 162,275 L 194,275 Q 196,265 181,264 L 168,264 Z" fill="#2563eb" stroke="#1e40af" stroke-width="1.5"/>
+
+                <path d="M 230,210 L 255,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 255,253 L 264,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 250,275 L 285,275 Q 288,265 270,264 L 256,264 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+
+                <path d="M 198,198 L 245,206 L 240,224 L 190,218 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M 190,148 L 246,158 L 236,204 L 192,200 Z" fill="url(#blueShirtGrad)" stroke="#1d4ed8" stroke-width="2"/>
+                <rect x="206" y="166" width="20" height="15" rx="3" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+                <text x="216" y="178" font-family="'Fredoka', sans-serif" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">2</text>
+
+                <path d="M 210,132 L 210,150 L 226,150 L 226,132 Z" fill="#fed7aa"/>
+                <path d="M 202,146 Q 217,153 232,148 L 230,154 Q 217,158 200,152 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+
+                <circle cx="218" cy="115" r="21" fill="#fed7aa"/>
+                <ellipse cx="198" cy="100" rx="9" ry="14" fill="#334155" transform="rotate(-25, 198, 100)"/>
+                <circle cx="204" cy="105" r="4" fill="#2563eb"/>
+                <ellipse cx="228" cy="122" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+                <path d="M 198,118 C 195,96 206,88 222,88 C 238,88 244,98 242,112 C 237,106 230,105 224,110 C 218,106 210,106 204,112 Z" fill="#334155"/>
+                <ellipse cx="228" cy="113" rx="3.5" ry="4.5" fill="#0f172a"/>
+                <circle cx="229" cy="111" r="1.5" fill="#ffffff"/>
+                <path d="M 223,106 L 233,108" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 224,124 Q 230,128 235,123" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                <path d="M 225,158 Q 250,172 288,194" stroke="#3b82f6" stroke-width="16" stroke-linecap="round"/>
+                <circle cx="290" cy="195" r="7.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+              </g>
+
+              <!-- BLUE PULLER 3 (FRONT: Headband Student #3) -->
+              <g id="bluePuller3">
+                <path d="M 320,210 L 295,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 295,253 L 288,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 272,275 L 304,275 Q 306,265 291,264 L 278,264 Z" fill="#2563eb" stroke="#1e40af" stroke-width="1.5"/>
+
+                <path d="M 340,210 L 365,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 365,253 L 374,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 360,275 L 395,275 Q 398,265 380,264 L 366,264 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+
+                <path d="M 308,198 L 355,206 L 350,224 L 300,218 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M 300,148 L 356,158 L 346,204 L 302,200 Z" fill="url(#blueShirtGrad)" stroke="#1d4ed8" stroke-width="2"/>
+                <rect x="316" y="166" width="20" height="15" rx="3" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+                <text x="326" y="178" font-family="'Fredoka', sans-serif" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">3</text>
+
+                <path d="M 320,132 L 320,150 L 336,150 L 336,132 Z" fill="#fed7aa"/>
+                <path d="M 312,146 Q 327,153 342,148 L 340,154 Q 327,158 310,152 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+
+                <circle cx="328" cy="115" r="21" fill="#fed7aa"/>
+                <path d="M 308,104 Q 328,98 348,106 L 347,112 Q 328,104 308,110 Z" fill="#2563eb" stroke="#1e3a8a" stroke-width="1.5"/>
+                <ellipse cx="338" cy="122" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+                <path d="M 308,118 C 305,96 316,88 332,88 C 348,88 354,98 352,112 C 347,106 340,105 334,110 C 328,106 320,106 314,112 Z" fill="#334155"/>
+                <circle cx="316" cy="117" r="4.5" fill="#fed7aa" stroke="#fba772" stroke-width="1.2"/>
+                <ellipse cx="338" cy="113" rx="3.5" ry="4.5" fill="#0f172a"/>
+                <circle cx="339" cy="111" r="1.5" fill="#ffffff"/>
+                <path d="M 333,106 L 343,108" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 334,124 Q 340,128 345,123" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                <path d="M 335,158 Q 360,172 402,194" stroke="#3b82f6" stroke-width="16" stroke-linecap="round"/>
+                <circle cx="404" cy="195" r="7.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+              </g>
+            </g>
+
+            <!-- ================= RED TEAM (RIGHT: 3 STUDENTS) ================= -->
+            <g id="redTeamSvgGroup" class="char-group animate-pull-effort-red">
+              
+              <!-- RED PULLER 1 (FRONT: Headband Student #1) -->
+              <g id="redPuller1">
+                <path d="M 590,210 L 615,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 615,253 L 622,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 638,275 L 606,275 Q 604,265 619,264 L 632,264 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>
+
+                <path d="M 570,210 L 545,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 545,253 L 536,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 550,275 L 515,275 Q 512,265 530,264 L 544,264 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+
+                <path d="M 602,198 L 555,206 L 560,224 L 610,218 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M 610,148 L 554,158 L 564,204 L 608,200 Z" fill="url(#redShirtGrad)" stroke="#b91c1c" stroke-width="2"/>
+                <rect x="572" y="166" width="20" height="15" rx="3" fill="#ffffff" stroke="#fca5a5" stroke-width="1"/>
+                <text x="582" y="178" font-family="'Fredoka', sans-serif" font-size="11" font-weight="bold" fill="#dc2626" text-anchor="middle">1</text>
+
+                <path d="M 590,132 L 590,150 L 574,150 L 574,132 Z" fill="#fed7aa"/>
+                <path d="M 598,146 Q 583,153 568,148 L 570,154 Q 583,158 600,152 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+
+                <circle cx="582" cy="115" r="21" fill="#fed7aa"/>
+                <path d="M 602,104 Q 582,98 562,106 L 563,112 Q 582,104 602,110 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>
+                <ellipse cx="572" cy="122" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+                <path d="M 602,118 C 605,96 594,88 578,88 C 562,88 556,98 558,112 C 563,106 570,105 576,110 C 582,106 590,106 596,112 Z" fill="#334155"/>
+                <circle cx="594" cy="117" r="4.5" fill="#fed7aa" stroke="#fba772" stroke-width="1.2"/>
+                <ellipse cx="572" cy="113" rx="3.5" ry="4.5" fill="#0f172a"/>
+                <circle cx="571" cy="111" r="1.5" fill="#ffffff"/>
+                <path d="M 577,106 L 567,108" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 576,124 Q 570,128 565,123" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                <path d="M 575,158 Q 550,172 506,194" stroke="#ef4444" stroke-width="16" stroke-linecap="round"/>
+                <circle cx="504" cy="195" r="7.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+              </g>
+
+              <!-- RED PULLER 2 (MIDDLE: Student #2) -->
+              <g id="redPuller2">
+                <path d="M 700,210 L 725,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 725,253 L 732,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 748,275 L 716,275 Q 714,265 729,264 L 742,264 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>
+
+                <path d="M 680,210 L 655,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 655,253 L 646,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 660,275 L 625,275 Q 622,265 640,264 L 654,264 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+
+                <path d="M 712,198 L 665,206 L 670,224 L 720,218 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M 720,148 L 664,158 L 674,204 L 718,200 Z" fill="url(#redShirtGrad)" stroke="#b91c1c" stroke-width="2"/>
+                <rect x="682" y="166" width="20" height="15" rx="3" fill="#ffffff" stroke="#fca5a5" stroke-width="1"/>
+                <text x="692" y="178" font-family="'Fredoka', sans-serif" font-size="11" font-weight="bold" fill="#dc2626" text-anchor="middle">2</text>
+
+                <path d="M 700,132 L 700,150 L 684,150 L 684,132 Z" fill="#fed7aa"/>
+                <path d="M 708,146 Q 693,153 678,148 L 680,154 Q 693,158 710,152 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+
+                <circle cx="692" cy="115" r="21" fill="#fed7aa"/>
+                <ellipse cx="682" cy="122" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+                <path d="M 712,118 C 715,96 704,88 688,88 C 672,88 666,98 668,112 C 673,106 680,105 686,110 C 692,106 700,106 706,112 Z" fill="#334155"/>
+                <circle cx="704" cy="117" r="4.5" fill="#fed7aa" stroke="#fba772" stroke-width="1.2"/>
+                <ellipse cx="682" cy="113" rx="3.5" ry="4.5" fill="#0f172a"/>
+                <circle cx="681" cy="111" r="1.5" fill="#ffffff"/>
+                <path d="M 687,106 L 677,108" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 686,124 Q 680,128 675,123" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                <path d="M 685,158 Q 660,172 616,194" stroke="#ef4444" stroke-width="16" stroke-linecap="round"/>
+                <circle cx="614" cy="195" r="7.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+              </g>
+
+              <!-- RED PULLER 3 (RIGHT-BACK: Ponytail Girl #3) -->
+              <g id="redPuller3">
+                <path d="M 810,210 L 835,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 835,253 L 842,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 858,275 L 826,275 Q 824,265 839,264 L 852,264 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>
+
+                <path d="M 790,210 L 765,255" stroke="#1e293b" stroke-width="19" stroke-linecap="round"/>
+                <path d="M 765,253 L 756,267" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 770,275 L 735,275 Q 732,265 750,264 L 764,264 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+
+                <path d="M 822,198 L 775,206 L 780,224 L 830,218 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M 830,148 L 774,158 L 784,204 L 828,200 Z" fill="url(#redShirtGrad)" stroke="#b91c1c" stroke-width="2"/>
+                <rect x="792" y="166" width="20" height="15" rx="3" fill="#ffffff" stroke="#fca5a5" stroke-width="1"/>
+                <text x="802" y="178" font-family="'Fredoka', sans-serif" font-size="11" font-weight="bold" fill="#dc2626" text-anchor="middle">3</text>
+
+                <path d="M 810,132 L 810,150 L 794,150 L 794,132 Z" fill="#fed7aa"/>
+                <path d="M 818,146 Q 803,153 788,148 L 790,154 Q 803,158 820,152 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2.2"/>
+
+                <circle cx="802" cy="115" r="21" fill="#fed7aa"/>
+                <ellipse cx="792" cy="122" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+
+                <path d="M 822,118 C 825,96 814,88 798,88 C 782,88 776,98 778,112 C 783,106 790,105 796,110 C 802,106 810,106 816,112 Z" fill="#334155"/>
+                <ellipse cx="828" cy="100" rx="9" ry="14" fill="#334155" transform="rotate(25, 828, 100)"/>
+                <circle cx="820" cy="105" r="4" fill="#ef4444"/>
+
+                <circle cx="814" cy="117" r="4.5" fill="#fed7aa" stroke="#fba772" stroke-width="1.2"/>
+                <ellipse cx="792" cy="113" rx="3.5" ry="4.5" fill="#0f172a"/>
+                <circle cx="791" cy="111" r="1.5" fill="#ffffff"/>
+                <path d="M 797,106 L 787,108" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 796,124 Q 790,128 785,123" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+                <path d="M 795,158 Q 770,172 726,194" stroke="#ef4444" stroke-width="16" stroke-linecap="round"/>
+                <circle cx="724" cy="195" r="7.5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+              </g>
+            </g>
+
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- Realtime Tug Status Callout -->
+      <div id="tensionBadge" class="text-center py-1 text-xs font-black text-slate-500 tracking-wider">
+        3v3 對峙中 · 答對心算拉動中間紅標！
+      </div>
+    </div>
+
+    <!-- DUAL PLAYER INTERACTIVE CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 flex-1">
+      
+      <!-- BLUE TEAM PANEL -->
+      <div id="blueCard" class="team-card bg-blue-50/90 border-2 border-blue-400 rounded-3xl p-4 shadow-md flex flex-col justify-between transition-all">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-blue-600 animate-ping"></span>
+            <span class="text-xs font-black text-blue-800 uppercase tracking-wide">藍隊 (3人) 題目區</span>
+            <span class="text-[11px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full border border-blue-200">
+              🔥 連對: <span id="blueStreak" class="text-blue-600 font-black">0</span>
+            </span>
+          </div>
+          <span id="blueHint" class="text-xs text-blue-700 bg-blue-200/70 px-2 py-0.5 rounded-full font-bold">點選正確答案</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-blue-200 p-4 text-center shadow-inner my-auto flex flex-col items-center justify-center min-h-[96px] relative overflow-hidden">
+          <div id="blueQuestion" class="text-3xl sm:text-4xl md:text-5xl font-display font-black text-blue-900 tracking-wider">
+            12 + 8 = ?
+          </div>
+          <div id="blueFeedback" class="absolute inset-0 flex items-center justify-center bg-white/95 text-xl font-black transition-opacity opacity-0 pointer-events-none">
+          </div>
+        </div>
+
+        <div id="blueOptions" class="grid grid-cols-2 gap-2.5 mt-3">
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-blue-600 hover:text-white border-2 border-blue-300 text-blue-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-blue-600 hover:text-white border-2 border-blue-300 text-blue-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-blue-600 hover:text-white border-2 border-blue-300 text-blue-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-blue-600 hover:text-white border-2 border-blue-300 text-blue-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+        </div>
+      </div>
+
+      <!-- RED TEAM PANEL -->
+      <div id="redCard" class="team-card bg-red-50/90 border-2 border-red-400 rounded-3xl p-4 shadow-md flex flex-col justify-between transition-all">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-red-600 animate-ping"></span>
+            <span id="redSectionTitle" class="text-xs font-black text-red-800 uppercase tracking-wide">紅隊 (3人) 題目區</span>
+            <span class="text-[11px] bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded-full border border-red-200">
+              🔥 連對: <span id="redStreak" class="text-red-600 font-black">0</span>
+            </span>
+          </div>
+          <span id="redHint" class="text-xs text-red-700 bg-red-200/70 px-2 py-0.5 rounded-full font-bold">電腦思索中...</span>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-red-200 p-4 text-center shadow-inner my-auto flex flex-col items-center justify-center min-h-[96px] relative overflow-hidden">
+          <div id="redQuestion" class="text-3xl sm:text-4xl md:text-5xl font-display font-black text-red-900 tracking-wider">
+            15 − 7 = ?
+          </div>
+          <div id="redFeedback" class="absolute inset-0 flex items-center justify-center bg-white/95 text-xl font-black transition-opacity opacity-0 pointer-events-none">
+          </div>
+        </div>
+
+        <div id="redOptions" class="grid grid-cols-2 gap-2.5 mt-3">
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-red-600 hover:text-white border-2 border-red-300 text-red-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-red-600 hover:text-white border-2 border-red-300 text-red-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-red-600 hover:text-white border-2 border-red-300 text-red-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+          <button type="button" class="answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-red-600 hover:text-white border-2 border-red-300 text-red-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center">0</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Surrender / Return Controls -->
+    <div class="mt-2 flex justify-between items-center text-xs text-slate-500 px-2">
+      <span>💡 拔河力道小秘訣：連續答對可觸發 3 人合力連擊強拉！快捷鍵：藍隊 [1,2,3,4] / 紅隊 [7,8,9,0]</span>
+      <button id="giveUpBtn" class="text-slate-500 hover:text-rose-600 underline font-bold transition">
+        中止比賽返回設定
+      </button>
+    </div>
+  </main>
+
+  <!-- MATCH RESULT MODAL -->
+  <div id="resultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-slate-200 text-center relative overflow-hidden transform transition-all scale-95 opacity-0 duration-300" id="resultModalBox">
+      
+      <div id="confettiContainer" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
+
+      <div id="winnerEmoji" class="text-6xl mb-2 animate-bounce">🏆</div>
+      <h3 id="winnerTitle" class="text-2xl sm:text-3xl font-black text-slate-800 mb-1">
+        藍隊獲勝！
+      </h3>
+      <p id="winnerSubtitle" class="text-sm font-semibold text-slate-500 mb-6">三人合力！心算如雷，展現了無與倫比的強大拉力！</p>
+
+      <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6 text-sm">
+        <div class="grid grid-cols-3 gap-2 font-bold pb-2 border-b border-slate-200 text-slate-600 text-xs">
+          <span>指標</span>
+          <span class="text-blue-600">藍隊 (3人)</span>
+          <span class="text-red-600">紅隊 (3人)</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 py-2 border-b border-slate-200/60 items-center">
+          <span class="text-slate-500 text-xs font-bold">答對題數</span>
+          <span id="statBlueCorrect" class="font-black text-blue-700 text-base">0</span>
+          <span id="statRedCorrect" class="font-black text-red-700 text-base">0</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 py-2 border-b border-slate-200/60 items-center">
+          <span class="text-slate-500 text-xs font-bold">答題正確率</span>
+          <span id="statBlueAcc" class="font-black text-slate-700">0%</span>
+          <span id="statRedAcc" class="font-black text-slate-700">0%</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 pt-2 items-center">
+          <span class="text-slate-500 text-xs font-bold">最高連對</span>
+          <span id="statBlueMaxStreak" class="font-black text-blue-600">0</span>
+          <span id="statRedMaxStreak" class="font-black text-red-600">0</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="rematchBtn" class="flex-1 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-base shadow-md shadow-blue-500/25 transition">
+          🔄 再戰一場
+        </button>
+        <button id="backToSettingsBtn" class="flex-1 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-base transition">
+          ⚙️ 調整題型設定
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY / RULES MODAL -->
+  <div id="ruleModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+          <span>📖</span> 拔河數學玩法規則
+        </h3>
+        <button id="closeRuleBtn" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">&times;</button>
+      </div>
+      <div class="space-y-3 text-sm text-slate-600 leading-relaxed">
+        <div class="p-3 bg-blue-50 rounded-xl border border-blue-200">
+          <strong class="text-blue-800">1. 答對往前拉：</strong>
+          每答對一題，你的 3 人小隊會使勁將繩子往己方拉動一段距離。
+        </div>
+        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+          <strong class="text-amber-800">2. 連對有爆發力：</strong>
+          連續答對 3 題以上會觸發「三人齊力連擊」，拉力大幅提升！
+        </div>
+        <div class="p-3 bg-red-50 rounded-xl border border-red-200">
+          <strong class="text-red-800">3. 答錯會失誤：</strong>
+          答錯時會短暫陷入「腳滑」狀態（0.5秒），且繩子可能被對方趁機拉扯！
+        </div>
+        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+          <strong class="text-emerald-800">4. 獲勝方式：</strong>
+          只要將中間紅旗成功拉過己方的虛線門檻，或 60 秒計時結束時繩子偏向己方即可奪冠！
+        </div>
+      </div>
+      <button id="confirmRuleBtn" class="w-full mt-5 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm transition">
+        明白，馬上開始！
+      </button>
+    </div>
+  </div>
+
+  <script>
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+        this.bgmEnabled = true;
+        this.bgmTimer = null;
+        this.currentTrack = 'doraemon';
+        this.isPlayingBgm = false;
+        this.stepIndex = 0;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playTone(freq, type, duration, gainValue = 0.2) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+          gain.gain.setValueAtTime(gainValue, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {}
+      }
+
+      playBgmNote(freq, duration, bassFreq = 0, style = 'pop') {
+        if (!this.bgmEnabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const now = this.ctx.currentTime;
+
+          // Main Melody
+          if (freq > 0) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = (style === 'dance') ? 'sawtooth' : 'triangle';
+            osc.frequency.setValueAtTime(freq, now);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(style === 'dance' ? 0.12 : 0.16, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration * 0.92);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + duration * 0.95);
+
+            // Harmonic Chime layer
+            const overtone = this.ctx.createOscillator();
+            const overGain = this.ctx.createGain();
+            overtone.type = 'sine';
+            overtone.frequency.setValueAtTime(freq * 2, now);
+            overGain.gain.setValueAtTime(0.001, now);
+            overGain.gain.linearRampToValueAtTime(0.04, now + 0.02);
+            overGain.gain.exponentialRampToValueAtTime(0.0001, now + duration * 0.6);
+
+            overtone.connect(overGain);
+            overGain.connect(this.ctx.destination);
+            overtone.start(now);
+            overtone.stop(now + duration * 0.65);
+          }
+
+          // Bass Drum / Rhythm
+          if (bassFreq > 0) {
+            const bassOsc = this.ctx.createOscillator();
+            const bassGain = this.ctx.createGain();
+            bassOsc.type = 'sine';
+            bassOsc.frequency.setValueAtTime(bassFreq, now);
+
+            bassGain.gain.setValueAtTime(0.001, now);
+            bassGain.gain.linearRampToValueAtTime(0.18, now + 0.02);
+            bassGain.gain.exponentialRampToValueAtTime(0.0001, now + duration * 0.85);
+
+            bassOsc.connect(bassGain);
+            bassGain.connect(this.ctx.destination);
+
+            bassOsc.start(now);
+            bassOsc.stop(now + duration * 0.9);
+          }
+        } catch (err) {}
+      }
+
+      getTrackScore(trackName) {
+        const C3 = 130.81, D3 = 146.83, E3 = 164.81, F3 = 174.61, G3 = 196.00, A3 = 220.00, B3 = 246.94;
+        const C4 = 261.63, D4 = 293.66, E4 = 329.63, F4 = 349.23, G4 = 392.00, A4 = 440.00, B4 = 493.88;
+        const C5 = 523.25, D5 = 587.33, E5 = 659.25, F5 = 698.46, G5 = 783.99, A5 = 880.00, B5 = 987.77;
+        const C6 = 1046.50;
+        const R = 0;
+
+        if (trackName === 'guyongzhe') {
+          // 《孤勇者》副歌高潮 (陳奕迅)
+          const beat = 0.22;
+          const score = [
+            { f: A4, d: 0.9, b: A3 }, { f: A4, d: 0.9 }, { f: A4, d: 0.9 }, { f: G4, d: 0.9, b: E3 }, { f: A4, d: 0.9 }, { f: C5, d: 1.8, b: A3 },
+            { f: A4, d: 0.9, b: F3 }, { f: A4, d: 0.9 }, { f: A4, d: 0.9 }, { f: G4, d: 0.9, b: G3 }, { f: E4, d: 2.2, b: C3 },
+            { f: R, d: 0.4 },
+            { f: A4, d: 0.9, b: A3 }, { f: A4, d: 0.9 }, { f: A4, d: 0.9 }, { f: G4, d: 0.9, b: E3 }, { f: A4, d: 0.9 }, { f: C5, d: 1.8, b: A3 },
+            { f: D5, d: 0.9, b: D3 }, { f: C5, d: 0.9 }, { f: D5, d: 1.0, b: E3 }, { f: E5, d: 2.2, b: E3 },
+            { f: R, d: 0.5 },
+            { f: E5, d: 0.8, b: A3 }, { f: A4, d: 1.2 }, { f: E5, d: 0.8, b: F3 }, { f: A4, d: 1.2 },
+            { f: A4, d: 0.8, b: C3 }, { f: C5, d: 0.8 }, { f: D5, d: 0.8, b: D3 }, { f: C5, d: 0.8 }, { f: A4, d: 1.8, b: A3 },
+            { f: E5, d: 0.8, b: A3 }, { f: A4, d: 1.2 }, { f: E5, d: 0.8, b: F3 }, { f: A4, d: 1.2 },
+            { f: A4, d: 0.8, b: C3 }, { f: C5, d: 0.8 }, { f: D5, d: 0.8, b: G3 }, { f: E5, d: 1.0 }, { f: D5, d: 2.2, b: D3 },
+            { f: R, d: 0.4 },
+            { f: C5, d: 0.8, b: F3 }, { f: D5, d: 0.8 }, { f: E5, d: 0.8, b: G3 }, { f: E5, d: 0.8 }, { f: D5, d: 0.8 }, { f: C5, d: 0.8, b: A3 }, { f: A4, d: 1.8 },
+            { f: A4, d: 0.8, b: D3 }, { f: C5, d: 0.8 }, { f: D5, d: 0.8, b: E3 }, { f: C5, d: 0.8 }, { f: A4, d: 0.8 }, { f: A4, d: 2.6, b: A3 },
+            { f: R, d: 1.8 }
+          ];
+          return { beat, score, style: 'pop' };
+
+        } else if (trackName === 'apt') {
+          // 《APT.》(Rosé & Bruno Mars)
+          const beat = 0.16;
+          const score = [
+            { f: E5, d: 0.7, b: E3 }, { f: E5, d: 0.7 }, { f: E5, d: 1.0, b: A3 }, { f: R, d: 0.4 },
+            { f: E5, d: 0.7, b: E3 }, { f: E5, d: 0.7 }, { f: E5, d: 1.0, b: A3 }, { f: R, d: 0.4 },
+            { f: E5, d: 0.7, b: E3 }, { f: E5, d: 0.7 }, { f: E5, d: 1.0, b: A3 }, { f: R, d: 0.4 },
+            { f: G5, d: 0.8, b: G3 }, { f: E5, d: 0.8 }, { f: D5, d: 1.2, b: D3 }, { f: R, d: 0.4 },
+            { f: E5, d: 0.8, b: A3 }, { f: E5, d: 0.8 }, { f: R, d: 0.6 },
+            { f: E5, d: 0.8, b: A3 }, { f: E5, d: 0.8 }, { f: R, d: 0.6 },
+            { f: E5, d: 0.7, b: E3 }, { f: E5, d: 0.7 }, { f: E5, d: 1.0, b: A3 }, { f: R, d: 0.4 },
+            { f: E5, d: 0.7, b: E3 }, { f: E5, d: 0.7 }, { f: E5, d: 1.0, b: A3 }, { f: R, d: 0.4 },
+            { f: A5, d: 1.0, b: A3 }, { f: G5, d: 0.8 }, { f: E5, d: 0.8, b: E3 }, { f: D5, d: 1.0 }, { f: C5, d: 1.8, b: C3 },
+            { f: R, d: 1.2 }
+          ];
+          return { beat, score, style: 'dance' };
+
+        } else if (trackName === 'kemusan') {
+          // 《科目三》（一笑江湖）
+          const beat = 0.17;
+          const score = [
+            { f: A4, d: 0.8, b: A3 }, { f: C5, d: 0.8 }, { f: E5, d: 0.8, b: E3 }, { f: D5, d: 0.8 }, { f: C5, d: 0.8 }, { f: A4, d: 1.6, b: A3 },
+            { f: G4, d: 0.8, b: G3 }, { f: A4, d: 0.8 }, { f: C5, d: 0.8, b: C3 }, { f: A4, d: 0.8 }, { f: G4, d: 0.8 }, { f: E4, d: 1.8, b: E3 },
+            { f: A4, d: 0.8, b: A3 }, { f: C5, d: 0.8 }, { f: E5, d: 0.8, b: E3 }, { f: G5, d: 0.8 }, { f: E5, d: 0.8 }, { f: D5, d: 1.6, b: D3 },
+            { f: C5, d: 0.8, b: C3 }, { f: A4, d: 0.8 }, { f: C5, d: 0.8, b: E3 }, { f: E5, d: 0.8 }, { f: A4, d: 2.2, b: A3 },
+            { f: R, d: 1.2 }
+          ];
+          return { beat, score, style: 'dance' };
+
+        } else {
+          // 《哆啦A夢主題曲》經典版
+          const beat = 0.22;
+          const score = [
+            { f: C6, d: 0.5, b: C3 }, { f: B5, d: 0.5 }, { f: A5, d: 0.5 }, { f: G5, d: 0.5 }, { f: A5, d: 0.5 }, { f: B5, d: 0.5 },
+            { f: C6, d: 0.5, b: C3 }, { f: B5, d: 0.5 }, { f: A5, d: 0.5 }, { f: G5, d: 0.5 }, { f: A5, d: 0.5 }, { f: B5, d: 0.5 },
+            { f: G4, d: 0.7, b: G3 }, { f: G4, d: 0.7 }, { f: G4, d: 0.6 }, { f: A4, d: 1.0 }, { f: B4, d: 1.0 }, { f: R, d: 0.4 },
+            { f: G3, d: 0.8, b: C3 },
+            { f: C4, d: 0.9, b: C3 }, { f: C4, d: 0.9 }, { f: E4, d: 0.9 }, { f: A4, d: 0.9, b: A3 }, { f: E4, d: 0.9 }, { f: G4, d: 2.2, b: C3 },
+            { f: G4, d: 0.8, b: G3 }, { f: A4, d: 0.8 }, { f: G4, d: 0.8 }, { f: E4, d: 0.8 }, { f: F4, d: 0.8, b: D3 }, { f: E4, d: 0.8 }, { f: D4, d: 2.4, b: G3 },
+            { f: R, d: 0.4 },
+            { f: A4, d: 1.3, b: F3 }, { f: R, d: 0.3 },
+            { f: A4, d: 1.3, b: F3 }, { f: R, d: 0.3 },
+            { f: A4, d: 0.8, b: F3 }, { f: G4, d: 0.8 }, { f: F4, d: 0.8 }, { f: G4, d: 0.8, b: C3 }, { f: A4, d: 0.8 }, { f: G4, d: 2.2, b: C3 },
+            { f: D4, d: 0.8, b: D3 }, { f: E4, d: 0.8 }, { f: F4, d: 0.8 }, { f: D4, d: 0.8, b: G3 }, { f: G4, d: 2.4, b: G3 },
+            { f: R, d: 1.5 }
+          ];
+          return { beat, score, style: 'pop' };
+        }
+      }
+
+      startBgm(track = this.currentTrack) {
+        this.init();
+        this.stopBgm();
+
+        this.currentTrack = track;
+        this.isPlayingBgm = true;
+        this.stepIndex = 0;
+
+        const soundWave = document.getElementById('soundWaveIcon');
+        if (soundWave) soundWave.classList.remove('opacity-30');
+
+        const { beat, score, style } = this.getTrackScore(track);
+
+        const playNext = () => {
+          if (!this.bgmEnabled || !this.isPlayingBgm) return;
+          const current = score[this.stepIndex];
+          if (current.f > 0 || current.b > 0) {
+            this.playBgmNote(current.f, current.d * beat, current.b || 0, style);
+          }
+          this.stepIndex = (this.stepIndex + 1) % score.length;
+          this.bgmTimer = setTimeout(playNext, current.d * beat * 1000);
+        };
+
+        playNext();
+      }
+
+      stopBgm() {
+        this.isPlayingBgm = false;
+        if (this.bgmTimer) {
+          clearTimeout(this.bgmTimer);
+          this.bgmTimer = null;
+        }
+        const soundWave = document.getElementById('soundWaveIcon');
+        if (soundWave) soundWave.classList.add('opacity-30');
+      }
+
+      toggleBgm() {
+        this.init();
+        this.bgmEnabled = !this.bgmEnabled;
+        if (this.bgmEnabled) {
+          this.startBgm(this.currentTrack);
+        } else {
+          this.stopBgm();
+        }
+        return this.bgmEnabled;
+      }
+
+      changeTrack(newTrack) {
+        this.init();
+        this.currentTrack = newTrack;
+        if (this.bgmEnabled) {
+          this.startBgm(newTrack);
+        }
+      }
+
+      playCorrect() {
+        this.playTone(523.25, 'sine', 0.15, 0.25);
+        setTimeout(() => this.playTone(659.25, 'sine', 0.15, 0.25), 60);
+        setTimeout(() => this.playTone(783.99, 'sine', 0.25, 0.25), 120);
+      }
+
+      playWrong() {
+        this.playTone(180, 'sawtooth', 0.25, 0.2);
+        setTimeout(() => this.playTone(130, 'sawtooth', 0.3, 0.2), 100);
+      }
+
+      playPull() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(320, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.15);
+        } catch (e) {}
+      }
+
+      playWhistle() {
+        this.playTone(987.77, 'sine', 0.35, 0.3);
+        setTimeout(() => this.playTone(987.77, 'sine', 0.45, 0.3), 300);
+      }
+
+      playWin() {
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => this.playTone(freq, 'triangle', 0.3, 0.3), idx * 140);
+        });
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    const state = {
+      mode: 'ai',
+      aiDiff: 'support', // 預設使用學障友善慢速
+      matchDuration: 'unlimited', // 預設無時限模式，給予零壓力環境
+      friendlyMode: true, // 特教無挫折模式：答錯不後拉、充足檢視時間
+      operations: ['add', 'sub'],
+      level: 'easy',
+      isPlaying: false,
+      timeLeft: 120,
+      timerInterval: null,
+      ropePosition: 0,
+      winThreshold: 85,
+
+      blue: {
+        currentQuestion: null,
+        correctCount: 0,
+        wrongCount: 0,
+        streak: 0,
+        maxStreak: 0,
+        locked: false
+      },
+      red: {
+        currentQuestion: null,
+        correctCount: 0,
+        wrongCount: 0,
+        streak: 0,
+        maxStreak: 0,
+        locked: false,
+        aiTimeout: null
+      }
+    };
+
+    function gcd(a, b) {
+      return b === 0 ? a : gcd(b, a % b);
+    }
+    function lcm(a, b) {
+      return (a * b) / gcd(a, b);
+    }
+
+    function generateMathProblem(operations, level) {
+      const op = operations[Math.floor(Math.random() * operations.length)];
+      let formula = '', answer = '', choices = new Set();
+
+      if (op === 'add') {
+        let n1, n2;
+        if (level === 'easy') {
+          n1 = Math.floor(Math.random() * 10) + 1;
+          n2 = Math.floor(Math.random() * 10) + 1;
+        } else if (level === 'mid') {
+          n1 = Math.floor(Math.random() * 50) + 12;
+          n2 = Math.floor(Math.random() * 50) + 12;
+        } else {
+          n1 = Math.floor(Math.random() * 300) + 120;
+          n2 = Math.floor(Math.random() * 300) + 120;
+        }
+        answer = String(n1 + n2);
+        formula = `${n1} + ${n2} = ?`;
+      } else if (op === 'sub') {
+        let n1, n2;
+        if (level === 'easy') {
+          n1 = Math.floor(Math.random() * 15) + 5;
+          n2 = Math.floor(Math.random() * n1) + 1;
+        } else if (level === 'mid') {
+          n1 = Math.floor(Math.random() * 80) + 20;
+          n2 = Math.floor(Math.random() * (n1 - 10)) + 5;
+        } else {
+          n1 = Math.floor(Math.random() * 500) + 150;
+          n2 = Math.floor(Math.random() * (n1 - 50)) + 30;
+        }
+        answer = String(n1 - n2);
+        formula = `${n1} − ${n2} = ?`;
+      } else if (op === 'mul') {
+        let n1, n2;
+        if (level === 'easy') {
+          n1 = Math.floor(Math.random() * 8) + 2;
+          n2 = Math.floor(Math.random() * 5) + 1;
+        } else if (level === 'mid') {
+          n1 = Math.floor(Math.random() * 8) + 2;
+          n2 = Math.floor(Math.random() * 8) + 2;
+        } else {
+          n1 = Math.floor(Math.random() * 15) + 5;
+          n2 = Math.floor(Math.random() * 11) + 3;
+        }
+        answer = String(n1 * n2);
+        formula = `${n1} × ${n2} = ?`;
+      } else if (op === 'div') {
+        let divisor, quotient;
+        if (level === 'easy') {
+          divisor = Math.floor(Math.random() * 4) + 2;
+          quotient = Math.floor(Math.random() * 5) + 1;
+        } else if (level === 'mid') {
+          divisor = Math.floor(Math.random() * 8) + 2;
+          quotient = Math.floor(Math.random() * 8) + 2;
+        } else {
+          divisor = Math.floor(Math.random() * 12) + 3;
+          quotient = Math.floor(Math.random() * 15) + 3;
+        }
+        const dividend = divisor * quotient;
+        answer = String(quotient);
+        formula = `${dividend} ÷ ${divisor} = ?`;
+      } else if (op === 'box') {
+        const isAdd = Math.random() > 0.5;
+        if (isAdd) {
+          const n1 = Math.floor(Math.random() * (level === 'easy' ? 12 : 35)) + 4;
+          const ansVal = Math.floor(Math.random() * (level === 'easy' ? 10 : 25)) + 3;
+          const sum = n1 + ansVal;
+          formula = Math.random() > 0.5 ? `[ ? ] + ${n1} = ${sum}` : `${n1} + [ ? ] = ${sum}`;
+          answer = String(ansVal);
+        } else {
+          const mult = Math.floor(Math.random() * 7) + 2;
+          const ansVal = Math.floor(Math.random() * 7) + 2;
+          const prod = mult * ansVal;
+          formula = Math.random() > 0.5 ? `[ ? ] × ${mult} = ${prod}` : `${mult} × [ ? ] = ${prod}`;
+          answer = String(ansVal);
+        }
+      } else if (op === 'mixed') {
+        const a = Math.floor(Math.random() * 8) + 2;
+        const b = Math.floor(Math.random() * 6) + 2;
+        const c = Math.floor(Math.random() * 10) + 2;
+        if (Math.random() > 0.5) {
+          formula = `${c} + ${a} × ${b} = ?`;
+          answer = String(c + (a * b));
+        } else {
+          formula = `(${c} + ${a}) × ${b} = ?`;
+          answer = String((c + a) * b);
+        }
+      } else if (op === 'fraction') {
+        const den = [3, 4, 5, 6, 7, 8, 9, 10][Math.floor(Math.random() * 8)];
+        const n1 = Math.floor(Math.random() * (den - 2)) + 1;
+        const n2 = Math.floor(Math.random() * (den - n1 - 1)) + 1;
+        formula = `${n1}/${den} + ${n2}/${den} = ?`;
+        answer = `${n1 + n2}/${den}`;
+        choices.add(answer);
+        choices.add(`${Math.max(1, n1 + n2 - 1)}/${den}`);
+        choices.add(`${n1 + n2 + 1}/${den}`);
+        choices.add(`${n1 + n2}/${den + 1}`);
+      } else if (op === 'decimal') {
+        const d1 = (Math.floor(Math.random() * 40) + 10) / 10;
+        const d2 = (Math.floor(Math.random() * 30) + 5) / 10;
+        if (Math.random() > 0.5) {
+          formula = `${d1.toFixed(1)} + ${d2.toFixed(1)} = ?`;
+          answer = (d1 + d2).toFixed(1);
+        } else {
+          const maxD = Math.max(d1, d2);
+          const minD = Math.min(d1, d2);
+          formula = `${maxD.toFixed(1)} − ${minD.toFixed(1)} = ?`;
+          answer = (maxD - minD).toFixed(1);
+        }
+      } else if (op === 'factor') {
+        const type = Math.random() > 0.5 ? 'gcd' : 'lcm';
+        if (type === 'gcd') {
+          const pairs = [[12, 18], [8, 12], [15, 20], [14, 21], [16, 24]];
+          const p = pairs[Math.floor(Math.random() * pairs.length)];
+          formula = `${p[0]} 與 ${p[1]} 的最大公因數？`;
+          answer = String(gcd(p[0], p[1]));
+        } else {
+          const pairs = [[3, 4], [4, 6], [6, 8], [2, 5], [4, 5]];
+          const p = pairs[Math.floor(Math.random() * pairs.length)];
+          formula = `${p[0]} 與 ${p[1]} 的最小公倍數？`;
+          answer = String(lcm(p[0], p[1]));
+        }
+      } else if (op === 'time') {
+        if (Math.random() > 0.5) {
+          const hrs = Math.floor(Math.random() * 4) + 2;
+          formula = `${hrs} 小時等於幾分鐘？`;
+          answer = `${hrs * 60}分`;
+          choices.add(answer);
+          choices.add(`${(hrs - 1) * 60}分`);
+          choices.add(`${hrs * 60 + 30}分`);
+          choices.add(`${hrs * 50}分`);
+        } else {
+          const mins = (Math.floor(Math.random() * 3) + 1) * 60 + (Math.floor(Math.random() * 4) + 1) * 10;
+          const h = Math.floor(mins / 60);
+          const m = mins % 60;
+          formula = `${mins} 分鐘是幾時幾分？`;
+          answer = `${h}時${m}分`;
+          choices.add(answer);
+          choices.add(`${h + 1}時${m}分`);
+          choices.add(`${h}時${Math.abs(m - 10)}分`);
+          choices.add(`${h - 1}時${m}分`);
+        }
+      } else if (op === 'geometry') {
+        const sub = Math.random();
+        if (sub < 0.35) {
+          const side = Math.floor(Math.random() * 6) + 3;
+          formula = `邊長 ${side}cm 正方形的周長？`;
+          answer = `${side * 4}cm`;
+          choices.add(answer);
+          choices.add(`${side * 2}cm`);
+          choices.add(`${side * side}cm`);
+          choices.add(`${side * 4 + 4}cm`);
+        } else if (sub < 0.7) {
+          const w = Math.floor(Math.random() * 5) + 3;
+          const h = Math.floor(Math.random() * 4) + 2;
+          formula = `長 ${w}cm、寬 ${h}cm 長方形的面積？`;
+          answer = `${w * h}cm²`;
+          choices.add(answer);
+          choices.add(`${(w + h) * 2}cm²`);
+          choices.add(`${w * h + 2}cm²`);
+          choices.add(`${w * 2 + h}cm²`);
+        } else {
+          const base = (Math.floor(Math.random() * 5) + 2) * 2;
+          const height = Math.floor(Math.random() * 5) + 3;
+          formula = `底 ${base}cm、高 ${height}cm 的三角形面積？`;
+          answer = `${(base * height) / 2}cm²`;
+          choices.add(answer);
+          choices.add(`${base * height}cm²`);
+          choices.add(`${base + height}cm²`);
+          choices.add(`${(base * height) / 2 + 4}cm²`);
+        }
+      } else if (op === 'money') {
+        // 1~2年級 錢幣與找零
+        const moneyTypes = [
+          { q: '小明有 3 個 10 元與 4 個 1 元，共有幾元？', a: '34元', w: ['30元', '43元', '24元'] },
+          { q: '拿 50 元買 32 元的鉛筆，應找回幾元？', a: '18元', w: ['28元', '12元', '22元'] },
+          { q: '1 張 100 元鈔票可以換成幾個 10 元硬幣？', a: '10個', w: ['5個', '20個', '8個'] },
+          { q: '買一顆 15 元的茶葉蛋，付 2 個 10 元，找回幾元？', a: '5元', w: ['10元', '15元', '2元'] },
+          { q: '2 個 50 元硬幣總共是多少元？', a: '100元', w: ['50元', '200元', '150元'] }
+        ];
+        const m = moneyTypes[Math.floor(Math.random() * moneyTypes.length)];
+        formula = m.q;
+        answer = m.a;
+        choices.add(answer);
+        m.w.forEach(item => choices.add(item));
+      } else if (op === 'units') {
+        // 3~4年級 度量衡單位換算
+        const unitTypes = [
+          { q: '3 公尺 (m) 等於幾公分 (cm)？', a: '300cm', w: ['30cm', '3000cm', '30000cm'] },
+          { q: '2 公斤 (kg) 等於幾公克 (g)？', a: '2000g', w: ['200g', '20g', '20000g'] },
+          { q: '1 公升 (L) 等於幾毫升 (ml)？', a: '1000ml', w: ['100ml', '10ml', '500ml'] },
+          { q: '45 毫米 (mm) 等於幾公分幾毫米？', a: '4cm5mm', w: ['45cm', '40cm5mm', '5cm4mm'] },
+          { q: '5 公里 (km) 等於幾公尺 (m)？', a: '5000m', w: ['500m', '50m', '50000m'] }
+        ];
+        const u = unitTypes[Math.floor(Math.random() * unitTypes.length)];
+        formula = u.q;
+        answer = u.a;
+        choices.add(answer);
+        u.w.forEach(item => choices.add(item));
+      } else if (op === 'angle') {
+        // 3~5年級 角度運算
+        const angleTypes = [
+          { q: '鐘面上有一個「直角」，直角是幾度？', a: '90°', w: ['180°', '45°', '60°'] },
+          { q: '「平角」的度數是幾度？', a: '180°', w: ['90°', '360°', '270°'] },
+          { q: '三角形的三個內角總和是幾度？', a: '180°', w: ['90°', '360°', '270°'] },
+          { q: '三角形其中兩角為 50° 和 60°，第三角是幾度？', a: '70°', w: ['80°', '60°', '90°'] },
+          { q: '一個角是 35°，它和另一個角合成直角(90°)，另一個角是？', a: '55°', w: ['65°', '45°', '145°'] }
+        ];
+        const an = angleTypes[Math.floor(Math.random() * angleTypes.length)];
+        formula = an.q;
+        answer = an.a;
+        choices.add(answer);
+        an.w.forEach(item => choices.add(item));
+      } else if (op === 'percent') {
+        // 5~6年級 百分率與打折
+        const percentTypes = [
+          { q: '定價 100 元的玩具打「8 折」，售價是幾元？', a: '80元', w: ['20元', '85元', '90元'] },
+          { q: '定價 200 元的帽子打「7 折」，售價是幾元？', a: '140元', w: ['160元', '70元', '130元'] },
+          { q: '投籃 10 次投進 6 次，進球率用百分率表示是？', a: '60%', w: ['6%', '40%', '16%'] },
+          { q: '全班 20 人中有 5 人戴眼鏡，戴眼鏡的比率是？', a: '25%', w: ['20%', '5%', '50%'] },
+          { q: '一件商品打折後「折價 20%」，相當於打幾折？', a: '8折', w: ['2折', '85折', '7折'] }
+        ];
+        const p = percentTypes[Math.floor(Math.random() * percentTypes.length)];
+        formula = p.q;
+        answer = p.a;
+        choices.add(answer);
+        p.w.forEach(item => choices.add(item));
+      } else if (op === 'speed') {
+        // 5~6年級 速率與距離
+        const speedTypes = [
+          { q: '小跑步時速 6 公里，跑了 2 小時，共跑了幾公里？', a: '12公里', w: ['8公里', '18公里', '3公里'] },
+          { q: '小明走了 300 公尺花了 5 分鐘，他的分速是？', a: '60公尺/分', w: ['50公尺/分', '150公尺/分', '30公尺/分'] },
+          { q: '距離 80 公里，車速每小時 40 公里，需花幾小時到達？', a: '2小時', w: ['3小時', '4小時', '1小時'] },
+          { q: '秒速 10 公尺等於分速多少公尺？', a: '600公尺', w: ['60公尺', '100公尺', '360公尺'] }
+        ];
+        const sp = speedTypes[Math.floor(Math.random() * speedTypes.length)];
+        formula = sp.q;
+        answer = sp.a;
+        choices.add(answer);
+        sp.w.forEach(item => choices.add(item));
+      } else if (op === 'volume') {
+        // 5~6年級 體積與容積
+        const side = Math.floor(Math.random() * 3) + 2;
+        const volSub = Math.random();
+        if (volSub < 0.5) {
+          formula = `邊長 ${side}cm 的正方體，體積是多少立方公分？`;
+          answer = `${side * side * side}cm³`;
+          choices.add(answer);
+          choices.add(`${side * 6}cm³`);
+          choices.add(`${side * side}cm³`);
+          choices.add(`${side * side * side + 4}cm³`);
+        } else {
+          const l = 3, w = 2, h = 4;
+          formula = `長 3cm、寬 2cm、高 4cm 的長方體體積？`;
+          answer = `24cm³`;
+          choices.add('24cm³');
+          choices.add('18cm³');
+          choices.add('20cm³');
+          choices.add('12cm³');
+        }
+      } else {
+        // word (生活應用素養題)
+        const scenarios = [
+          { q: '買了 3 枝 15 元原子筆，共需付？', a: '45元', w: ['35元', '50元', '40元'] },
+          { q: '小華拿 100 元買 35 元麵包，找回？', a: '65元', w: ['75元', '55元', '60元'] },
+          { q: '24 顆糖果平分給 4 位同學，每人得？', a: '6顆', w: ['8顆', '5顆', '7顆'] },
+          { q: '一瓶果汁 1 公升，喝掉 400 毫升還剩？', a: '600毫升', w: ['500毫升', '700毫升', '400毫升'] },
+          { q: '原價 100 元文具特價打 8 折，售價是？', a: '80元', w: ['70元', '85元', '90元'] }
+        ];
+        const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+        formula = sc.q;
+        answer = sc.a;
+        choices.add(answer);
+        sc.w.forEach(item => choices.add(item));
+      }
+
+      choices.add(answer);
+
+      // Generate distractors if numeric
+      const numericVal = parseFloat(answer);
+      if (!isNaN(numericVal) && !String(answer).includes('/')) {
+        const isFloat = String(answer).includes('.');
+        while (choices.size < 4) {
+          const delta = isFloat ? [-0.2, 0.2, -0.1, 0.1, 0.5, -0.5][Math.floor(Math.random() * 6)] : [-1, 1, -2, 2, -10, 10, -5, 5][Math.floor(Math.random() * 8)];
+          const candidate = (numericVal + delta);
+          if (candidate >= 0 && candidate !== numericVal) {
+            choices.add(isFloat ? candidate.toFixed(1) : String(Math.round(candidate)));
+          } else {
+            choices.add(isFloat ? (numericVal + 1.2).toFixed(1) : String(Math.round(numericVal + 3)));
+          }
+        }
+      }
+
+      // Fallback
+      let fallbackIndex = 1;
+      while (choices.size < 4) {
+        choices.add(`${answer}_${fallbackIndex++}`);
+      }
+
+      return {
+        formula,
+        correctAnswer: answer,
+        options: Array.from(choices).slice(0, 4).sort(() => Math.random() - 0.5)
+      };
+    }
+
+    const setupScreen = document.getElementById('setupScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    const bgmToggleBtn = document.getElementById('bgmToggleBtn');
+    const bgmIcon = document.getElementById('bgmIcon');
+    const bgmStatusText = document.getElementById('bgmStatusText');
+    const bgmSelect = document.getElementById('bgmSelect');
+    const ruleBtn = document.getElementById('ruleBtn');
+    const ruleModal = document.getElementById('ruleModal');
+    const closeRuleBtn = document.getElementById('closeRuleBtn');
+    const confirmRuleBtn = document.getElementById('confirmRuleBtn');
+    const navSettingsBtn = document.getElementById('navSettingsBtn');
+    const giveUpBtn = document.getElementById('giveUpBtn');
+    const resultModal = document.getElementById('resultModal');
+    const resultModalBox = document.getElementById('resultModalBox');
+    const rematchBtn = document.getElementById('rematchBtn');
+    const backToSettingsBtn = document.getElementById('backToSettingsBtn');
+
+    const ropeRig = document.getElementById('ropeRig');
+    const tensionBadge = document.getElementById('tensionBadge');
+    const blueTeamSvgGroup = document.getElementById('blueTeamSvgGroup');
+    const redTeamSvgGroup = document.getElementById('redTeamSvgGroup');
+    const blueScoreDisplay = document.getElementById('blueScoreDisplay');
+    const redScoreDisplay = document.getElementById('redScoreDisplay');
+    const redTeamLabel = document.getElementById('redTeamLabel');
+
+    const modeSelectBtns = document.querySelectorAll('.mode-select-btn');
+    const aiDiffWrapper = document.getElementById('aiDiffWrapper');
+    const aiDiffBtns = document.querySelectorAll('.ai-diff-btn');
+    const durationBtns = document.querySelectorAll('.duration-btn');
+    const opBtns = document.querySelectorAll('.op-btn');
+    const levelBtns = document.querySelectorAll('.level-btn');
+    const toggleAllOpsBtn = document.getElementById('toggleAllOpsBtn');
+    const friendlyModeToggle = document.getElementById('friendlyModeToggle');
+
+    if (friendlyModeToggle) {
+      friendlyModeToggle.addEventListener('change', (e) => {
+        state.friendlyMode = e.target.checked;
+      });
+    }
+
+    // 比賽時間按鈕綁定
+    durationBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        durationBtns.forEach(b => {
+          b.classList.remove('active', 'border-2', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800', 'font-black');
+          b.classList.add('border', 'border-slate-200', 'text-slate-600', 'font-bold');
+        });
+        btn.classList.add('active', 'border-2', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800', 'font-black');
+        btn.classList.remove('border', 'border-slate-200', 'text-slate-600');
+        state.matchDuration = btn.dataset.duration === 'unlimited' ? 'unlimited' : parseInt(btn.dataset.duration, 10);
+      });
+    });
+
+    modeSelectBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeSelectBtns.forEach(b => {
+          b.classList.remove('active', 'border-blue-500', 'bg-blue-50', 'text-blue-800');
+          b.classList.add('border-slate-200', 'text-slate-700');
+        });
+        btn.classList.add('active', 'border-blue-500', 'bg-blue-50', 'text-blue-800');
+        btn.classList.remove('border-slate-200', 'text-slate-700');
+        state.mode = btn.dataset.mode;
+        aiDiffWrapper.style.display = (state.mode === 'ai') ? 'block' : 'none';
+      });
+    });
+
+    aiDiffBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        aiDiffBtns.forEach(b => {
+          b.classList.remove('active', 'border-2', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800', 'font-black');
+          b.classList.add('border', 'border-slate-200', 'text-slate-600', 'font-bold');
+        });
+        btn.classList.add('active', 'border-2', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800', 'font-black');
+        btn.classList.remove('border', 'border-slate-200', 'text-slate-600');
+        state.aiDiff = btn.dataset.aidiff;
+      });
+    });
+
+    opBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const op = btn.dataset.op;
+        if (state.operations.includes(op)) {
+          if (state.operations.length <= 1) return;
+          state.operations = state.operations.filter(item => item !== op);
+          btn.classList.remove('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+          btn.classList.add('border-slate-200', 'text-slate-600');
+          const subText = btn.querySelector('span:last-child');
+          if (subText) subText.className = 'text-[10px] text-slate-500 font-normal';
+        } else {
+          state.operations.push(op);
+          btn.classList.add('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+          btn.classList.remove('border-slate-200', 'text-slate-600');
+          const subText = btn.querySelector('span:last-child');
+          if (subText) subText.className = 'text-[10px] text-emerald-600 font-normal';
+        }
+      });
+    });
+
+    if (toggleAllOpsBtn) {
+      toggleAllOpsBtn.addEventListener('click', () => {
+        const allOpKeys = Array.from(opBtns).map(b => b.dataset.op);
+        if (state.operations.length === allOpKeys.length) {
+          state.operations = ['add', 'sub'];
+          opBtns.forEach(btn => {
+            const isDefault = ['add', 'sub'].includes(btn.dataset.op);
+            btn.classList.toggle('active', isDefault);
+            btn.classList.toggle('border-emerald-500', isDefault);
+            btn.classList.toggle('bg-emerald-50', isDefault);
+            btn.classList.toggle('text-emerald-800', isDefault);
+            btn.classList.toggle('border-slate-200', !isDefault);
+            btn.classList.toggle('text-slate-600', !isDefault);
+            const sub = btn.querySelector('span:last-child');
+            if (sub) sub.className = isDefault ? 'text-[10px] text-emerald-600 font-normal' : 'text-[10px] text-slate-500 font-normal';
+          });
+        } else {
+          state.operations = [...allOpKeys];
+          opBtns.forEach(btn => {
+            btn.classList.add('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+            btn.classList.remove('border-slate-200', 'text-slate-600');
+            const sub = btn.querySelector('span:last-child');
+            if (sub) sub.className = 'text-[10px] text-emerald-600 font-normal';
+          });
+        }
+      });
+    }
+
+    levelBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        levelBtns.forEach(b => {
+          b.classList.remove('active', 'border-blue-500', 'bg-blue-50', 'text-blue-800');
+          b.classList.add('border-slate-200', 'text-slate-600');
+        });
+        btn.classList.add('active', 'border-blue-500', 'bg-blue-50', 'text-blue-800');
+        btn.classList.remove('border-slate-200', 'text-slate-600');
+        state.level = btn.dataset.level;
+      });
+    });
+
+    soundToggleBtn.addEventListener('click', () => {
+      sound.init();
+      sound.enabled = !sound.enabled;
+      soundIcon.textContent = sound.enabled ? '🔊' : '🔇';
+      soundToggleBtn.querySelector('span:last-child').textContent = sound.enabled ? '音效開' : '靜音中';
+    });
+
+    bgmToggleBtn.addEventListener('click', () => {
+      sound.init();
+      const isActive = sound.toggleBgm();
+      if (isActive) {
+        bgmIcon.textContent = '🎵';
+        bgmStatusText.textContent = '播放中';
+        bgmToggleBtn.classList.remove('bg-slate-400');
+        bgmToggleBtn.classList.add('bg-rose-600');
+      } else {
+        bgmIcon.textContent = '⏸️';
+        bgmStatusText.textContent = '已暫停';
+        bgmToggleBtn.classList.remove('bg-rose-600');
+        bgmToggleBtn.classList.add('bg-slate-400');
+      }
+    });
+
+    bgmSelect.addEventListener('change', (e) => {
+      sound.init();
+      sound.changeTrack(e.target.value);
+      if (sound.bgmEnabled) {
+        bgmIcon.textContent = '🎵';
+        bgmStatusText.textContent = '播放中';
+        bgmToggleBtn.classList.remove('bg-slate-400');
+        bgmToggleBtn.classList.add('bg-rose-600');
+      }
+    });
+
+    const toggleRuleModal = (show) => ruleModal.classList.toggle('hidden', !show);
+    ruleBtn.addEventListener('click', () => toggleRuleModal(true));
+    closeRuleBtn.addEventListener('click', () => toggleRuleModal(false));
+    confirmRuleBtn.addEventListener('click', () => toggleRuleModal(false));
+
+    navSettingsBtn.addEventListener('click', () => {
+      if (state.isPlaying) endGame('aborted');
+      returnToSetup();
+    });
+    giveUpBtn.addEventListener('click', () => {
+      endGame('aborted');
+      returnToSetup();
+    });
+
+    function updateRopeUI(pullDirection = 0) {
+      const maxOffsetPx = 180;
+      const xPixel = (state.ropePosition / state.winThreshold) * maxOffsetPx;
+
+      ropeRig.style.transform = `translateX(${xPixel}px)`;
+
+      if (pullDirection < 0) {
+        blueTeamSvgGroup.classList.add('pull-flash-blue');
+        tensionBadge.textContent = '⚡ 藍隊 3 人齊心使勁！紅標向左移！';
+        tensionBadge.className = 'text-center py-1 text-xs font-black text-blue-600 tracking-wider';
+        setTimeout(() => blueTeamSvgGroup.classList.remove('pull-flash-blue'), 350);
+      } else if (pullDirection > 0) {
+        redTeamSvgGroup.classList.add('pull-flash-red');
+        tensionBadge.textContent = '⚡ 紅隊 3 人全力拉扯！紅標向右移！';
+        tensionBadge.className = 'text-center py-1 text-xs font-black text-red-600 tracking-wider';
+        setTimeout(() => redTeamSvgGroup.classList.remove('pull-flash-red'), 350);
+      }
+    }
+
+    function startGame() {
+      sound.init();
+      sound.playWhistle();
+
+      if (sound.bgmEnabled) {
+        sound.startBgm(sound.currentTrack);
+        bgmIcon.textContent = '🎵';
+        bgmStatusText.textContent = '播放中';
+        bgmToggleBtn.classList.remove('bg-slate-400');
+        bgmToggleBtn.classList.add('bg-rose-600');
+      }
+
+      state.isPlaying = true;
+      state.timeLeft = state.matchDuration === 'unlimited' ? 0 : state.matchDuration;
+      state.ropePosition = 0;
+
+      state.blue = {
+        currentQuestion: null,
+        correctCount: 0,
+        wrongCount: 0,
+        streak: 0,
+        maxStreak: 0,
+        locked: false
+      };
+
+      state.red = {
+        currentQuestion: null,
+        correctCount: 0,
+        wrongCount: 0,
+        streak: 0,
+        maxStreak: 0,
+        locked: false,
+        aiTimeout: null
+      };
+
+      if (state.mode === 'ai') {
+        const diffNames = { 
+          support: '慢速練習小熊', 
+          easy: '溫和慢速狐狸', 
+          normal: '中年級同學', 
+          hard: '高年級快手' 
+        };
+        redTeamLabel.textContent = `Team 2 (${diffNames[state.aiDiff]})`;
+        document.getElementById('redSectionTitle').textContent = `Team 2 (${diffNames[state.aiDiff]}) 題目區`;
+        document.getElementById('redHint').textContent = '陪伴練習中...';
+      } else {
+        redTeamLabel.textContent = 'Team 2 (紅隊 3人)';
+        document.getElementById('redSectionTitle').textContent = 'Team 2 (3人) 題目區';
+        document.getElementById('redHint').textContent = '點選正確答案';
+      }
+
+      blueScoreDisplay.textContent = '0';
+      redScoreDisplay.textContent = '0';
+      const blueStreakEl = document.getElementById('blueStreak');
+      const redStreakEl = document.getElementById('redStreak');
+      if (blueStreakEl) blueStreakEl.textContent = '0';
+      if (redStreakEl) redStreakEl.textContent = '0';
+
+      tensionBadge.textContent = '3v3 對峙中 · 答對心算拉動中間紅標！';
+      tensionBadge.className = 'text-center py-1 text-xs font-black text-slate-500 tracking-wider';
+
+      setupScreen.classList.add('hidden');
+      gameScreen.classList.remove('hidden');
+      resultModal.classList.add('hidden');
+
+      updateRopeUI(0);
+      startMatchTimer();
+
+      nextBlueQuestion();
+      nextRedQuestion();
+    }
+
+    function startMatchTimer() {
+      clearInterval(state.timerInterval);
+      const timerDisplay = document.getElementById('matchTimerDisplay');
+      
+      const formatTime = (secs) => {
+        const m = String(Math.floor(secs / 60)).padStart(2, '0');
+        const s = String(secs % 60).padStart(2, '0');
+        return `${m}:${s}`;
+      };
+
+      if (state.matchDuration === 'unlimited') {
+        timerDisplay.textContent = '∞ 無限時';
+        timerDisplay.classList.remove('text-red-600', 'animate-pulse');
+        // 無時限模式只計算已進行時間或以拔河拉過線決勝負
+        return;
+      }
+
+      timerDisplay.textContent = formatTime(state.timeLeft);
+
+      state.timerInterval = setInterval(() => {
+        if (!state.isPlaying) return;
+        state.timeLeft--;
+        timerDisplay.textContent = formatTime(state.timeLeft);
+
+        if (state.timeLeft <= 10) {
+          timerDisplay.classList.add('text-red-600', 'animate-pulse');
+        } else {
+          timerDisplay.classList.remove('text-red-600', 'animate-pulse');
+        }
+
+        if (state.timeLeft <= 0) {
+          clearInterval(state.timerInterval);
+          if (state.ropePosition < -5) {
+            endGame('blue');
+          } else if (state.ropePosition > 5) {
+            endGame('red');
+          } else {
+            endGame('draw');
+          }
+        }
+      }, 1000);
+    }
+
+    function nextBlueQuestion() {
+      if (!state.isPlaying) return;
+      const problem = generateMathProblem(state.operations, state.level);
+      state.blue.currentQuestion = problem;
+      state.blue.locked = false;
+
+      const qEl = document.getElementById('blueQuestion');
+      const optionsContainer = document.getElementById('blueOptions');
+      const feedback = document.getElementById('blueFeedback');
+      if (feedback) feedback.style.opacity = '0';
+
+      qEl.textContent = problem.formula;
+
+      if (problem.formula.length > 20) {
+        qEl.className = 'text-base sm:text-lg md:text-xl font-display font-black text-blue-900 tracking-normal px-2 text-center';
+      } else {
+        qEl.className = 'text-3xl sm:text-4xl md:text-5xl font-display font-black text-blue-900 tracking-wider text-center';
+      }
+
+      const buttons = optionsContainer.querySelectorAll('button');
+      problem.options.forEach((opt, idx) => {
+        const btn = buttons[idx];
+        btn.textContent = opt;
+        btn.disabled = false;
+        btn.className = 'answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-blue-600 hover:text-white border-2 border-blue-300 text-blue-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center';
+        btn.onclick = () => handleBlueAnswer(opt, btn);
+      });
+    }
+
+    function handleBlueAnswer(selectedAns, btnElement) {
+      if (!state.isPlaying || state.blue.locked) return;
+      state.blue.locked = true;
+
+      const correct = String(selectedAns) === String(state.blue.currentQuestion.correctAnswer);
+      const feedback = document.getElementById('blueFeedback');
+
+      if (correct) {
+        sound.playCorrect();
+        sound.playPull();
+        state.blue.correctCount++;
+        state.blue.streak++;
+        blueScoreDisplay.textContent = state.blue.correctCount;
+        if (state.blue.streak > state.blue.maxStreak) {
+          state.blue.maxStreak = state.blue.streak;
+        }
+
+        let pullAmount = 14 + Math.min(state.blue.streak * 2, 10);
+        state.ropePosition = Math.max(state.ropePosition - pullAmount, -state.winThreshold);
+
+        btnElement.classList.remove('bg-white', 'hover:bg-blue-600', 'text-blue-900');
+        btnElement.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+
+        feedback.textContent = `🌟 太棒了答對！前進拉動 +${pullAmount}`;
+        feedback.className = 'absolute inset-0 flex items-center justify-center bg-white/95 text-emerald-600 text-xl font-black opacity-100 transition-opacity';
+
+        updateRopeUI(-1);
+
+        if (state.ropePosition <= -state.winThreshold) {
+          state.red.locked = true;
+          clearTimeout(state.red.aiTimeout);
+          setTimeout(() => endGame('blue'), 300);
+          return;
+        }
+      } else {
+        sound.playWrong();
+        state.blue.wrongCount++;
+        state.blue.streak = 0;
+        
+        // 特教友善模式：答錯不向後拉動懲罰繩子，讓學童無負擔重新嘗試
+        if (!state.friendlyMode) {
+          state.ropePosition = Math.min(state.ropePosition + 5, state.winThreshold);
+          updateRopeUI(1);
+        }
+
+        btnElement.classList.remove('bg-white', 'hover:bg-blue-600', 'text-blue-900');
+        btnElement.classList.add('bg-amber-400', 'text-amber-950', 'border-amber-500', 'animate-shake');
+
+        feedback.innerHTML = `<div>💡 正確答案是【<span class="text-emerald-700 underline font-black text-2xl">${state.blue.currentQuestion.correctAnswer}</span>】<div class="text-xs text-slate-500 mt-1">沒關係，下一題繼續加油！</div></div>`;
+        feedback.className = 'absolute inset-0 flex items-center justify-center bg-white/95 text-amber-800 text-base font-black opacity-100 transition-opacity p-2 text-center';
+      }
+
+      const blueStreakEl = document.getElementById('blueStreak');
+      if (blueStreakEl) blueStreakEl.textContent = state.blue.streak;
+
+      // 若答錯且開啟特教友善模式，給予足足 1.8 秒充分讀題並吸收正確答案
+      const waitTime = correct ? 400 : (state.friendlyMode ? 1800 : 800);
+      setTimeout(() => {
+        feedback.style.opacity = '0';
+        nextBlueQuestion();
+      }, waitTime);
+    }
+
+    function nextRedQuestion() {
+      if (!state.isPlaying) return;
+      clearTimeout(state.red.aiTimeout);
+
+      const problem = generateMathProblem(state.operations, state.level);
+      state.red.currentQuestion = problem;
+      state.red.locked = false;
+
+      const qEl = document.getElementById('redQuestion');
+      const optionsContainer = document.getElementById('redOptions');
+      const feedback = document.getElementById('redFeedback');
+      if (feedback) feedback.style.opacity = '0';
+
+      qEl.textContent = problem.formula;
+
+      if (problem.formula.length > 20) {
+        qEl.className = 'text-base sm:text-lg md:text-xl font-display font-black text-red-900 tracking-normal px-2 text-center';
+      } else {
+        qEl.className = 'text-3xl sm:text-4xl md:text-5xl font-display font-black text-red-900 tracking-wider text-center';
+      }
+
+      const buttons = optionsContainer.querySelectorAll('button');
+
+      if (state.mode === 'ai') {
+        problem.options.forEach((opt, idx) => {
+          const btn = buttons[idx];
+          btn.textContent = opt;
+          btn.disabled = true;
+          btn.className = 'py-3.5 px-2 rounded-2xl bg-white/70 border-2 border-red-200 text-red-800 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center opacity-80 cursor-not-allowed';
+        });
+
+        scheduleAiAnswer();
+      } else {
+        problem.options.forEach((opt, idx) => {
+          const btn = buttons[idx];
+          btn.textContent = opt;
+          btn.disabled = false;
+          btn.className = 'answer-btn py-3.5 px-2 rounded-2xl bg-white hover:bg-red-600 hover:text-white border-2 border-red-300 text-red-900 text-xl sm:text-2xl font-black shadow-sm flex items-center justify-center';
+          btn.onclick = () => handleRedAnswer(opt, btn);
+        });
+      }
+    }
+
+    function handleRedAnswer(selectedAns, btnElement = null) {
+      if (!state.isPlaying || state.red.locked) return;
+      state.red.locked = true;
+
+      const correct = String(selectedAns) === String(state.red.currentQuestion.correctAnswer);
+      const feedback = document.getElementById('redFeedback');
+
+      if (correct) {
+        sound.playPull();
+        state.red.correctCount++;
+        state.red.streak++;
+        redScoreDisplay.textContent = state.red.correctCount;
+        if (state.red.streak > state.red.maxStreak) {
+          state.red.maxStreak = state.red.streak;
+        }
+
+        let pullAmount = 14 + Math.min(state.red.streak * 2, 10);
+        state.ropePosition = Math.min(state.ropePosition + pullAmount, state.winThreshold);
+
+        if (btnElement) {
+          btnElement.classList.remove('bg-white', 'hover:bg-red-600', 'text-red-900');
+          btnElement.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+        }
+
+        feedback.textContent = `🎯 紅隊得分！3人拉動 +${pullAmount}`;
+        feedback.className = 'absolute inset-0 flex items-center justify-center bg-white/95 text-emerald-600 text-xl font-black opacity-100 transition-opacity';
+
+        updateRopeUI(1);
+
+        if (state.ropePosition >= state.winThreshold) {
+          state.blue.locked = true;
+          clearTimeout(state.red.aiTimeout);
+          setTimeout(() => endGame('red'), 300);
+          return;
+        }
+      } else {
+        state.red.wrongCount++;
+        state.red.streak = 0;
+        state.ropePosition = Math.max(state.ropePosition - 5, -state.winThreshold);
+
+        if (btnElement) {
+          btnElement.classList.remove('bg-white', 'hover:bg-red-600', 'text-red-900');
+          btnElement.classList.add('bg-rose-500', 'text-white', 'border-rose-600', 'animate-shake');
+        }
+
+        feedback.textContent = `❌ 紅隊失誤！答案是 ${state.red.currentQuestion.correctAnswer}`;
+        feedback.className = 'absolute inset-0 flex items-center justify-center bg-white/95 text-rose-600 text-lg font-black opacity-100 transition-opacity';
+
+        updateRopeUI(-1);
+      }
+
+      const redStreakEl = document.getElementById('redStreak');
+      if (redStreakEl) redStreakEl.textContent = state.red.streak;
+
+      setTimeout(() => {
+        feedback.style.opacity = '0';
+        nextRedQuestion();
+      }, correct ? 400 : 750);
+    }
+
+    function scheduleAiAnswer() {
+      if (!state.isPlaying || state.mode !== 'ai') return;
+
+      // 專為特教與學��障礙學生調配的超寬鬆思考時距
+      let minTime = 18000, maxTime = 28000, accuracyRate = 0.32;
+      if (state.aiDiff === 'support') {
+        minTime = 18000;
+        maxTime = 28000;
+        accuracyRate = 0.32; // 超長思考 18~28秒，適度給予學生充足思考時間
+      } else if (state.aiDiff === 'easy') {
+        minTime = 10000;
+        maxTime = 16000;
+        accuracyRate = 0.48; // 溫和慢速 10~16秒
+      } else if (state.aiDiff === 'normal') {
+        minTime = 6000;
+        maxTime = 10000;
+        accuracyRate = 0.68; // 標準 6~10秒
+      } else if (state.aiDiff === 'hard') {
+        minTime = 3000;
+        maxTime = 5000;
+        accuracyRate = 0.85; // 競速 3~5秒
+      }
+
+      const thinkTime = Math.floor(Math.random() * (maxTime - minTime)) + minTime;
+
+      state.red.aiTimeout = setTimeout(() => {
+        if (!state.isPlaying) return;
+
+        const isCorrect = Math.random() < accuracyRate;
+        let chosenAnswer = state.red.currentQuestion.correctAnswer;
+
+        if (!isCorrect) {
+          const wrongOptions = state.red.currentQuestion.options.filter(o => String(o) !== String(chosenAnswer));
+          chosenAnswer = wrongOptions[Math.floor(Math.random() * wrongOptions.length)] || chosenAnswer;
+        }
+
+        const buttons = document.querySelectorAll('#redOptions button');
+        let matchedBtn = null;
+        buttons.forEach(btn => {
+          if (btn.textContent.trim() === String(chosenAnswer)) {
+            matchedBtn = btn;
+          }
+        });
+
+        handleRedAnswer(chosenAnswer, matchedBtn);
+      }, thinkTime);
+    }
+
+    function endGame(winner) {
+      if (!state.isPlaying && winner !== 'aborted') return;
+      state.isPlaying = false;
+      clearInterval(state.timerInterval);
+      clearTimeout(state.red.aiTimeout);
+
+      if (winner === 'aborted') return;
+
+      sound.playWin();
+
+      const winnerEmoji = document.getElementById('winnerEmoji');
+      const winnerTitle = document.getElementById('winnerTitle');
+      const winnerSubtitle = document.getElementById('winnerSubtitle');
+
+      if (winner === 'blue') {
+        winnerEmoji.textContent = '🦁🏆';
+        winnerTitle.textContent = '🎉 藍隊 3 人小隊大獲全勝！';
+        winnerTitle.className = 'text-2xl sm:text-3xl font-black text-blue-700 mb-1';
+        winnerSubtitle.textContent = '心算如雷！三人同心，其利斷金！';
+        createConfetti(['#2563eb', '#60a5fa', '#f59e0b', '#10b981']);
+      } else if (winner === 'red') {
+        const redName = state.mode === 'ai' ? '電腦 AI 隊' : '紅隊 3 人小隊';
+        winnerEmoji.textContent = '🦊👑';
+        winnerTitle.textContent = `🚩 ${redName} 奪得勝利！`;
+        winnerTitle.className = 'text-2xl sm:text-3xl font-black text-red-600 mb-1';
+        winnerSubtitle.textContent = '運算精準穩定，成功拉走錦旗！';
+        createConfetti(['#dc2626', '#f87171', '#f59e0b', '#6366f1']);
+      } else {
+        winnerEmoji.textContent = '🤝⚖️';
+        winnerTitle.textContent = '勢均力敵！3v3 平手握手言和！';
+        winnerTitle.className = 'text-2xl sm:text-3xl font-black text-slate-700 mb-1';
+        winnerSubtitle.textContent = '雙方算力平分秋色，展現極高專注力！';
+      }
+
+      document.getElementById('statBlueCorrect').textContent = state.blue.correctCount;
+      document.getElementById('statRedCorrect').textContent = state.red.correctCount;
+
+      const blueTotal = state.blue.correctCount + state.blue.wrongCount;
+      const blueAcc = blueTotal > 0 ? Math.round((state.blue.correctCount / blueTotal) * 100) : 0;
+      document.getElementById('statBlueAcc').textContent = `${blueAcc}% (${state.blue.correctCount}/${blueTotal})`;
+
+      const redTotal = state.red.correctCount + state.red.wrongCount;
+      const redAcc = redTotal > 0 ? Math.round((state.red.correctCount / redTotal) * 100) : 0;
+      document.getElementById('statRedAcc').textContent = `${redAcc}% (${state.red.correctCount}/${redTotal})`;
+
+      document.getElementById('statBlueMaxStreak').textContent = `${state.blue.maxStreak} 題`;
+      document.getElementById('statRedMaxStreak').textContent = `${state.red.maxStreak} 題`;
+
+      resultModal.classList.remove('hidden');
+      setTimeout(() => {
+        resultModalBox.classList.remove('scale-95', 'opacity-0');
+        resultModalBox.classList.add('scale-100', 'opacity-100');
+      }, 50);
+    }
+
+    function createConfetti(colors) {
+      const container = document.getElementById('confettiContainer');
+      container.innerHTML = '';
+      for (let i = 0; i < 36; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = `${Math.random() * 1.5}s`;
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+        container.appendChild(piece);
+      }
+    }
+
+    function returnToSetup() {
+      resultModal.classList.add('hidden');
+      gameScreen.classList.add('hidden');
+      setupScreen.classList.remove('hidden');
+    }
+
+    rematchBtn.addEventListener('click', () => startGame());
+    backToSettingsBtn.addEventListener('click', () => returnToSetup());
+    startGameBtn.addEventListener('click', () => startGame());
+
+    window.addEventListener('keydown', (e) => {
+      if (!state.isPlaying) return;
+
+      const blueBtns = document.querySelectorAll('#blueOptions button');
+      if (['Digit1', 'KeyA'].includes(e.code) && blueBtns[0]) blueBtns[0].click();
+      if (['Digit2', 'KeyS'].includes(e.code) && blueBtns[1]) blueBtns[1].click();
+      if (['Digit3', 'KeyD'].includes(e.code) && blueBtns[2]) blueBtns[2].click();
+      if (['Digit4', 'KeyF'].includes(e.code) && blueBtns[3]) blueBtns[3].click();
+
+      if (state.mode === 'pvp') {
+        const redBtns = document.querySelectorAll('#redOptions button');
+        if (['Digit7', 'KeyJ'].includes(e.code) && redBtns[0]) redBtns[0].click();
+        if (['Digit8', 'KeyK'].includes(e.code) && redBtns[1]) redBtns[1].click();
+        if (['Digit9', 'KeyL'].includes(e.code) && redBtns[2]) redBtns[2].click();
+        if (['Digit0', 'Semicolon'].includes(e.code) && redBtns[3]) redBtns[3].click();
+      }
+    });
+
+    document.body.addEventListener('click', () => {
+      sound.init();
+      if (sound.bgmEnabled && !sound.isPlayingBgm) {
+        sound.startBgm(sound.currentTrack);
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>

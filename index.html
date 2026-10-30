@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>學習教室三年級上學期數學備課平台 (南一版 108普通課綱 & 特教課綱)</title>
+  <meta name="description" content="學習教室三年級上學期數學備課平台，深度結合南一版三上數學教材、108普通數學課綱、十二年國教特殊教育課程實施規範（課程調整四向度）、特殊需求領域課綱（學習策略與生活管理）、C-R-A具體教學鷹架、TTS語音朗讀與IEP隨堂質性評量。">
+  
+  <!-- 依據規範標準引入專屬設計主題 Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+
+  <!-- 引入 字嗨注音標楷 (Bpmf Zihi Kai Std) 開源注音字型 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/teacher-tools.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- 無障礙跳至主要內容 -->
+  <a href="#main-content-area" class="skip-link">跳至主要教學內容</a>
+
+  <!-- 頂部應用程式導覽與特教無障礙工具列 -->
+  <header class="app-header" role="banner">
+    <div class="header-container">
+      <div class="brand-section">
+        <img src="favicon.svg" alt="南一三上數學特教平台圖標" class="brand-logo" width="48" height="48">
+        <div>
+          <h1 class="brand-title">
+            學習教室三年級上學期數學備課平台
+            <span class="brand-badge">108普數 & 特教課綱雙軌對應</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- 特教友善工具箱 -->
+      <div class="header-tools" role="toolbar" aria-label="無障礙輔助功能">
+        <!-- 🛠️ 教學輔助功能直式選單 (節省空間) -->
+        <div class="tools-dropdown-container" id="tools-dropdown-container">
+          <button id="btn-tools-dropdown" class="tool-btn dropdown-trigger-btn" aria-haspopup="true" aria-expanded="false" title="點擊展開教學輔助功能直式選單">
+            <span style="font-size: 1.15rem;">🛠️</span>
+            <span>教學輔助功能</span>
+            <span class="dropdown-arrow">▾</span>
+          </button>
+
+          <div id="tools-dropdown-menu" class="vertical-dropdown-menu" role="menu" aria-label="教學輔助功能清單">
+            <div class="dropdown-header">
+              <span class="dropdown-header-title">🏛️ 教學輔助功能</span>
+              <span class="dropdown-header-sub">直式選單 · 點選項目即刻開啟</span>
+            </div>
+
+            <div class="dropdown-items-group">
+              <!-- 1. 🏆 教學平台特色 -->
+              <button class="dropdown-menu-item" onclick="JudgesShowcase.openJudgesModal(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#fef3c7; color:#b45309;">🏆</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">教學平台特色</div>
+                  <div class="menu-item-desc">教材教法特教亮點與核心特色對照</div>
+                </div>
+              </button>
+
+              <!-- 2. 🖨️ A4 學習單列印 -->
+              <button class="dropdown-menu-item" onclick="WorksheetGenerator.openWorksheetModal(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#eff6ff; color:#1d4ed8;">🖨️</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">A4 學習單列印</div>
+                  <div class="menu-item-desc">個別化注音大字點陣卷，支援自填日期</div>
+                </div>
+              </button>
+
+              <!-- 3. 🕹️ 單鍵微動開關輔具 -->
+              <button id="btn-tool-switch-access" class="dropdown-menu-item" onclick="SwitchAccessManager.toggle(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#fef3c7; color:#b45309;">🕹️</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">單鍵微動開關輔具</div>
+                  <div class="menu-item-desc">重度肢障/腦麻專用自動掃描模式 (空白鍵選取)</div>
+                </div>
+              </button>
+
+              <!-- 4. 📏 閱讀聚焦尺 -->
+              <button id="btn-tool-reading-ruler" class="dropdown-menu-item" onclick="ReadingRulerManager.toggle(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#f3e8ff; color:#7e22ce;">📏</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">視線專注閱讀聚焦尺</div>
+                  <div class="menu-item-desc">ADHD 與學障專用視線聚焦遮罩</div>
+                </div>
+              </button>
+
+              <!-- 5. 🧘 數學冷靜通道 -->
+              <button class="dropdown-menu-item" onclick="openCalmCornerModal(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#d1fae5; color:#047857;">🧘</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">數學冷靜通道</div>
+                  <div class="menu-item-desc">4-7-8 呼吸、沙漏放鬆與減焦慮白噪音</div>
+                </div>
+              </button>
+
+              <!-- 6. 📝 親師聯絡 & 4合1小單 -->
+              <button class="dropdown-menu-item" onclick="openCommunicationModal(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#e0e7ff; color:#4338ca;">📝</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">親師聯絡 & 4合1小單</div>
+                  <div class="menu-item-desc">LINE 快報、IEP 評量草稿與實體聯絡單</div>
+                </div>
+              </button>
+
+              <!-- 7. ⚡ 60秒備課卡 -->
+              <button class="dropdown-menu-item" onclick="openQuickBriefingModal(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#ffedd5; color:#c2410c;">⚡</span>
+                <div class="menu-item-content">
+                  <div class="menu-item-title">60秒快速備課卡</div>
+                  <div class="menu-item-desc">課前一分鐘掌握單元重點與具體教具清單</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 朗讀語速調整 -->
+        <label for="speech-rate-selector" style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+          🗣️ 念題語速：
+          <select id="speech-rate-selector" class="tool-btn" style="padding: 4px 8px; font-size: 0.9rem;">
+            <option value="0.75">0.75x (慢速/聽語障)</option>
+            <option value="0.85" selected>0.85x (特教標準)</option>
+            <option value="1.0">1.0x (一般速度)</option>
+          </select>
+        </label>
+
+        <!-- 靜音開關 -->
+        <button id="btn-audio-mute" class="tool-btn" aria-pressed="false" title="開啟或關閉平台音效與語音">
+          🔊 聲音開啟
+        </button>
+
+        <!-- 自閉症低刺激/專注模式 -->
+        <button id="btn-calm-focus" class="tool-btn" aria-pressed="false" title="切換為溫和色調、隱藏多餘裝飾以降低感官刺激">
+          🌿 低刺激專注模式
+        </button>
+
+        <!-- 高對比模式 -->
+        <button id="btn-high-contrast" class="tool-btn" aria-pressed="false" title="切換黑底高對比以利視知覺辨識">
+          🌓 高對比
+        </button>
+
+        <!-- 正向增強代幣集星箱 (Token Economy) -->
+        <div class="token-counter" title="已累積的學習星星代幣" aria-live="polite">
+          ⭐ <span id="token-count">0</span> 顆星
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 資源班 5 位學生代幣存摺列 -->
+  <section class="student-bank-container" aria-label="學生代幣存摺">
+    <div class="student-bank-inner">
+      <div class="student-bank-label">
+        <span>⭐ 學習教室 5 位同學代幣存摺：</span>
+        <span style="font-size:0.75rem; color:#64748b; font-weight:normal;">點擊頭像擊掌打氣 · 點擊姓名編輯 · ± 增減星星</span>
+      </div>
+      <div class="student-bank-grid" id="mathStudentsBankBar"></div>
+    </div>
+  </section>
+
+  <!-- 主導覽標籤列 (Tabs) -->
+  <nav class="main-nav" role="navigation" aria-label="功能標籤">
+    <div class="nav-container">
+      <button class="nav-tab active" data-tab="units">
+        📚 課堂教學
+      </button>
+      <button class="nav-tab" data-tab="sandbox">
+        🧰 數位教具操作箱
+      </button>
+      <button class="nav-tab" data-tab="practice">
+        🎯 隨堂練習
+      </button>
+      <button class="nav-tab" data-tab="battle">
+        🎮 分組搶答
+      </button>
+      <button class="nav-tab" data-tab="arcade">
+        🎪 互動遊戲
+      </button>
+      <button class="nav-tab" data-tab="guide">
+        🏛️ 課程調整指南
+      </button>
+      <button class="nav-tab" data-tab="iep">
+        📊 隨堂診斷
+      </button>
+    </div>
+  </nav>
+
+  <!-- 主內容區域 -->
+  <main class="main-content" id="main-content-area" role="main">
+    
+    <!-- 1. 單元教學與教具主畫面 -->
+    <section class="tab-pane active" id="tab-units" aria-labelledby="tab-units-title">
+      <h2 id="tab-units-title" class="sr-only" style="display:none;">單元課程與動態教具</h2>
+      
+      <!-- 9 大單元快速選擇列 -->
+      <div class="unit-selector-grid" id="unit-nav-list">
+        <!-- 由 JavaScript 動態生成單元按鈕（含普通課綱代號與特需課綱指標） -->
+      </div>
+
+      <!-- 當前選取單元的教學鷹架與教具展示 -->
+      <div id="unit-detail-container">
+        <!-- 由 JavaScript 動態掛載該單元之 108 特教課綱四向度調整、C-R-A 鷹架、障別教學建議與操作教具 -->
+      </div>
+    </section>
+
+    <!-- 2. 獨立數位教具操作箱 (Sandbox) -->
+    <section class="tab-pane" id="tab-sandbox">
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--primary);">🧰 特教互動數位教具箱 (Sandbox)</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 4px;">
+              老師於資源班上課時，可隨時單獨抽調任何單元的教具在電子白板或平板上自由操作演示，不拘泥於題目。
+            </p>
+          </div>
+          <select id="sandbox-unit-select" class="form-control" style="width: auto; min-width: 280px; font-weight: 700;">
+            <!-- 動態注入九大教具選項 -->
+          </select>
+        </div>
+      </div>
+
+      <div id="sandbox-stage">
+        <!-- 動態掛載所選教具 -->
+      </div>
+    </section>
+
+    <!-- 3. 隨堂練習與語音念題 -->
+    <section class="tab-pane" id="tab-practice">
+      <div class="practice-container">
+        
+        <!-- 童趣伴讀吉祥物互動卡片 (消除 AI 冰冷感，即時打氣與換裝) -->
+        <div id="mascot-companion-slot"></div>
+
+        <div class="card" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="practice-unit-select" style="font-weight: 800;">選擇診斷單元：</label>
+              <select id="practice-unit-select" class="form-control" style="width: auto; min-width: 260px;">
+                <!-- 動態注入選項 -->
+              </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="kid-btn kid-btn-solution" id="btn-practice-launch-battle" style="font-size: 0.95rem; padding: 6px 14px;" title="以當前單元題目開啟分組搶答對決擂台">
+                ⚔️ 本單元分組搶答對決
+              </button>
+              <span class="brand-badge" id="practice-meta-badge" style="font-size: 0.95rem; padding: 6px 14px;">診斷題號</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="question-header">
+            <span class="need-tag tag-sld" style="font-size: 0.9rem;">語音輔助免讀題障礙 (TTS)</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-speech" id="btn-practice-speech" title="以語音朗讀這道題目">
+                🔊 念題目
+              </button>
+              <button class="btn btn-speech" id="btn-practice-solution-speech" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;" title="朗讀這道題目的完整解題步驟與音檔">
+                🔊 聽解題音檔
+              </button>
+            </div>
+          </div>
+
+          <div class="question-text" id="practice-question-text">
+            題目載入中...
+          </div>
+
+          <!-- 選項按鈕清單 (童趣大按鈕，注音標楷，A/B/C/D Distinct Colors) -->
+          <div class="options-grid" id="practice-options">
+            <!-- 動態生成選項 -->
+          </div>
+
+          <!-- 正向回饋與解題引導提示區 -->
+          <div class="feedback-box" id="practice-feedback"></div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button class="btn btn-outline" id="btn-practice-hint">
+                💡 看特教提示小精靈
+              </button>
+              <button class="btn btn-outline" id="btn-practice-ladder" style="color: #1d4ed8; border-color: #93c5fd; background: #eff6ff;">
+                🪜 逐步拆解解題鷹架
+              </button>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" id="btn-practice-prev" title="返回上一題">
+                ⬅ 上一題
+              </button>
+              <button class="btn btn-primary" id="btn-practice-next">
+                下一題 ➔
+              </button>
+            </div>
+          </div>
+          <!-- 逐步解題鷹架展開槽 -->
+          <div id="practice-ladder-box" style="display: none;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2.5 分組搶答大對決 (Math Battle Arena) -->
+    <section class="tab-pane" id="tab-battle">
+      <div id="battle-arena-container">
+        <!-- 由 js/battle.js 動態渲染 -->
+      </div>
+    </section>
+
+    <!-- 2.8 互動遊戲冒險館 (Interactive Math Arcade - 整合 5 大互動遊戲) -->
+    <section class="tab-pane" id="tab-arcade">
+      <div class="arcade-container">
+        
+        <!-- 頂部冒險橫幅 -->
+        <div class="arcade-hero-card">
+          <div class="arcade-hero-content">
+            <div style="font-size: 2.8rem;">🎪</div>
+            <div>
+              <h2 style="font-size: 1.8rem; font-weight: 900; color: #1e1b4b;">
+                三年級數學 🎪 互動遊戲冒險館
+              </h2>
+              <p style="font-size: 1rem; color: #475569; margin-top: 4px;">
+                將趣味生活情境、數位觸控小白板與同儕拔河對決深度整合！支援平板雙人共玩、電子白板全螢幕投影。
+              </p>
+            </div>
+          </div>
+          <div class="arcade-hero-badges">
+            <span class="arcade-tag">🎮 5 大互動遊戲</span>
+            <span class="arcade-tag">⭐ 學生代幣同步</span>
+            <span class="arcade-tag">⛶ 一鍵全螢幕</span>
+          </div>
+        </div>
+
+        <!-- 嵌入式遊戲遊玩舞台 (預設隱藏，點擊「在平台內開啟」展開) -->
+        <div id="arcade-player-modal" style="display: none; margin-bottom: 24px;">
+          <div class="arcade-player-card">
+            <div class="arcade-player-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5rem;" id="arcade-player-icon">🎮</span>
+                <strong style="font-size: 1.2rem; color: #1e1b4b;" id="arcade-player-title">遊戲載入中...</strong>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="kid-btn kid-btn-secondary" onclick="window.openCurrentGameNewTab()" style="font-size: 0.9rem; padding: 6px 14px;" title="在獨立分頁中打開">
+                  ↗ 另開分頁
+                </button>
+                <button class="kid-btn kid-btn-primary" onclick="window.closeArcadePlayer()" style="font-size: 0.9rem; padding: 6px 16px;">
+                  ✕ 關閉遊戲返回
+                </button>
+              </div>
+            </div>
+            <div class="arcade-iframe-wrapper">
+              <iframe id="arcade-game-frame" src="" style="width: 100%; height: 750px; border: none; border-radius: 0 0 20px 20px;" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 大互動遊戲卡片清單 (Game Cards Grid) -->
+        <div class="arcade-cards-grid">
+          
+          <!-- 遊戲 1 -->
+          <div class="arcade-card">
+            <div class="arcade-card-banner" style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-bottom: 2px solid #f59e0b;">
+              <span class="arcade-card-icon">🏪</span>
+              <span class="arcade-card-badge">單元1/2 先備回溯</span>
+            </div>
+            <div class="arcade-card-body">
+              <h3 class="arcade-card-title">小二加法冒險王：森林超商大採購</h3>
+              <p class="arcade-card-desc">
+                結合「位值積木點數（點擊出聲）」與「森林超商金幣進位收銀台」，落實 C-R-A 具體表徵，支援 5 位特教學童專屬代幣存摺！
+              </p>
+              <div class="arcade-card-skills">
+                <span>🪙 錢幣進位換算</span>
+                <span>🧱 具體積木點數</span>
+                <span>📋 IEP評量記錄</span>
+              </div>
+              <div class="arcade-card-actions">
+                <button class="kid-btn kid-btn-primary" onclick="window.launchArcadeGame('games/game1-addition-adventure/index.html', '小二加法冒險王：森林超商大採購', '🏪')">
+                  🎮 平台內遊玩
+                </button>
+                <a href="games/game1-addition-adventure/index.html" target="_blank" class="kid-btn kid-btn-secondary" style="text-decoration: none;">
+                  ⛶ 獨立分頁
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 遊戲 2 -->
+          <div class="arcade-card">
+            <div class="arcade-card-banner" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); border-bottom: 2px solid #0284c7;">
+              <span class="arcade-card-icon">🧮</span>
+              <span class="arcade-card-badge">單元 2 直式加減</span>
+            </div>
+            <div class="arcade-card-body">
+              <h3 class="arcade-card-title">三四位數直式加減 · 學障友善園地</h3>
+              <p class="arcade-card-desc">
+                專為學障與低感官刺激設計：四色位值定錨（千紅百藍十綠個橘）、防呆進借位提示圈與溫和木琴音效，徹底消除視覺雜訊！
+              </p>
+              <div class="arcade-card-skills">
+                <span>🌈 位值四色對齊</span>
+                <span>⭕ 防呆進借位</span>
+                <span>🌿 低刺激木琴音</span>
+              </div>
+              <div class="arcade-card-actions">
+                <button class="kid-btn kid-btn-primary" onclick="window.launchArcadeGame('games/game2-vertical-addition/index.html', '三四位數直式加減 · 學障友善園地', '🧮')">
+                  🎮 平台內遊玩
+                </button>
+                <a href="games/game2-vertical-addition/index.html" target="_blank" class="kid-btn kid-btn-secondary" style="text-decoration: none;">
+                  ⛶ 獨立分頁
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 遊戲 3 -->
+          <div class="arcade-card">
+            <div class="arcade-card-banner" style="background: linear-gradient(135deg, #fee2e2, #fecaca); border-bottom: 2px solid #ef4444;">
+              <span class="arcade-card-icon">🪢</span>
+              <span class="arcade-card-badge">全冊 3v3 競速</span>
+            </div>
+            <div class="arcade-card-body">
+              <h3 class="arcade-card-title">數學拔河大對決 (Math Tug of War)</h3>
+              <p class="arcade-card-desc">
+                超人氣 3v3 團隊拔河或雙人對決！答對題隊伍奮力將繩子拉向己方，具備逼真拔河張力物理、連擊強拉大招與 8-bit 晶片配樂！
+              </p>
+              <div class="arcade-card-skills">
+                <span>⚔️ 同儕團隊拔河</span>
+                <span>⚡ 連擊齊心強拉</span>
+                <span>🎵 8-bit 歡樂音效</span>
+              </div>
+              <div class="arcade-card-actions">
+                <button class="kid-btn kid-btn-primary" onclick="window.launchArcadeGame('games/game3-math-tug-of-war/index.html', '數學拔河大對決 (Math Tug of War)', '🪢')">
+                  🎮 平台內遊玩
+                </button>
+                <a href="games/game3-math-tug-of-war/index.html" target="_blank" class="kid-btn kid-btn-secondary" style="text-decoration: none;">
+                  ⛶ 獨立分頁
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 遊戲 4 -->
+          <div class="arcade-card">
+            <div class="arcade-card-banner" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-bottom: 2px solid #10b981;">
+              <span class="arcade-card-icon">🎨</span>
+              <span class="arcade-card-badge">手寫塗鴉與列印</span>
+            </div>
+            <div class="arcade-card-body">
+              <h3 class="arcade-card-title">學習教室數學樂園 & 數位小白板</h3>
+              <p class="arcade-card-desc">
+                整合數位觸控計算小白板（學生在大螢幕直接筆算塗鴉）、注音標準排版、語音報讀，並可一鍵生成 A4 四合一實體列印小單！
+              </p>
+              <div class="arcade-card-skills">
+                <span>✏️ 觸控手寫板</span>
+                <span>🖨️ A4 實體練習單</span>
+                <span>🔤 標準注音排版</span>
+              </div>
+              <div class="arcade-card-actions">
+                <button class="kid-btn kid-btn-primary" onclick="window.launchArcadeGame('games/game4-math-park-board/index.html', '學習教室數學樂園 & 數位小白板', '🎨')">
+                  🎮 平台內遊玩
+                </button>
+                <a href="games/game4-math-park-board/index.html" target="_blank" class="kid-btn kid-btn-secondary" style="text-decoration: none;">
+                  ⛶ 獨立分頁
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 遊戲 5 -->
+          <div class="arcade-card">
+            <div class="arcade-card-banner" style="background: linear-gradient(135deg, #f3e8ff, #e9d5ff); border-bottom: 2px solid #a855f7;">
+              <span class="arcade-card-icon">⚡</span>
+              <span class="arcade-card-badge">中年級血條對戰</span>
+            </div>
+            <div class="arcade-card-body">
+              <h3 class="arcade-card-title">國小中年級數學雙雄爭霸戰</h3>
+              <p class="arcade-card-desc">
+                閃電暴龍隊 vs 烈火鳳凰隊！雙人同台血條對抗、搶答計分、首殺號角與大招能量蓄力，徹底激發學童的主動計算動機！
+              </p>
+              <div class="arcade-card-skills">
+                <span>🦖 雙雄血條對決</span>
+                <span>⏱️ 計時搶答競速</span>
+                <span>🔥 大招能量奧義</span>
+              </div>
+              <div class="arcade-card-actions">
+                <button class="kid-btn kid-btn-primary" onclick="window.launchArcadeGame('games/game5-dual-math-battle/index.html', '國小中年級數學雙雄爭霸戰', '⚡')">
+                  🎮 平台內遊玩
+                </button>
+                <a href="games/game5-dual-math-battle/index.html" target="_blank" class="kid-btn kid-btn-secondary" style="text-decoration: none;">
+                  ⛶ 獨立分頁
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 獨立數位教具操作箱 (Sandbox) -->
+    <section class="tab-pane" id="tab-sandbox">
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--primary);">🧰 特教互動數位教具箱 (Sandbox)</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 4px;">
+              老師於資源班上課時，可隨時單獨抽調任何單元的教具在電子白板或平板上自由操作演示，不拘泥於題目。
+            </p>
+          </div>
+          <select id="sandbox-unit-select" class="form-control" style="width: auto; min-width: 280px; font-weight: 700;">
+            <!-- 動態注入九大教具選項 -->
+          </select>
+        </div>
+      </div>
+
+      <div id="sandbox-stage">
+        <!-- 動態掛載所選教具 -->
+      </div>
+    </section>
+
+    <!-- 4. 資源班備課手冊與特教課綱對照 -->
+    <section class="tab-pane" id="tab-guide">
+      <div class="card" style="margin-bottom: 24px;">
+        <h3 class="card-title" style="color: #4338ca; font-size: 1.35rem;">
+          🏛️ 十二年國民基本教育特殊教育課程實施規範 備課總指引
+        </h3>
+        
+        <p style="font-size: 1rem; line-height: 1.8; color: var(--text-main); margin-bottom: 16px;">
+          依據我國<strong>《十二年國民基本教育特殊教育課程實施規範》</strong>與<strong>《高級中等以下學校特殊教育課程教材教法及評量方式實施辦法》</strong>，資源班教師實施教學時，需針對普通教育課程進行「課程調整」，並融入「特殊需求領域課程綱要」。本平台已將此法規架構完整落實於南一版三上數學教材中。
+        </p>
+
+        <!-- 課程調整四大構面說明卡片 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div style="background: #fdf2f8; border-left: 5px solid #db2777; padding: 16px; border-radius: 8px;">
+            <strong style="color: #9d174d; font-size: 1.05rem;">1. 學習內容調整 (Content)</strong>
+            <p style="font-size: 0.9rem; margin-top: 6px; line-height: 1.6; color: #701a75;">
+              採<strong>【簡化】</strong>（聚焦生活核心數值）、<strong>【減量】</strong>（精簡題量保留核心觀念）、<strong>【分解】</strong>（直式除法四步驟工作分析）、<strong>【替代】</strong>（以真實錢幣與超商包裝替代抽象題型）。
+            </p>
+          </div>
+
+          <div style="background: #f0fdf4; border-left: 5px solid #16a34a; padding: 16px; border-radius: 8px;">
+            <strong style="color: #166534; font-size: 1.05rem;">2. 學習歷程調整 (Process)</strong>
+            <p style="font-size: 0.9rem; margin-top: 6px; line-height: 1.6; color: #14532d;">
+              嚴格遵守 <strong>C-R-A 鷹架</strong>（具體操作物 ➔ 圖像半具體 ➔ 抽象符號）；運用<strong>多感官管道</strong>（色彩定錨、語音報讀）；依學生能力提供漸進式<strong>提示階層</strong>（肢體協助 ➔ 示範 ➔ 視覺 ➔ 口語 ➔ 獨立）。
+            </p>
+          </div>
+
+          <div style="background: #eff6ff; border-left: 5px solid #2563eb; padding: 16px; border-radius: 8px;">
+            <strong style="color: #1e40af; font-size: 1.05rem;">3. 學習環境調整 (Environment)</strong>
+            <p style="font-size: 0.9rem; margin-top: 6px; line-height: 1.6; color: #1e3a8a;">
+              內建<strong>自閉症（ASD）低刺激專注模式</strong>（排除突發動畫與雜訊視覺）；提供<strong>高對比模式</strong>（滿足視知覺需求）；全面配備<strong>輔助科技（AT）</strong>（TTS 語音念題、數位放大鏡米尺、九九乘法輪）。
+            </p>
+          </div>
+
+          <div style="background: #fefce8; border-left: 5px solid #ca8a04; padding: 16px; border-radius: 8px;">
+            <strong style="color: #854d0e; font-size: 1.05rem;">4. 學習評量調整 (Assessment)</strong>
+            <p style="font-size: 0.9rem; margin-top: 6px; line-height: 1.6; color: #713f12;">
+              實施<strong>動態評量與多元表現評量</strong>（以教具操作指認、語音口述替代繁複紙筆書寫）；提供<strong>試題報讀</strong>（TTS 解決文字障礙）；作答時間具高度彈性，強調學生個人的縱向進步。
+            </p>
+          </div>
+        </div>
+
+        <!-- 特殊需求領域課綱指標說明 -->
+        <div style="background: #f5f3ff; border: 2px solid #8b5cf6; padding: 18px; border-radius: 12px; margin-bottom: 24px;">
+          <h4 style="color: #5b21b6; font-size: 1.15rem; font-weight: 800; margin-bottom: 10px;">
+            🎯 身心障礙學生特殊需求領域課程綱要 融入重點
+          </h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 0.92rem;">
+            <div>
+              <strong style="color: #6d28d9; font-size: 1rem;">【學習策略領域】：</strong>
+              <ul style="padding-left: 20px; margin-top: 6px; line-height: 1.7; color: #4c1d95;">
+                <li><strong>特學1-E-1</strong> 運用感官知覺（色碼、放大鏡）獲取學習訊息。</li>
+                <li><strong>特學1-E-2</strong> 運用記憶策略（除法商乘減降口訣、矩形面積心像）。</li>
+                <li><strong>特學2-E-1</strong> 運用閱讀理解策略（TTS報讀、題意色彩標記）。</li>
+                <li><strong>特學2-E-2</strong> 運用組織策略（位值表格化、長方形面積分割圖）。</li>
+                <li><strong>特學3-E-1</strong> 運用自我監控策略（檢查「餘數小於除數」、進退位確認）。</li>
+              </ul>
+            </div>
+            <div>
+              <strong style="color: #6d28d9; font-size: 1rem;">【生活管理領域】：</strong>
+              <ul style="padding-left: 20px; margin-top: 6px; line-height: 1.7; color: #4c1d95;">
+                <li><strong>特生2-E-1</strong> 生活貨幣認識與購物運算（千元/百元/十元/一元錢幣換算與找錢應用）。</li>
+                <li><strong>特生2-E-3</strong> 常用度量衡工具的生活使用（直尺測量毫米與公分、量筒容量公升與毫升）。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 1.15rem; font-weight: 800; margin: 20px 0 12px 0;">
+          📋 南一版三上 9 大單元 · 普數課綱 × 特教課綱四向度調整對照表
+        </h4>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <thead>
+              <tr style="background: var(--bg-subtle); border-bottom: 2px solid var(--border-color);">
+                <th style="padding: 12px; width: 85px;">單元序</th>
+                <th style="padding: 12px; width: 140px;">單元名稱</th>
+                <th style="padding: 12px; width: 130px;">課綱指標代碼</th>
+                <th style="padding: 12px;">特教課綱四向度調整 (內容/歷程/環境/評量)</th>
+                <th style="padding: 12px; width: 220px;">三類障別個別化微調重點</th>
+              </tr>
+            </thead>
+            <tbody id="guide-unit-table-body">
+              <!-- 由 JavaScript 動態注入 9 大單元特教課綱調整對比 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 隨堂 IEP 質性評量記錄產生器與錯誤型態診斷 -->
+    <section class="tab-pane" id="tab-iep">
+      <!-- 🧠 特教專業評量：四大認知錯誤型態診斷雷達 ＆ C-R-A 提示消褪成長驗證 -->
+      <div class="card" style="margin-bottom: 24px; border: 2.5px solid #818cf8;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+          <div>
+            <h3 class="card-title" style="color:#3730a3; margin:0;">
+              🧠 學生四大認知錯誤型態診斷雷達 ＆ C-R-A 成長歷程
+            </h3>
+            <p style="font-size:0.88rem; color:#475569; margin-top:4px;">
+              超越單純分數統計！深度分析學童核心認知盲點（進退位、空間對齊、文字長句、乘除口訣），提供 IEP 個別化處方與實證成長曲線。
+            </p>
+          </div>
+          <!-- 學生切換標籤按鈕 -->
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span style="font-weight:800; font-size:0.9rem; color:#4338ca;">切換學生：</span>
+            <div id="clinic-student-selector" style="display:flex; gap:4px;">
+              <!-- 由 JS 動態生成 5 位學生按鈕 -->
+            </div>
+          </div>
+        </div>
+
+        <div class="clinic-dashboard-container">
+          <!-- 左側：SVG 認知錯誤雷達圖與處方分析 -->
+          <div class="radar-display-box" id="clinic-radar-slot">
+            <!-- 由 JS 動態渲染雷達圖 -->
+          </div>
+
+          <!-- 右側：C-R-A 提示階層三段消褪成效折線圖 -->
+          <div id="clinic-growth-slot">
+            <!-- 由 JS 動態渲染成長歷程圖 -->
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <h3 class="card-title">📊 隨堂診斷 IEP 質性評量記錄產生器（符合特教評鑑規範）</h3>
+        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 16px;">
+          老師在課堂結束前 2 分鐘，勾選學生的個別化表現與支持層級，系統將自動依據<strong>《十二年國民基本教育特殊教育課程實施規範》</strong>與<strong>普通課綱指標</strong>產出標準質性評量文字，可直接複製貼入學校特教行政系統、IEP 檢討會議紀錄或家長聯絡簿。
+        </p>
+
+        <div class="iep-tracker-layout">
+          <!-- 填寫表單 -->
+          <div style="background: var(--bg-subtle); padding: 20px; border-radius: var(--radius-md);">
+            <div class="form-group">
+              <label for="iep-student-name">學生姓名或代號：</label>
+              <input type="text" id="iep-student-name" class="form-control" placeholder="例如：嘉、萱、涵、凱、宸 或 學生代號" value="嘉 (學習教室)">
+            </div>
+
+            <div class="form-group">
+              <label for="iep-unit-select">評量單元：</label>
+              <select id="iep-unit-select" class="form-control">
+                <!-- 動態注入單元清單 -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="iep-support-level">當前掌握程度與所需支持層級：</label>
+              <select id="iep-support-level" class="form-control">
+                <option value="獨立完成 (掌握率 90% 以上，概念精熟)">獨立完成 (掌握率 90% 以上，概念精熟)</option>
+                <option value="需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)" selected>需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)</option>
+                <option value="需口語步驟引導 (經教師拆解口訣商乘減降後能完成計算)">需口語步驟引導 (經教師拆解口訣商乘減降後能完成計算)</option>
+                <option value="需具體教具與肢體協助 (依賴實體錢幣/積木/量筒操作完成)">需具體教具與肢體協助 (依賴實體錢幣/積木/量筒操作完成)</option>
+                <option value="概念尚待建立 (需回溯上一階段基礎先備經驗)">概念尚待建立 (需回溯上一階段基礎先備經驗)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="iep-teacher-notes">教師隨堂診斷補充觀察筆記（選填）：</label>
+              <textarea id="iep-teacher-notes" class="form-control" rows="3" placeholder="例如：今天使用披薩分數盤反應極佳，但進位直式十位仍偶有漏加..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" id="iep-generate-btn" style="width: 100%;">
+              ⚡ 即時生成合規 IEP 質性評量報告
+            </button>
+          </div>
+
+          <!-- 輸出與一鍵複製區 -->
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="report-output-box" id="iep-output">
+點擊左側「即時生成合規 IEP 質性評量報告」按鈕，此處將自動產生符合特教法規、特需課綱與四向度調整標準之質性評量紀錄文字...
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-accent" id="iep-copy-btn" style="flex: 1;">
+                📋 一鍵複製文字 (貼入IEP系統)
+              </button>
+              <button class="btn btn-outline" id="iep-print-btn">
+                🖨️ 列印評量單
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 腳本載入順序：資料庫 ➔ 音效與語音 ➔ 聲光特效與吉祥物 ➔ 雙人搶答擂台 ➔ 9大教具 ➔ 特教工具箱 ➔ 旗艦競賽功能 ➔ 主應用程式 -->
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/confetti-effects.js"></script>
+  <script src="js/battle.js"></script>
+  <script src="js/manipulatives.js"></script>
+  <script src="js/teacher-tools.js"></script>
+  <script src="js/contest-features.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
