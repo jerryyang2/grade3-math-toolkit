@@ -1,19 +1,24 @@
 /* 皮克敏同人花園：每個角色有獨立的肢體、葉片與互動狀態。 */
-.storybook-site { --sb-green: #4f7341; --primary: #4f7341; --primary-dark: #35562f; --primary-light: #e7edd6; }
-.storybook-site .storybook-welcome { background: #355c40; border-color: #304f36; }
-.storybook-site .brand-title { color: #385b37; }
-.storybook-welcome h2 { letter-spacing: .025em; }
-.storybook-welcome h2 em { color: #f0d278; }
-.storybook-greet { border: 1px solid #adc78f80; border-radius: 100px; padding: 7px 14px; gap: 9px; background: #ffffff0a; min-height: 44px; }
-.storybook-greet:hover, .storybook-greet[aria-pressed="true"] { background: #f4dc98; color: #355337; border-color: #e9ce85; }
+.storybook-site { --sb-green: #3e805c; --primary: #3e805c; --primary-dark: #2e6649; --primary-light: #e8f4e3; }
+.storybook-site .storybook-welcome { background: #e8f5fb; border-color: #b7d7d9; }
+.storybook-site .brand-title { color: #346c4c; }
+.storybook-welcome::before { border-color: #ffffffb8; }
+.storybook-welcome h2 { color: #315947; letter-spacing: .025em; }
+.storybook-eyebrow { color: #52725d; }
+.storybook-eyebrow::before { background: #daaa57; }
+.storybook-welcome p { color: #526e63; }
+.storybook-welcome h2 em { color: #c86b47; }
+.storybook-welcome h2 em::after { border-color: #e2b45d; }
+.storybook-greet { border: 1px solid #a7cbb0; color: #366e4f; border-radius: 100px; padding: 7px 14px; gap: 9px; background: #fffef9; min-height: 44px; }
+.storybook-greet:hover, .storybook-greet[aria-pressed="true"] { background: #e5f3d9; color: #325f3c; border-color: #98bf85; }
 .storybook-greet svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .pikmin-scene { height: 255px; margin: -7px -10px -4px 0; position: relative; }
 .storybook-art .pikmin-garden-ground { width: 100%; height: 100%; object-fit: contain; animation: none; z-index: 0; pointer-events: none; }
 .pikmin-garden { position: absolute; inset: 22px 0 0; z-index: 1; }
 .pikmin-friend { --size: 72px; position: absolute; left: var(--x); bottom: var(--y); width: var(--size); height: calc(var(--size) * 1.5); padding: 0; margin: 0; background: none; border: 0; border-radius: 35%; cursor: pointer; transform: translateX(-50%); transition: left 1s ease-in-out, bottom 1s ease-in-out; -webkit-tap-highlight-color: transparent; }
 .pikmin-friend::after { content: ''; position: absolute; inset: 28% 8% 2%; border-radius: 45%; border: 1px solid transparent; pointer-events: none; }
-.pikmin-friend:hover::after { background: #fffbd513; border-color: #f4e6a865; }
-.pikmin-friend:focus-visible { outline: 2px solid #fff4b9 !important; outline-offset: 3px !important; }
+.pikmin-friend:hover::after { background: #ffffff35; border-color: #69a16b99; }
+.pikmin-friend:focus-visible { outline: 2px solid #347b5a !important; outline-offset: 3px !important; }
 .pikmin-character { width: 100%; height: 100%; display: block; overflow: visible; }
 .pik-figure { transform-origin: 50px 135px; animation: pikmin-walk 3.8s ease-in-out infinite; animation-delay: calc(var(--order, 0) * -.43s); }
 .pik-sprout { transform-origin: 50px 46px; animation: pikmin-leaf 3s ease-in-out infinite; animation-delay: calc(var(--order, 0) * -.6s); }
@@ -42,14 +47,15 @@
 .pikmin-garden.is-gathered .pikmin-friend .pik-figure { animation-duration: 4.5s; }
 .pikmin-garden .is-cheering .pik-figure { animation: pikmin-cheer .7s ease-out; }
 .pikmin-scene .storybook-speech { top: -5px; left: 13%; right: auto; font-size: .66rem; max-width: 90%; padding: 7px 12px; border-radius: 12px 12px 12px 2px; transform: rotate(-2deg); }
-.garden-caption { position: absolute; right: 9%; bottom: 1%; font-size: .6rem; letter-spacing: .12em; color: #d3dfb7; transform: rotate(-4deg); }
+.pikmin-scene .storybook-speech { background: #fffef9; border-color: #b1d0c5; color: #3d6554; box-shadow: 2px 3px 0 #bfdcc980; }
+.garden-caption { position: absolute; right: 9%; bottom: 1%; font-size: .6rem; letter-spacing: .12em; color: #527649; transform: rotate(-4deg); }
 .storybook-site .mascot-avatar-circle { width: 82px; height: 102px; padding: 0; }
 .storybook-site .mascot-switch-btn .pikmin-character { width: 28px; height: 38px; }
-.storybook-site .mascot-companion-card { background: #eaf0d9 !important; border: 1px solid #b8c896 !important; }
-.storybook-site .mascot-role-pill { background: #b7cb94 !important; color: #324c2c !important; }
-.storybook-site .nav-tab.active { background: #e7edd8; border-bottom-color: #54763d; }
+.storybook-site .mascot-companion-card { background: #f0f8e6 !important; border: 1px solid #c0d8ab !important; }
+.storybook-site .mascot-role-pill { background: #d8edc4 !important; color: #3e6637 !important; }
+.storybook-site .nav-tab.active { background: #eaf5df; border-bottom-color: #54864b; }
 .storybook-site .nav-tab.active .sketch-icon { transform: rotate(-5deg); }
-.theme-credit { text-align: center; font-size: .65rem; color: #746c57; padding: 12px 16px 25px; }
+.theme-credit { text-align: center; font-size: .65rem; color: #65775f; padding: 12px 16px 25px; }
 .theme-credit a { color: inherit; text-underline-offset: 3px; }
 @keyframes pikmin-walk { 0%,100% { transform: translate(0,0) rotate(-3deg); } 25% { transform: translate(3px,-3px) rotate(2deg); } 50% { transform: translate(6px,0) rotate(3deg); } 75% { transform: translate(3px,-3px) rotate(-2deg); } }
 @keyframes pikmin-leaf { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
@@ -108,3 +114,5 @@
 .storybook-site .mascot-switch-btn:is(:hover,.active) { transform: none; }
 .storybook-site .mascot-switch-btn .pikmin-character { pointer-events: none; }
 @media (max-width: 700px) { .storybook-site .mascot-switcher-mini { margin-left: 0; } }
+
+.storybook-site.high-contrast-mode .pikmin-friend:focus-visible { outline-color: #facc15 !important; }

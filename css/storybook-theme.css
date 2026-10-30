@@ -1,29 +1,29 @@
 /* 故事書的紙張與鉛筆線條；數學圖形、位值配色與所有作答功能保持原有語意。 */
 :root {
-  --sb-ink: #514434;
-  --sb-muted: #766954;
-  --sb-paper: #fffdf6;
-  --sb-cream: #f6f0e1;
-  --sb-green: #56735b;
-  --sb-soft-green: #e8eddb;
-  --sb-yellow: #edc773;
-  --sb-line: #c9baa0;
-  --primary: #56735b;
-  --primary-dark: #3f5944;
-  --primary-light: #e8eddb;
-  --secondary: #527d8d;
-  --secondary-light: #e5eff0;
-  --accent: #a66a3c;
-  --accent-light: #faedcb;
-  --bg-main: #f6f0e1;
-  --bg-card: #fffdf6;
-  --bg-subtle: #f2eddf;
-  --text-main: #514434;
-  --text-muted: #766954;
-  --border-color: #d4c7af;
-  --shadow-sm: 1px 2px 0 #d6c9ad;
-  --shadow-md: 3px 4px 0 #dfd5be;
-  --shadow-lg: 4px 6px 0 #d7c9ae;
+  --sb-ink: #314e43;
+  --sb-muted: #607367;
+  --sb-paper: #fffef9;
+  --sb-cream: #f9fcf5;
+  --sb-green: #3e805c;
+  --sb-soft-green: #e8f4e3;
+  --sb-yellow: #ffd08c;
+  --sb-line: #c6d9c7;
+  --primary: #3e805c;
+  --primary-dark: #2e6649;
+  --primary-light: #e8f4e3;
+  --secondary: #518da0;
+  --secondary-light: #e9f5fa;
+  --accent: #b96942;
+  --accent-light: #fff0d8;
+  --bg-main: #f9fcf5;
+  --bg-card: #fffef9;
+  --bg-subtle: #f0f7ed;
+  --text-main: #314e43;
+  --text-muted: #607367;
+  --border-color: #cfdfce;
+  --shadow-sm: 1px 2px 0 #d8e7d6;
+  --shadow-md: 3px 4px 0 #e2ecdd;
+  --shadow-lg: 4px 6px 0 #d6e6d4;
 }
 body.storybook-site, body.storybook-game {
   background-color: var(--sb-cream);
@@ -35,36 +35,36 @@ body.storybook-site, body.storybook-game {
 /* 緊湊的工作列，讓課堂工具留在第一眼可見的範圍。 */
 .storybook-site .skip-link { top: -100px; }
 .storybook-site .skip-link:focus { top: 10px; }
-.storybook-site .app-header { background: var(--sb-paper); border-bottom: 1px solid #d4c7af; box-shadow: none; position: relative; z-index: 100; }
+.storybook-site .app-header { background: var(--sb-paper); border-bottom: 1px solid #cfdfce; box-shadow: none; position: relative; z-index: 100; }
 .storybook-site .header-container { max-width: 1320px; gap: 12px; padding: 12px 24px; flex-direction: row; align-items: center; }
 .storybook-site .brand-section { gap: 9px; }
 .storybook-site .brand-logo { width: 43px; height: 43px; }
 .storybook-site .brand-title { display: flex; align-items: center; gap: 12px; color: #304d3e; font-size: 1.35rem; font-weight: 900; letter-spacing: .035em; }
-.brand-caption { border-left: 1px solid #cfc5b0; padding-left: 12px; font-size: .68rem; letter-spacing: .025em; color: var(--sb-muted); font-weight: 500; line-height: 1.5; }
+.brand-caption { border-left: 1px solid #d7e3d4; padding-left: 12px; font-size: .68rem; letter-spacing: .025em; color: var(--sb-muted); font-weight: 500; line-height: 1.5; }
 .storybook-site .header-tools { gap: 8px; width: auto; }
-.storybook-site .header-tools .tool-btn { background: var(--sb-paper); border: 1px solid #c7b99f; border-radius: 8px; color: var(--sb-ink); box-shadow: none; padding: 7px 11px; font-size: .8rem; min-height: 44px; }
-.storybook-site .header-tools .dropdown-trigger-btn { background: #304f40 !important; color: #fffdf6 !important; border-color: #304f40 !important; box-shadow: none; }
+.storybook-site .header-tools .tool-btn { background: var(--sb-paper); border: 1px solid #c7dac6; border-radius: 8px; color: var(--sb-ink); box-shadow: none; padding: 7px 11px; font-size: .8rem; min-height: 44px; }
+.storybook-site .header-tools .dropdown-trigger-btn { background: #357954 !important; color: #fffef9 !important; border-color: #357954 !important; box-shadow: none; }
 .storybook-site .tool-btn.active { background: var(--sb-soft-green); color: #314e36; border-color: var(--sb-green); }
-.storybook-site .token-counter { background: #f7e7b9; color: #6e4c1f; border: 1px solid #d6b878; box-shadow: none; border-radius: 8px; font-size: .8rem; padding: 8px 11px; }
+.storybook-site .token-counter { background: #fff0c8; color: #775424; border: 1px solid #ead39a; box-shadow: none; border-radius: 8px; font-size: .8rem; padding: 8px 11px; }
 .display-settings { position: relative; }
 .display-settings > summary { list-style: none; cursor: pointer; display: flex; gap: 8px; align-items: center; }
 .display-settings > summary::-webkit-details-marker { display: none; }
-.display-settings[open] > summary { background: #e8eddb !important; border-color: #56735b !important; }
-.display-settings-panel { position: absolute; right: 0; top: calc(100% + 9px); width: 280px; display: grid; gap: 9px; padding: 18px; background: var(--sb-paper); border: 1px solid #a99b80; border-radius: 14px; box-shadow: 0 12px 24px #3b442326; z-index: 110; }
-.display-settings-panel > strong { font-size: .9rem; color: #304f40; margin-bottom: 3px; }
+.display-settings[open] > summary { background: #e8f4e3 !important; border-color: #3e805c !important; }
+.display-settings-panel { position: absolute; right: 0; top: calc(100% + 9px); width: 280px; display: grid; gap: 9px; padding: 18px; background: var(--sb-paper); border: 1px solid #b5d1bd; border-radius: 14px; box-shadow: 0 12px 24px #345c3b18; z-index: 110; }
+.display-settings-panel > strong { font-size: .9rem; color: #357954; margin-bottom: 3px; }
 .display-settings-panel label { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; font-size: .8rem; font-weight: 700; }
 .display-settings-panel .tool-btn { width: 100%; justify-content: start; }
-.storybook-site .student-bank-container { background: #eae7d8; border: 0; border-bottom: 1px solid #d4c7af; box-shadow: none; padding: 0; }
-.storybook-site .student-bank-container > summary { max-width: 1320px; margin: auto; font-size: .7rem; color: #655c48; padding: 3px 24px; }
-.storybook-site .student-bank-card { background: var(--sb-paper); border: 1px solid #cabba0; border-radius: 12px 9px 13px 9px; box-shadow: 1px 2px 0 #dbd0bb; }
+.storybook-site .student-bank-container { background: #edf5e5; border: 0; border-bottom: 1px solid #cfdfce; box-shadow: none; padding: 0; }
+.storybook-site .student-bank-container > summary { max-width: 1320px; margin: auto; font-size: .7rem; color: #526b52; padding: 3px 24px; }
+.storybook-site .student-bank-card { background: var(--sb-paper); border: 1px solid #c8dcc4; border-radius: 12px 9px 13px 9px; box-shadow: 1px 2px 0 #e1ecdc; }
 .storybook-site .student-bank-inner { padding-top: 8px; padding-bottom: 12px; }
-.storybook-site .main-nav { background: var(--sb-paper); border-bottom: 1px solid #d4c7af; }
+.storybook-site .main-nav { background: var(--sb-paper); border-bottom: 1px solid #cfdfce; }
 .storybook-site .nav-container { max-width: 1320px; padding: 0 24px; gap: 6px; }
-.storybook-site .nav-tab { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; color: #766954; background: transparent; border: 0; border-bottom: 3px solid transparent; border-radius: 0; font-size: .86rem; white-space: nowrap; min-height: 48px; }
+.storybook-site .nav-tab { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; color: #607367; background: transparent; border: 0; border-bottom: 3px solid transparent; border-radius: 0; font-size: .86rem; white-space: nowrap; min-height: 48px; }
 .storybook-site .nav-tab .sketch-icon { width: 23px; height: 23px; }
-.storybook-site .nav-tab.active { background: #edf0e3; color: #304f40; border-bottom-color: #304f40; box-shadow: none; }
+.storybook-site .nav-tab.active { background: #edf0e3; color: #357954; border-bottom-color: #357954; box-shadow: none; }
 .storybook-site .nav-tab::after { display: none; }
-.storybook-site .nav-tab:hover { background: #f3ecd9; }
+.storybook-site .nav-tab:hover { background: #f1f7e8; }
 .storybook-site .main-content { padding: 18px 24px; max-width: 1320px; }
 /* 一張有前景、紙上小島和探索路線的繪本封面。 */
 .storybook-welcome { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); align-items: center; position: relative; padding: 18px 30px 0; margin-bottom: 0; border: 1px solid #294738; border-radius: 24px 24px 0 0; background: #2e5041; isolation: isolate; overflow: clip; }
@@ -83,84 +83,84 @@ body.storybook-site, body.storybook-game {
 .storybook-art { margin: -12px -14px -6px 0; position: relative; height: 240px; min-width: 0; display: flex; justify-content: center; align-items: center; }
 .storybook-art img { width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 1; }
 .storybook-speech { position: absolute; right: 8%; top: 8px; background: #fff9e6; border: 1px solid #9a8256; color: #645033; padding: 7px 12px; border-radius: 13px 13px 13px 2px; font-size: .68rem; transform: rotate(3deg); max-width: 230px; box-shadow: 2px 3px 0 #233f32; z-index: 3; }
-.storybook-launch { display: flex; align-items: center; gap: 16px; grid-column: 1 / -1; background: #fffaf0; border-radius: 13px 13px 0 0; padding: 11px 15px; margin-top: 6px; box-shadow: 0 -4px 0 #ecbd6640; position: relative; z-index: 4; }
+.storybook-launch { display: flex; align-items: center; gap: 16px; grid-column: 1 / -1; background: #fffefb; border-radius: 13px 13px 0 0; padding: 11px 15px; margin-top: 6px; box-shadow: 0 -4px 0 #b9dfb960; position: relative; z-index: 4; }
 .storybook-site .lesson-quick-picker { flex: 1; min-width: 0; display: flex; flex-wrap: nowrap; gap: 18px; margin: 0; }
-.storybook-site .lesson-quick-picker label { color: #304f40; font-size: .87rem; line-height: 1.4; white-space: nowrap; }
+.storybook-site .lesson-quick-picker label { color: #357954; font-size: .87rem; line-height: 1.4; white-space: nowrap; }
 .lesson-quick-picker label span { display: block; font-size: .6rem; color: #7b6b4d; letter-spacing: .12em; margin-bottom: 2px; }
-.storybook-site .lesson-quick-picker select { border: 1px solid #cfc3a8; min-height: 46px; height: 46px; font-size: .95rem; font-weight: 700; min-width: 0; background: #fffdf7; border-radius: 8px; }
-.storybook-start { display: inline-flex; align-items: center; gap: 24px; justify-content: space-between; min-height: 46px; padding: 9px 18px; border: 1px solid #c2943e; border-radius: 8px; background: #edc572; color: #4e3e25; text-decoration: none; font-size: .85rem; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 #cba45b; transition: background .15s, transform .15s; }
-.storybook-start:hover { background: #f8d785; transform: translateY(-2px); }
+.storybook-site .lesson-quick-picker select { border: 1px solid #c7d9c5; min-height: 46px; height: 46px; font-size: .95rem; font-weight: 700; min-width: 0; background: #fffefb; border-radius: 8px; }
+.storybook-start { display: inline-flex; align-items: center; gap: 24px; justify-content: space-between; min-height: 46px; padding: 9px 18px; border: 1px solid #d89a4e; border-radius: 8px; background: #ffd08c; color: #63411d; text-decoration: none; font-size: .85rem; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 #dfac66; transition: background .15s, transform .15s; }
+.storybook-start:hover { background: #ffdfa9; transform: translateY(-2px); }
 .storybook-start span { font-size: 1.2rem; }
 /* 紙片和縫線取代大面積漸層與浮雕。 */
-.storybook-site :is(.card,.question-card,.manipulative-card,.arcade-card,.kid-modal-card,.teacher-modal-content,.battle-player-card,.shape-comparison-tool) { background: var(--sb-paper); border: 1px solid #cbbca1; border-radius: 15px 19px 14px 18px; box-shadow: 2px 3px 0 #e1d6bf; }
-.storybook-site :is(.card-title,.manipulative-header h4,.evidence-card h2) { color: #56674c; letter-spacing: .02em; }
+.storybook-site :is(.card,.question-card,.manipulative-card,.arcade-card,.kid-modal-card,.teacher-modal-content,.battle-player-card,.shape-comparison-tool) { background: var(--sb-paper); border: 1px solid #c9dcc7; border-radius: 15px 19px 14px 18px; box-shadow: 2px 3px 0 #e1ecdc; }
+.storybook-site :is(.card-title,.manipulative-header h4,.evidence-card h2) { color: #3e7551; letter-spacing: .02em; }
 .storybook-site [style*="linear-gradient"] { background-image: none !important; }
-.storybook-site :is(.unit-card-btn,.option-btn,.kid-btn,.btn,.fading-btn) { border-radius: 10px 14px 11px 13px; box-shadow: 1px 2px 0 #d8ccb4; transition: background-color .15s ease, box-shadow .15s ease; }
-.storybook-site :is(.btn-outline,.kid-btn-secondary,.kid-btn-solution,.btn-speech) { background: #fff9e9 !important; border: 1px solid #c5b493 !important; color: #6b5941 !important; }
-.storybook-site :is(.btn-primary,.kid-btn-primary) { background: #5c775a !important; border: 1px solid #425b41 !important; color: #fffdf5 !important; box-shadow: 1px 3px 0 #3b5139; }
-.storybook-site :is(.btn-accent,.kid-btn-solution:hover) { background: #f0d697 !important; color: #60482b !important; border-color: #c6a563 !important; }
+.storybook-site :is(.unit-card-btn,.option-btn,.kid-btn,.btn,.fading-btn) { border-radius: 10px 14px 11px 13px; box-shadow: 1px 2px 0 #dce8d6; transition: background-color .15s ease, box-shadow .15s ease; }
+.storybook-site :is(.btn-outline,.kid-btn-secondary,.kid-btn-solution,.btn-speech) { background: #f6fbf0 !important; border: 1px solid #bcd5ba !important; color: #456447 !important; }
+.storybook-site :is(.btn-primary,.kid-btn-primary) { background: #397b58 !important; border: 1px solid #306848 !important; color: #fffefb !important; box-shadow: 1px 3px 0 #2e6547; }
+.storybook-site :is(.btn-accent,.kid-btn-solution:hover) { background: #ffdc9b !important; color: #6c4b27 !important; border-color: #e1b36c !important; }
 .storybook-site :is(.btn,.kid-btn,.tool-btn):hover { transform: translateY(-1px); }
 .storybook-site :is(.btn,.kid-btn,.tool-btn):active { transform: translateY(1px); box-shadow: none; }
-.storybook-site :is(button,a,summary,input,select):focus-visible { outline: 3px solid #a67537; outline-offset: 4px; }
-.storybook-site :is(.lesson-quick-picker label,.fading-label,.number-line-status,#practice-record-status) { color: #50694c; }
-.storybook-site :is(input,select,textarea).form-control, .storybook-site .practice-settings-grid :is(input,select), .storybook-site .evidence-toolbar select { border: 1px solid #b9ab90; border-radius: 8px 11px 8px 10px; background: #fffef8; color: #574a38; }
-.storybook-site :is(.student-scaffold,.practice-settings-wrap,.fraction-compare-details) > summary { background: #edeedb; border: 1px dashed #b2b598; color: #606c48; box-shadow: none; border-radius: 10px 13px 10px 12px; }
-.storybook-site :is(.teacher-guide-details,.sample-records) { background: #f8f3e7; border: 1px dashed #c4b596; box-shadow: none; }
-.storybook-site .lesson-banner { background: #eee9d7 !important; border: 1px dashed #b9ad90 !important; border-radius: 14px 19px 13px 16px !important; box-shadow: none; padding: 16px 20px !important; }
+.storybook-site :is(button,a,summary,input,select):focus-visible { outline: 3px solid #3e8060; outline-offset: 4px; }
+.storybook-site :is(.lesson-quick-picker label,.fading-label,.number-line-status,#practice-record-status) { color: #3b7050; }
+.storybook-site :is(input,select,textarea).form-control, .storybook-site .practice-settings-grid :is(input,select), .storybook-site .evidence-toolbar select { border: 1px solid #b7d2bb; border-radius: 8px 11px 8px 10px; background: #fffefb; color: #3b5545; }
+.storybook-site :is(.student-scaffold,.practice-settings-wrap,.fraction-compare-details) > summary { background: #eaf5e5; border: 1px dashed #b4d0ae; color: #486c49; box-shadow: none; border-radius: 10px 13px 10px 12px; }
+.storybook-site :is(.teacher-guide-details,.sample-records) { background: #f4f9ee; border: 1px dashed #bfd4b7; box-shadow: none; }
+.storybook-site .lesson-banner { background: #eee9d7 !important; border: 1px dashed #b7d1b3 !important; border-radius: 14px 19px 13px 16px !important; box-shadow: none; padding: 16px 20px !important; }
 .storybook-site .lesson-banner-heading { display: flex; gap: 13px; align-items: center; }
 .storybook-site .lesson-banner .sketch-icon { width: 48px; height: 48px; }
-.storybook-site .lesson-banner strong { color: #4f523a !important; font-size: 1.12rem !important; }
-.storybook-site .lesson-banner-note { color: #877558 !important; font-size: .8rem; margin-top: 3px; }
-.storybook-site .unit-card-btn { border: 1px solid #bbad90; background: #fffcf1; padding: 16px; }
-.storybook-site .unit-card-btn:nth-child(3n+2) { background: #edf0df; }
-.storybook-site .unit-card-btn:nth-child(3n) { background: #f7e7d9; }
-.storybook-site .unit-card-btn.active { border: 2px solid #6d805a; box-shadow: 3px 4px 0 #d5d7b8; }
-.storybook-site .unit-num-badge { color: #8a7248; background: transparent; padding: 0; font-size: .73rem; letter-spacing: .05em; }
-.storybook-site .unit-title-text { color: #554b39; font-size: 1.05rem; margin-top: 8px; }
-.storybook-site .unit-story-label { font-size: .77rem; color: #8a7257; margin-top: 5px; }
-.storybook-site .fading-control-panel { background: #f0ebdf; border: 1px solid #cfbea0; box-shadow: none; }
-.storybook-site .fading-btn { background: #fffaf0; color: #726246; border: 1px solid #c7b898; }
-.storybook-site .fading-btn.active { background: #e3e9d3; border-color: #80916b; color: #41583c; }
-.storybook-site :is(.scaffold-tip,.badge-tag,.brand-badge,.need-tag) { background: #f0e8d5; border-color: #cbb995; color: #766142; box-shadow: none; }
-.storybook-site .question-card { border-top: 4px solid #d4b36c; }
-.storybook-site .question-text { color: #514434; }
-.storybook-site .option-btn { background: #fffdf7; border: 2px solid #cbbd9e; color: #554839; }
-.storybook-site .option-btn:hover:not(:disabled) { background: #f9efd3; border-color: #aa8e58; transform: none; }
-.storybook-site .option-btn .option-label { background: #f1e3bf; color: #83653c; }
+.storybook-site .lesson-banner strong { color: #375640 !important; font-size: 1.12rem !important; }
+.storybook-site .lesson-banner-note { color: #63765d !important; font-size: .8rem; margin-top: 3px; }
+.storybook-site .unit-card-btn { border: 1px solid #bdd5ba; background: #fffdf4; padding: 16px; }
+.storybook-site .unit-card-btn:nth-child(3n+2) { background: #eef8e7; }
+.storybook-site .unit-card-btn:nth-child(3n) { background: #fff0e8; }
+.storybook-site .unit-card-btn.active { border: 2px solid #558753; box-shadow: 3px 4px 0 #d7e8cb; }
+.storybook-site .unit-num-badge { color: #69754d; background: transparent; padding: 0; font-size: .73rem; letter-spacing: .05em; }
+.storybook-site .unit-title-text { color: #3b5847; font-size: 1.05rem; margin-top: 8px; }
+.storybook-site .unit-story-label { font-size: .77rem; color: #687459; margin-top: 5px; }
+.storybook-site .fading-control-panel { background: #edf5e8; border: 1px solid #c4d8bd; box-shadow: none; }
+.storybook-site .fading-btn { background: #fffefb; color: #576b4f; border: 1px solid #c1d5b8; }
+.storybook-site .fading-btn.active { background: #e4f2d8; border-color: #78a165; color: #3d683f; }
+.storybook-site :is(.scaffold-tip,.badge-tag,.brand-badge,.need-tag) { background: #eef6e4; border-color: #c6dab4; color: #5c704b; box-shadow: none; }
+.storybook-site .question-card { border-top: 4px solid #ecc47c; }
+.storybook-site .question-text { color: #314e43; }
+.storybook-site .option-btn { background: #fffefb; border: 2px solid #c6d8bd; color: #3c5747; }
+.storybook-site .option-btn:hover:not(:disabled) { background: #f2f9e8; border-color: #8cad6f; transform: none; }
+.storybook-site .option-btn .option-label { background: #fff0c6; color: #7b5e2c; }
 .storybook-site .option-btn.selected-correct { background: #e7efdb; border-color: #779667; color: #36532f; }
 .storybook-site .option-btn.selected-wrong { background: #f6e7db; border-color: #c08f70; color: #825b43; }
-.storybook-site .mascot-companion-card { background: #f7edce !important; border: 1px dashed #c9ae6f !important; box-shadow: none; border-radius: 15px 18px 15px 20px; }
+.storybook-site .mascot-companion-card { background: #f0f8e6 !important; border: 1px dashed #bdd49f !important; box-shadow: none; border-radius: 15px 18px 15px 20px; }
 .storybook-site .mascot-avatar-circle { background: transparent !important; border: 0; box-shadow: none; width: 80px; height: 80px; }
 .storybook-site .mascot-emoji-big { width: 100%; height: 100%; }
-.storybook-site .mascot-name-row strong { color: #796134; }
+.storybook-site .mascot-name-row strong { color: #56733d; }
 .storybook-site .mascot-role-pill { background: #b4bd92 !important; color: #3d4c31 !important; border-radius: 5px; }
-.storybook-site .mascot-speech-bubble { background: #fffdf5; color: #6a5c46; border: 1px solid #d7c5a0; box-shadow: none; }
-.storybook-site :is(.evidence-metrics > span,.evidence-empty,.teaching-notice) { background: #eff0e0; border-color: #c5c8a9; color: #62704b; }
+.storybook-site .mascot-speech-bubble { background: #fffefb; color: #52674e; border: 1px solid #c4d8b6; box-shadow: none; }
+.storybook-site :is(.evidence-metrics > span,.evidence-empty,.teaching-notice) { background: #eef7e8; border-color: #c2d7b4; color: #537347; }
 .storybook-site .evidence-metrics strong { color: #4c633f; }
-.storybook-site .practice-settings-grid button, .storybook-site .evidence-toolbar button { background: #ede8d6; border-color: #c6b99a; color: #6b5c41; }
-.storybook-site .arcade-hero-card { background: #e9ecda; border: 1px dashed #a9b18c; box-shadow: none; }
-.storybook-site .arcade-card-banner { background: #f1e6c7 !important; border-color: #cdb78c !important; }
-.storybook-site .vertical-dropdown-menu { background: #fffdf4; border: 1px solid #bdae92; box-shadow: 3px 5px 0 #d8cdb5; border-radius: 10px 16px 10px 14px; }
-.storybook-site .dropdown-header { background: #e9ecd9; color: #556747; }
-.storybook-site .dropdown-menu-item:hover { background: #f4ecd6; }
+.storybook-site .practice-settings-grid button, .storybook-site .evidence-toolbar button { background: #eef6e5; border-color: #c2d5b9; color: #53694c; }
+.storybook-site .arcade-hero-card { background: #eaf5e1; border: 1px dashed #b3cc9f; box-shadow: none; }
+.storybook-site .arcade-card-banner { background: #fff1cb !important; border-color: #e1ce97 !important; }
+.storybook-site .vertical-dropdown-menu { background: #fffef9; border: 1px solid #c0d4b8; box-shadow: 3px 5px 0 #dce8d4; border-radius: 10px 16px 10px 14px; }
+.storybook-site .dropdown-header { background: #ebf5df; color: #4c7046; }
+.storybook-site .dropdown-menu-item:hover { background: #f4f9eb; }
 /* 畫記工具也像一本小速寫簿。保留畫筆顏色、選中及禁用狀態。 */
-:is(.storybook-site,.storybook-game) .mft-launcher { background: #5d6d51; border: 1px solid #3c5037; border-radius: 12px 17px 12px 15px; box-shadow: 2px 3px 0 #ccbea0; }
-:is(.storybook-site,.storybook-game) .mft-launcher small { color: #e1e7cc; }
-:is(.storybook-site,.storybook-game) .mft-panel { background: #fffdf4; border: 1px solid #b9aa8e; border-radius: 14px 19px 12px 16px; box-shadow: 3px 5px 0 #cabd9d; }
-:is(.storybook-site,.storybook-game) .mft-header { background: #eee8d6; border-color: #ccbea1; }
-:is(.storybook-site,.storybook-game) .mft-heading strong { color: #5e533e; }
-:is(.storybook-site,.storybook-game) .mft-settings { background: #f2eddc; }
+:is(.storybook-site,.storybook-game) .mft-launcher { background: #4c8865; border: 1px solid #3a6b4f; border-radius: 12px 17px 12px 15px; box-shadow: 2px 3px 0 #c7dfc9; }
+:is(.storybook-site,.storybook-game) .mft-launcher small { color: #e5f4e4; }
+:is(.storybook-site,.storybook-game) .mft-panel { background: #fffef9; border: 1px solid #b8d0b6; border-radius: 14px 19px 12px 16px; box-shadow: 3px 5px 0 #c9dfc6; }
+:is(.storybook-site,.storybook-game) .mft-header { background: #edf5e5; border-color: #c6d8bb; }
+:is(.storybook-site,.storybook-game) .mft-heading strong { color: #416146; }
+:is(.storybook-site,.storybook-game) .mft-settings { background: #f1f8e9; }
 :is(.storybook-site,.storybook-game) .mft-tool { border-radius: 6px 9px 7px 10px; }
-:is(.storybook-site,.storybook-game) .mft-tool[aria-pressed="true"] { background: #647b56; border-color: #435b3b !important; color: #fffdf3; box-shadow: 1px 2px 0 #c4c9ac; }
+:is(.storybook-site,.storybook-game) .mft-tool[aria-pressed="true"] { background: #4d8558; border-color: #376740 !important; color: #fffef9; box-shadow: 1px 2px 0 #cce0bd; }
 /* 五個獨立遊戲沿用相同紙張框架，保留紅藍隊和位值顏色。 */
-.storybook-game .sp-ed-game-navbar { background: #fffcf0 !important; border-color: #cbbb9b !important; box-shadow: none !important; backdrop-filter: none !important; }
-.storybook-game .sp-ed-game-navbar a { background: #5d7755 !important; border: 1px solid #3c5337; border-radius: 8px 13px 8px 11px !important; box-shadow: 1px 2px 0 #bdc5a0 !important; }
-.storybook-game :is(.bg-white,.bg-slate-50) { background-color: #fffdf5 !important; }
+.storybook-game .sp-ed-game-navbar { background: #fffef7 !important; border-color: #c6d9bc !important; box-shadow: none !important; backdrop-filter: none !important; }
+.storybook-game .sp-ed-game-navbar a { background: #437e58 !important; border: 1px solid #336644; border-radius: 8px 13px 8px 11px !important; box-shadow: 1px 2px 0 #c8ddb7 !important; }
+.storybook-game :is(.bg-white,.bg-slate-50) { background-color: #fffefb !important; }
 .storybook-game :is(.rounded-3xl,.rounded-2xl) { border-radius: 15px 20px 16px 19px; }
-.storybook-game :is(.shadow-xl,.shadow-lg,.shadow-md) { box-shadow: 2px 3px 0 #d8cbb0 !important; }
+.storybook-game :is(.shadow-xl,.shadow-lg,.shadow-md) { box-shadow: 2px 3px 0 #dbe9d1 !important; }
 .storybook-game button { border-radius: 8px 12px 9px 11px; }
-.storybook-game h1 { color: #586446; letter-spacing: .02em; }
-.storybook-game :is(input,select) { accent-color: #6d805b; }
+.storybook-game h1 { color: #497345; letter-spacing: .02em; }
+.storybook-game :is(input,select) { accent-color: #568450; }
 .calm-focus-mode .storybook-art * { animation: none !important; }
 .storybook-site.calm-focus-mode .storybook-welcome { min-height: auto; display: block; }
 .storybook-site.calm-focus-mode .storybook-welcome-actions { display: none; }
@@ -170,22 +170,22 @@ body.storybook-site, body.storybook-game {
 .storybook-site.high-contrast-mode .app-header { background: #18181b; }
 .storybook-site.high-contrast-mode .brand-title { color: #fff; }
 /* 課堂控制收成一張連續的工作紙，減少一層一層的空白卡片。 */
-.storybook-site .unit-card-picker { margin: 0 0 14px; padding: 0 18px; background: #e9e4d3; border: 1px solid #c4b594; border-top: 0; border-radius: 0 0 12px 12px; }
-.storybook-site .unit-card-picker > summary { padding: 7px 0; font-size: .76rem; font-weight: 700; color: #63583f; }
+.storybook-site .unit-card-picker { margin: 0 0 14px; padding: 0 18px; background: #edf5e3; border: 1px solid #c0d5b4; border-top: 0; border-radius: 0 0 12px 12px; }
+.storybook-site .unit-card-picker > summary { padding: 7px 0; font-size: .76rem; font-weight: 700; color: #546e46; }
 .storybook-site .unit-selector-grid { gap: 10px; margin: 8px 0 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .storybook-site .unit-card-btn { padding: 12px; gap: 3px; }
 .storybook-site .unit-title-text { margin-top: 2px; }
 .storybook-site .unit-detail-layout { gap: 14px; }
 .storybook-site #unit-detail-container { scroll-margin-top: 18px; }
-.storybook-site .manipulative-main-area { border: 1px solid #c6b99e; border-radius: 16px; background: #fffdf6; padding: 16px; min-width: 0; }
-.storybook-site .lesson-banner { background: transparent !important; padding: 0 0 12px !important; border: 0 !important; border-bottom: 1px solid #d8ceb8 !important; border-radius: 0 !important; margin-bottom: 10px !important; }
+.storybook-site .manipulative-main-area { border: 1px solid #c5d9bd; border-radius: 16px; background: #fffef9; padding: 16px; min-width: 0; }
+.storybook-site .lesson-banner { background: transparent !important; padding: 0 0 12px !important; border: 0 !important; border-bottom: 1px solid #dce7d2 !important; border-radius: 0 !important; margin-bottom: 10px !important; }
 .storybook-site .lesson-banner .sketch-icon { width: 40px; height: 40px; }
 .storybook-site .lesson-banner .kid-btn { font-size: .78rem !important; min-height: 44px; padding: 6px 10px !important; }
-.storybook-site .fading-control-panel { background: #f2efdf; border: 0; border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; gap: 6px; }
+.storybook-site .fading-control-panel { background: #f2f8e9; border: 0; border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; gap: 6px; }
 .storybook-site .fading-label { font-size: .76rem; }
 .storybook-site .fading-btn { padding: 6px 10px; font-size: .75rem; min-height: 44px; box-shadow: none; }
 .storybook-site .student-scaffold { margin-bottom: 10px; }
-.storybook-site .student-scaffold > summary { padding: 8px 10px; margin-bottom: 0; background: transparent; border: 0; border-bottom: 1px dashed #c4b99b; border-radius: 0; font-size: .83rem; }
+.storybook-site .student-scaffold > summary { padding: 8px 10px; margin-bottom: 0; background: transparent; border: 0; border-bottom: 1px dashed #c6d9b8; border-radius: 0; font-size: .83rem; }
 .storybook-site #unit-manipulative-slot > .manipulative-card:first-child { margin-top: 0; }
 .storybook-site .teacher-guide-details { border-radius: 10px; }
 .storybook-site .teacher-guide-details > summary { padding: 9px 14px; font-size: .8rem; }
@@ -260,8 +260,8 @@ body.storybook-site, body.storybook-game {
 
 .storybook-site .option-btn.selected-correct { background: #e7efdb !important; border-color: #779667 !important; box-shadow: 1px 2px 0 #a5b794 !important; color: #36532f !important; transform: none; }
 .storybook-site .option-btn.selected-wrong { background: #f6e7db !important; border-color: #c08f70 !important; box-shadow: 1px 2px 0 #d6b69e !important; color: #825b43 !important; }
-.storybook-site .option-btn:hover:not(:disabled) { box-shadow: 1px 3px 0 #cbb996; }
-.storybook-site .option-btn .option-text { color: #514434; }
+.storybook-site .option-btn:hover:not(:disabled) { box-shadow: 1px 3px 0 #bcd4ad; }
+.storybook-site .option-btn .option-text { color: #314e43; }
 /* 高對比模式不使用紙張淡色，文字和操作狀態維持足夠對比。 */
 .storybook-site.high-contrast-mode .brand-caption { color: #ddd; }
 .storybook-site.high-contrast-mode :is(.nav-tab,.student-bank-container) { background: #18181b; color: #fff; border-color: #facc15; }
@@ -275,14 +275,14 @@ body.storybook-site, body.storybook-game {
 .storybook-site.high-contrast-mode .option-btn .option-label { background: #facc15; color: #111; }
 .storybook-site.high-contrast-mode :is(input,select,textarea).form-control, .storybook-site.high-contrast-mode .practice-settings-grid :is(input,select), .storybook-site.high-contrast-mode .evidence-toolbar select { background: #18181b; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode :is(.number-line-tool,.shape-comparison-tool) svg text { fill: #fff; }
-.storybook-site .teacher-modal-header { background: #627654 !important; color: #fffdf4; }
+.storybook-site .teacher-modal-header { background: #467d59 !important; color: #fffef9; }
 .storybook-site.high-contrast-mode :is(.fading-control-panel,.teacher-guide-details,.sample-records) { background: #18181b; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode .fading-btn { background: #27272a; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode .fading-btn.active { background: #facc15; color: #111; }
 
 .storybook-site.calm-focus-mode .storybook-welcome { min-height: auto; display: block; padding: 18px 18px 0; background: #edf0e3; border-color: #aab49a; }
 .storybook-site.calm-focus-mode .storybook-welcome-copy { padding-bottom: 12px; }
-.storybook-site.calm-focus-mode .storybook-welcome :is(h2,em,p,.storybook-eyebrow) { color: #304f40; }
+.storybook-site.calm-focus-mode .storybook-welcome :is(h2,em,p,.storybook-eyebrow) { color: #357954; }
 .storybook-site.calm-focus-mode .storybook-welcome h2 { font-family: var(--font-base); font-size: 1.7rem; line-height: 1.4; }
 .storybook-site.calm-focus-mode .storybook-welcome h2 br { display: none; }
 .storybook-site.calm-focus-mode .storybook-welcome::before, .storybook-site.calm-focus-mode .storybook-welcome h2 em::after { display: none; }
