@@ -32,49 +32,65 @@ body.storybook-site, body.storybook-game {
 }
 .sketch-icon { width: 30px; height: 30px; flex: 0 0 auto; color: var(--sb-ink); vertical-align: middle; }
 .storybook-character { width: 100%; height: 100%; display: block; }
-.storybook-site .app-header { background: #fffdf6f5; border-bottom: 1px solid var(--sb-line); box-shadow: none; position: static; }
-.storybook-site .header-container { gap: 14px; padding-top: 14px; padding-bottom: 14px; }
-.storybook-site .brand-section { gap: 10px; }
-.storybook-site .brand-logo { width: 47px; height: 47px; }
-.storybook-site .brand-title { display: flex; align-items: center; gap: 15px; color: var(--sb-ink); font-size: 1.42rem; font-weight: 800; letter-spacing: .04em; }
-.brand-caption { font-size: .78rem; letter-spacing: .025em; color: var(--sb-muted); font-weight: 500; line-height: 1.5; }
-.storybook-site .header-tools { gap: 8px; }
-.storybook-site .header-tools .tool-btn { background: var(--sb-paper); border: 1px solid var(--sb-line); border-radius: 9px 12px 10px 8px; color: var(--sb-ink); box-shadow: 0 2px 0 #e2d9c6; padding: 7px 10px; font-size: .8rem; min-height: 40px; }
-.storybook-site .header-tools .dropdown-trigger-btn { background: var(--sb-green) !important; color: #fffdf6 !important; border-color: var(--sb-green) !important; box-shadow: 0 2px 0 #354e38; }
+/* 緊湊的工作列，讓課堂工具留在第一眼可見的範圍。 */
+.storybook-site .skip-link { top: -100px; }
+.storybook-site .skip-link:focus { top: 10px; }
+.storybook-site .app-header { background: var(--sb-paper); border-bottom: 1px solid #d4c7af; box-shadow: none; position: relative; z-index: 100; }
+.storybook-site .header-container { max-width: 1320px; gap: 12px; padding: 12px 24px; flex-direction: row; align-items: center; }
+.storybook-site .brand-section { gap: 9px; }
+.storybook-site .brand-logo { width: 43px; height: 43px; }
+.storybook-site .brand-title { display: flex; align-items: center; gap: 12px; color: #304d3e; font-size: 1.35rem; font-weight: 900; letter-spacing: .035em; }
+.brand-caption { border-left: 1px solid #cfc5b0; padding-left: 12px; font-size: .68rem; letter-spacing: .025em; color: var(--sb-muted); font-weight: 500; line-height: 1.5; }
+.storybook-site .header-tools { gap: 8px; width: auto; }
+.storybook-site .header-tools .tool-btn { background: var(--sb-paper); border: 1px solid #c7b99f; border-radius: 8px; color: var(--sb-ink); box-shadow: none; padding: 7px 11px; font-size: .8rem; min-height: 44px; }
+.storybook-site .header-tools .dropdown-trigger-btn { background: #304f40 !important; color: #fffdf6 !important; border-color: #304f40 !important; box-shadow: none; }
 .storybook-site .tool-btn.active { background: var(--sb-soft-green); color: #314e36; border-color: var(--sb-green); }
-.storybook-site .token-counter { background: #f8e8b9; color: #795727; border: 1px solid #c8a76c; box-shadow: none; border-radius: 9px 13px 9px 12px; font-size: .85rem; }
-.storybook-site .student-bank-container { background: #eee7d7; border: 0; border-bottom: 1px dashed #c6b89d; box-shadow: none; }
-.storybook-site .student-bank-container > summary { max-width: 1320px; margin: auto; font-size: .8rem; color: #73644f; padding: 6px 24px; }
+.storybook-site .token-counter { background: #f7e7b9; color: #6e4c1f; border: 1px solid #d6b878; box-shadow: none; border-radius: 8px; font-size: .8rem; padding: 8px 11px; }
+.display-settings { position: relative; }
+.display-settings > summary { list-style: none; cursor: pointer; display: flex; gap: 8px; align-items: center; }
+.display-settings > summary::-webkit-details-marker { display: none; }
+.display-settings[open] > summary { background: #e8eddb !important; border-color: #56735b !important; }
+.display-settings-panel { position: absolute; right: 0; top: calc(100% + 9px); width: 280px; display: grid; gap: 9px; padding: 18px; background: var(--sb-paper); border: 1px solid #a99b80; border-radius: 14px; box-shadow: 0 12px 24px #3b442326; z-index: 110; }
+.display-settings-panel > strong { font-size: .9rem; color: #304f40; margin-bottom: 3px; }
+.display-settings-panel label { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; font-size: .8rem; font-weight: 700; }
+.display-settings-panel .tool-btn { width: 100%; justify-content: start; }
+.storybook-site .student-bank-container { background: #eae7d8; border: 0; border-bottom: 1px solid #d4c7af; box-shadow: none; padding: 0; }
+.storybook-site .student-bank-container > summary { max-width: 1320px; margin: auto; font-size: .7rem; color: #655c48; padding: 3px 24px; }
 .storybook-site .student-bank-card { background: var(--sb-paper); border: 1px solid #cabba0; border-radius: 12px 9px 13px 9px; box-shadow: 1px 2px 0 #dbd0bb; }
 .storybook-site .student-bank-inner { padding-top: 8px; padding-bottom: 12px; }
-.storybook-site .main-nav { background: transparent; border-bottom: 1px solid #c7b99e; }
-.storybook-site .nav-container { padding-top: 10px; gap: 8px; }
-.storybook-site .nav-tab { display: inline-flex; align-items: center; gap: 7px; padding: 10px 17px 12px; color: #786a55; background: #ede6d6; border: 1px solid #d6c9b1; border-bottom: 0; border-radius: 13px 18px 0 0; font-size: .94rem; white-space: nowrap; }
-.storybook-site .nav-tab .sketch-icon { width: 25px; height: 25px; }
-.storybook-site .nav-tab.active { background: var(--sb-paper); color: #3c5c42; border-color: #a69c7b; box-shadow: inset 0 3px #8a9c70; }
+.storybook-site .main-nav { background: var(--sb-paper); border-bottom: 1px solid #d4c7af; }
+.storybook-site .nav-container { max-width: 1320px; padding: 0 24px; gap: 6px; }
+.storybook-site .nav-tab { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; color: #766954; background: transparent; border: 0; border-bottom: 3px solid transparent; border-radius: 0; font-size: .86rem; white-space: nowrap; min-height: 48px; }
+.storybook-site .nav-tab .sketch-icon { width: 23px; height: 23px; }
+.storybook-site .nav-tab.active { background: #edf0e3; color: #304f40; border-bottom-color: #304f40; box-shadow: none; }
 .storybook-site .nav-tab::after { display: none; }
-.storybook-site .nav-tab:hover { background: #f9f3e2; }
-.storybook-site .main-content { padding-top: 26px; max-width: 1280px; }
-/* 以插畫作為歡迎頁的主角，文字仍是可選取、可報讀的 HTML。 */
-.storybook-welcome { display: grid; grid-template-columns: 1fr 1fr; align-items: center; position: relative; min-height: 258px; padding: 15px 34px 22px; margin-bottom: 28px; border-bottom: 1px dashed #cbbd9f; }
-.storybook-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #7b6a4c; font-size: .8rem; letter-spacing: .14em; font-weight: 700; margin-bottom: 13px; }
-.storybook-eyebrow::before { content: ''; width: 23px; height: 2px; background: #b9934b; transform: rotate(-8deg); }
-.storybook-welcome h2 { color: #4e4934; font-family: 'Kaiti TC', 'STKaiti', 'DFKai-SB', serif; font-size: clamp(2rem, 3.1vw, 3rem); line-height: 1.4; letter-spacing: .06em; margin: 0 0 13px; font-weight: 700; }
-.storybook-welcome h2 em { font-style: normal; color: #66805a; position: relative; white-space: nowrap; }
-.storybook-welcome h2 em::after { content: ''; position: absolute; height: 7px; left: 2px; right: 0; bottom: -3px; border: 2px solid #b6ba88; border-top: 0; border-right: 0; border-radius: 50%; transform: rotate(-2deg); }
-.storybook-welcome p { color: #7a6c56; font-size: .95rem; line-height: 1.9; max-width: 420px; margin: 0; }
-.storybook-welcome-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 19px; }
-.storybook-greet { display: inline-flex; align-items: center; gap: 7px; border: 1.5px solid #8c7957; color: #5e5038; padding: 9px 15px; background: #f8e5ad; border-radius: 12px 9px 15px 10px; box-shadow: 2px 3px 0 #dccba4; font: inherit; font-size: .86rem; cursor: pointer; }
-.storybook-greet .sketch-icon { width: 22px; height: 22px; }
-.storybook-motion-toggle { background: transparent; border: 0; border-bottom: 1px dashed #aa9e86; color: #81725a; padding: 5px 0; font: inherit; font-size: .76rem; cursor: pointer; }
-.storybook-art { margin: 0; position: relative; height: 258px; display: flex; justify-content: center; align-items: center; }
-.storybook-art img { width: 100%; height: 100%; object-fit: contain; animation: storybook-breathe 9s ease-in-out infinite; }
-.storybook-speech { position: absolute; right: 6%; top: 2px; background: #fffdf4; border: 1px solid #b8a586; color: #746044; padding: 6px 12px; border-radius: 16px 13px 13px 3px; font-size: .73rem; transform: rotate(2deg); max-width: 240px; box-shadow: 1px 2px 0 #e4dac5; }
-.storybook-butterfly { position: absolute; width: 34px; height: 32px; left: 3%; top: 25%; transform: rotate(-15deg); animation: storybook-flutter 7s ease-in-out infinite; }
-.storybook-art.is-waving img { animation: storybook-wave .8s ease-in-out 1; }
-@keyframes storybook-breathe { 0%,100% { transform: translateY(0) rotate(-.25deg); } 50% { transform: translateY(-4px) rotate(.25deg); } }
-@keyframes storybook-flutter { 0%,100% { transform: translate(0,0) rotate(-15deg); } 50% { transform: translate(9px,-7px) rotate(6deg); } }
-@keyframes storybook-wave { 0%,100% { transform: rotate(0); } 30% { transform: rotate(-2deg); } 65% { transform: rotate(2deg); } }
+.storybook-site .nav-tab:hover { background: #f3ecd9; }
+.storybook-site .main-content { padding: 18px 24px; max-width: 1320px; }
+/* 一張有前景、紙上小島和探索路線的繪本封面。 */
+.storybook-welcome { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); align-items: center; position: relative; padding: 18px 30px 0; margin-bottom: 0; border: 1px solid #294738; border-radius: 24px 24px 0 0; background: #2e5041; isolation: isolate; overflow: clip; }
+.storybook-welcome::before { content: ''; position: absolute; inset: 10px; border: 1px solid #f4e0a52e; border-radius: 17px 17px 0 0; pointer-events: none; z-index: -1; }
+.storybook-welcome-copy { position: relative; z-index: 2; padding-bottom: 12px; }
+.storybook-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #e8d8aa; font-size: .7rem; letter-spacing: .18em; font-weight: 700; margin-bottom: 9px; }
+.storybook-eyebrow::before { content: ''; width: 22px; height: 2px; background: #e5bb66; transform: rotate(-8deg); }
+.storybook-welcome h2 { color: #fff7de; font-family: 'Kaiti TC', 'STKaiti', 'DFKai-SB', serif; font-size: clamp(2.5rem, 4vw, 3.45rem); line-height: 1.2; letter-spacing: .055em; margin: 0 0 16px; font-weight: 900; }
+.storybook-welcome h2 em { font-style: normal; color: #f6cd70; position: relative; white-space: nowrap; }
+.storybook-welcome h2 em::after { content: ''; position: absolute; height: 9px; left: 3px; right: 4px; bottom: -5px; border: 2px solid #ecc26e; border-top: 0; border-right: 0; border-radius: 50%; transform: rotate(-3deg); }
+.storybook-welcome p { color: #e1e6d6; font-size: .82rem; line-height: 1.7; max-width: 360px; margin: 0; }
+.storybook-welcome-actions { display: flex; gap: 14px; align-items: center; margin-top: 13px; }
+.storybook-greet { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; border: 0; border-bottom: 1px solid #c5d1ac88; color: #f3e8c7; padding: 6px 0; min-height: 44px; background: none; border-radius: 0; box-shadow: none; font: inherit; font-size: .77rem; cursor: pointer; }
+.storybook-greet:hover { color: #ffd582; border-color: #ffd582; }
+.storybook-greet span { font-size: 1.1rem; }
+.storybook-art { margin: -12px -14px -6px 0; position: relative; height: 240px; min-width: 0; display: flex; justify-content: center; align-items: center; }
+.storybook-art img { width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 1; }
+.storybook-speech { position: absolute; right: 8%; top: 8px; background: #fff9e6; border: 1px solid #9a8256; color: #645033; padding: 7px 12px; border-radius: 13px 13px 13px 2px; font-size: .68rem; transform: rotate(3deg); max-width: 230px; box-shadow: 2px 3px 0 #233f32; z-index: 3; }
+.storybook-launch { display: flex; align-items: center; gap: 16px; grid-column: 1 / -1; background: #fffaf0; border-radius: 13px 13px 0 0; padding: 11px 15px; margin-top: 6px; box-shadow: 0 -4px 0 #ecbd6640; position: relative; z-index: 4; }
+.storybook-site .lesson-quick-picker { flex: 1; min-width: 0; display: flex; flex-wrap: nowrap; gap: 18px; margin: 0; }
+.storybook-site .lesson-quick-picker label { color: #304f40; font-size: .87rem; line-height: 1.4; white-space: nowrap; }
+.lesson-quick-picker label span { display: block; font-size: .6rem; color: #7b6b4d; letter-spacing: .12em; margin-bottom: 2px; }
+.storybook-site .lesson-quick-picker select { border: 1px solid #cfc3a8; min-height: 46px; height: 46px; font-size: .95rem; font-weight: 700; min-width: 0; background: #fffdf7; border-radius: 8px; }
+.storybook-start { display: inline-flex; align-items: center; gap: 24px; justify-content: space-between; min-height: 46px; padding: 9px 18px; border: 1px solid #c2943e; border-radius: 8px; background: #edc572; color: #4e3e25; text-decoration: none; font-size: .85rem; font-weight: 800; white-space: nowrap; box-shadow: 0 3px 0 #cba45b; transition: background .15s, transform .15s; }
+.storybook-start:hover { background: #f8d785; transform: translateY(-2px); }
+.storybook-start span { font-size: 1.2rem; }
 /* 紙片和縫線取代大面積漸層與浮雕。 */
 .storybook-site :is(.card,.question-card,.manipulative-card,.arcade-card,.kid-modal-card,.teacher-modal-content,.battle-player-card,.shape-comparison-tool) { background: var(--sb-paper); border: 1px solid #cbbca1; border-radius: 15px 19px 14px 18px; box-shadow: 2px 3px 0 #e1d6bf; }
 .storybook-site :is(.card-title,.manipulative-header h4,.evidence-card h2) { color: #56674c; letter-spacing: .02em; }
@@ -145,7 +161,7 @@ body.storybook-site, body.storybook-game {
 .storybook-game button { border-radius: 8px 12px 9px 11px; }
 .storybook-game h1 { color: #586446; letter-spacing: .02em; }
 .storybook-game :is(input,select) { accent-color: #6d805b; }
-.storybook-motion-paused .storybook-art *, .calm-focus-mode .storybook-art *, .storybook-motion-paused .mascot-avatar-circle { animation: none !important; }
+.calm-focus-mode .storybook-art * { animation: none !important; }
 .storybook-site.calm-focus-mode .storybook-welcome { min-height: auto; display: block; }
 .storybook-site.calm-focus-mode .storybook-welcome-actions { display: none; }
 .storybook-site.high-contrast-mode { --sb-ink: #fff; --sb-paper: #18181b; --sb-cream: #000; background-image: none; }
@@ -153,35 +169,83 @@ body.storybook-site, body.storybook-game {
 .storybook-site.high-contrast-mode .storybook-welcome :is(h2,p,em,.storybook-eyebrow) { color: #fff; }
 .storybook-site.high-contrast-mode .app-header { background: #18181b; }
 .storybook-site.high-contrast-mode .brand-title { color: #fff; }
-@media (max-width: 900px) {
-  .storybook-site .brand-title { font-size: 1.2rem; }
-  .storybook-welcome { padding: 12px 8px 20px; grid-template-columns: 1.1fr 1fr; }
-  .storybook-art { height: 225px; }
-  .storybook-welcome h2 { font-size: 2rem; }
+/* 課堂控制收成一張連續的工作紙，減少一層一層的空白卡片。 */
+.storybook-site .unit-card-picker { margin: 0 0 14px; padding: 0 18px; background: #e9e4d3; border: 1px solid #c4b594; border-top: 0; border-radius: 0 0 12px 12px; }
+.storybook-site .unit-card-picker > summary { padding: 7px 0; font-size: .76rem; font-weight: 700; color: #63583f; }
+.storybook-site .unit-selector-grid { gap: 10px; margin: 8px 0 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.storybook-site .unit-card-btn { padding: 12px; gap: 3px; }
+.storybook-site .unit-title-text { margin-top: 2px; }
+.storybook-site .unit-detail-layout { gap: 14px; }
+.storybook-site #unit-detail-container { scroll-margin-top: 18px; }
+.storybook-site .manipulative-main-area { border: 1px solid #c6b99e; border-radius: 16px; background: #fffdf6; padding: 16px; min-width: 0; }
+.storybook-site .lesson-banner { background: transparent !important; padding: 0 0 12px !important; border: 0 !important; border-bottom: 1px solid #d8ceb8 !important; border-radius: 0 !important; margin-bottom: 10px !important; }
+.storybook-site .lesson-banner .sketch-icon { width: 40px; height: 40px; }
+.storybook-site .lesson-banner .kid-btn { font-size: .78rem !important; min-height: 44px; padding: 6px 10px !important; }
+.storybook-site .fading-control-panel { background: #f2efdf; border: 0; border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; gap: 6px; }
+.storybook-site .fading-label { font-size: .76rem; }
+.storybook-site .fading-btn { padding: 6px 10px; font-size: .75rem; min-height: 44px; box-shadow: none; }
+.storybook-site .student-scaffold { margin-bottom: 10px; }
+.storybook-site .student-scaffold > summary { padding: 8px 10px; margin-bottom: 0; background: transparent; border: 0; border-bottom: 1px dashed #c4b99b; border-radius: 0; font-size: .83rem; }
+.storybook-site #unit-manipulative-slot > .manipulative-card:first-child { margin-top: 0; }
+.storybook-site .teacher-guide-details { border-radius: 10px; }
+.storybook-site .teacher-guide-details > summary { padding: 9px 14px; font-size: .8rem; }
+.storybook-site :is(.card,.question-card,.manipulative-card) { padding: 20px; }
+@media (max-width: 1000px) {
+  .storybook-site .brand-title { font-size: 1.15rem; }
+  .brand-caption { font-size: .6rem; }
+  .storybook-welcome { padding: 24px 24px 0; }
+  .storybook-art { height: 240px; }
 }
-@media (max-width: 600px) {
-  .storybook-site .header-container { padding: 12px; gap: 12px; }
-  .storybook-site .brand-title { font-size: 1.15rem; gap: 12px; }
-  .brand-caption { font-size: .66rem; }
-  .storybook-site .header-tools { gap: 6px; }
-  .storybook-site .header-tools .tool-btn { padding: 6px 8px; font-size: .72rem; min-height: 38px; }
-  .storybook-site .header-tools label { font-size: .72rem !important; }
-  .storybook-site .main-content { padding: 14px 12px; }
-  .storybook-site .nav-container { padding: 8px 12px 0; }
-  .storybook-site .nav-tab { padding: 8px 12px; font-size: .86rem; }
+@media (max-width: 700px) {
+  .storybook-site .header-container { padding: 10px 12px; gap: 8px; }
+  .storybook-site .brand-title { font-size: 1.12rem; gap: 8px; }
+  .storybook-site .brand-logo { width: 36px; height: 36px; }
+  .brand-caption { border: 0; padding: 0; font-size: .58rem; }
+  .storybook-site .header-tools { width: 100%; gap: 6px; justify-content: flex-start; }
+  .storybook-site .header-tools .tool-btn { font-size: .73rem; padding: 6px 9px; }
+  .storybook-site .token-counter { margin-left: auto; padding: 8px; font-size: .7rem; }
+  .display-settings-panel { right: -52px; width: min(280px, calc(100vw - 24px)); }
+  .storybook-site .nav-container { padding: 0 12px; gap: 0; }
+  .storybook-site .nav-tab { padding: 8px 10px; font-size: .77rem; }
   .storybook-site .nav-tab .sketch-icon { width: 21px; height: 21px; }
-  .storybook-welcome { grid-template-columns: 1fr; gap: 0; padding: 10px 8px 13px; margin-bottom: 20px; min-height: auto; }
-  .storybook-welcome h2 { font-size: 1.9rem; margin-bottom: 9px; }
-  .storybook-eyebrow { margin-bottom: 9px; font-size: .68rem; }
-  .storybook-welcome p { font-size: .84rem; }
-  .storybook-welcome-actions { margin-top: 12px; }
-  .storybook-art { height: 190px; margin-top: 5px; }
-  .storybook-speech { right: 0; top: 8px; font-size: .68rem; }
-  .storybook-butterfly { left: 6%; }
-  .storybook-site .lesson-banner { padding: 12px !important; }
-  .storybook-site .lesson-banner .sketch-icon { width: 36px; height: 36px; }
+  .storybook-site .student-bank-container > summary { padding: 3px 12px; }
+  .storybook-site .main-content { padding: 12px; }
+  .storybook-welcome { grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); padding: 22px 18px 0; border-radius: 18px 18px 0 0; }
+  .storybook-welcome-copy { padding-bottom: 12px; }
+  .storybook-eyebrow { font-size: .57rem; letter-spacing: .07em; margin-bottom: 10px; gap: 5px; white-space: nowrap; }
+  .storybook-eyebrow::before { width: 14px; }
+  .storybook-welcome h2 { font-size: clamp(1.75rem, 5.9vw, 2.6rem); line-height: 1.3; letter-spacing: .03em; margin-bottom: 11px; }
+  .storybook-welcome p { font-size: .73rem; max-width: 140px; }
+  .storybook-welcome-actions { margin-top: 5px; }
+  .storybook-greet { font-size: .67rem; gap: 8px; }
+  .storybook-art { height: 200px; margin: 0 -8px 0 -4px; }
+  .storybook-art img { width: 108%; max-width: none; flex-shrink: 0; }
+  .storybook-speech { top: 11px; right: -2px; font-size: .53rem; max-width: 165px; padding: 4px 7px; }
+  .storybook-launch { padding: 12px; margin: 8px -6px 0; gap: 8px; flex-wrap: wrap; }
+  .storybook-site .lesson-quick-picker { width: 100%; flex-basis: 100%; gap: 10px; }
+  .storybook-site .lesson-quick-picker label { font-size: .7rem; }
+  .storybook-site .lesson-quick-picker select { font-size: .8rem; min-width: 0; padding: 8px; }
+  .lesson-quick-picker label span { font-size: .54rem; }
+  .storybook-start { width: 100%; min-height: 44px; padding: 7px 12px; font-size: .78rem; }
+  .storybook-site .unit-card-picker { padding: 0 12px; margin-bottom: 10px; }
+  .storybook-site .unit-selector-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .storybook-site .unit-card-btn { padding: 10px; }
+  .storybook-site .unit-title-text { font-size: .87rem; }
+  .storybook-site .unit-story-label { font-size: .65rem; }
+  .storybook-site .manipulative-main-area { padding: 12px; }
+  .storybook-site .lesson-banner-heading { gap: 8px; }
   .storybook-site .lesson-banner strong { font-size: 1rem !important; }
+  .storybook-site .lesson-banner-note { font-size: .68rem; }
+  .storybook-site .lesson-banner .kid-btn { font-size: .68rem !important; padding: 6px 8px !important; }
+  .storybook-site .fading-btn-group { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); width: 100%; }
+  .storybook-site .fading-btn { font-size: .64rem; padding: 6px; }
+  .storybook-site :is(.card,.question-card,.manipulative-card) { padding: 14px; }
   .storybook-site .mascot-avatar-circle { width: 45px; height: 45px; }
+}
+@media (max-width: 380px) {
+  .storybook-welcome { padding-left: 14px; padding-right: 14px; }
+  .storybook-welcome h2 { font-size: 1.7rem; }
+  .storybook-art { height: 200px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .storybook-art *, .storybook-character { animation: none !important; }
@@ -204,7 +268,6 @@ body.storybook-site, body.storybook-game {
 .storybook-site.high-contrast-mode .nav-tab .sketch-icon { color: inherit; }
 .storybook-site.high-contrast-mode .nav-tab.active { background: #facc15; color: #111; box-shadow: none; }
 .storybook-site.high-contrast-mode .student-bank-container > summary { color: #fff; }
-.storybook-site.high-contrast-mode .storybook-motion-toggle { color: #fff; }
 .storybook-site.high-contrast-mode :is(.lesson-banner,.mascot-companion-card,.scaffold-tip,.evidence-metrics > span,.evidence-empty,.teaching-notice,.practice-settings) { background: #18181b !important; border-color: #facc15 !important; color: #fff !important; }
 .storybook-site.high-contrast-mode :is(.lesson-banner strong,.lesson-banner-note,.lesson-quick-picker label,.fading-label,.number-line-status,#practice-record-status,.card-title,.manipulative-header h4,.evidence-card h2,.evidence-card p,.evidence-metrics strong,.mascot-name-row strong) { color: #fff !important; }
 .storybook-site.high-contrast-mode :is(.student-scaffold,.practice-settings-wrap,.fraction-compare-details) > summary { background: #27272a; color: #fff; border-color: #facc15; }
@@ -212,8 +275,26 @@ body.storybook-site, body.storybook-game {
 .storybook-site.high-contrast-mode .option-btn .option-label { background: #facc15; color: #111; }
 .storybook-site.high-contrast-mode :is(input,select,textarea).form-control, .storybook-site.high-contrast-mode .practice-settings-grid :is(input,select), .storybook-site.high-contrast-mode .evidence-toolbar select { background: #18181b; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode :is(.number-line-tool,.shape-comparison-tool) svg text { fill: #fff; }
-.storybook-site .header-tools .tool-btn, .storybook-motion-toggle { min-height: 44px; }
 .storybook-site .teacher-modal-header { background: #627654 !important; color: #fffdf4; }
 .storybook-site.high-contrast-mode :is(.fading-control-panel,.teacher-guide-details,.sample-records) { background: #18181b; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode .fading-btn { background: #27272a; color: #fff; border-color: #facc15; }
 .storybook-site.high-contrast-mode .fading-btn.active { background: #facc15; color: #111; }
+
+.storybook-site.calm-focus-mode .storybook-welcome { min-height: auto; display: block; padding: 18px 18px 0; background: #edf0e3; border-color: #aab49a; }
+.storybook-site.calm-focus-mode .storybook-welcome-copy { padding-bottom: 12px; }
+.storybook-site.calm-focus-mode .storybook-welcome :is(h2,em,p,.storybook-eyebrow) { color: #304f40; }
+.storybook-site.calm-focus-mode .storybook-welcome h2 { font-family: var(--font-base); font-size: 1.7rem; line-height: 1.4; }
+.storybook-site.calm-focus-mode .storybook-welcome h2 br { display: none; }
+.storybook-site.calm-focus-mode .storybook-welcome::before, .storybook-site.calm-focus-mode .storybook-welcome h2 em::after { display: none; }
+.storybook-site.calm-focus-mode .storybook-launch { margin: 0; }
+.storybook-site.high-contrast-mode .display-settings-panel { background: #18181b; border-color: #facc15; }
+.storybook-site.high-contrast-mode .display-settings-panel > strong { color: #fff; }
+.storybook-site.high-contrast-mode .storybook-launch { background: #18181b; border: 1px solid #facc15; box-shadow: none; }
+.storybook-site.high-contrast-mode .lesson-quick-picker label span { color: #fff; }
+.storybook-site.high-contrast-mode .storybook-start { background: #facc15; color: #111; border-color: #facc15; box-shadow: none; }
+.storybook-site.high-contrast-mode .storybook-greet { color: #fff; border-color: #fff; }
+.storybook-site.high-contrast-mode :is(.manipulative-main-area,.unit-card-picker) { background: #18181b; border-color: #facc15; }
+.storybook-site.high-contrast-mode .unit-card-picker > summary { color: #fff; }
+.storybook-site.high-contrast-mode .lesson-banner { background: #18181b !important; }
+.storybook-site.high-contrast-mode .storybook-welcome :is(h2,em,p,.storybook-eyebrow) { color: #fff; }
+@media print { .storybook-site .manipulative-main-area { border: 0; padding: 0; } }

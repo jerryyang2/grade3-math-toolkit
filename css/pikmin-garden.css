@@ -1,0 +1,110 @@
+/* 皮克敏同人花園：每個角色有獨立的肢體、葉片與互動狀態。 */
+.storybook-site { --sb-green: #4f7341; --primary: #4f7341; --primary-dark: #35562f; --primary-light: #e7edd6; }
+.storybook-site .storybook-welcome { background: #355c40; border-color: #304f36; }
+.storybook-site .brand-title { color: #385b37; }
+.storybook-welcome h2 { letter-spacing: .025em; }
+.storybook-welcome h2 em { color: #f0d278; }
+.storybook-greet { border: 1px solid #adc78f80; border-radius: 100px; padding: 7px 14px; gap: 9px; background: #ffffff0a; min-height: 44px; }
+.storybook-greet:hover, .storybook-greet[aria-pressed="true"] { background: #f4dc98; color: #355337; border-color: #e9ce85; }
+.storybook-greet svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.pikmin-scene { height: 255px; margin: -7px -10px -4px 0; position: relative; }
+.storybook-art .pikmin-garden-ground { width: 100%; height: 100%; object-fit: contain; animation: none; z-index: 0; pointer-events: none; }
+.pikmin-garden { position: absolute; inset: 22px 0 0; z-index: 1; }
+.pikmin-friend { --size: 72px; position: absolute; left: var(--x); bottom: var(--y); width: var(--size); height: calc(var(--size) * 1.5); padding: 0; margin: 0; background: none; border: 0; border-radius: 35%; cursor: pointer; transform: translateX(-50%); transition: left 1s ease-in-out, bottom 1s ease-in-out; -webkit-tap-highlight-color: transparent; }
+.pikmin-friend::after { content: ''; position: absolute; inset: 28% 8% 2%; border-radius: 45%; border: 1px solid transparent; pointer-events: none; }
+.pikmin-friend:hover::after { background: #fffbd513; border-color: #f4e6a865; }
+.pikmin-friend:focus-visible { outline: 2px solid #fff4b9 !important; outline-offset: 3px !important; }
+.pikmin-character { width: 100%; height: 100%; display: block; overflow: visible; }
+.pik-figure { transform-origin: 50px 135px; animation: pikmin-walk 3.8s ease-in-out infinite; animation-delay: calc(var(--order, 0) * -.43s); }
+.pik-sprout { transform-origin: 50px 46px; animation: pikmin-leaf 3s ease-in-out infinite; animation-delay: calc(var(--order, 0) * -.6s); }
+.pik-eyes { transform-origin: 50px 65px; animation: pikmin-blink 6.8s linear infinite; animation-delay: calc(var(--order, 0) * -.8s); }
+.pik-arm-left { transform-origin: 39px 94px; animation: pikmin-arm 1.9s ease-in-out infinite; }
+.pik-arm-right { transform-origin: 62px 94px; animation: pikmin-arm 1.9s ease-in-out infinite reverse; }
+.pik-leg-left { transform-origin: 44px 116px; animation: pikmin-step 1.9s ease-in-out infinite; }
+.pik-leg-right { transform-origin: 57px 116px; animation: pikmin-step 1.9s ease-in-out infinite reverse; }
+.pikmin-red { --x: 17%; --y: 8%; }
+.pikmin-yellow { --x: 36%; --y: 9%; }
+.pikmin-blue { --x: 55%; --y: 8%; }
+.pikmin-purple { --x: 75%; --y: 8%; --size: 80px; }
+.pikmin-white { --x: 29%; --y: 32%; --size: 58px; }
+.pikmin-rock { --x: 57%; --y: 35%; --size: 66px; }
+.pikmin-winged { --x: 83%; --y: 42%; --size: 65px; }
+.pikmin-ice { --x: 88%; --y: 23%; --size: 61px; }
+.pikmin-glow { --x: 9%; --y: 39%; --size: 60px; }
+.pikmin-purple .pik-figure { animation-duration: 5.2s; }
+.pikmin-white .pik-figure { animation-duration: 2.8s; }
+.pikmin-rock .pik-figure { animation-name: pikmin-rock; animation-duration: 4.4s; }
+.pikmin-winged .pik-figure { animation: pikmin-fly 4s ease-in-out infinite; }
+.pik-wing { transform-box: fill-box; transform-origin: center; animation: pikmin-wings .6s ease-in-out infinite alternate; }
+.pik-wing-right { animation-delay: -.3s; }
+.pikmin-glow .pik-figure { filter: drop-shadow(0 0 5px #d8ffad88); animation: pikmin-fly 5s ease-in-out infinite; }
+.pikmin-garden.is-gathered .pikmin-friend { left: calc(8% + var(--order) * 10.5%); bottom: 16%; --size: 58px; }
+.pikmin-garden.is-gathered .pikmin-friend .pik-figure { animation-duration: 4.5s; }
+.pikmin-garden .is-cheering .pik-figure { animation: pikmin-cheer .7s ease-out; }
+.pikmin-scene .storybook-speech { top: -5px; left: 13%; right: auto; font-size: .66rem; max-width: 90%; padding: 7px 12px; border-radius: 12px 12px 12px 2px; transform: rotate(-2deg); }
+.garden-caption { position: absolute; right: 9%; bottom: 1%; font-size: .6rem; letter-spacing: .12em; color: #d3dfb7; transform: rotate(-4deg); }
+.storybook-site .mascot-avatar-circle { width: 82px; height: 102px; padding: 0; }
+.storybook-site .mascot-switch-btn .pikmin-character { width: 28px; height: 38px; }
+.storybook-site .mascot-companion-card { background: #eaf0d9 !important; border: 1px solid #b8c896 !important; }
+.storybook-site .mascot-role-pill { background: #b7cb94 !important; color: #324c2c !important; }
+.storybook-site .nav-tab.active { background: #e7edd8; border-bottom-color: #54763d; }
+.storybook-site .nav-tab.active .sketch-icon { transform: rotate(-5deg); }
+.theme-credit { text-align: center; font-size: .65rem; color: #746c57; padding: 12px 16px 25px; }
+.theme-credit a { color: inherit; text-underline-offset: 3px; }
+@keyframes pikmin-walk { 0%,100% { transform: translate(0,0) rotate(-3deg); } 25% { transform: translate(3px,-3px) rotate(2deg); } 50% { transform: translate(6px,0) rotate(3deg); } 75% { transform: translate(3px,-3px) rotate(-2deg); } }
+@keyframes pikmin-leaf { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+@keyframes pikmin-blink { 0%,43%,46%,100% { transform: scaleY(1); } 44.5% { transform: scaleY(.1); } }
+@keyframes pikmin-arm { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(9deg); } }
+@keyframes pikmin-step { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(7deg); } }
+@keyframes pikmin-rock { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(4deg) translateY(-2px); } }
+@keyframes pikmin-fly { 0%,100% { transform: translateY(-4px) rotate(-3deg); } 50% { transform: translateY(-14px) rotate(3deg); } }
+@keyframes pikmin-wings { from { transform: scaleX(.55); } to { transform: scaleX(1); } }
+@keyframes pikmin-cheer { 0%,100% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-18px) rotate(-8deg); } 65% { transform: translateY(-5px) rotate(8deg); } }
+@media (max-width: 1000px) and (min-width: 701px) {
+  .pikmin-friend { --size: 61px; }
+  .pikmin-purple { --size: 70px; }
+  .pikmin-white,.pikmin-glow { --size: 52px; }
+}
+@media (max-width: 700px) {
+  .storybook-site .storybook-welcome { grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); padding-top: 18px; }
+  .storybook-welcome h2 { font-size: clamp(1.7rem,5.7vw,2.55rem); }
+  .storybook-eyebrow { font-size: .54rem; letter-spacing: 0; }
+  .storybook-welcome p { font-size: .71rem; }
+  .storybook-greet { font-size: .68rem; padding: 6px 10px; gap: 5px; }
+  .storybook-greet svg { width: 18px; height: 18px; }
+  .pikmin-scene { height: 235px; margin: 0 -9px 0 -5px; align-self: end; }
+  .storybook-art .pikmin-garden-ground { position: absolute; width: 135%; height: 100%; max-width: none; bottom: -10px; left: -15%; object-fit: fill; }
+  .pikmin-garden { top: 28px; bottom: 15px; }
+  .pikmin-friend, .pikmin-purple, .pikmin-white, .pikmin-rock, .pikmin-winged, .pikmin-ice, .pikmin-glow { --size: 47px; }
+  .pikmin-red { --x: 16%; --y: 3%; }
+  .pikmin-yellow { --x: 48%; --y: 8%; }
+  .pikmin-blue { --x: 80%; --y: 3%; }
+  .pikmin-purple { --x: 18%; --y: 34%; }
+  .pikmin-white { --x: 50%; --y: 37%; }
+  .pikmin-rock { --x: 82%; --y: 34%; }
+  .pikmin-winged { --x: 80%; --y: 65%; }
+  .pikmin-ice { --x: 48%; --y: 63%; }
+  .pikmin-glow { --x: 16%; --y: 65%; }
+  .pikmin-garden.is-gathered .pikmin-friend { --size: 44px; left: var(--x); bottom: var(--y); transform: translateX(-50%) scale(.92); }
+  .pikmin-garden.is-gathered .pikmin-red,.pikmin-garden.is-gathered .pikmin-purple,.pikmin-garden.is-gathered .pikmin-glow { left: 23%; }
+  .pikmin-garden.is-gathered .pikmin-yellow,.pikmin-garden.is-gathered .pikmin-white,.pikmin-garden.is-gathered .pikmin-ice { left: 50%; }
+  .pikmin-garden.is-gathered .pikmin-blue,.pikmin-garden.is-gathered .pikmin-rock,.pikmin-garden.is-gathered .pikmin-winged { left: 77%; }
+  .pikmin-scene .storybook-speech { left: -6px; top: -6px; max-width: calc(100% + 10px); padding: 5px 7px; font-size: .58rem; line-height: 1.5; }
+  .garden-caption { right: 2px; bottom: 0; font-size: .45rem; letter-spacing: .04em; }
+  .storybook-site .mascot-avatar-circle { width: 52px; height: 72px; }
+}
+/* 設定仍由既有的低刺激與系統偏好統一處理，畫面不增加動畫控制按鈕。 */
+.storybook-site.calm-focus-mode .pikmin-scene { display: none !important; }
+.storybook-site.calm-focus-mode .storybook-welcome { background: #edf0e3; }
+.storybook-site.high-contrast-mode .storybook-welcome { background: #18181b; border-color: #facc15; }
+.storybook-site.high-contrast-mode .storybook-greet { background: #18181b; color: #fff; border-color: #facc15; }
+.storybook-site.high-contrast-mode .theme-credit { color: #fff; }
+@media (prefers-reduced-motion: reduce) {
+  .pikmin-character *, .pikmin-friend { animation: none !important; transition: none !important; }
+}
+@media print { .theme-credit { display: none; } }
+/* 伴讀切換保留固定的大點選範圍，角色動畫只發生在按鈕內。 */
+.storybook-site .mascot-switch-btn { width: 44px; height: 44px; flex: 0 0 44px; transform: none; transition: background-color .15s, border-color .15s; }
+.storybook-site .mascot-switch-btn:is(:hover,.active) { transform: none; }
+.storybook-site .mascot-switch-btn .pikmin-character { pointer-events: none; }
+@media (max-width: 700px) { .storybook-site .mascot-switcher-mini { margin-left: 0; } }

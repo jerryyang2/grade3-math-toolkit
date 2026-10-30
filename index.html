@@ -7,8 +7,8 @@
   <meta name="description" content="學習教室三年級上學期數學備課平台，深度結合南一版三上數學教材、108普通數學課綱、十二年國教特殊教育課程實施規範（課程調整四向度）、特殊需求領域課綱（學習策略與生活管理）、C-R-A具體教學鷹架、TTS語音朗讀與IEP隨堂質性評量。">
   
   <!-- 依據規範標準引入專屬設計主題 Favicon -->
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=storybook-20261031">
-  <link rel="apple-touch-icon" href="favicon.svg?v=storybook-20261031">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=pikmin-20261031">
+  <link rel="apple-touch-icon" href="favicon.svg?v=pikmin-20261031">
 
   <!-- 引入 字嗨注音標楷 (Bpmf Zihi Kai Std) 開源注音字型 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
@@ -18,7 +18,8 @@
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/floating-tools.css">
   <link rel="stylesheet" href="css/teaching-workflow.css?v=20261031-teaching-2">
-  <link rel="stylesheet" href="css/storybook-theme.css?v=storybook-20261031">
+  <link rel="stylesheet" href="css/storybook-theme.css?v=pikmin-20261031">
+  <link rel="stylesheet" href="css/pikmin-garden.css?v=pikmin-20261031">
 </head>
 <body class="storybook-site">
   <!-- 無障礙跳至主要內容 -->
@@ -28,7 +29,7 @@
   <header class="app-header" role="banner">
     <div class="header-container">
       <div class="brand-section">
-        <img src="favicon.svg?v=storybook-20261031" alt="數學小探險：手繪數學筆記本" class="brand-logo" width="48" height="48">
+        <img src="favicon.svg?v=pikmin-20261031" alt="數學小探險：葉芽與數學積木" class="brand-logo" width="48" height="48">
         <div>
           <h1 class="brand-title">
             數學小探險
@@ -120,30 +121,22 @@
           </div>
         </div>
 
-        <!-- 朗讀語速調整 -->
-        <label for="speech-rate-selector" style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
-          🗣️ 念題語速：
-          <select id="speech-rate-selector" class="tool-btn" style="padding: 4px 8px; font-size: 0.9rem;">
-            <option value="0.75">0.75x (慢速/聽語障)</option>
-            <option value="0.85" selected>0.85x (特教標準)</option>
-            <option value="1.0">1.0x (一般速度)</option>
-          </select>
-        </label>
-
-        <!-- 靜音開關 -->
-        <button id="btn-audio-mute" class="tool-btn" aria-pressed="false" title="開啟或關閉平台音效與語音">
-          🔊 聲音開啟
-        </button>
-
-        <!-- 自閉症低刺激/專注模式 -->
-        <button id="btn-calm-focus" class="tool-btn" aria-pressed="false" title="切換為溫和色調、隱藏多餘裝飾以降低感官刺激">
-          🌿 低刺激專注模式
-        </button>
-
-        <!-- 高對比模式 -->
-        <button id="btn-high-contrast" class="tool-btn" aria-pressed="false" title="切換黑底高對比以利視知覺辨識">
-          🌓 高對比
-        </button>
+        <details class="display-settings" id="display-settings">
+          <summary class="tool-btn"><span aria-hidden="true">◐</span> 顯示與朗讀 <span aria-hidden="true">⌄</span></summary>
+          <div class="display-settings-panel">
+            <strong>讓學習更舒服</strong>
+            <label for="speech-rate-selector">念題語速
+              <select id="speech-rate-selector" class="tool-btn">
+                <option value="0.75">0.75x（慢速）</option>
+                <option value="0.85" selected>0.85x（標準）</option>
+                <option value="1.0">1.0x（一般）</option>
+              </select>
+            </label>
+            <button id="btn-audio-mute" class="tool-btn" aria-pressed="false" title="開啟或關閉平台音效與語音">🔊 聲音開啟</button>
+            <button id="btn-calm-focus" class="tool-btn" aria-pressed="false" title="切換為溫和色調、隱藏多餘裝飾以降低感官刺激">🌿 低刺激專注模式</button>
+            <button id="btn-high-contrast" class="tool-btn" aria-pressed="false" title="切換黑底高對比以利視知覺辨識">🌓 高對比</button>
+          </div>
+        </details>
 
         <!-- 正向增強代幣集星箱 (Token Economy) -->
         <div class="token-counter" title="已累積的學習星星代幣" aria-live="polite">
@@ -201,22 +194,25 @@
       
       <section class="storybook-welcome" aria-labelledby="storybook-title">
         <div class="storybook-welcome-copy">
-          <span class="storybook-eyebrow">翻開今天的數學探索手帳</span>
-          <h2 id="storybook-title">一起，把數學<br><em>玩懂吧。</em></h2>
-          <p>數一數、分一分、動手試試看。<br>每個小發現，都是往前的一步。</p>
+          <span class="storybook-eyebrow">皮克敏的數學探險手帳</span>
+          <h2 id="storybook-title">小小隊伍，<br><em>大大發現。</em></h2>
+          <p>跟著皮克敏，數一數、分一分，一起找答案。</p>
           <div class="storybook-welcome-actions">
-            <button type="button" id="storybook-greet" class="storybook-greet">和小夥伴打招呼 ↗</button>
-            <button type="button" id="storybook-motion-toggle" class="storybook-motion-toggle" aria-pressed="false">暫停小動畫</button>
+            <button type="button" id="storybook-greet" class="storybook-greet" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h7l4-4v12l-4-4H4Zm14-3q6 5 0 10M20 3l2-2M20 21l2 2"/></svg><span>吹哨集合</span></button>
           </div>
         </div>
-        <figure class="storybook-art decorative-item">
-          <img src="assets/storybook/math-friends.png" width="1536" height="1024" fetchpriority="high" alt="色鉛筆插畫：小獅子數積木，小兔子分享披薩">
-          <figcaption id="storybook-speech" class="storybook-speech" role="status" aria-live="polite">今天，也一起慢慢探索。</figcaption>
-          <svg class="storybook-butterfly" viewBox="0 0 40 36" aria-hidden="true"><path d="M20 22C-4 23 4-7 18 10L21 20C29-7 48 12 28 23L21 25C34 27 28 40 21 28 12 42 4 29 18 25Z" fill="#e8c47e" stroke="#8d7752" stroke-width="1.4"/><path d="M20 15l1 15m-1-14-4-6m5 6 5-6" fill="none" stroke="#735b3e" stroke-width="1.4"/></svg>
+        <figure class="storybook-art pikmin-scene decorative-item" aria-label="皮克敏數學花園">
+          <img class="pikmin-garden-ground" src="assets/pikmin/garden.svg" width="640" height="320" alt="" aria-hidden="true">
+          <div id="pikmin-garden" class="pikmin-garden" role="group" aria-label="九種皮克敏小隊，點擊角色打招呼"></div>
+          <figcaption id="storybook-speech" class="storybook-speech" role="status" aria-live="polite">點點皮克敏，和小隊打個招呼！</figcaption>
+          <span class="garden-caption" aria-hidden="true">小隊的數學花園</span>
         </figure>
+        <div class="storybook-launch">
+          <div class="lesson-quick-picker"><label for="lesson-unit-quick-select"><span>準備出發</span>今天探索哪一站？</label><select id="lesson-unit-quick-select" class="form-control"></select></div>
+          <a class="storybook-start" href="#unit-detail-container">開始動手玩 <span aria-hidden="true">↓</span></a>
+        </div>
       </section>
-      <div class="lesson-quick-picker"><label for="lesson-unit-quick-select">今天教什麼？</label><select id="lesson-unit-quick-select" class="form-control"></select></div>
-      <details class="unit-card-picker"><summary>展開九個單元的課程卡片</summary>
+      <details class="unit-card-picker"><summary>查看全部 9 個探索單元</summary>
       <div class="unit-selector-grid" id="unit-nav-list">
         <!-- 由 JavaScript 動態生成單元按鈕（含普通課綱代號與特需課綱指標） -->
       </div>
@@ -712,20 +708,22 @@
     </section>
 
   </main>
+  <footer class="theme-credit">皮克敏同人學習主題 · 角色原作：<a href="https://pikmin.nintendo.com/" target="_blank" rel="noopener noreferrer">Nintendo</a></footer>
 
   <!-- 腳本載入順序：資料庫 ➔ 音效與語音 ➔ 聲光特效與吉祥物 ➔ 雙人搶答擂台 ➔ 9大教具 ➔ 特教工具箱 ➔ 旗艦競賽功能 ➔ 主應用程式 -->
   <script src="js/data.js?v=20261031-teaching"></script>
   <script src="js/audio.js?v=20261031-teaching"></script>
-  <script src="js/confetti-effects.js?v=storybook-20261031"></script>
+  <script src="js/confetti-effects.js?v=pikmin-20261031"></script>
   <script src="js/battle.js?v=20261031-teaching"></script>
   <script src="js/manipulatives.js?v=20261031-teaching"></script>
-  <script src="js/teacher-tools.js?v=storybook-20261031"></script>
-  <script src="js/contest-features.js?v=storybook-20261031"></script>
+  <script src="js/teacher-tools.js?v=pikmin-20261031"></script>
+  <script src="js/contest-features.js?v=pikmin-20261031"></script>
   <script src="js/learning-records.js?v=20261031-teaching"></script>
   <script src="js/number-line.js?v=20261031-teaching"></script>
   <script src="js/geometry-shapes.js?v=20261031-teaching"></script>
-  <script src="js/storybook-theme.js?v=storybook-20261031"></script>
-  <script src="js/app.js?v=storybook-20261031"></script>
+  <script src="js/pikmin-garden.js?v=pikmin-20261031"></script>
+  <script src="js/storybook-theme.js?v=pikmin-20261031"></script>
+  <script src="js/app.js?v=pikmin-20261031"></script>
   <script src="js/floating-tools.js?v=20261031-teaching"></script>
 </body>
 </html>
