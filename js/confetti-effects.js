@@ -16,8 +16,8 @@
       color: '#f59e0b',
       bg: '#fef3c7',
       cheers: [
-        '哇！答對了！你太厲害了，真是數學小天才！⭐',
-        '太神啦！樂樂獅為你大力鼓掌！繼續衝刺！🎉',
+        '哇！答對了！你太厲害了，有把步驟做對！⭐',
+        '你有耐心地完成！樂樂獅為你大力鼓掌！繼續衝刺！🎉',
         '嗶嗶啵啵！全對得分！你真是超級大高手！🚀',
         '答得太漂亮了！閃亮星星代幣送給你！✨'
       ],
@@ -37,7 +37,7 @@
       bg: '#ffedd5',
       cheers: [
         '靈光一閃！萌萌狐發現你的算術雷達超靈敏！⭐',
-        '算得又快又準！恭喜解開這道題目的秘密！🎉',
+        '你有仔細檢查！恭喜解開這道題目的秘密！🎉',
         '太棒了！聰明小腦袋轉得飛快，滿分表現！🌟'
       ],
       comforts: [
@@ -124,6 +124,7 @@
 
     // 啟動五彩紙帶與金星慶祝特效
     blast(count = 70, durationMs = 2600) {
+      if (document.body.classList.contains('calm-focus-mode') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       if (!this.canvas || !this.ctx) return;
       this.resize();
       this.canvas.style.display = 'block';
@@ -242,6 +243,7 @@
   // 2. 金幣星星飛向代幣存摺動畫 (Fly Coin Animation)
   function flyStarToken(sourceEl) {
     if (!sourceEl || typeof document === 'undefined') return;
+    if (document.body.classList.contains('calm-focus-mode') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const destEl = document.getElementById('token-count') || document.querySelector('.token-counter');
     if (!destEl) return;
 
@@ -358,6 +360,7 @@
 
   // 4. 答對時的「聲光刺激」彈出視窗 (Celebration Modal)
   function showCelebrationModal({ title = '太棒了！答對了！', hint = '', solutionSpeech = '', onNext = null }) {
+    if (document.body.classList.contains('calm-focus-mode') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const existing = document.getElementById('celebration-modal');
     if (existing) existing.remove();
 
@@ -376,7 +379,7 @@
         </div>
         <h2 class="celebration-title">🎉 ${title}</h2>
         <div class="celebration-reward-pill">
-          ⭐ <strong>+1 顆星星代幣</strong> 入袋！太神啦！
+          ⭐ <strong>+1 顆星星代幣</strong> 入袋！你有耐心地完成！
         </div>
         <div class="celebration-speech-box">
           <p class="celebration-cheer">「${praise}」</p>

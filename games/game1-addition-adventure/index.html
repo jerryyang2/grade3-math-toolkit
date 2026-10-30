@@ -132,7 +132,7 @@
           <div class="bg-white/90 rounded-2xl p-2.5 border-2 border-sky-200">
             <div class="flex items-center justify-between mb-1.5 px-1">
               <span class="text-xs sm:text-sm font-extrabold text-slate-600">
-                🐾 點選目前作答的小勇士（自動儲存紀錄，答對加星，也可按 ＋ 手動獎勵）���
+                🐾 點選目前作答的小勇士（自動儲存紀錄，答對加星，也可按 ＋ 手動獎勵）
               </span>
               <button id="btn-reset-scores" type="button"
                       class="text-xs font-bold text-slate-500 hover:text-rose-600 px-2 py-0.5 rounded-lg border border-slate-200">
@@ -266,7 +266,7 @@
             <input id="custom-num1" type="number" min="1" max="499" value="28" aria-label="被加數"
                    class="w-16 px-2 py-1 rounded-lg border border-slate-300 font-black text-center text-sm text-slate-800">
             <span class="font-black text-slate-600">＋</span>
-            <input id="custom-num2" type="number" min="1" max="499" value="15" aria-label="加���"
+            <input id="custom-num2" type="number" min="1" max="499" value="15" aria-label="加數"
                    class="w-16 px-2 py-1 rounded-lg border border-slate-300 font-black text-center text-sm text-slate-800">
             <button id="btn-custom-set" type="button"
                     class="dopamine-btn px-2.5 py-1 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-black text-xs border border-sky-700">
@@ -503,7 +503,7 @@
           <span class="font-black text-slate-700">🎯 玩法選擇：</span>
           <button type="button" data-g2-mode="make-tens"
                   class="g2-mode-btn dopamine-btn px-3.5 py-2 rounded-xl font-extrabold text-sm sm:text-base bg-pink-500 text-white border-2 border-pink-700">
-            🌟 湊成��十數好朋友（如 24 配 16 = 40）
+            🌟 湊成整十數好朋友（如 24 配 16 = 40）
           </button>
           <button type="button" data-g2-mode="eq-match"
                   class="g2-mode-btn dopamine-btn px-3.5 py-2 rounded-xl font-extrabold text-sm sm:text-base bg-white text-slate-700 border-2 border-slate-300">
@@ -558,7 +558,7 @@
             🏪 森林超商大採購：金幣進位收銀台
           </h2>
           <p class="text-sm font-bold text-slate-600">
-            點選架上任意 2 樣商品（或按隨機出題），再用 10 元與 1 元硬幣付錢，滿 10 個 1 元記���按「銀行換幣」！
+            點選架上任意 2 樣商品（或按隨機出題），再用 10 元與 1 元硬幣付錢，滿 10 個 1 元記得按「銀行換幣」！
           </p>
         </div>
         <div class="flex items-center gap-2">
@@ -577,7 +577,7 @@
         <!-- Store Shelf (Left 6 Cols) -->
         <div class="lg:col-span-6 bg-white rounded-3xl p-5 border-4 border-amber-300 dopamine-shadow">
           <div class="flex items-center justify-between mb-3">
-            <span class="font-black text-lg text-slate-800">🛍️ 超商商��架（點選 2 樣要買的商品）</span>
+            <span class="font-black text-lg text-slate-800">🛍️ 超商商品架（點選 2 樣要買的商品）</span>
             <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900">綠色：好算｜粉色：有進位</span>
           </div>
           <div id="g3-shelf-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -1109,7 +1109,7 @@
       }
       const streakBadge = document.getElementById('g1-streak-badge');
       if (streakBadge) {
-        streakBadge.textContent = `��� 連對 ${g1.streak} 題`;
+        streakBadge.textContent = `🔥 連對 ${g1.streak} 題`;
       }
     }
 
@@ -1230,7 +1230,7 @@
         const carryText = g1.carryTens ? '（記得加上進位小 1 喔！）' : '';
         stepText.textContent = `第二步：再算藍色「十位欄」 ${t1} ＋ ${t2} ${carryText}`;
       } else if (isThreeDigit && g1.ansHundreds === null) {
-        stepText.textContent = `第三步：最後算綠色「百位欄」，完成後按「✅ 檢查���案」！`;
+        stepText.textContent = `第三步：最後算綠色「百位欄」，完成後按「✅ 檢查答案」！`;
       } else {
         stepText.textContent = `太棒了！已經填好直式數字，請按右下角「✅ 檢查答案」！`;
       }
@@ -1981,7 +1981,7 @@
           saveProgress();
           playSuccessSound();
           renderGame1();
-          showToast('✨ 成功把 10 個 1 打包成 1 條 10，並��動點亮進位小 1！', '🧱', true);
+          showToast('✨ 成功把 10 個 1 打包成 1 條 10，並自動點亮進位小 1！', '🧱', true);
         }
       });
 
@@ -2057,7 +2057,7 @@
       document.getElementById('btn-g3-tts').addEventListener('click', () => {
         const chosen = state.game3.selectedIds.map(id => state.game3.items.find(it => it.id === id)).filter(Boolean);
         if (chosen.length === 2) {
-          speakText(`請買一個${chosen[0].name}${chosen[0].price}元，和一個${chosen[1].name}${chosen[1].price}��，總共要付多少元？`, 'zh-TW');
+          speakText(`請買一個${chosen[0].name}${chosen[0].price}元，和一個${chosen[1].name}${chosen[1].price}元，總共要付多少元？`, 'zh-TW');
         }
       });
 
@@ -2158,8 +2158,7 @@
         const note = document.getElementById('teacher-note-input').value.trim() || '能透過色塊對位與積木/錢幣操作進行二位數加法練習。';
         const studentLines = state.students.map(s =>
           `- ${s.icon} ${s.name}：累積 ${s.stars} 顆星｜答對 ${s.correct} 題｜進位小1提示 ${s.carryHints} 次｜教具打包/換幣 ${s.blockUses} 次`
-        ).join('
-');
+        ).join('\n');
 
         const reportText = `【資源班數學課堂練習紀錄：國小二年級加法練習】
 ` +

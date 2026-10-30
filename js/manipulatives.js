@@ -995,7 +995,7 @@ const Manipulatives = {
           </div>
 
           <p class="scaffold-tip">
-            💡 <strong>學障與視知覺鷹架</strong>：尺上的「0 刻度」一定要對齊物品的最左邊！1 公分裡面有 10 個小格子，每小格就是 1 毫米 (mm)！
+            💡 <strong>學障與視知覺鷹架</strong>：尺上的「0 刻度」一定要對齊物品的最左邊！1 公分裡面有 10 個小格子，每小格就是 1 毫米 (mm)！這是放大示意圖，請勿拿螢幕直接量實物。
           </p>
 
           <!-- 模擬直尺視圖 -->
@@ -1468,7 +1468,7 @@ const Manipulatives = {
               <div class="drink-comparisons">
                 <div class="drink-item">🧃 養樂多瓶：約 100 mL</div>
                 <div class="drink-item">🥤 超商寶特瓶：約 600 mL</div>
-                <div class="drink-item">🥛 家庭號鮮奶：剛好 1000 mL (1 公升)</div>
+                <div class="drink-item">🥛 標示 1 L 的飲品：1000 mL（以包裝標示為準）</div>
               </div>
             </div>
           </div>
@@ -1518,14 +1518,14 @@ const Manipulatives = {
   },
 
   // 8. 單元八：披薩與巧克力分數切盤器
-  renderU8Fraction(containerId) {
+  renderU8Fraction(containerId, initial = {}) {
     const el = document.getElementById(containerId);
     if (!el) return;
     const cid = containerId;
     const $ = (id) => el.querySelector("#" + cid + "-" + id) || el.querySelector("#" + id);
 
-    let denominator = 4; // 分母（平分成幾等份）
-    let numerator = 3;   // 分子（選取了幾份）
+    let denominator = initial.denominator || 4; // 分母（平分成幾等份）
+    let numerator = initial.numerator ?? 3;   // 分子（選取了幾份）
 
     function update() {
       if (numerator > denominator) numerator = denominator;
@@ -1533,12 +1533,12 @@ const Manipulatives = {
       el.innerHTML = `
         <div class="manipulative-card">
           <div class="manipulative-header">
-            <h4>🍕 披薩分數切片盤與真分數探索</h4>
+            <h4>🍕 披薩分數切片盤與等分探索</h4>
             <div class="badge-tag">分數表示：${numerator} / ${denominator}</div>
           </div>
 
           <p class="scaffold-tip">
-            💡 <strong>分數結構特教口訣</strong>：橫線下方的「分母」是切成幾塊；橫線上方的「分子」是拿了幾塊！分母相同時，分子越大塊數越多！
+            💡 <strong>分數結構特教口訣</strong>：橫線下方的「分母」是平分成幾等份；橫線上方的「分子」是取了其中幾份！同一個整體且分母相同時，分子越大，取的份數越多！
           </p>
 
           <div class="fraction-stage">
@@ -1577,7 +1577,7 @@ const Manipulatives = {
                 <span class="f-den">${denominator}</span>
               </div>
               <div class="f-reading">
-                讀作：<strong>${denominator === 2 ? '二' : denominator === 3 ? '三' : denominator === 4 ? '四' : denominator === 6 ? '六' : '八'}分之${numerator === 1 ? '一' : numerator === 2 ? '二' : numerator === 3 ? '三' : numerator}</strong>
+                讀作：<strong>${denominator === 2 ? '二' : denominator === 3 ? '三' : denominator === 4 ? '四' : denominator === 6 ? '六' : '八'}分之${['零','一','二','三','四','五','六','七','八'][numerator]}</strong>
               </div>
               <button class="btn btn-speech mt-2" id="${cid}-u8-speech-btn">🔊 朗讀分數</button>
             </div>
@@ -1593,9 +1593,9 @@ const Manipulatives = {
             </div>
             <div class="control-row">
               <label>拿取了幾份（分子）：</label>
-              <button class="btn btn-sm btn-outline" id="${cid}-u8-sub-num">－1 份</button>
+              <button class="btn btn-sm btn-outline" id="${cid}-u8-sub-num" ${numerator === 0 ? 'disabled' : ''}>－1 份</button>
               <span class="val-display">${numerator}</span>
-              <button class="btn btn-sm btn-outline" id="${cid}-u8-add-num">＋1 份</button>
+              <button class="btn btn-sm btn-outline" id="${cid}-u8-add-num" ${numerator === denominator ? 'disabled' : ''}>＋1 份</button>
             </div>
           </div>
         </div>

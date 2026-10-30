@@ -1,0 +1,93 @@
+.practice-settings { margin-bottom: 18px; border: 1px solid #c7d2fe; }
+.lesson-quick-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
+.lesson-quick-picker label { font-weight: 800; color: #3730a3; }
+.lesson-quick-picker select { flex: 1; min-width: 220px; min-height: 48px; }
+.unit-card-picker { margin-bottom: 18px; }
+.unit-card-picker > summary { cursor: pointer; color: #52617b; padding: 10px 0; }
+.practice-settings-grid { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.practice-settings-grid label, .evidence-toolbar label { display: flex; flex-direction: column; gap: 5px; font-weight: 700; font-size: .9rem; flex: 1 1 140px; }
+.practice-settings-grid input, .practice-settings-grid select, .evidence-toolbar select { font: inherit; color: #24324b; background: white; width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 9px; }
+.practice-settings-grid button, .evidence-toolbar button { min-height: 44px; padding: 9px 14px; border-radius: 10px; border: 1px solid #c7d2fe; background: #eef2ff; color: #3730a3; font: inherit; font-weight: 700; cursor: pointer; }
+#practice-record-status { margin: 12px 0 4px; color: #3730a3; font-size: .9rem; }
+.practice-privacy { color: #64748b; font-size: .8rem; }
+.evidence-card h2 { font-size: 1.35rem; margin-bottom: 8px; color: #3730a3; }
+.evidence-card p { font-size: .9rem; color: #52617b; margin: 8px 0 12px; }
+.evidence-toolbar { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.evidence-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.evidence-metrics > span { border: 1px solid #e0e7ff; border-radius: 12px; padding: 12px; background: #f8faff; font-size: .85rem; color: #475569; }
+.evidence-metrics strong { display: block; font-size: 1.6rem; color: #3730a3; margin-top: 4px; }
+.evidence-table { overflow-x: auto; }
+.evidence-table table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.evidence-table th, .evidence-table td { text-align: left; padding: 10px; border-bottom: 1px solid #e2e8f0; }
+.evidence-table caption { text-align: left; padding: 10px 0; font-weight: 700; }
+.evidence-empty, .teaching-notice { background: #f0f7ff; border: 1px solid #cfe3ff; padding: 15px; border-radius: 12px; color: #31517c; }
+.sample-records { margin: 18px 0; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 14px; }
+.sample-records summary, .teacher-guide-details > summary { cursor: pointer; font-weight: 700; color: #475569; padding: 10px; }
+.sample-records > .card { margin-top: 15px; }
+.teacher-guide-details { align-self: start; border: 1px solid #dbe2ef; border-radius: 14px; background: #fff; }
+.teacher-guide-details > :not(summary) { margin: 12px; }
+.unit-detail-layout { grid-template-columns: 1fr; }
+.unit-detail-layout > .teacher-guide-details { order: 2; }
+.unit-detail-layout > .manipulative-main-area { order: 1; min-width: 0; }
+.teaching-notice { width: 100%; font-size: .9rem; }
+.arcade-hero-card { flex-wrap: wrap; }
+.number-line-tool svg { width: 100%; height: auto; display: block; min-width: 0; }
+.number-line-status { color: #4338ca; font-weight: 700; margin: 18px 0 0; }
+.number-line-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.calm-focus-mode #effects-canvas, .calm-focus-mode .star-flyer-particle { display: none !important; }
+@media (max-width: 600px) {
+  .app-header .header-container { padding: 12px; gap: 10px; }
+  .brand-title { font-size: 1.05rem; }
+  .brand-logo { width: 36px; height: 36px; }
+  .student-bank-inner { flex-wrap: wrap; }
+  .student-bank-inner > span { width: 100%; }
+  #mathStudentsBankBar { display: flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 6px; gap: 7px; }
+  #mathStudentsBankBar .student-bank-card { flex: 0 0 auto; }
+  .evidence-metrics { grid-template-columns: repeat(2, 1fr); }
+  .question-text { font-size: 1.35rem; line-height: 1.7; }
+  .options-grid { grid-template-columns: 1fr; }
+  .main-content { padding: 12px; }
+  .practice-settings-grid label { flex-basis: 130px; }
+  select.form-control { max-width: 100%; min-width: 0 !important; }
+}
+@media print {
+  .student-bank-container, #learning-records-dashboard, .sample-records { display: none !important; }
+  #iep-report-card > :not(.iep-tracker-layout), .iep-tracker-layout > :first-child { display: none !important; }
+  .iep-tracker-layout > :last-child > :not(#iep-output) { display: none !important; }
+  #iep-output { white-space: pre-wrap; color: black; background: white; }
+}
+
+.shape-comparison-tool { margin-top: 24px; }
+.shape-comparison-tool svg { display: block; width: 100%; max-height: 410px; }
+
+.calm-focus-mode *, .calm-focus-mode *::before, .calm-focus-mode *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+.student-bank-container > summary { cursor: pointer; font-size: .9rem; font-weight: 700; padding: 5px 20px; color: #475569; }
+.student-scaffold > summary, .practice-settings-wrap > summary { cursor: pointer; color: #4338ca; font-weight: 700; padding: 14px; border: 1px solid #dbe2ef; border-radius: 10px; background: #f8faff; margin-bottom: 12px; }
+.student-scaffold { margin-bottom: 18px; }
+
+.calm-focus-mode #mascot-companion-slot { display: none; }
+@media (max-width: 600px) {
+  .mascot-companion-card { padding: 10px; gap: 8px; margin-bottom: 12px; }
+  .mascot-avatar-circle { width: 40px; height: 40px; }
+  .mascot-emoji-big { font-size: 1.5rem; }
+  .mascot-speech-bubble, .mascot-role-pill { display: none; }
+  .mascot-name-row { margin: 0; gap: 6px; }
+  .practice-range-row { width: 100%; flex-wrap: wrap; }
+  .practice-range-row label { width: 100%; }
+  #practice-unit-select { width: 100% !important; }
+  #practice-meta-badge { white-space: normal; }
+}
+
+@media (max-width: 600px) { .app-header { position: static; } }
+
+.fraction-compare-details { margin-top: 18px; }
+.fraction-compare-details > summary { cursor: pointer; font-weight: 700; color: #4338ca; padding: 14px; background: #eef2ff; border-radius: 10px; }
+.fraction-compare-details > p { margin: 14px 0; line-height: 1.7; }
+@media (min-width: 900px) {
+  #unit-manipulative-slot:has(> .fraction-compare-details[open]), #sandbox-stage:has(> .fraction-compare-details[open]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .fraction-compare-details[open] { margin-top: 0; }
+}

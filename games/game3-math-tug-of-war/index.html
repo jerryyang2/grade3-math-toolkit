@@ -129,7 +129,7 @@
         <div>
           <h1 class="text-base sm:text-lg md:text-xl font-black text-slate-800 tracking-tight leading-none flex items-center gap-1.5">
             數學拔河大對決
-            <span class="text-[11px] bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full border border-rose-300">國��� 3v3 競賽版</span>
+            <span class="text-[11px] bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full border border-rose-300">國小 3v3 競賽版</span>
           </h1>
           <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:block">國小 108 課綱 3v3 熱血心算！答對前拉，連對爆發！</p>
         </div>
@@ -154,8 +154,8 @@
           </select>
           
           <button id="bgmToggleBtn" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition flex items-center text-xs font-black shadow-sm" title="點擊切換音樂播放/暫停">
-            <span id="bgmIcon" class="mr-1">🎵</span>
-            <span id="bgmStatusText" class="text-[11px]">播放中</span>
+            <span id="bgmIcon" class="mr-1">⏸️</span>
+            <span id="bgmStatusText" class="text-[11px]">已暫停</span>
           </button>
         </div>
 
@@ -218,7 +218,7 @@
               <span class="text-[10px] text-emerald-600 font-semibold">特教友善</span>
             </label>
             <div class="grid grid-cols-2 gap-1.5 text-xs">
-              <button type="button" data-aidiff="support" class="ai-diff-btn active py-2 px-1.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black text-center">🌱 學障慢速 (18-28秒)</button>
+              <button type="button" data-aidiff="support" class="ai-diff-btn active py-2 px-1.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black text-center">🌱 充分思考 (18-28秒)</button>
               <button type="button" data-aidiff="easy" class="ai-diff-btn py-2 px-1.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">溫和慢速 (10-16秒)</button>
               <button type="button" data-aidiff="normal" class="ai-diff-btn py-2 px-1.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">中年級同學 (6-10秒)</button>
               <button type="button" data-aidiff="hard" class="ai-diff-btn py-2 px-1.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">高年級快手 (3-5秒)</button>
@@ -232,7 +232,7 @@
               <button type="button" data-duration="unlimited" class="duration-btn active py-2 px-1 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black text-center">∞ 無限時</button>
               <button type="button" data-duration="300" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">300秒(5分)</button>
               <button type="button" data-duration="180" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">180秒(3分)</button>
-              <button type="button" data-duration="120" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">120秒(推薦)</button>
+              <button type="button" data-duration="120" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">120秒</button>
               <button type="button" data-duration="90" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">90秒</button>
               <button type="button" data-duration="60" class="duration-btn py-2 px-1 rounded-xl border border-slate-200 text-slate-600 font-bold text-center">60秒(競速)</button>
             </div>
@@ -283,7 +283,7 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs">
             <button type="button" data-op="add" class="op-btn active p-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-left transition">
               <div class="font-black text-sm">➕ 加法運算</div>
-              <span class="text-[10px] text-emerald-600 font-normal">1~3年級 基礎加��</span>
+              <span class="text-[10px] text-emerald-600 font-normal">1~3年級 基礎加法</span>
             </button>
 
             <button type="button" data-op="sub" class="op-btn active p-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-left transition">
@@ -297,7 +297,7 @@
             </button>
 
             <button type="button" data-op="div" class="op-btn p-2 rounded-xl border-2 border-slate-200 text-slate-600 font-bold text-left transition">
-              <div class="font-black text-sm">➗ 整數除���</div>
+              <div class="font-black text-sm">➗ 整數除法</div>
               <span class="text-[10px] text-slate-500 font-normal">3~5年級 九九整除</span>
             </button>
 
@@ -344,7 +344,7 @@
 
           <div class="flex items-center justify-between text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
             <span class="font-bold">比賽獲勝：</span>
-            <span>答對前拉＋連對強拉！將紅標拉過獲勝線，或 60 秒倒數佔優者勝出！</span>
+            <span>答對前拉＋連對強拉！將紅標拉過獲勝線，或在所選時限結束時佔優者勝出（不限時模式沒有倒數）！</span>
           </div>
         </div>
       </div>
@@ -798,7 +798,7 @@
       constructor() {
         this.ctx = null;
         this.enabled = true;
-        this.bgmEnabled = true;
+        this.bgmEnabled = false;
         this.bgmTimer = null;
         this.currentTrack = 'doraemon';
         this.isPlayingBgm = false;
@@ -1944,7 +1944,7 @@
     function scheduleAiAnswer() {
       if (!state.isPlaying || state.mode !== 'ai') return;
 
-      // 專為特教與學��障礙學生調配的超寬鬆思考時距
+      // 專為特教與學習障礙學生調配的超寬鬆思考時距
       let minTime = 18000, maxTime = 28000, accuracyRate = 0.32;
       if (state.aiDiff === 'support') {
         minTime = 18000;

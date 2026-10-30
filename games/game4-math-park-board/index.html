@@ -233,7 +233,7 @@
           </div>
         </div>
 
-        <!-- 常用核心單元快��點選 -->
+        <!-- 常用核心單元快速點選 -->
         <div class="mb-4">
           <div class="flex items-center justify-between mb-1.5">
             <label class="block text-xs font-bold text-slate-600" id="quickTopicLabel">
@@ -253,7 +253,7 @@
               教學主題（手動輸入或點選上方即刻更換）：
             </label>
             <div class="relative">
-              <input type="text" id="topicInput" required value="二位數乘以二位數"
+              <input type="text" id="topicInput" required value="三位數乘以一位數"
                 placeholder="例如：二位數乘以二位數、三位數除以一位數、長方形周長面積..."
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs sm:text-sm font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-sky-400 focus:bg-white transition">
             </div>
@@ -266,7 +266,7 @@
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" id="checkZhuyin" onchange="toggleZhuyinOption(this.checked)"
                 class="w-4 h-4 rounded text-sky-600 focus:ring-sky-400 border-slate-300">
-              <span class="text-xs font-bold text-slate-700">題目自動標註注音符號（低年級��議開啟）</span>
+              <span class="text-xs font-bold text-slate-700">題目自動標註注音符號（低年級建議開啟）</span>
             </label>
 
             <label class="flex items-center gap-2 cursor-pointer">
@@ -298,7 +298,7 @@
           <span>學習教室 • 教學提醒：</span>
         </div>
         <p class="font-medium">
-          系統已全面測試與驗證各單元！涵蓋乘法（二乘二、三乘一、三乘二）、除法（二除一、三除一、三除二）、幾何面積周長（正/長方形、三角形/梯形）、四則運算、四位數加減、分數、小數、時間時刻與公因數公倍數。點擊��何單元都會即時精準出題！
+          本工具包含跨年級延伸題。三上可優先選三位數乘一位數、四位數加減與二位數除一位數；面積、小數、異年級除法與公因倍數請依學生先備能力選用。產生後請先檢查題意與數值是否符合本次目標。
         </p>
       </div>
     </aside>
@@ -461,7 +461,7 @@
       stars: 0,
       speechRate: 0.9,
       questions: [],
-      currentTopic: "二位數乘以二位數",
+      currentTopic: "三位數乘以一位數",
       answeredMap: {},
       whiteboardMode: 'pen',
       penColor: '#1e293b',
@@ -518,8 +518,8 @@
       "2": {
         domain: "中年級 (3-4年級)",
         pure_calc: [
-          "二位數乘以二位數",
           "三位數乘以一位數",
+          "二位數乘以二位數",
           "二位數乘一位數",
           "三位數乘以二位數",
           "多位數除法運算",
@@ -532,8 +532,8 @@
           "一位小數加減法"
         ],
         story: [
-          "二位數乘以二位數生活題",
           "三位數乘以一位數採購題",
+          "二位數乘以二位數生活題",
           "長方形正方形花圃周長面積",
           "多位數除法生活題",
           "二位數除以一位數平分",
@@ -549,7 +549,7 @@
         domain: "高年級 (5-6年級)",
         pure_calc: [
           "三位數乘以二位數",
-          "兩步驟整數��則混合運算",
+          "兩步驟整數四則混合運算",
           "三角形與平行四邊形面積",
           "梯形面積公式計算",
           "異分母分數加減",
@@ -907,12 +907,12 @@
             const scenarios = [
               { text: `學校禮堂舉辦全校才藝發表會，禮堂每排擺放了 ${a} 張椅子，總共整齊排了 ${b} 排，請問禮堂一共可以容納多少張椅子？`, icon: "🪑" },
               { text: `社區在地農產產銷班採收優質酸菜，每箱裝入 ${a} 包真空包裝酸菜，今天上午共裝箱封裝了 ${b} 箱，請問一共包裝了幾包酸菜？`, icon: "🥬" },
-              { text: `體育課健康體能測驗，小明練習跳繩平均每分鐘可以跳 ${a} 下，他堅持連續跳了 ${b} 分鐘，請問小明一共跳了多少下？`, icon: "🏃" },
+              { text: `玩具機器人每分鐘可以走 ${a} 步，連續運作 ${b} 分鐘，請問機器人一共走了多少步？`, icon: "🏃" },
               { text: `學校每週推行健康飲品，營養午餐配送一箱裝有 ${a} 瓶新鮮鮮奶，今天全校各班一共配送了 ${b} 箱，請問全部共有多少瓶鮮奶？`, icon: "🥛" },
               { text: `美勞教室補充粉彩畫紙，每包大包裝粉彩紙內有 ${a} 張，美勞老師為各年級一共訂購了 ${b} 包，請問一共有多少張粉彩紙？`, icon: "🎨" },
               { text: `班級推廣寒暑假共讀計畫，小華每天認真閱讀課外橋樑書 ${a} 頁，連續堅持看了 ${b} 天，請問小華這段時間一共看了多少頁書？`, icon: "📖" },
               { text: `學校食農教育開心農場，一畦田整齊種植了 ${a} 株高麗菜幼苗，三四年級同學一共開闢整理了 ${b} 畦田，請問總共種植了幾株幼苗？`, icon: "🌱" },
-              { text: `學校響應環境保護愛地球活動，全校每個班級收集廢乾電池，平均一個班級收集了 ${a} 顆，全校共有 ${b} 個班��參與，請問全校一共回收了多少顆廢乾電池？`, icon: "🔋" }
+              { text: `學校響應環境保護愛地球活動，全校每個班級收集廢乾電池，平均一個班級收集了 ${a} 顆，全校共有 ${b} 個班級參與，請問全校一共回收了多少顆廢乾電池？`, icon: "🔋" }
             ];
             const sc = scenarios[(i - 1) % scenarios.length];
             qText = sc.text;
@@ -1084,7 +1084,7 @@
             if (width >= length) length = width + 3;
             ans = String((length + width) * 2);
             expectedFormula = `(${length}+${width})*2`;
-            qText = isPure ? `長方形長 ${length} 公分，寬 ${width} 公分，周長 ＝ (    ) 公��` : `在長方形公佈欄四周貼上一圈防撞保護條，公佈欄長 ${length} 公寸，寬 ${width} 公寸，請問保護條共需多長？`;
+            qText = isPure ? `長方形長 ${length} 公分，寬 ${width} 公分，周長 ＝ (    ) 公分` : `在長方形公佈欄四周貼上一圈防撞保護條，公佈欄長 ${length} 公分，寬 ${width} 公分，請問保護條共需多長？`;
             hint = `長方形周長 ＝ (長 ＋ 寬) × 2 ＝ (${length} ＋ ${width}) × 2 ＝ ${ans}`;
             visual = `📏 周長 ＝ (${length} ＋ ${width}) × 2 ＝ ${ans}`;
             options = [ans, String(parseInt(ans) + 4), String(Math.max(10, parseInt(ans) - 4))];
@@ -1114,7 +1114,7 @@
             ans = String((base * height) / 2);
             expectedFormula = `(${base}*${height})/2`;
             qText = isPure ? `三角形底長 ${base} 公分，高 ${height} 公分，面積 ＝ (    ) 平方公分` : `開心農場有一塊三角形蔬菜苗圃，底長 ${base} 公尺，高 ${height} 公尺，請問面積是多少平方公尺？`;
-            hint = `��角形面積 ＝ 底 × 高 ÷ 2 ＝ ${base} × ${height} ÷ 2 ＝ ${ans}`;
+            hint = `三角形面積 ＝ 底 × 高 ÷ 2 ＝ ${base} × ${height} ÷ 2 ＝ ${ans}`;
             visual = `📐 三角形面積 ＝ ${ans}`;
             options = [ans, String(parseInt(ans) + base), String(Math.max(6, parseInt(ans) - height))];
           } else if (subType === 1) {
@@ -1130,7 +1130,7 @@
             let base = Math.floor(Math.random() * 12) + 6, height = Math.floor(Math.random() * 9) + 4;
             ans = String(base * height);
             expectedFormula = `${base}*${height}`;
-            qText = isPure ? `平行四邊形底長 ${base} 公分，高 ${height} 公分，面積 ＝ (    ) 平方公分` : `自然教室門口的平行四邊形展示花台，底長 ${base} 公寸，高 ${height} 公寸，請問面積是多少平方公寸？`;
+            qText = isPure ? `平行四邊形底長 ${base} 公分，高 ${height} 公分，面積 ＝ (    ) 平方公分` : `自然教室門口的平行四邊形展示花台，底長 ${base} 公分，高 ${height} 公分，請問面積是多少平方公分？`;
             hint = `平行四邊形面積 ＝ 底 × 高 ＝ ${base} × ${height} ＝ ${ans}`;
             visual = `▰ 平行四邊形面積 ＝ ${ans}`;
             options = [ans, String(parseInt(ans) + base), String(Math.max(10, parseInt(ans) - height))];
@@ -1182,7 +1182,7 @@
             ans = String(numAns);
             expectedFormula = `(${a}+${b})*${c}`;
             qText = isPure ? `( ${a} ＋ ${b} ) × ${c} ＝ (    )` : `哥哥有 ${a} 元，弟弟有 ${b} 元，媽媽給他們的零用錢是兩個人總和的 ${c} 倍，請問媽媽給了多少元？`;
-            hint = `有括號的要先���括號裡！先算 ${a} ＋ ${b} ＝ ${a + b}，再乘以 ${c} ＝ ${numAns}`;
+            hint = `有括號的要先算括號裡！先算 ${a} ＋ ${b} ＝ ${a + b}，再乘以 ${c} ＝ ${numAns}`;
             visual = `🧮 (${a} ＋ ${b}) × ${c} ＝ ${a + b} × ${c} ＝ ${numAns}`;
             options = [ans, String(numAns + 20), String(numAns - 20)];
           } else {
@@ -1215,7 +1215,7 @@
             let den1 = 4, den2 = 2; // 異分母通分
             ans = `3/4`;
             expectedFormula = `1/4+1/2`;
-            qText = isPure ? `1/4 ＋ 1/2 ＝ (    )` : `烘焙做蛋糕用了 1/4 包麵粉，做餅乾用了 1/2 包麵粉，請問一共���了幾包麵粉？`;
+            qText = isPure ? `1/4 ＋ 1/2 ＝ (    )` : `烘焙做蛋糕用了 1/4 包麵粉，做餅乾用了 1/2 包麵粉，請問一共用了幾包麵粉？`;
             hint = `異分母分數相加要先通分！1/2 ＝ 2/4，所以 1/4 ＋ 2/4 ＝ 3/4`;
             visual = `🍰 1/4 ＋ 2/4 ＝ 3/4`;
             options = ["3/4", "2/6", "1/4"];
@@ -1346,7 +1346,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
               qText = lcmScenarios[(i - 1) % lcmScenarios.length];
               hint = `循環週期再次相遇求「最小公倍數」！
 求 ${numA} 與 ${numB} 的最小公倍數 ＝ ${correctVal}`;
-              visual = `🚌 最小公��數 lcm(${numA}, ${numB}) ＝ ${correctVal}`;
+              visual = `🚌 最小公分數 lcm(${numA}, ${numB}) ＝ ${correctVal}`;
             }
             options = [ans, String(correctVal + numA), String(Math.max(2, correctVal - numB))];
           }
@@ -1494,7 +1494,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
           hint: hint,
           visualRepresentation: visual,
           keywords: [
-            "全部", "一共", "剩下", "面積", "周長", "平方公分", "平方公尺", "平方公寸",
+            "全部", "一共", "剩下", "面積", "周長", "平方公分", "平方公尺", "平方公分",
             "合起來", "幾點", "幾分", "行駛", "小時", "分鐘", "經過", "售價", "訂購",
             "排", "箱", "瓶", "包", "張", "頁", "株", "袋", "每排", "每箱", "每天",
             "每分鐘", "底長", "下底", "上底", "高", "平分", "平均", "裝滿", "還剩下",
@@ -1620,13 +1620,10 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
           </div>
 
           ${q.visualRepresentation ? `
-            <div class="bg-amber-50/70 p-3 rounded-2xl border border-amber-200 flex items-center gap-2 text-sm text-amber-900 font-medium">
-              <span class="text-base">💡</span>
-              <div>
-                <span class="font-bold text-xs text-amber-700">具體示意：</span>
-                <span class="text-xs sm:text-sm font-bold ml-1">${q.visualRepresentation}</span>
-              </div>
-            </div>
+            <details class="bg-amber-50/70 p-3 rounded-2xl border border-amber-200 text-sm text-amber-900 font-medium">
+              <summary style="cursor:pointer">查看教學示意（含答案，請先讓學生嘗試）</summary>
+              <p class="text-xs sm:text-sm font-bold ml-1">${q.visualRepresentation}</p>
+            </details>
           ` : ''}
 
           <!-- 輸入/選擇作答區 -->
@@ -2130,7 +2127,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
       const printContents = document.getElementById('printSheetBody').innerHTML;
       const win = window.open('', '_blank');
       if (!win) {
-        showToast("彈出視窗被瀏���器阻擋，請使用「直接列印」");
+        showToast("彈出視窗被瀏覽器阻擋，請使用「直接列印」");
         return;
       }
       win.document.write(`<!DOCTYPE html>

@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 標籤頁面切換
   function switchToTab(target) {
+    window.spEdAudio.stopSpeech();
     AppState.activeTab = target;
     elements.navTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === target));
     elements.tabPanes.forEach(p => p.classList.toggle('active', p.id === `tab-${target}`));
@@ -124,15 +125,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.spEdAudio.playClick();
 
     if (target === 'practice') {
-      loadPracticesForUnit(AppState.currentUnitId);
+      if (!AppState.filteredPractices.length) loadPracticesForUnit(elements.practiceUnitSelect.value || AppState.currentUnitId);
     } else if (target === 'sandbox') {
-      renderSandbox(AppState.currentUnitId);
+      renderSandbox(elements.sandboxUnitSelect.value || AppState.currentUnitId);
     } else if (target === 'battle') {
-      if (window.MathBattleArena) {
+      if (window.MathBattleArena && (!window.MathBattleArena.questions.length || window.MathBattleArena.currentUnitId !== AppState.currentUnitId)) {
         window.MathBattleArena.startBattle(AppState.currentUnitId, 'all', 10);
       }
     } else if (target === 'iep') {
       renderClinicDashboard('嘉');
+      window.LearningRecords?.renderDashboard();
     }
   }
   window.switchSpEdTab = switchToTab;
@@ -151,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 渲染學生切換按鈕
     if (selectorContainer) {
       selectorContainer.innerHTML = students.map(s => `
-        <button class="kid-btn ${s.name === studentName ? 'kid-btn-primary' : 'kid-btn-secondary'}" data-sname="${s.name}" style="padding: 4px 10px; font-size: 0.85rem;">
-          ${s.avatar} ${s.name}
+        <button class="kid-btn ${s.name === studentName ? 'kid-btn-primary' : 'kid-btn-secondary'}" data-sname="${window.LearningRecords.escapeHtml(s.name)}" style="padding: 4px 10px; font-size: 0.85rem;">
+          ${s.avatar} ${window.LearningRecords.escapeHtml(s.name)}
         </button>
       `).join('');
 
@@ -169,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const rx = window.ErrorPatternDiagnosis.getDiagnosticPrescription(studentName);
       radarSlot.innerHTML = `
         <div style="font-weight: 800; color: #3730a3; margin-bottom: 8px;">
-          🎯 ${studentName} 同學 · 四大認知錯誤型態雷達分佈：
+          🎯 ${window.LearningRecords.escapeHtml(studentName)} · 虛構範例型態分佈：
         </div>
         ${window.ErrorPatternDiagnosis.renderRadarSvg(studentName, 260)}
         <div style="background: #eef2ff; border-left: 4px solid #6366f1; border-radius: 6px; padding: 10px 12px; margin-top: 14px; width: 100%; box-sizing: border-box;">
@@ -222,6 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 跨視窗/iframe 訊息監聽 (關閉視窗或獎勵星星入帳)
   window.addEventListener('message', (event) => {
+    const frame = document.getElementById('arcade-game-frame');
+    if (event.origin !== window.location.origin || event.source !== frame?.contentWindow) return;
     if (event.data === 'close-game-modal') {
       window.closeArcadePlayer();
     } else if (event.data && event.data.type === 'award-star') {
@@ -241,6 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 載入單元清單與詳情
   function initUnitView() {
     if (!elements.unitNavList) return;
+    const quickSelect = document.getElementById('lesson-unit-quick-select');
+    quickSelect.innerHTML = NANI_G3S1_DATA.units.map(u => `<option value="${u.id}">第 ${u.number} 單元：${u.title}</option>`).join('');
+    quickSelect.addEventListener('change', () => selectUnit(quickSelect.value));
 
     elements.unitNavList.innerHTML = NANI_G3S1_DATA.units.map(unit => {
       const theme = UNIT_THEMES[unit.id] || { icon: '📐', theme: '趣味數學探索', color: '#4f46e5' };
@@ -273,6 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function selectUnit(uid) {
     AppState.currentUnitId = uid;
+    document.getElementById('lesson-unit-quick-select').value = uid;
     AppState.currentScaffoldStep = 0; // 重置步驟精靈至第一步
     document.querySelectorAll('.unit-card-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.unitId === uid);
@@ -324,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.unitDetailContainer.innerHTML = `
       <div class="unit-detail-layout">
         <!-- 左側：特教四向度、先備回溯、迷思除錯與 C-R-A 鷹架 -->
-        <div class="special-ed-sidebar">
+        <details class="special-ed-sidebar teacher-guide-details"><summary>備課指引：先備檢核、迷思與課綱對照</summary>
           
           <!-- 1. 🔄 先備能力診斷與向下回溯地圖 -->
           <div class="prerequisite-card">
@@ -417,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="cra-desc">${unit.cra.abstract}</div>
             </div>
           </div>
-        </div>
+        </details>
 
         <!-- 右側主區域：單元趣味標頭 + 提示消褪列 + 微步驟引導精靈 + 動態特教教具操作台 -->
         <div class="manipulative-main-area">
@@ -438,8 +446,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <button class="kid-btn kid-btn-solution" onclick="window.switchSpEdTab('arcade')" style="font-size:0.95rem; padding:6px 14px; background:#fdf2f8; color:#be185d; border-color:#fbcfe8;" title="前往互動遊戲冒險館遊玩 5 大精選遊戲">
                 🎪 遊戲冒險館
               </button>
-              <button class="kid-btn kid-btn-primary" onclick="window.switchSpEdTab('practice')" style="font-size:0.95rem; padding:6px 14px;" title="前往本單元隨堂診斷">
-                🎯 進入隨堂診斷
+              <button class="kid-btn kid-btn-primary" onclick="window.switchSpEdTab('practice')" style="font-size:0.95rem; padding:6px 14px;" title="前往本單元練習與觀察">
+                🎯 練習與觀察
               </button>
             </div>
           </div>
@@ -463,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <!-- 微步驟引導教學精靈 (Step-by-Step Wizard) -->
-          <div class="scaffold-wizard-box" id="scaffold-wizard-slot"></div>
+          <details class="student-scaffold"><summary>展開逐步教學引導：一起說步驟、做檢查</summary><div class="scaffold-wizard-box" id="scaffold-wizard-slot"></div></details>
 
           <!-- 動態教具掛載槽 -->
           <div id="unit-manipulative-slot"></div>
@@ -547,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
           按照步驟循序漸進，不著急、不跳步
         </span>
         <button class="btn btn-primary" id="btn-step-next">
-          ${currentIdx === steps.length - 1 ? '🎉 完成全部步驟 (+1 ⭐)' : '下一步 ➔'}
+          ${currentIdx === steps.length - 1 ? '完成示範，換學生操作' : '下一步 ➔'}
         </button>
       </div>
     `;
@@ -590,10 +598,8 @@ document.addEventListener('DOMContentLoaded', () => {
           window.spEdAudio.playCorrect();
           renderScaffoldingWizard(unit);
         } else {
-          // 完成最後一步
-          window.spEdAudio.playCelebration();
-          updateStars(1);
-          alert(`🎉 太棒了！您已經完整走完【第 ${unit.number} 單元：${unit.title}】的微步驟教學鷹架！已獲得 1 顆學習星星！`);
+          btnNext.textContent = '請學生操作、口述，再由教師記錄表現';
+          btnNext.disabled = true;
         }
       });
     }
@@ -615,6 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'u5':
         Manipulatives.renderU5Angle(targetSlotId);
+        window.GeometryShapes.append(targetSlotId);
         break;
       case 'u6':
         Manipulatives.renderU6Division(targetSlotId);
@@ -623,7 +630,9 @@ document.addEventListener('DOMContentLoaded', () => {
         Manipulatives.renderU7Capacity(targetSlotId);
         break;
       case 'u8':
-        Manipulatives.renderU8Fraction(targetSlotId);
+        document.getElementById(targetSlotId).innerHTML = `<div id="${targetSlotId}-primary-fraction"></div><details class="fraction-compare-details"><summary>展開第二個等大分數盤，並列比較</summary><p>兩個完整披薩一樣大，才能比較取出的份量。先做同分母比較，再試試 1/2 和 1/8；請學生指出每份大小與份數。</p><div id="${targetSlotId}-compare-fraction"></div></details>`;
+        Manipulatives.renderU8Fraction(`${targetSlotId}-primary-fraction`);
+        Manipulatives.renderU8Fraction(`${targetSlotId}-compare-fraction`, { denominator: 2, numerator: 1 });
         break;
       case 'u9':
         Manipulatives.renderU9Circle(targetSlotId);
@@ -668,7 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
       elements.btnPracticePrev.addEventListener('click', () => {
         AppState.currentPracticeIndex--;
         if (AppState.currentPracticeIndex < 0) {
-          AppState.currentPracticeIndex = AppState.filteredPractices.length - 1;
+          AppState.currentPracticeIndex = 0;
         }
         renderCurrentPractice();
         window.spEdAudio.playClick();
@@ -933,7 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (p && elements.practiceFeedback) {
           elements.practiceFeedback.className = 'feedback-box hint show';
           elements.practiceFeedback.innerHTML = `
-            <strong>💡 特教解題小提示：</strong>${p.hint}
+            <strong>💡 先做一個步驟：</strong>${window.LearningRecords.strategyPrompt(p)}
             <div style="font-size: 0.9rem; margin-top: 6px; color: #78350f;">
               <em>【個別化支持】：${p.specialNote}</em>
             </div>
@@ -958,7 +967,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
           }
           window.spEdAudio.playHint();
-          window.spEdAudio.speak(`解題提示：${p.hint}`);
+          window.spEdAudio.speak(`解題提示：${window.LearningRecords.strategyPrompt(p)}`);
         }
       });
     }
@@ -983,27 +992,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function loadPracticesForUnit(filterValue) {
-    if (!filterValue || filterValue === 'all') {
-      AppState.filteredPractices = [...NANI_G3S1_DATA.practiceBank];
-    } else if (filterValue.startsWith('s')) {
-      AppState.filteredPractices = NANI_G3S1_DATA.practiceBank.filter(p => p.sectionId === filterValue);
-    } else if (filterValue.startsWith('u')) {
-      AppState.filteredPractices = NANI_G3S1_DATA.practiceBank.filter(p => p.unitId === filterValue);
-    } else {
-      AppState.filteredPractices = [...NANI_G3S1_DATA.practiceBank];
-    }
-    if (AppState.filteredPractices.length === 0) {
-      AppState.filteredPractices = [...NANI_G3S1_DATA.practiceBank];
-    }
+  function loadPracticesForUnit(filterValue, keepOffset = false) {
+    AppState.practiceFilter = filterValue || 'all';
+    if (!keepOffset) AppState.practiceOffset = 0;
+    let bank = NANI_G3S1_DATA.practiceBank.filter(p => AppState.practiceFilter === 'all' || p.sectionId === AppState.practiceFilter || p.unitId === AppState.practiceFilter);
+    const difficulty = document.getElementById('practice-difficulty')?.value || 'all';
+    if (difficulty !== 'all') bank = bank.filter(p => p.level === Number(difficulty));
+    AppState.availablePractices = bank;
+    const length = document.getElementById('practice-length')?.value || '5';
+    const size = length === 'all' ? bank.length : Number(length);
+    AppState.filteredPractices = bank.slice(AppState.practiceOffset, AppState.practiceOffset + size);
     AppState.currentPracticeIndex = 0;
     renderCurrentPractice();
   }
+  document.addEventListener('practice-filter-change', () => loadPracticesForUnit(elements.practiceUnitSelect.value));
+  document.addEventListener('practice-new-session', () => loadPracticesForUnit(elements.practiceUnitSelect.value));
+  document.addEventListener('practice-student-change', renderCurrentPractice);
 
   function renderCurrentPractice() {
     const p = AppState.filteredPractices[AppState.currentPracticeIndex];
-    if (!p) return;
-
+    if (!p) {
+      elements.practiceQuestionText.textContent = '這個範圍尚無所選難度的題目，請調整難度或練習範圍。';
+      elements.practiceOptions.replaceChildren(); elements.practiceFeedback.textContent = '';
+      elements.practiceMetaBadge.textContent = '0 題';
+      elements.btnPracticePrev.disabled = true; elements.btnPracticeNext.disabled = true;
+      return;
+    }
+    window.LearningRecords?.beginQuestion(p);
+    elements.btnPracticePrev.disabled = AppState.currentPracticeIndex === 0;
+    elements.btnPracticeNext.disabled = false;
     const unit = NANI_G3S1_DATA.units.find(u => u.id === p.unitId);
     const secTitle = p.sectionTitle || (unit ? unit.title : '');
     const levelLabel = p.level === 1
@@ -1050,22 +1067,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function nextPractice() {
-    AppState.currentPracticeIndex++;
-    if (AppState.currentPracticeIndex >= AppState.filteredPractices.length) {
-      AppState.currentPracticeIndex = 0;
+    window.spEdAudio.stopSpeech();
+    if (AppState.currentPracticeIndex + 1 < AppState.filteredPractices.length) {
+      AppState.currentPracticeIndex++;
+      renderCurrentPractice();
+      return;
     }
-    renderCurrentPractice();
-    window.spEdAudio.playClick();
+    elements.practiceFeedback.className = 'feedback-box show';
+    elements.practiceFeedback.innerHTML = '<strong>本組題目已瀏覽完畢。</strong><p>未作答不會計入觀察，請先看實際紀錄，再決定休息、再教或繼續。</p><button class="btn btn-primary" id="practice-next-group">下一組題目</button>';
+    document.getElementById('practice-next-group').onclick = () => {
+      const offset = (AppState.practiceOffset || 0) + AppState.filteredPractices.length;
+      AppState.practiceOffset = offset < AppState.availablePractices.length ? offset : 0;
+      loadPracticesForUnit(AppState.practiceFilter, true);
+    };
+    elements.practiceFeedback.scrollIntoView({ block: 'nearest' });
   }
 
   function handleAnswer(chosenIndex, p) {
     const isCorrect = chosenIndex === p.answerIndex;
+    const evidence = window.LearningRecords.record(p, isCorrect);
     const allBtns = elements.practiceOptions.querySelectorAll('.option-btn');
     const clickedBtn = elements.practiceOptions.querySelector(`.option-btn[data-index="${chosenIndex}"]`);
 
     allBtns.forEach((btn, idx) => {
       btn.disabled = true;
-      if (idx === p.answerIndex) {
+      if (isCorrect && idx === p.answerIndex) {
         btn.classList.add('selected-correct');
       } else if (idx === chosenIndex) {
         btn.classList.add('selected-wrong');
@@ -1079,7 +1105,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // 2. 代幣星星 +1
-      updateStars(1);
+      if (evidence.reward) {
+        updateStars(1);
+        if (evidence.studentId) window.StudentBank?.addStar(Number(evidence.studentId), 1);
+      }
 
       // 3. 聲光刺激：全螢幕五彩紙花 + 金星雨爆發 + 金幣飛行
       if (window.KidEffects) {
@@ -1099,7 +1128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="flex:1;">
               <strong style="font-size:1.3rem; color:#065f46;">${praise}</strong>
               <div style="margin-top:6px; font-size:1.15rem; color:#047857;">
-                ⭐ <strong>+1 顆星星代幣已入袋！</strong>
+                ⭐ <strong>${evidence.reward ? '+1 顆星星代幣已入袋！' : '本題已領過星星，重練仍值得肯定。'}</strong>
               </div>
               <p style="margin-top: 6px; font-size:1.05rem; color:#374151;">💡 ${p.hint}</p>
             </div>
@@ -1155,10 +1184,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
     } else {
-      // 答錯：自動標記認知錯誤型態至診斷資料庫
-      if (window.ErrorPatternDiagnosis) {
-        window.ErrorPatternDiagnosis.recordError('嘉', p);
-      }
+      window.LearningRecords.markSupport();
 
       // 特教低焦慮「溫暖抱抱站」，絕無冰冷紅叉與刺眼扣分
       if (window.spEdAudio) {
@@ -1175,7 +1201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="flex:1;">
               <strong style="font-size:1.25rem; color:#9a3412;">${comfort}</strong>
               <div style="margin-top: 8px; font-size:1.1rem; color:#475569; background:#ffffff; padding:10px 14px; border-radius:14px; border:2px dashed #fed7aa;">
-                💡 <strong>小提示線索：</strong>${p.hint}
+                💡 <strong>先試這一步：</strong>${window.LearningRecords.strategyPrompt(p)}
               </div>
             </div>
           </div>
@@ -1204,7 +1230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (window.spEdAudio) {
               window.spEdAudio.playClick();
-              window.spEdAudio.speak('太棒了，再試一次，這次一定可以的！');
+              window.spEdAudio.speak('照著提示，先完成一個步驟再試試看。');
             }
           });
         }
@@ -1227,7 +1253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 語音溫暖播報安慰與提示
       if (window.spEdAudio) {
-        window.spEdAudio.speak(comfort + '。' + p.hint);
+        window.spEdAudio.speak(comfort + '。' + window.LearningRecords.strategyPrompt(p));
       }
     }
   }
@@ -1238,7 +1264,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     elements.sandboxUnitSelect.innerHTML = NANI_G3S1_DATA.units.map(u => `
       <option value="${u.id}">第 ${u.number} 單元專用教具：${u.title}</option>
-    `).join('');
+    `).join('') + '<option value="number-line">補充教具：數線與加減跳格</option>';
 
     elements.sandboxUnitSelect.addEventListener('change', (e) => {
       renderSandbox(e.target.value);
@@ -1250,7 +1276,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.sandboxUnitSelect) {
       elements.sandboxUnitSelect.value = unitId;
     }
-    mountUnitManipulative(unitId, 'sandbox-stage');
+    if (elements.sandboxStage.dataset.unit === unitId) return;
+    elements.sandboxStage.dataset.unit = unitId;
+    if (unitId === 'number-line') window.NumberLineTool.render('sandbox-stage');
+    else mountUnitManipulative(unitId, 'sandbox-stage');
   }
 
   // IEP 隨堂評量紀錄模組
@@ -1270,8 +1299,8 @@ document.addEventListener('DOMContentLoaded', () => {
       elements.iepCopyBtn.addEventListener('click', () => {
         if (elements.iepOutput && elements.iepOutput.textContent) {
           navigator.clipboard.writeText(elements.iepOutput.textContent).then(() => {
-            alert('已成功複製符合特教課綱格式之 IEP 評量紀錄文字！可直接貼上至學校特教行政系統。');
-          });
+            elements.iepCopyBtn.textContent = '已複製草稿，請核對實際觀察';
+          }).catch(() => { elements.iepCopyBtn.textContent = '複製失敗，請選取草稿手動複製'; });
         }
       });
     }
@@ -1287,7 +1316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentName = elements.iepStudentName.value.trim() || '學生A';
     const unitId = elements.iepUnitSelect.value;
     const unit = NANI_G3S1_DATA.units.find(u => u.id === unitId);
-    const iepObj = NANI_G3S1_DATA.iepObjectives.find(o => o.unitId === unitId);
+    const iepObj = NANI_G3S1_DATA.iepObjectives?.find(o => o.unitId === unitId);
     const supportLevel = elements.iepSupportLevel.value;
     const notes = elements.iepTeacherNotes.value.trim();
     const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -1300,43 +1329,47 @@ document.addEventListener('DOMContentLoaded', () => {
       return `  ● 【${info.code}】${info.title}（${info.desc}）`;
     }).join('\n');
 
-    const reportText = `【學習教室 數學領域隨堂診斷個別化評量紀錄】
+    const reportText = `【數學領域評量草稿｜需經教師核對】
+此草稿包含教學計畫與參考目標；不是自動診斷或達標證明。
 評量日期：${today}
 學生姓名／代號：${studentName}
 普通教材版本：南一版 國小數學三年級上學期（108課綱普通數學：${unit.curriculumCode}）
 評量單元：第 ${unit.number} 單元【${unit.title}】
 
-一、法令依據與課綱對應標準：
+一、課綱對照與參考教學目標（非本次達成結果）：
 1. 普通教育數學領域學習條目：${unit.curriculumCode} ${unit.curriculumDesc}
 2. 特殊需求領域課綱指標（學習策略／生活管理）：
 ${specialNeedsDetails}
 3. IEP 單元長期目標：${iepObj ? iepObj.goal : '能掌握單元核心數學概念並運用於生活中。'}
-4. 評量效標 (Criteria)：${iepObj ? iepObj.criteria : '能依指示完成 80% 之評量題型。'}
+4. 評量效標 (Criteria)：${iepObj ? iepObj.criteria : '待教師設定題數、正確題數與允許支持。'}
 
-二、十二年國教特教課綱【課程調整四向度實施紀錄】：
+二、課程調整四向度建議（實際採用項目由教師確認）：
 1. 學習內容調整：${unit.accommodations.content}
 2. 學習歷程調整：${unit.accommodations.process}
 3. 學習環境調整：${unit.accommodations.environment}
 4. 學習評量調整：${unit.accommodations.assessment}
 
 三、先備能力診斷、迷思除錯與提示消褪進程：
-● 先備能力回溯狀態：【${unit.prerequisite.grade} ${unit.prerequisite.unitCode} ${unit.prerequisite.title}】已完成銜接診斷。
-● 迷思概念破除成果：已針對「${unit.misconception.name}」進行特教處方破除引導。
-● 當前提示階層達成等級：【${promptLevelName}】
+● 先備能力回溯狀態：【${unit.prerequisite.grade} ${unit.prerequisite.unitCode} ${unit.prerequisite.title}】；是否完成檢核：尚待教師確認。
+● 建議觀察的迷思：「${unit.misconception.name}」；是否出現及改善：尚待教師觀察。
+● 畫面設定的提示層級（不代表學生達成）：【${promptLevelName}】
 ● 所需支持層級：【${supportLevel}】
 
 四、課堂微步驟鷹架引導表現：
 ● 步驟化工作分析 (Task Analysis) 完成進程：
-  - 能跟隨微步驟精靈逐步完成步驟操作與口訣自檢。
-● C-R-A 具體-圖像-抽象進程表現：
+  - 尚待教師確認：是否能操作、口述、換題後獨立完成。
+● C-R-A 教學參考（實際表現需另記）：
   - 具體操作 (Concrete)：${unit.cra.concrete}
   - 圖像表徵 (Representational)：${unit.cra.representational}
   - 抽象運算 (Abstract)：${unit.cra.abstract}
 
-五、教師質性觀察與後續 IEP 調整建議：
-${notes ? notes : '學生在先備回溯與迷思除錯後，計算穩定度明顯提升。目前已能於半鷹架消褪模式下維持良好正確率，後續將朝無鷹架獨立模式邁進。'}
+五、可核對的本回合作答證據：
+${window.LearningRecords.report(unitId)}
 
-六、特推會與親師溝通指引：
+六、教師質性觀察與後續調整：
+${notes ? notes : '未填寫教師觀察，不推定進步、精熟或提示消褪成效。'}
+
+七、親師溝通參考：
 在家中可維持生活情境實踐任務，透過真實貨幣與容量容器進行對話，促進概念類化。`;
 
     if (elements.iepOutput) {

@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/teacher-tools.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/floating-tools.css">
+  <link rel="stylesheet" href="css/teaching-workflow.css?v=20261031-teaching">
 </head>
 <body>
   <!-- 無障礙跳至主要內容 -->
@@ -93,7 +94,7 @@
                 <span class="menu-item-icon" style="background:#d1fae5; color:#047857;">🧘</span>
                 <div class="menu-item-content">
                   <div class="menu-item-title">數學冷靜通道</div>
-                  <div class="menu-item-desc">4-7-8 呼吸、沙漏放鬆與減焦慮白噪音</div>
+                  <div class="menu-item-desc">舒適吸吐光環、沙漏與可選雨聲</div>
                 </div>
               </button>
 
@@ -152,7 +153,8 @@
   </header>
 
   <!-- 資源班 5 位學生代幣存摺列 -->
-  <section class="student-bank-container" aria-label="學生代幣存摺">
+  <details class="student-bank-container" aria-label="學生代幣存摺" open>
+    <summary>⭐ 學生代幣存摺（展開或收合）</summary>
     <div class="student-bank-inner">
       <div class="student-bank-label">
         <span>⭐ 學習教室 5 位同學代幣存摺：</span>
@@ -160,7 +162,7 @@
       </div>
       <div class="student-bank-grid" id="mathStudentsBankBar"></div>
     </div>
-  </section>
+  </details>
 
   <!-- 主導覽標籤列 (Tabs) -->
   <nav class="main-nav" role="navigation" aria-label="功能標籤">
@@ -196,10 +198,12 @@
     <section class="tab-pane active" id="tab-units" aria-labelledby="tab-units-title">
       <h2 id="tab-units-title" class="sr-only" style="display:none;">單元課程與動態教具</h2>
       
-      <!-- 9 大單元快速選擇列 -->
+      <div class="lesson-quick-picker"><label for="lesson-unit-quick-select">今天教什麼？</label><select id="lesson-unit-quick-select" class="form-control"></select></div>
+      <details class="unit-card-picker"><summary>展開九個單元的課程卡片</summary>
       <div class="unit-selector-grid" id="unit-nav-list">
         <!-- 由 JavaScript 動態生成單元按鈕（含普通課綱代號與特需課綱指標） -->
       </div>
+      </details>
 
       <!-- 當前選取單元的教學鷹架與教具展示 -->
       <div id="unit-detail-container">
@@ -237,8 +241,8 @@
 
         <div class="card" style="margin-bottom: 20px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="practice-unit-select" style="font-weight: 800;">選擇診斷單元：</label>
+            <div class="practice-range-row" style="display: flex; align-items: center; gap: 10px;">
+              <label for="practice-unit-select" style="font-weight: 800;">練習範圍：</label>
               <select id="practice-unit-select" class="form-control" style="width: auto; min-width: 260px;">
                 <!-- 動態注入選項 -->
               </select>
@@ -252,6 +256,7 @@
           </div>
         </div>
 
+        <div id="practice-session-controls"></div>
         <div class="question-card">
           <div class="question-header">
             <span class="need-tag tag-sld" style="font-size: 0.9rem;">語音輔助免讀題障礙 (TTS)</span>
@@ -314,6 +319,7 @@
         
         <!-- 頂部冒險橫幅 -->
         <div class="arcade-hero-card">
+          <p class="teaching-notice">遊戲包含先備與跨年級題型，請先選符合學生程度的內容；競速得分不等於概念掌握。建議先用不限時模式，再依需要加入速度練習。</p>
           <div class="arcade-hero-content">
             <div style="font-size: 2.8rem;">🎪</div>
             <div>
@@ -497,29 +503,10 @@
       </div>
     </section>
 
-    <!-- 3. 獨立數位教具操作箱 (Sandbox) -->
-    <section class="tab-pane" id="tab-sandbox">
-      <div class="card" style="margin-bottom: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-          <div>
-            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--primary);">🧰 特教互動數位教具箱 (Sandbox)</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 4px;">
-              老師於資源班上課時，可隨時單獨抽調任何單元的教具在電子白板或平板上自由操作演示，不拘泥於題目。
-            </p>
-          </div>
-          <select id="sandbox-unit-select" class="form-control" style="width: auto; min-width: 280px; font-weight: 700;">
-            <!-- 動態注入九大教具選項 -->
-          </select>
-        </div>
-      </div>
-
-      <div id="sandbox-stage">
-        <!-- 動態掛載所選教具 -->
-      </div>
-    </section>
-
     <!-- 4. 資源班備課手冊與特教課綱對照 -->
     <section class="tab-pane" id="tab-guide">
+      <p class="teaching-notice">課綱代碼依官方文件核對；各單元的指標連結與教學調整為平台建議，請依學生基線選用，不代表官方認證。<a href="https://edu.law.moe.gov.tw/LawContent.aspx?id=GL001788" target="_blank" rel="noopener">數學課綱來源</a> · <a href="https://stv.naer.edu.tw/data/course_outline/513721112.pdf" target="_blank" rel="noopener">特殊需求課綱來源（生活管理第23～24頁、學習策略第39～40頁）</a></p>
+
       <div class="card" style="margin-bottom: 24px;">
         <h3 class="card-title" style="color: #4338ca; font-size: 1.35rem;">
           🏛️ 十二年國民基本教育特殊教育課程實施規範 備課總指引
@@ -569,18 +556,18 @@
             <div>
               <strong style="color: #6d28d9; font-size: 1rem;">【學習策略領域】：</strong>
               <ul style="padding-left: 20px; margin-top: 6px; line-height: 1.7; color: #4c1d95;">
-                <li><strong>特學1-E-1</strong> 運用感官知覺（色碼、放大鏡）獲取學習訊息。</li>
-                <li><strong>特學1-E-2</strong> 運用記憶策略（除法商乘減降口訣、矩形面積心像）。</li>
-                <li><strong>特學2-E-1</strong> 運用閱讀理解策略（TTS報讀、題意色彩標記）。</li>
-                <li><strong>特學2-E-2</strong> 運用組織策略（位值表格化、長方形面積分割圖）。</li>
-                <li><strong>特學3-E-1</strong> 運用自我監控策略（檢查「餘數小於除數」、進退位確認）。</li>
+                <li><strong>特學1-Ⅱ-1</strong> 運用感官知覺（色碼、放大鏡）獲取學習訊息。</li>
+                <li><strong>特學1-Ⅱ-7</strong> 運用記憶策略（除法商乘減降口訣、矩形面積心像）。</li>
+                <li><strong>特學1-Ⅱ-13</strong> 運用閱讀理解策略（TTS報讀、題意色彩標記）。</li>
+                <li><strong>特學1-Ⅱ-5</strong> 運用組織策略（位值表格化、長方形面積分割圖）。</li>
+                <li><strong>特學4-Ⅱ-2</strong> 運用自我監控策略（檢查「餘數小於除數」、進退位確認）。</li>
               </ul>
             </div>
             <div>
               <strong style="color: #6d28d9; font-size: 1rem;">【生活管理領域】：</strong>
               <ul style="padding-left: 20px; margin-top: 6px; line-height: 1.7; color: #4c1d95;">
-                <li><strong>特生2-E-1</strong> 生活貨幣認識與購物運算（千元/百元/十元/一元錢幣換算與找錢應用）。</li>
-                <li><strong>特生2-E-3</strong> 常用度量衡工具的生活使用（直尺測量毫米與公分、量筒容量公升與毫升）。</li>
+                <li><strong>特生3-sP-4</strong> 生活貨幣認識與購物運算（千元/百元/十元/一元錢幣換算與找錢應用）。</li>
+                <li><strong>特學3-Ⅱ-2</strong> 常用度量衡工具的生活使用（直尺測量毫米與公分、量筒容量公升與毫升）。</li>
               </ul>
             </div>
           </div>
@@ -610,15 +597,17 @@
 
     <!-- 5. 隨堂 IEP 質性評量記錄產生器與錯誤型態診斷 -->
     <section class="tab-pane" id="tab-iep">
+      <div id="learning-records-dashboard"></div>
+      <details class="sample-records"><summary>查看虛構範例圖表（不屬於實際學習紀錄）</summary>
       <!-- 🧠 特教專業評量：四大認知錯誤型態診斷雷達 ＆ C-R-A 提示消褪成長驗證 -->
       <div class="card" style="margin-bottom: 24px; border: 2.5px solid #818cf8;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
           <div>
             <h3 class="card-title" style="color:#3730a3; margin:0;">
-              🧠 學生四大認知錯誤型態診斷雷達 ＆ C-R-A 成長歷程
+              🧠 虛構範例：錯誤型態與提示層級示意
             </h3>
             <p style="font-size:0.88rem; color:#475569; margin-top:4px;">
-              超越單純分數統計！深度分析學童核心認知盲點（進退位、空間對齊、文字長句、乘除口訣），提供 IEP 個別化處方與實證成長曲線。
+              以下數字均為虛構示範，不會與上方實際作答紀錄混合，也不能用來診斷學生的認知原因或證明教學成效。
             </p>
           </div>
           <!-- 學生切換標籤按鈕 -->
@@ -643,8 +632,9 @@
         </div>
       </div>
 
-      <div class="card" style="margin-bottom: 24px;">
-        <h3 class="card-title">📊 隨堂診斷 IEP 質性評量記錄產生器（符合特教評鑑規範）</h3>
+      </details>
+      <div class="card" id="iep-report-card" style="margin-bottom: 24px;">
+        <h3 class="card-title">📊 教師覆核用 IEP 質性評量記錄產生器（需經教師核對實際觀察）</h3>
         <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 16px;">
           老師在課堂結束前 2 分鐘，勾選學生的個別化表現與支持層級，系統將自動依據<strong>《十二年國民基本教育特殊教育課程實施規範》</strong>與<strong>普通課綱指標</strong>產出標準質性評量文字，可直接複製貼入學校特教行政系統、IEP 檢討會議紀錄或家長聯絡簿。
         </p>
@@ -654,7 +644,7 @@
           <div style="background: var(--bg-subtle); padding: 20px; border-radius: var(--radius-md);">
             <div class="form-group">
               <label for="iep-student-name">學生姓名或代號：</label>
-              <input type="text" id="iep-student-name" class="form-control" placeholder="例如：嘉、萱、涵、凱、宸 或 學生代號" value="嘉 (學習教室)">
+              <input type="text" id="iep-student-name" class="form-control" placeholder="例如：嘉、萱、涵、凱、宸 或 學生代號" value="">
             </div>
 
             <div class="form-group">
@@ -667,8 +657,9 @@
             <div class="form-group">
               <label for="iep-support-level">當前掌握程度與所需支持層級：</label>
               <select id="iep-support-level" class="form-control">
-                <option value="獨立完成 (掌握率 90% 以上，概念精熟)">獨立完成 (掌握率 90% 以上，概念精熟)</option>
-                <option value="需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)" selected>需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)</option>
+                <option value="尚未觀察，待教師填寫" selected>尚未觀察，待教師填寫</option>
+                <option value="獨立完成（教師觀察，非系統推估掌握率）">獨立完成（教師觀察，非系統推估掌握率）</option>
+                <option value="需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)">需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)</option>
                 <option value="需口語步驟引導 (經教師拆解口訣商乘減降後能完成計算)">需口語步驟引導 (經教師拆解口訣商乘減降後能完成計算)</option>
                 <option value="需具體教具與肢體協助 (依賴實體錢幣/積木/量筒操作完成)">需具體教具與肢體協助 (依賴實體錢幣/積木/量筒操作完成)</option>
                 <option value="概念尚待建立 (需回溯上一階段基礎先備經驗)">概念尚待建立 (需回溯上一階段基礎先備經驗)</option>
@@ -681,14 +672,14 @@
             </div>
 
             <button class="btn btn-primary" id="iep-generate-btn" style="width: 100%;">
-              ⚡ 即時生成合規 IEP 質性評量報告
+              產生待覆核評量草稿
             </button>
           </div>
 
           <!-- 輸出與一鍵複製區 -->
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <div class="report-output-box" id="iep-output">
-點擊左側「即時生成合規 IEP 質性評量報告」按鈕，此處將自動產生符合特教法規、特需課綱與四向度調整標準之質性評量紀錄文字...
+請先確認學生代號、單元與教師觀察，再產生草稿；未觀察的項目不會自動填為達成。
             </div>
             <div style="display: flex; gap: 10px;">
               <button class="btn btn-accent" id="iep-copy-btn" style="flex: 1;">
@@ -706,14 +697,17 @@
   </main>
 
   <!-- 腳本載入順序：資料庫 ➔ 音效與語音 ➔ 聲光特效與吉祥物 ➔ 雙人搶答擂台 ➔ 9大教具 ➔ 特教工具箱 ➔ 旗艦競賽功能 ➔ 主應用程式 -->
-  <script src="js/data.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/confetti-effects.js"></script>
-  <script src="js/battle.js"></script>
-  <script src="js/manipulatives.js"></script>
-  <script src="js/teacher-tools.js"></script>
-  <script src="js/contest-features.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/floating-tools.js"></script>
+  <script src="js/data.js?v=20261031-teaching"></script>
+  <script src="js/audio.js?v=20261031-teaching"></script>
+  <script src="js/confetti-effects.js?v=20261031-teaching"></script>
+  <script src="js/battle.js?v=20261031-teaching"></script>
+  <script src="js/manipulatives.js?v=20261031-teaching"></script>
+  <script src="js/teacher-tools.js?v=20261031-teaching"></script>
+  <script src="js/contest-features.js?v=20261031-teaching"></script>
+  <script src="js/learning-records.js?v=20261031-teaching"></script>
+  <script src="js/number-line.js?v=20261031-teaching"></script>
+  <script src="js/geometry-shapes.js?v=20261031-teaching"></script>
+  <script src="js/app.js?v=20261031-teaching"></script>
+  <script src="js/floating-tools.js?v=20261031-teaching"></script>
 </body>
 </html>

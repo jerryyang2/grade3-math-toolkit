@@ -670,7 +670,7 @@
 
         promptText.innerHTML = `
           計算${currentName}：<span class="font-extrabold text-indigo-600">${v1} + ${v2}${carryIn > 0 ? ' + 1' : ''}</span> 是多少？<br>
-          <span class="text-xs text-slate-400 font-medium">請在下方填��${currentName}要寫下的數字</span>
+          <span class="text-xs text-slate-400 font-medium">請在下方填入${currentName}要寫下的數字</span>
         `;
         hintText.innerHTML = `算算看：${v1} + ${v2}${carryIn > 0 ? ' + 1' : ''} = <strong>${sum}</strong>。${sum >= 10 ? '滿十了，要進位到左邊！' : '寫下答案即可！'}`;
 
@@ -930,9 +930,9 @@
     /* =========================================================
      * 9. INITIALIZATION
      * ========================================================= */
-    window.onload = function() {
+    document.addEventListener('DOMContentLoaded', function() {
       newQuestion();
-    };
+    });
   </script>
   <script src="../../js/floating-tools.js"></script>
 </body>

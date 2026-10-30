@@ -7,10 +7,13 @@
 (function(window) {
   'use strict';
 
+  const escapeText = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
   const BattleArena = {
     currentUnitId: 'u1',
     currentSectionId: 'all',
     roundCount: 10,
+    autoRead: true,
     currentQuestionIndex: 0,
     questions: [],
     isRoundActive: false,
@@ -164,9 +167,10 @@
             </div>
 
             <div class="battle-meta-info" style="display:flex; align-items:center; gap:8px;">
+              <button class="btn btn-primary" id="btn-battle-next" disabled>討論完了，下一題</button>
               <span class="battle-round-badge" id="battle-round-indicator">第 1 / ${this.questions.length || 10} 題</span>
               <button class="btn btn-speech btn-sm" id="btn-battle-tts-toggle" style="background:#f1f5f9; border:1px solid #cbd5e1; font-size:0.85rem; padding:4px 10px;">
-                🔊 自動念題：開啟
+                ${this.autoRead ? '🔊 自動念題：開啟' : '🔇 自動念題：關閉'}
               </button>
             </div>
           </div>
@@ -177,10 +181,10 @@
             <div class="battle-player-card player-blue" id="card-player-blue">
               <div class="battle-player-header">
                 <span class="battle-player-badge">🔵 勇氣藍隊</span>
-                <select class="battle-player-select" id="select-player-blue">
+                <select class="battle-player-select" id="select-player-blue" aria-label="藍隊學生代號">
                   ${players.map(p => `
-                    <option value="${p.name}" data-avatar="${p.avatar || '🦁'}" ${p.name === this.player1.name ? 'selected' : ''}>
-                      ${p.avatar || '🦁'} ${p.name}
+                    <option value="${escapeText(p.name)}" data-avatar="${p.avatar || '🦁'}" ${p.name === this.player1.name ? 'selected' : ''}>
+                      ${p.avatar || '🦁'} ${escapeText(p.name)}
                     </option>
                   `).join('')}
                 </select>
@@ -205,10 +209,10 @@
             <div class="battle-player-card player-red" id="card-player-red">
               <div class="battle-player-header">
                 <span class="battle-player-badge">🔴 智慧紅隊</span>
-                <select class="battle-player-select" id="select-player-red">
+                <select class="battle-player-select" id="select-player-red" aria-label="紅隊學生代號">
                   ${players.map(p => `
-                    <option value="${p.name}" data-avatar="${p.avatar || '🦊'}" ${p.name === this.player2.name ? 'selected' : ''}>
-                      ${p.avatar || '🦊'} ${p.name}
+                    <option value="${escapeText(p.name)}" data-avatar="${p.avatar || '🦊'}" ${p.name === this.player2.name ? 'selected' : ''}>
+                      ${p.avatar || '🦊'} ${escapeText(p.name)}
                     </option>
                   `).join('')}
                 </select>
@@ -342,6 +346,14 @@
         });
       }
 
+      document.getElementById('btn-battle-next').addEventListener('click', () => {
+        if (!this.isRoundActive) this.loadQuestion(this.currentQuestionIndex + 1);
+      });
+      document.getElementById('btn-battle-tts-toggle').addEventListener('click', event => {
+        this.autoRead = !this.autoRead;
+        event.currentTarget.textContent = this.autoRead ? '🔊 自動念題：開啟' : '🔇 自動念題：關閉';
+        if (!this.autoRead) window.spEdAudio?.stopSpeech();
+      });
       // 朗讀題目按鈕
       const btnSpeak = document.getElementById('btn-battle-speak-q');
       if (btnSpeak) {
@@ -372,6 +384,7 @@
         return;
       }
 
+      document.getElementById('btn-battle-next').disabled = true;
       this.currentQuestionIndex = index;
       this.isRoundActive = true;
       this.player1.isLocked = false;
@@ -442,7 +455,7 @@
       }
 
       // 語音自動念題（若開啟）
-      if (window.spEdAudio) {
+      if (this.autoRead && window.spEdAudio) {
         window.spEdAudio.speak(q.question);
       }
     },
@@ -500,10 +513,8 @@
           window.spEdAudio.speak(cheerText);
         }
 
-        // 2 秒後自動進入下一題
-        setTimeout(() => {
-          this.loadQuestion(this.currentQuestionIndex + 1);
-        }, 2200);
+        // 留下題目供口述策略與討論，由教師控制換題。
+        document.getElementById('btn-battle-next').disabled = false;
 
       } else {
         // 答錯：不扣分（特教友善），但該選手短暫鎖定 2 秒，對手可繼續作答
@@ -532,11 +543,9 @@
             `;
           }
           if (window.spEdAudio) {
-            window.spEdAudio.speak(`沒關係，正確答案是第 ${['A', 'B', 'C', 'D'][q.answerIndex]} 項。我們一起看下一題！`);
+            window.spEdAudio.speak(`沒關係，正確答案是第 ${['A', 'B', 'C', 'D'][q.answerIndex]} 項。我們一起說說怎麼想，再換下一題。`);
           }
-          setTimeout(() => {
-            this.loadQuestion(this.currentQuestionIndex + 1);
-          }, 3200);
+          document.getElementById('btn-battle-next').disabled = false;
         } else {
           // 解除單方鎖定定時器
           setTimeout(() => {
@@ -605,19 +614,19 @@
             ${isTie ? '🤝 實力相當！兩隊都是算術大贏家！' : `🎉 恭喜 ${winner.name} 奪得搶答冠軍！`}
           </h2>
           <p style="font-size: 1.15rem; color: #4b5563; margin-bottom: 20px;">
-            藍隊 <strong>${this.player1.name}</strong> (${this.player1.score}分) ｜ 紅隊 <strong>${this.player2.name}</strong> (${this.player2.score}分)
+            藍隊 <strong>${escapeText(this.player1.name)}</strong> (${this.player1.score}分) ｜ 紅隊 <strong>${escapeText(this.player2.name)}</strong> (${this.player2.score}分)
           </p>
 
           <div class="ceremony-rewards-box">
             <div class="ceremony-reward-item">
               <span style="font-size: 1.8rem;">${this.player1.avatar}</span>
-              <strong>${this.player1.name}</strong>
+              <strong>${escapeText(this.player1.name)}</strong>
               <span class="badge-star">+${this.player1.stars + 1} ⭐ 努力之星</span>
             </div>
             <div style="font-size: 1.6rem; color: #f59e0b;">✨ 友誼第一 ✨</div>
             <div class="ceremony-reward-item">
               <span style="font-size: 1.8rem;">${this.player2.avatar}</span>
-              <strong>${this.player2.name}</strong>
+              <strong>${escapeText(this.player2.name)}</strong>
               <span class="badge-star">+${this.player2.stars + 1} ⭐ 努力之星</span>
             </div>
           </div>

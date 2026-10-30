@@ -1,7 +1,7 @@
 /**
  * 三年級數學備課平台 - 特教教師實務專業工具箱 (Teacher Tools)
  * 移植並優化自 101 堂特教社交技巧課備課平台之核心架構：
- * 1. 🧘 數學焦慮情緒冷靜通道 (Calm Corner: 4-7-8 呼吸光環、視覺沙漏、5-4-3-2-1 著陸法、白噪音細雨聲、432Hz 頌缽)
+ * 1. 🧘 數學焦慮情緒冷靜通道 (Calm Corner: 舒適吸吐光環、視覺沙漏、5-4-3-2-1 著陸法、白噪音細雨聲、432Hz 頌缽)
  * 2. 📝 親師聯絡 & IEP 評量四合一生成器 (LINE親師訊息、特教通報網IEP草稿、A4 4合1省紙實體聯絡小單)
  * 3. ⚡ 課前 60 秒極速備課卡 (Quick 60s Briefing Card & 實體教具檢核清單)
  * 4. ⭐ 資源班 5 位同學代幣存摺 (5-Student Star Bank)
@@ -9,6 +9,8 @@
 
 (function(window) {
   'use strict';
+
+  const escapeText = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
   // ==================== 1. Web Audio 自然舒緩音訊引擎 ====================
   const MathCalmAudio = {
@@ -38,7 +40,7 @@
         const gain = this.ctx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(432, now); // 432 Hz 自然和諧頻率
+        osc.frequency.setValueAtTime(432, now); // 432 Hz 合成音調（不宣稱療效）
         overtone.type = 'sine';
         overtone.frequency.setValueAtTime(864, now);
 
@@ -198,7 +200,7 @@
             <span class="st-avatar">${st.avatar}</span>
           </div>
           <div class="st-info">
-            <div class="st-name" onclick="window.StudentBank.editName(${st.id})" title="點擊修改名字">${st.name}</div>
+            <div class="st-name" onclick="window.StudentBank.editName(${st.id})" title="點擊修改名字">${escapeText(st.name)}</div>
             <div class="st-stars">⭐ <strong>${st.stars}</strong> 顆</div>
           </div>
           <div class="st-actions">
@@ -223,9 +225,10 @@
       if (!st) return;
       const newName = prompt(`請輸入學生姓名或代號：`, st.name);
       if (newName && newName.trim()) {
-        st.name = newName.trim();
+        st.name = newName.trim().slice(0, 30);
         this.save(students);
         this.render();
+        document.dispatchEvent(new CustomEvent('student-bank-renamed'));
       }
     }
   };
@@ -279,7 +282,7 @@
     }
   };
 
-  // 4-7-8 呼吸光環控制
+  // 舒適吸吐光環控制
   function startBreathingGuide() {
     stopBreathingGuide();
     const bubble = document.getElementById('breathingBubble');
@@ -291,31 +294,20 @@
     breathingCycleCount = 0;
 
     function runCycle() {
-      // 1. 吸氣 4 秒 (Inhale)
       bubble.className = 'breathing-bubble inhale';
-      if (title) title.innerHTML = '👃 慢慢深吸氣 (4秒)';
-      if (desc) desc.innerHTML = '像聞到剛出爐的香甜爆米花，肚子慢慢鼓起來……';
-      MathCalmAudio.playChime();
-
+      bubble.style.animationDuration = '4s';
+      if (title) title.textContent = '慢慢吸氣，照自己的舒服速度';
+      if (desc) desc.textContent = '光環只是節奏參考，不必吸很深，也不用跟滿秒數。';
       breathingTimer = setTimeout(() => {
-        // 2. 閉氣 7 秒 (Hold)
-        bubble.className = 'breathing-bubble hold';
-        if (title) title.innerHTML = '🧘 閉氣停一停 (7秒)';
-        if (desc) desc.innerHTML = '放鬆肩膀，在大腦裡安靜數 1、2、3、4、5、6、7……';
-
+        bubble.className = 'breathing-bubble exhale';
+        bubble.style.animationDuration = '4s';
+        if (title) title.textContent = '輕輕吐氣，不需要憋氣';
+        if (desc) desc.textContent = '也可以只看光環、安靜坐一下，準備好再回來。';
         breathingTimer = setTimeout(() => {
-          // 3. 呼氣 8 秒 (Exhale)
-          bubble.className = 'breathing-bubble exhale';
-          if (title) title.innerHTML = '💨 慢慢長吐氣 (8秒)';
-          if (desc) desc.innerHTML = '像在吹一根羽毛讓它輕輕飄，把數學焦慮統統吹走……';
-          MathCalmAudio.playBowl();
-
-          breathingTimer = setTimeout(() => {
-            breathingCycleCount++;
-            if (counter) counter.innerText = `已完成 ${breathingCycleCount} 次深呼吸`;
-            runCycle();
-          }, 8000);
-        }, 7000);
+          breathingCycleCount++;
+          if (counter) counter.textContent = `已看過 ${breathingCycleCount} 次吸吐節奏`;
+          runCycle();
+        }, 4000);
       }, 4000);
     }
 
@@ -429,21 +421,21 @@
             <span style="font-size:1.8rem;">🧘</span>
             <div>
               <h2 style="margin:0; font-size:1.35rem; color:#ffffff;">特教數學即時冷靜通道 · 感官舒緩與焦慮急救</h2>
-              <p style="margin:2px 0 0 0; font-size:0.85rem; color:#ccfbf1;">4-7-8 調息光環 · 沉浸視覺沙漏 · 5-4-3-2-1 著陸法 · 零刺激雨聲白噪音</p>
+              <p style="margin:2px 0 0 0; font-size:0.85rem; color:#ccfbf1;">舒適吸吐光環 · 沉浸視覺沙漏 · 5-4-3-2-1 著陸法 · 可選雨聲</p>
             </div>
           </div>
           <button class="modal-close-btn" onclick="closeCalmCornerModal()" title="關閉">✕</button>
         </div>
 
         <div class="calm-tabs-nav">
-          <button id="calmTabBtn-breathe" class="calm-tab-btn active" onclick="switchCalmTab('breathe')">🌊 4-7-8 調息光環</button>
+          <button id="calmTabBtn-breathe" class="calm-tab-btn active" onclick="switchCalmTab('breathe')">🌊 舒適吸吐光環</button>
           <button id="calmTabBtn-timer" class="calm-tab-btn" onclick="switchCalmTab('timer')">⏳ 沉浸視覺沙漏</button>
           <button id="calmTabBtn-grounding" class="calm-tab-btn" onclick="switchCalmTab('grounding')">🖐️ 5-4-3-2-1 著陸法</button>
           <button id="calmRainToggleBtn" class="calm-tab-btn rain-btn" onclick="toggleCalmRain()">🌧️ 播放細雨白噪音</button>
         </div>
 
         <div class="calm-modal-body">
-          <!-- Tab 1: 4-7-8 呼吸光環 -->
+          <!-- Tab 1: 舒適吸吐光環 -->
           <div id="calmTabPane-breathe" class="calm-tab-pane">
             <div class="breathing-arena">
               <div class="breathing-bubble-container">
@@ -453,9 +445,9 @@
                 </div>
               </div>
               <div class="breathing-text-area">
-                <div id="breathingInstruction" class="breathing-main-text">👃 深吸氣 (4秒)</div>
-                <div id="breathingSubInstruction" class="breathing-sub-text">慢慢吸一口氣，讓肚子像小氣球一樣鼓起來……</div>
-                <div id="breathingCycleCounter" class="breathing-cycle-pill">已完成 0 次深呼吸</div>
+                <div id="breathingInstruction" class="breathing-main-text">慢慢吸氣，照自己的舒服速度</div>
+                <div id="breathingSubInstruction" class="breathing-sub-text">光環只是節奏參考，也可以只看光環、安靜休息。</div>
+                <div id="breathingCycleCounter" class="breathing-cycle-pill">已看過 0 次吸吐節奏</div>
               </div>
             </div>
             <div class="calm-tip-bar">
@@ -541,7 +533,7 @@
   };
 
   function getActiveUnitData() {
-    const uid = window.AppState ? window.AppState.currentUnitId : 'u1';
+    const uid = document.getElementById('lesson-unit-quick-select')?.value || 'u1';
     return NANI_G3S1_DATA.units.find(u => u.id === uid) || NANI_G3S1_DATA.units[0];
   }
 
@@ -562,7 +554,7 @@
       case 'u7':
         return '請孩子在冰箱找找鮮奶瓶上的容量標示，看看是不是剛好寫著「1000 mL (1公升)」！';
       case 'u8':
-        return '分吃披薩或鬆餅時，請孩子指出「分母是切成幾塊、分子是拿了幾塊」！';
+        return '分吃披薩或鬆餅時，請孩子指出「分母是平分成幾等份、分子是取了其中幾份」！';
       case 'u9':
         return '請孩子找找家中圓形的物品（時鐘、杯蓋、車輪），並指出正中間的圓心位置！';
       default:
@@ -576,12 +568,13 @@
     const taskText = getHomeTaskText(unit.id);
 
     // 1. LINE 親師聯絡簿溫馨通知
-    const lineText = `【🌟 今日特教數學課堂成長快報】
+    const lineText = `【數學親師聯絡草稿｜請教師核對後使用】
 親愛的家長您好：
-今天孩子在學習教室數學課進行了【第 ${unit.number} 單元：${unit.title}】的探索！
+本次預定學習主題為【第 ${unit.number} 單元：${unit.title}】的探索！
 
-✨ 今日課堂超棒表現：
-孩子透過「具體操作教具」與「微步驟口訣」，能順利掌握 ${unit.title} 的核心觀念！在課堂上表現非常專注，答對題目還獲得了榮譽星星 ⭐！
+本次觀察（請教師填寫）：
+使用的教具：＿＿；學生能做到：＿＿；需要的支持：＿＿。
+請依實際課堂表現補充，不以星星數推定概念精熟。
 
 🛒 今晚生活實踐超能力小任務：
 ${taskText}
@@ -603,18 +596,17 @@ ${taskText}
 ● 歷程調整：${unit.accommodations.process}
 ● 環境調整：${unit.accommodations.environment}
 ● 評量調整：${unit.accommodations.assessment}
-表現質性描述：學生在微步驟鷹架引導與具體教具輔助下，能理解算理步驟，並在自我檢核提醒下降低計算失誤，達成單元目標 80% 以上。`;
+實際作答證據：${window.LearningRecords?.report(unit.id) || '尚無可引用紀錄。'}
+表現質性描述（待教師填寫）：＿＿。不推定已達標。
+以上調整為建議計畫，是否實際提供及成效均須教師核對。`;
 
     const iepTextEl = document.getElementById('commIepText');
     if (iepTextEl) iepTextEl.value = iepText;
 
-    // 3. A4 4合1 省紙實體聯絡單
+    // 3. A4 每頁4張省紙實體聯絡單
     const slipsContainer = document.getElementById('commSlipsGrid');
     if (slipsContainer) {
-      const taskDescription = unit.id === 'u1' ? '數數皮夾裡的千元與百元鈔' :
-                             (unit.id === 'u2' ? '算算買早餐兩樣東西的花費' :
-                             (unit.id === 'u4' ? '用尺量量牙刷有幾公分幾毫米' :
-                             (unit.id === 'u7' ? '在冰箱找找 1000mL 鮮奶瓶' : '向家人念一次今日數學口訣')));
+      const taskDescription = taskText;
 
       const students = StudentBank.getStudents();
       slipsContainer.innerHTML = students.map(st => `
@@ -624,9 +616,9 @@ ${taskText}
             <span class="slip-date">${today}</span>
           </div>
           <div class="slip-body">
-            <div class="slip-unit">👤 學生：<strong>${st.name}</strong> ｜ 第 ${unit.number} 單元【${unit.title}】</div>
+            <div class="slip-unit">👤 學生：<strong>${escapeText(st.name)}</strong> ｜ 第 ${unit.number} 單元【${unit.title}】</div>
             <div class="slip-task">🏠 <strong>今晚生活實踐小任務：</strong><br/>${taskDescription}</div>
-            <div class="slip-stars">⭐ 今日課堂戰績：獲得 <strong>${st.stars}</strong> 顆學習星星！</div>
+            <div class="slip-stars">⭐ 存摺累計：<strong>${st.stars}</strong> 顆（非今日成績或精熟率）</div>
           </div>
           <div class="slip-footer">
             <span>💮 家長簽章：［　　　　］</span>
@@ -654,7 +646,19 @@ ${taskText}
   };
 
   window.printCommSlips = function() {
-    window.print();
+    const content = document.getElementById('commSlipsGrid');
+    if (!content) return;
+    const preview = window.open('', '_blank');
+    if (!preview) { alert('請允許彈出視窗以預覽聯絡單。'); return; }
+    preview.document.write(`<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>數學親師聯絡單</title><link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg', location.href).href}"><style>
+      @page { size:A4; margin:12mm; } body { font-family:'Microsoft JhengHei',sans-serif; color:#111; margin:0; }
+      .print-controls { padding:12px; background:#eef2ff; margin-bottom:12px; } button { padding:10px; font:inherit; }
+      .slips { display:grid; grid-template-columns:1fr 1fr; gap:10mm; }
+      .comm-slip-card { box-sizing:border-box; border:1px dashed #555; padding:8mm; min-height:115mm; break-inside:avoid; font-size:12pt; line-height:1.7; }
+      .slip-header { border-bottom:1px solid #aaa; padding-bottom:8px; margin-bottom:12px; } .slip-date { display:block; } .slip-task,.slip-stars,.slip-footer { margin-top:14px; } .slip-footer span { display:block; }
+      @media print { .print-controls { display:none; } }
+      </style></head><body><div class="print-controls"><button onclick="window.print()">列印／另存 PDF</button> 每頁最多 4 張，請先核對單元、代號與內容。</div><div class="slips">${content.innerHTML}</div></body></html>`);
+    preview.document.close();
   };
 
   function createCommunicationModalDOM() {
@@ -694,7 +698,7 @@ ${taskText}
           <!-- 右欄：4合1 列印小單預覽 -->
           <div class="comm-col-right">
             <div class="comm-section-title">
-              <span>🖨️ 3. A4 4合1 實體聯絡單小條（一頁印4張超省紙）</span>
+              <span>🖨️ 3. A4 4合1 實體聯絡單小條（每頁最多4張）</span>
               <button class="btn btn-sm btn-accent" onclick="printCommSlips()">🖨️ 列印此頁小單</button>
             </div>
             <div class="slips-preview-container" id="commSlipsGrid"></div>
@@ -794,6 +798,7 @@ ${taskText}
   // 網頁載入後自動渲染學生存摺
   document.addEventListener('DOMContentLoaded', () => {
     StudentBank.render();
+    if (window.matchMedia('(max-width: 600px)').matches) document.querySelector('.student-bank-container').open = false;
   });
 
 })(window);

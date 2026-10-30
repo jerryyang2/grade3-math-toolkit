@@ -83,11 +83,12 @@
         if (activeTab.id === 'tab-practice') {
           targets = Array.from(document.querySelectorAll('#practice-options .option-btn:not(:disabled)'));
           const nextBtn = document.getElementById('btn-practice-next');
-          if (nextBtn) targets.push(nextBtn);
+          if (nextBtn && !nextBtn.disabled) targets.push(nextBtn);
+          targets.push(...document.querySelectorAll('#btn-practice-retry, #practice-next-group, #btn-practice-hint'));
         }
         // 雙人對決區：作答按鈕
         else if (activeTab.id === 'tab-battle') {
-          targets = Array.from(document.querySelectorAll('.station-btn:not(:disabled)'));
+          targets = Array.from(document.querySelectorAll('.station-btn:not(:disabled), #btn-battle-next:not(:disabled)'));
         }
         // 單元頁：微步驟下一步或教具主要按鈕
         else if (activeTab.id === 'tab-units') {
@@ -434,7 +435,7 @@
     // 產生 SVG 認知錯誤型態雷達圖
     renderRadarSvg(studentName = '嘉', size = 300) {
       const data = this.getData();
-      const stats = data[studentName] || data['嘉'];
+      const stats = data[studentName] || { carry_borrow: 0, place_value: 0, word_problem: 0, math_fact: 0, totalTrials: 0 };
       const maxVal = Math.max(stats.carry_borrow, stats.place_value, stats.word_problem, stats.math_fact, 16);
 
       const center = size / 2;
@@ -501,7 +502,7 @@
     // 取得 IEP 專業診斷質性評語與處方
     getDiagnosticPrescription(studentName) {
       const data = this.getData();
-      const stats = data[studentName] || data['嘉'];
+      const stats = data[studentName] || { carry_borrow: 0, place_value: 0, word_problem: 0, math_fact: 0, totalTrials: 0 };
       let topPattern = 'carry_borrow';
       let maxErrors = -1;
 
@@ -516,7 +517,7 @@
         carry_borrow: {
           title: "📌 核心盲點：進退位自動化遺忘型",
           detail: `該生在千位、百位連續進位時，常因工作記憶容量限制漏加 +1。`,
-          rx: `建議維持使用本平台「單元二步驟化直式氣泡鷹架」，由個位往千位逐步揭示，建立手指按位檢核策略（特學1-E-1）。`
+          rx: `建議維持使用本平台「單元二步驟化直式氣泡鷹架」，由個位往千位逐步揭示，建立手指按位檢核策略（特學1-Ⅱ-1）。`
         },
         place_value: {
           title: "📌 核心盲點：位值空間對齊偏差型",
@@ -545,7 +546,7 @@
   // =========================================================================
   const GrowthTracker = {
     renderGrowthChart(size = 320) {
-      // 模擬經過平台 Level 1(全鷹架) -> Level 2(半消褪) -> Level 3(無鷹架獨立) 的平均答對率實證數據
+      // 模擬經過平台 Level 1(全鷹架) -> Level 2(半消褪) -> Level 3(無鷹架獨立) 的虛構比例示意資料
       const levels = [
         { label: '介入前\n(傳統講述)', rate: 42, color: '#94a3b8' },
         { label: 'Level 1\n全色彩鷹架', rate: 86, color: '#10b981' },
@@ -556,7 +557,7 @@
       return `
         <div class="growth-chart-box">
           <div style="font-weight: 800; color: #1e1b4b; font-size: 1.05rem; margin-bottom: 8px;">
-            📈 C-R-A 提示消褪 4 階段學習成效驗證曲線：
+            📈 虛構示意：不同提示層級的比例呈現：
           </div>
           <svg width="${size}" height="180" viewBox="0 0 ${size} 180" class="growth-svg" style="background:#f8fafc; border-radius:12px; padding:10px;">
             <!-- 背景格線 -->
@@ -589,7 +590,7 @@
             }).join('')}
           </svg>
           <div style="font-size:0.85rem; color:#059669; font-weight:700; margin-top:8px;">
-            💡 評審觀察點：學童在 Level 3 獨立無鷹架模式下仍保有 91% 正確率，實證消褪策略大獲成功！
+            以上比例均為虛構範例，不代表學生進步，也不能證明提示消褪策略的效果。
           </div>
         </div>
       `;
@@ -618,7 +619,7 @@
               <span style="font-size:2rem;">🖨️</span>
               <div>
                 <h3 style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
-                <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">教育部字嗨注音標楷體 · 大字點陣對齊格 · 特教課調認證註記</span>
+                <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 大字點陣對齊格 · 課程調整參考註記</span>
               </div>
             </div>
             <button id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
@@ -626,16 +627,16 @@
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
             <div>
-              <label style="font-weight:800; font-size:0.95rem; color:#334155;">選擇評量單元：</label>
+              <label for="ws-unit-select" style="font-weight:800; font-size:0.95rem; color:#334155;">選擇評量單元：</label>
               <select id="ws-unit-select" class="form-control" style="font-weight:700; width:100%;">
                 ${units.map(u => `<option value="${u.id}">第 ${u.number} 單元：${u.title}</option>`).join('')}
               </select>
             </div>
             <div>
-              <label style="font-weight:800; font-size:0.95rem; color:#334155;">指定學習教室學生：</label>
+              <label for="ws-student-select" style="font-weight:800; font-size:0.95rem; color:#334155;">指定學習教室學生：</label>
               <select id="ws-student-select" class="form-control" style="font-weight:700; width:100%;">
                 <option value="空白">（印空白卷由學童自填）</option>
-                ${students.map(s => `<option value="${s.name}">${s.avatar} ${s.name} 同學</option>`).join('')}
+                ${students.map(s => `<option value="${window.LearningRecords.escapeHtml(s.name)}">${s.avatar} ${window.LearningRecords.escapeHtml(s.name)} 同學</option>`).join('')}
               </select>
             </div>
           </div>
@@ -661,7 +662,7 @@
               </label>
               <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
                 <input type="checkbox" id="ws-chk-stamp" checked>
-                <strong>🏛️ 頁尾附 108 特教課綱四向度調整認證欄</strong>
+                <strong>🏛️ 頁尾附 108 特教課綱四向度調整參考欄</strong>
               </label>
             </div>
           </div>
@@ -692,18 +693,19 @@
         };
       }
 
+      modal.querySelector('#ws-unit-select').value = document.getElementById('lesson-unit-quick-select')?.value || 'u1';
       modal.querySelector('#btn-ws-print').onclick = () => {
         const uid = modal.querySelector('#ws-unit-select').value;
         const student = modal.querySelector('#ws-student-select').value;
         const customDate = (modal.querySelector('#ws-date-input')?.value || '').trim();
         const withGrid = modal.querySelector('#ws-chk-grid').checked;
         const withStamp = modal.querySelector('#ws-chk-stamp').checked;
-        this.generateAndPrint(uid, student, withGrid, withStamp, customDate);
+        this.generateAndPrint(uid, student, withGrid, withStamp, customDate, modal.querySelector('#ws-chk-zihi').checked);
         modal.remove();
       };
     },
 
-    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '') {
+    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true) {
       const data = window.NANI_G3S1_DATA || {};
       const unit = (data.units || []).find(u => u.id === unitId) || { number: 1, title: '數學' };
       const problems = (data.practiceBank || []).filter(p => p.unitId === unitId).slice(0, 5);
@@ -725,7 +727,7 @@
           <style>
             @page { size: A4; margin: 15mm; }
             body {
-              font-family: '字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'KaiTi', serif;
+              font-family: ${withZihi ? "'字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'KaiTi', serif" : "'Microsoft JhengHei', sans-serif"};
               color: #000;
               line-height: 1.6;
               padding: 0;
@@ -811,12 +813,14 @@
           </style>
         </head>
         <body>
+          <div class="print-preview-controls" style="padding:12px; margin-bottom:16px; background:#eef2ff;"><button onclick="window.print()" style="font:inherit; padding:10px;">列印／另存 PDF</button> 請先核對題目與支援選項。</div>
+          <style>@media print { .print-preview-controls { display: none !important; } }</style>
           <div class="ws-header">
             <h1 class="ws-title">南一版三年級上學期數學 學習教室個別化學習單</h1>
             <div style="font-size: 13pt; margin-top: 4px;">單元 ${unit.number}：${unit.title} · 實體紙筆精熟挑戰</div>
             <div class="ws-meta-row">
-              <span>學生姓名：<strong>${studentName === '空白' ? '___________' : studentName}</strong></span>
-              <span>評量日期：<strong>${dateDisplay}</strong></span>
+              <span>學生姓名：<strong>${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
+              <span>評量日期：<strong>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
               <span>得分：_______</span>
             </div>
           </div>
@@ -845,21 +849,17 @@
 
           ${withStamp ? `
             <div class="ws-footer-stamp">
-              <div class="stamp-title">🏛️ 108 特教課綱·課程調整與個別化支持紀錄欄（教師填寫）</div>
+              <div class="stamp-title">🏛️ 108 特教課綱·課程調整與個別化支持紀錄欄（教師勾選實際提供項目）</div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
-                <div>☑ <strong>學習內容</strong>：簡化題意長句、字嗨注音雙軌表徵</div>
-                <div>☑ <strong>學習歷程</strong>：點陣大字對齊防呆、C-R-A 具體操作後銜接</div>
-                <div>☑ <strong>學習環境</strong>：低視覺焦慮、無倒扣增強機制</div>
-                <div>☑ <strong>學習評量</strong>：延長評量時間、語音報讀念題、多步驟分段計分</div>
+                <div>☐ <strong>學習內容</strong>：簡化題意長句、字嗨注音雙軌表徵</div>
+                <div>☐ <strong>學習歷程</strong>：點陣大字對齊防呆、C-R-A 具體操作後銜接</div>
+                <div>☐ <strong>學習環境</strong>：低視覺焦慮、無倒扣增強機制</div>
+                <div>☐ <strong>學習評量</strong>：延長評量時間、語音報讀念題、多步驟分段計分</div>
               </div>
             </div>
           ` : ''}
 
-          <script>
-            window.onload = function() {
-              window.print();
-            };
-          </script>
+
         </body>
         </html>
       `);
@@ -905,7 +905,7 @@
                 <span class="j-icon">🏛️</span>
                 <strong>108 雙課綱深度對齊</strong>
               </div>
-              <p>完整對應普通數學領綱 <strong>n-II-1 ~ n-II-9</strong>，同時實質嵌入特殊需求領域課綱指標（<strong>特學1-E-1、特學2-E-2、特生2-E-2</strong>）。</p>
+              <p>完整對應普通數學領綱 <strong>n-II-1 ~ n-II-9</strong>，同時實質嵌入特殊需求領域課綱指標（<strong>特學1-Ⅱ-1、特學1-Ⅱ-5、生活實作策略</strong>）。</p>
             </div>
 
             <!-- 2. C-R-A 教學法 -->
@@ -923,7 +923,7 @@
                 <span class="j-icon">🎚️</span>
                 <strong>提示階層消褪 (Fading)</strong>
               </div>
-              <p>提供 Level 1 全色彩高亮 ➔ Level 2 黑白對齊線 ➔ Level 3 純淨獨立檢測，實證促成學童由高度支持邁向獨立自主作答。</p>
+              <p>提供 Level 1 全色彩高亮 ➔ Level 2 黑白對齊線 ➔ Level 3 純淨獨立檢測，協助教師逐步調整支持程度；成效仍須以實際作答與操作證據確認。</p>
             </div>
 
             <!-- 4. UDL 通用設計與輔具 -->
@@ -950,7 +950,7 @@
                 <span class="j-icon">⭐</span>
                 <strong>無標籤化代幣與同理擁抱</strong>
               </div>
-              <p>5 位學童無障礙標籤存摺、答對五彩紙花慶祝、答錯無倒扣給予溫暖擁抱詞，並附 4-7-8 呼吸與頌缽白噪音冷靜通道。</p>
+              <p>5 位學童無障礙標籤存摺、答對五彩紙花慶祝、答錯無倒扣給予溫暖擁抱詞，並附 舒適吸吐光環與可選音效冷靜通道。</p>
             </div>
           </div>
 
