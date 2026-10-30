@@ -254,16 +254,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <button class="unit-card-btn ${unit.id === AppState.currentUnitId ? 'active' : ''}" data-unit-id="${unit.id}">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="unit-num-badge">第 ${unit.number} 單元</span>
-            <span style="font-size:1.7rem;" title="${theme.theme}">${theme.icon}</span>
+            <span class="unit-num-badge">探索 ${String(unit.number).padStart(2, '0')}</span>
+            ${window.StorybookTheme?.icon(unit.id) || ''}
           </div>
           <span class="unit-title-text">${unit.title}</span>
-          <span style="display:inline-block; font-size:0.85rem; font-weight:800; color:${theme.color}; background:${theme.color}18; padding:3px 10px; border-radius:999px; margin-top:3px;">
-            ${theme.icon} ${theme.theme}
-          </span>
-          <div style="margin-top:6px; font-size:0.8rem; color:#64748b; line-height:1.4;">
-            <span>108普數：${unit.curriculumCode}</span> ｜ <span style="color:#4f46e5; font-weight:700;">特需課綱</span>
-          </div>
+          <span class="unit-story-label">${theme.theme} →</span>
         </button>
       `;
     }).join('');
@@ -431,12 +426,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="manipulative-main-area">
           
           <!-- 單元趣味生活主題橫幅與分組搶答入口 -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, #ffffff, #f5f3ff); border:2px solid #c7d2fe; border-radius:20px; padding:12px 18px; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="font-size:2rem;">${(UNIT_THEMES[unit.id] || {}).icon || '🌟'}</span>
+          <div class="lesson-banner" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <div class="lesson-banner-heading">
+              ${window.StorybookTheme?.icon(unit.id) || ''}
               <div>
-                <strong style="font-size:1.2rem; color:#1e1b4b;">${unit.title} · ${(UNIT_THEMES[unit.id] || {}).theme || ''}</strong>
-                <div style="font-size:0.85rem; color:#6366f1; font-weight:700;">三年級數學生活探險系列</div>
+                <strong>${unit.title}</strong>
+                <div class="lesson-banner-note">探索 ${String(unit.number).padStart(2, '0')} ／ ${(UNIT_THEMES[unit.id] || {}).theme || ''}</div>
               </div>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">

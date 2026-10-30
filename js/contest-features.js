@@ -725,7 +725,7 @@
         <html lang="zh-TW">
         <head>
           <meta charset="UTF-8">
-          <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg', window.location.href).href}">
+          <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=storybook-20261031', window.location.href).href}">
           <title>學習教室個別化學習單 - ${unit.title}</title>
           <style>
             @page { size: A4; margin: 15mm; }

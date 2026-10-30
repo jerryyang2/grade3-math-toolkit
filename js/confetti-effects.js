@@ -15,18 +15,8 @@
       badge: '🦁',
       color: '#f59e0b',
       bg: '#fef3c7',
-      cheers: [
-        '哇！答對了！你太厲害了，有把步驟做對！⭐',
-        '你有耐心地完成！樂樂獅為你大力鼓掌！繼續衝刺！🎉',
-        '嗶嗶啵啵！全對得分！你真是超級大高手！🚀',
-        '答得太漂亮了！閃亮星星代幣送給你！✨'
-      ],
-      comforts: [
-        '🧸 抱抱你，沒關係喔！這題有點小調皮，深呼吸再試一次，你一定可以做到的！',
-        '🌱 差一點點就抓住答案了！好棒的嘗試！大腦正在長出新的智慧小樹苗喔！',
-        '✨ 別灰心，數學大探險家每次嘗試都會變得更強大！看一下小線索，答案就在身邊喔！',
-        '🐾 太用心了！我們一步一步慢慢走，點擊『提示小精靈』，我們一起破解它！'
-      ]
+      cheers: ["答對了！來說說你怎麼想的。", "這題完成了，給自己一個小鼓勵。", "下一題，也照自己的步調來。", "答案找到了！我們再看一次方法。"],
+      comforts: ["先看一個小線索，再試一次。", "我們可以用教具或圖畫想一想。", "停一下，看看題目要找什麼。", "想休息一下，再回來也可以。"]
     },
     foxie: {
       id: 'foxie',
@@ -35,16 +25,8 @@
       badge: '🦊',
       color: '#ea580c',
       bg: '#ffedd5',
-      cheers: [
-        '靈光一閃！萌萌狐發現你的算術雷達超靈敏！⭐',
-        '你有仔細檢查！恭喜解開這道題目的秘密！🎉',
-        '太棒了！聰明小腦袋轉得飛快，滿分表現！🌟'
-      ],
-      comforts: [
-        '🔍 沒關係，小偵探在找線索時也會看錯一次，我們再看一次題目就好！',
-        '💡 只要換個角度想，答案就藏在數字裡喔！再挑戰一次試試看！',
-        '🦊 萌萌狐陪你一起找答案，點選『解題鷹架』一步步看就很清楚囉！'
-      ]
+      cheers: ["找到答案了！還有別的方法嗎？", "這題答對了，說說你的發現。", "把想法畫出來，也很有趣。", "完成一題了，準備好再往前。"],
+      comforts: ["換個角度想想看。", "找找題目裡重要的數字和單位。", "可以先說出知道什麼，再想下一步。", "我陪你把題目分成小步驟。"]
     },
     bobo: {
       id: 'bobo',
@@ -53,16 +35,8 @@
       badge: '🐻',
       color: '#854d0e',
       bg: '#fef9c3',
-      cheers: [
-        '波波熊開心地轉圈圈！答得太棒啦！⭐',
-        '好開心的星星入袋！波波熊給你一個大大的擊掌！✋',
-        '太厲害了，你讓波波熊超級佩服你！🎉'
-      ],
-      comforts: [
-        '🧸 給你一個大大的暖心熊抱！學習就像搭積木，倒了再拼起來就好，波波熊永遠支持你！',
-        '🍯 吃一口蜂蜜，心情放輕鬆！剛剛的嘗試超勇敢，我們再試一次吧！',
-        '💖 失敗是升級打怪的必經之路！老師和波波熊都在為你加油喔！'
-      ]
+      cheers: ["答對了，慢慢走也走得到。", "這一題完成了！", "說說剛剛哪一步最重要。", "先伸個懶腰，再繼續也可以。"],
+      comforts: ["不用急，我們一步一步來。", "先做你有把握的那一步。", "想一想，也可以動手試試。", "先停一下，我們一起看提示。"]
     },
     tuzi: {
       id: 'tuzi',
@@ -71,16 +45,8 @@
       badge: '🐰',
       color: '#db2777',
       bg: '#fce7f3',
-      cheers: [
-        '蹦蹦跳！跳跳兔為你歡呼！答得超級快！⭐',
-        '太神速了！胡蘿蔔能量滿滿，下一題繼續衝！🥕',
-        '星光閃耀！你的敏捷計算力太驚人啦！🎉'
-      ],
-      comforts: [
-        '🥕 沒關係，小兔子跳躍有時候也會滑一下，站穩再跳一次就過關囉！',
-        '🐰 蹦跳探險家永不放棄，深吸一口氣，我們再來挑戰一次！',
-        '✨ 差一點點就摸到紅蘿蔔了！再看個提示，這題一定是你的！'
-      ]
+      cheers: ["找到答案了！把方法也記下來吧。", "這題答對了！", "完成這一小步了。", "接下來想試哪一種方法？"],
+      comforts: ["先畫一畫，再想一想。", "看看圖和數字能不能對起來。", "換個方法試試，沒關係。", "我們先找一個小線索。"]
     }
   };
 
@@ -309,23 +275,23 @@
 
     container.innerHTML = `
       <div class="mascot-companion-card" style="border-color:${m.color}; background: linear-gradient(135deg, #ffffff, ${m.bg});">
-        <div class="mascot-avatar-circle" style="background:${m.color};" onclick="window.KidEffects.cheerRandomly()" title="點點我，聽吉祥物打氣！">
-          <span class="mascot-emoji-big">${m.badge}</span>
-        </div>
+        <button type="button" class="mascot-avatar-circle" style="background:${m.color};" onclick="window.KidEffects.cheerRandomly()" aria-label="聽${m.name}打氣" title="點點我，聽吉祥物打氣！">
+          <span class="mascot-emoji-big">${window.StorybookTheme?.character(m.id) || m.badge}</span>
+        </button>
         <div class="mascot-info-area">
           <div class="mascot-name-row">
             <strong>${m.name}</strong>
             <span class="mascot-role-pill" style="background:${m.color}; color:#fff;">${m.role}</span>
             <div class="mascot-switcher-mini" title="換個伴讀好朋友">
               ${Object.keys(MASCOTS).map(k => `
-                <button class="mascot-switch-btn ${k === currentMascotKey ? 'active' : ''}" onclick="window.KidEffects.setActiveMascot('${k}')" title="${MASCOTS[k].name}">
-                  ${MASCOTS[k].badge}
+                <button class="mascot-switch-btn ${k === currentMascotKey ? 'active' : ''}" onclick="window.KidEffects.setActiveMascot('${k}')" title="${MASCOTS[k].name}" aria-label="${MASCOTS[k].name}">
+                  ${window.StorybookTheme?.character(k) || MASCOTS[k].badge}
                 </button>
               `).join('')}
             </div>
           </div>
           <div class="mascot-speech-bubble" id="mascot-speech-text">
-            嗨！我是你的數學冒險好朋友<strong>${m.name}</strong>！準備好了嗎？我們一起解題拿大獎！✨
+            嗨！我是你的數學冒險好朋友<strong>${m.name}</strong>！動手試試，再說說你發現了什麼。
           </div>
         </div>
       </div>

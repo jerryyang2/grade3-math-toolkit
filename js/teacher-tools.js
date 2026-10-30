@@ -650,7 +650,7 @@ ${taskText}
     if (!content) return;
     const preview = window.open('', '_blank');
     if (!preview) { alert('請允許彈出視窗以預覽聯絡單。'); return; }
-    preview.document.write(`<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>數學親師聯絡單</title><link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg', location.href).href}"><style>
+    preview.document.write(`<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>數學親師聯絡單</title><link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=storybook-20261031', location.href).href}"><style>
       @page { size:A4; margin:12mm; } body { font-family:'Microsoft JhengHei',sans-serif; color:#111; margin:0; }
       .print-controls { padding:12px; background:#eef2ff; margin-bottom:12px; } button { padding:10px; font:inherit; }
       .slips { display:grid; grid-template-columns:1fr 1fr; gap:10mm; }

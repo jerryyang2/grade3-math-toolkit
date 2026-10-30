@@ -1,53 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
-  <defs>
-    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4F46E5" />
-      <stop offset="100%" stop-color="#06B6D4" />
-    </linearGradient>
-    <linearGradient id="block-1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F59E0B" />
-      <stop offset="100%" stop-color="#D97706" />
-    </linearGradient>
-    <linearGradient id="block-2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10B981" />
-      <stop offset="100%" stop-color="#059669" />
-    </linearGradient>
-    <linearGradient id="block-3" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#EC4899" />
-      <stop offset="100%" stop-color="#DB2777" />
-    </linearGradient>
-    <filter id="soft-shadow" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.25"/>
-    </filter>
-  </defs>
-
-  <!-- Background rounded square -->
-  <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#bg-grad)" filter="url(#soft-shadow)"/>
-  
-  <!-- Math Grid / Ruler subtle element -->
-  <path d="M 24 96 L 104 96" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 12" opacity="0.6"/>
-
-  <!-- Geometric / Concrete Blocks: Base-10 & Math shapes -->
-  <!-- Block 1: 100/1000 yellow cube -->
-  <g transform="translate(26, 32)">
-    <rect x="0" y="0" width="34" height="34" rx="8" fill="url(#block-1)"/>
-    <text x="17" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" text-anchor="middle">3</text>
-  </g>
-
-  <!-- Block 2: Green geometry & fraction circle -->
-  <g transform="translate(68, 28)">
-    <circle cx="18" cy="18" r="18" fill="url(#block-2)"/>
-    <path d="M 18 18 L 18 0 A 18 18 0 0 1 36 18 Z" fill="#34D399"/>
-    <text x="18" y="23" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle">＋</text>
-  </g>
-
-  <!-- Block 3: Pink base block with divider -->
-  <g transform="translate(42, 68)">
-    <rect x="0" y="0" width="44" height="28" rx="7" fill="url(#block-3)"/>
-    <circle cx="14" cy="14" r="5" fill="#FFFFFF"/>
-    <rect x="24" y="11" width="12" height="6" rx="3" fill="#FFFFFF"/>
-  </g>
-
-  <!-- Sparkle of learning -->
-  <path d="M 98 20 Q 98 26 104 26 Q 98 26 98 32 Q 98 26 92 26 Q 98 26 98 20 Z" fill="#FDE047"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+ <rect x="5" y="5" width="86" height="86" rx="23" fill="#fff5d9" stroke="#544535" stroke-width="4"/>
+ <path d="M17 32q15-7 31 1 16-7 31-1l-2 41q-15-5-29 2-15-7-29-2Z" fill="#f4d17e" stroke="#544535" stroke-width="3.5" stroke-linejoin="round"/>
+ <path d="M48 34v40M27 46h12m-6-6v12M57 46h12M58 59h12" fill="none" stroke="#544535" stroke-width="4" stroke-linecap="round"/>
+ <path d="M57 27Q52 9 70 11q8 9-13 16Z" fill="#8fa873" stroke="#544535" stroke-width="3"/>
+ <path d="M58 27l7-9" stroke="#544535" stroke-width="2" stroke-linecap="round"/>
 </svg>
