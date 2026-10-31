@@ -121,3 +121,9 @@ test('all circle subsections have figures and numeric diagrams do not fill in th
   const changed=problems.find(p=>p.id==='p9_2_8');
   assert.equal(figures.render({...changed,question:changed.question.replace('8 公分','10 公分')}),'');
 });
+
+test('angle-part illustration contains only the two angle arms and its arc, without a third leader line at the vertex',()=>{
+ const html=figures.render(data.practiceBank.find(p=>p.id==='p5_1_1'));
+ assert.equal((html.match(/<path /g)||[]).length,2);
+ assert.ok(html.includes('同一個黑點相接'));
+});

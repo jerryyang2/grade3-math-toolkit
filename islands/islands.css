@@ -146,3 +146,7 @@ html[lang=en] body[data-view=landing] #world:not(.flat) .island-label{max-width:
 .camera-controls p{font-size:15px;line-height:1.6;margin:10px 0 0;color:#4d6c64}
 body[data-view=landing] .camera-controls{margin-top:0}
 @media(max-width:950px){body[data-view=landing] .camera-controls{margin-top:16px}}
+
+/* 對話留在操作欄，不蓋住九島與步道。 */
+.map-console .resident-dialogue{position:static;inset:auto;width:100%;margin:0 0 16px;box-shadow:none}
+.map-console .resident-dialogue p{font-size:18px}

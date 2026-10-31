@@ -41,3 +41,11 @@ test('unit alignment uses verified math codes and every special-needs reference 
   assert.equal(data.iepObjectives.length,9);
   for(const u of data.units)assert.ok(data.iepObjectives.some(g=>g.unitId===u.id&&g.goal&&g.criteria));
 });
+
+test('questions remain self-contained when sampled independently, and radius definitions do not confuse arc length',()=>{
+ for(const p of data.practiceBank)assert.ok(!/承上題|接續上題/.test(p.question),p.id);
+ const payment=data.practiceBank.find(p=>p.id==='p1_2_10');assert.ok(payment.question.includes('店家可以找零'));assert.ok(payment.hint.includes('60 元'));assert.equal(1000+3*100-1240,60);
+ const radius=data.practiceBank.find(p=>p.id==='p9_1_3');assert.ok(radius.question.includes('線段'));assert.ok(!radius.hint.includes('圓周的一半'));
+ const diameterStep=data.units.find(u=>u.id==='u9').scaffoldingSteps[2];assert.ok(diameterStep.instruction.includes('線段'));assert.ok(diameterStep.instruction.includes('兩端在圓周'));assert.ok(!diameterStep.instruction.includes('直線'));
+ const volume=data.practiceBank.find(p=>p.id==='p7_1_7');assert.ok(volume.question.includes('1 公升'));assert.ok(volume.question.includes('10 大格'));assert.equal(volume.options[volume.answerIndex],'600 毫升');
+});

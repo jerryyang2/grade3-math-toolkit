@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/i18n.css?v=language-zh-20261101">
-  <script src="js/i18n-en.js?v=division-grid-20261101-2"></script>
+  <script src="js/i18n-en.js?v=teaching-audit-20261101"></script>
   <script src="js/i18n.js?v=division-grid-20261101-2"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="css/teacher-tools.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/floating-tools.css?v=zoom-tools-20261031">
-  <link rel="stylesheet" href="css/teaching-workflow.css?v=20261031-teaching-2">
+  <link rel="stylesheet" href="css/teaching-workflow.css?v=teaching-audit-20261101">
   <link rel="stylesheet" href="css/storybook-theme.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="css/animal-garden.css?v=classroom-refine-20261101">
   <link rel="stylesheet" href="css/readability.css?v=icon-tools-20261031">
@@ -322,17 +322,21 @@
             </div>
           </div>
 
-          <div class="question-text" id="practice-question-text">
+          <div id="practice-question-layout"><div class="question-text" id="practice-question-text" tabindex="-1">
             題目載入中...
           </div>
+
+          <div id="practice-question-figure"></div></div>
 
           <!-- 選項按鈕清單 (童趣大按鈕，注音標楷，A/B/C/D Distinct Colors) -->
           <div class="options-grid" id="practice-options">
             <!-- 動態生成選項 -->
           </div>
 
+          <div class="practice-reading-actions"><button type="button" class="btn btn-outline" id="practice-read-options">🔊 聽選項</button><button type="button" class="btn btn-outline" id="practice-stop-reading">停止朗讀</button></div>
+
           <!-- 正向回饋與解題引導提示區 -->
-          <div class="feedback-box" id="practice-feedback"></div>
+          <div class="feedback-box" id="practice-feedback" role="status" aria-live="polite"></div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; gap: 12px;">
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -567,7 +571,7 @@
         </h3>
         
         <p style="font-size: 1rem; line-height: 1.8; color: var(--text-main); margin-bottom: 16px;">
-          依據我國<strong>《十二年國民基本教育特殊教育課程實施規範》</strong>與<strong>《高級中等以下學校特殊教育課程教材教法及評量方式實施辦法》</strong>，資源班教師實施教學時，需針對普通教育課程進行「課程調整」，並融入「特殊需求領域課程綱要」。本平台已將此法規架構完整落實於南一版三上數學教材中。
+          依據我國<strong>《十二年國民基本教育特殊教育課程實施規範》</strong>與<strong>《高級中等以下學校特殊教育課程教材教法及評量方式實施辦法》</strong>，資源班教師實施教學時，需針對普通教育課程進行「課程調整」，並融入「特殊需求領域課程綱要」。本平台依此架構提供調整建議；實際支持方式與評量效標仍需依學生的先備能力、學習表現及個別化教育計畫選用。
         </p>
 
         <!-- 課程調整四大構面說明卡片 -->
@@ -589,7 +593,7 @@
           <div style="background: #eff6ff; border-left: 5px solid #2563eb; padding: 16px; border-radius: 8px;">
             <strong style="color: #1e40af; font-size: 1.05rem;">3. 學習環境調整 (Environment)</strong>
             <p style="font-size: 0.9rem; margin-top: 6px; line-height: 1.6; color: #1e3a8a;">
-              內建<strong>自閉症（ASD）低刺激專注模式</strong>（排除突發動畫與雜訊視覺）；提供<strong>高對比模式</strong>（滿足視知覺需求）；全面配備<strong>輔助科技（AT）</strong>（TTS 語音念題、數位放大鏡米尺、九九乘法輪）。
+              內建<strong>低刺激專注模式</strong>（排除突發動畫與雜訊視覺）；提供<strong>高對比模式</strong>（滿足視知覺需求）；全面配備<strong>輔助科技（AT）</strong>（TTS 語音念題、數位放大鏡米尺、九九乘法輪）。
             </p>
           </div>
 
@@ -609,20 +613,11 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 0.92rem;">
             <div>
               <strong style="color: #6d28d9; font-size: 1rem;">【學習策略領域】：</strong>
-              <ul style="padding-left: 20px; margin-top: 6px; line-height: 1.7; color: #4c1d95;">
-                <li><strong>特學1-Ⅱ-1</strong> 運用感官知覺（色碼、放大鏡）獲取學習訊息。</li>
-                <li><strong>特學1-Ⅱ-7</strong> 運用記憶策略（除法商乘減降口訣、矩形面積心像）。</li>
-                <li><strong>特學1-Ⅱ-13</strong> 運用閱讀理解策略（TTS報讀、題意色彩標記）。</li>
-                <li><strong>特學1-Ⅱ-5</strong> 運用組織策略（位值表格化、長方形面積分割圖）。</li>
-                <li><strong>特學4-Ⅱ-2</strong> 運用自我監控策略（檢查「餘數小於除數」、進退位確認）。</li>
-              </ul>
+              <ul id="guide-strategy-indicators" class="guide-indicators"></ul>
             </div>
             <div>
               <strong style="color: #6d28d9; font-size: 1rem;">【生活管理領域】：</strong>
-              <ul style="padding-left: 20px; margin-top: 6px; line-height: 1.7; color: #4c1d95;">
-                <li><strong>特生3-sP-4</strong> 生活貨幣認識與購物運算（千元/百元/十元/一元錢幣換算與找錢應用）。</li>
-                <li><strong>特學3-Ⅱ-2</strong> 常用度量衡工具的生活使用（直尺測量毫米與公分、量筒容量公升與毫升）。</li>
-              </ul>
+              <ul id="guide-life-indicators" class="guide-indicators"></ul>
             </div>
           </div>
         </div>
@@ -638,7 +633,7 @@
                 <th style="padding: 12px; width: 140px;">單元名稱</th>
                 <th style="padding: 12px; width: 130px;">課綱指標代碼</th>
                 <th style="padding: 12px;">特教課綱四向度調整 (內容/歷程/環境/評量)</th>
-                <th style="padding: 12px; width: 220px;">三類障別個別化微調重點</th>
+                <th style="padding: 12px; width: 220px;">不同學習需求的調整示例</th>
               </tr>
             </thead>
             <tbody id="guide-unit-table-body">
@@ -714,7 +709,7 @@
                 <option value="尚未觀察，待教師填寫" selected>尚未觀察，待教師填寫</option>
                 <option value="獨立完成（教師觀察，非系統推估掌握率）">獨立完成（教師觀察，非系統推估掌握率）</option>
                 <option value="需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)">需少許視覺提示 (能在彩色位值或圖形輔助下正確解題)</option>
-                <option value="需口語步驟引導 (經教師拆解口訣商乘減降後能完成計算)">需口語步驟引導 (經教師拆解口訣商乘減降後能完成計算)</option>
+                <option value="需口語步驟引導（教師提醒題意、操作順序或檢查方式）">需口語步驟引導（教師提醒題意、操作順序或檢查方式）</option>
                 <option value="需具體教具與肢體協助 (依賴實體錢幣/積木/量筒操作完成)">需具體教具與肢體協助 (依賴實體錢幣/積木/量筒操作完成)</option>
                 <option value="概念尚待建立 (需回溯上一階段基礎先備經驗)">概念尚待建立 (需回溯上一階段基礎先備經驗)</option>
               </select>
@@ -752,8 +747,8 @@
   <footer class="theme-credit">森林動物小隊・一起把數學玩懂</footer>
 
   <!-- 腳本載入順序：資料庫 ➔ 音效與語音 ➔ 聲光特效與吉祥物 ➔ 雙人搶答擂台 ➔ 9大教具 ➔ 特教工具箱 ➔ 旗艦競賽功能 ➔ 主應用程式 -->
-  <script src="js/data.js?v=20261031-teaching"></script>
-  <script src="js/female-audio-manifest.js?v=female-voice-20261031"></script>
+  <script src="js/data.js?v=teaching-audit-20261101"></script>
+  <script src="js/female-audio-manifest.js?v=teaching-audit-20261101"></script>
   <script src="js/audio.js?v=female-voice-20261031"></script>
   <script src="js/confetti-effects.js?v=forest-20261031"></script>
   <script src="js/battle.js?v=mondrian-20261031"></script>
@@ -761,22 +756,23 @@
   <script src="js/hands-on-tools.js?v=all-units-20261031"></script>
   <script src="js/manipulatives.js?v=all-units-20261031"></script>
   <script src="js/teacher-tools.js?v=compact-settings-bank-20261101"></script>
-  <script src="js/worksheet-visual-data.js?v=classroom-refine-20261101"></script>
+  <script src="js/worksheet-visual-data.js?v=teaching-audit-20261101"></script>
   <script src="js/worksheet-visual-supports.js?v=division-grid-20261101-2"></script>
-  <script src="js/worksheet-diagrams.js?v=shared-worksheet-20261101"></script>
+  <script src="js/worksheet-diagrams.js?v=teaching-audit-20261101"></script>
   <script src="js/contest-features.js?v=division-grid-20261101-2"></script>
-  <script src="js/learning-records.js?v=20261031-teaching"></script>
+  <script src="js/practice-session.js?v=teaching-audit-20261101"></script>
+  <script src="js/learning-records.js?v=teaching-audit-20261101"></script>
   <script src="js/number-line.js?v=20261031-teaching"></script>
   <script src="js/geometry-shapes.js?v=all-units-20261031"></script>
   <script src="js/animal-garden.js?v=home-voice-20261031"></script>
   <script src="js/storybook-theme.js?v=classroom-tools-20261031"></script>
   <script src="js/forest-home.js?v=forest-20261031"></script>
-  <script src="js/app.js?v=lesson-focus-20261031"></script>
+  <script src="js/app.js?v=teaching-audit-20261101"></script>
   <script src="js/focus-mode.js?v=lesson-focus-20261031-toolbar-1"></script>
   <script src="js/magnifier.js?v=toolbar-strips-20261031"></script>
-  <script src="js/floating-tools.js?v=paired-tools-drag-20261031"></script>
+  <script src="js/floating-tools.js?v=teaching-audit-20261101"></script>
   <script src="js/math-islands-entry.js?v=20261031-1"></script>
   <script src="js/math-whiteboard.js?v=classroom-refine-20261101"></script>
-  <script src="js/math-toolbox.js?v=icon-only-20261101"></script>
+  <script src="js/math-toolbox.js?v=teaching-audit-20261101"></script>
 </body>
 </html>

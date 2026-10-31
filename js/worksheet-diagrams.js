@@ -93,7 +93,7 @@ const WorksheetDiagrams = (() => {
   function angle(kind) {
     let body, description;
     if (kind === 'parts') {
-      body = angleArm(65, 105, 100, 65) + label(180, 55, '看連接點') + line({ x: 175, y: 61 }, { x: 70, y: 103 }) + label(180, 89, '再看兩條線');
+      body = angleArm(65, 105, 100, 65) + label(180, 55, '看連接點') + label(180, 89, '再看兩條線');
       description = '兩條直線段在同一個黑點相接';
     } else if (kind === 'curved') {
       body = '<path d="M40 95Q95 20 155 65M40 95Q100 145 170 100" stroke-width="3"/>' + dot(40, 95) + label(180, 65, '沿著兩條邊看') + label(180, 91, '有沒有彎曲？');
@@ -264,7 +264,7 @@ const WorksheetDiagrams = (() => {
   const entries = Object.create(null);
   const add = (id, required, draw, caption) => { entries[id] = { required, draw, caption }; };
   const circleTypes=['center','edge','radius','diameter','radii','chord','compare','fold-cross','fold-line','parts'];
-  const circleTerms=['最正中心','最外圍','從「圓心」','通過「圓心」','幾條半徑','沒有通過圓心','最長','對摺再對摺','接續上題','哪一個是錯誤'];
+  const circleTerms=['最正中心','最外圍','從「圓心」','通過「圓心」','幾條半徑','沒有通過圓心','最長','對摺再對摺','摺痕兩端','哪一個是錯誤'];
   circleTypes.forEach((kind,i)=>add(`p9_1_${i+1}`,[circleTerms[i]],()=>circle(kind),i===4?'圖中只畫出部分線段，可以繼續試畫。':kind.startsWith('fold')?'展開後的圓形紙片；虛線表示摺痕。':'對照黑點與線條，依題意判斷。'));
   [
     [1,['直徑','半徑'],'relation'],
@@ -308,7 +308,7 @@ const WorksheetDiagrams = (() => {
   add('p7_1_4',['家庭號鮮奶'],id=>capacity('milk',id),'想想生活中看過的家庭號鮮奶。');
   add('p7_1_5',['量筒','眼睛'],id=>capacity('eye',id),'A、B、C 是三種觀察高度，請依題意判斷。');
   add('p7_1_6',['1 公升','10 大格'],id=>jug(1,'公升',0,id),'整杯到上方刻度是 1 公升，各大格一樣高。');
-  add('p7_1_7',['第 6 大格'],id=>jug(1,'公升',6,id),'沿用上一題量杯；斜線區域表示水。');
+  add('p7_1_7',['第 6 大格'],id=>jug(1,'公升',6,id),'1公升量杯分成10大格；斜線區域表示水。');
   add('p7_1_8',['650 mL','半壺'],id=>capacity('half',id),'裝滿與喝了半壺是同一個水壺。');
   add('p7_1_9',['容量最大'],id=>capacity('containers',id),'容器僅為示意，請想想生活中實物的容量。');
   add('p7_1_10',['100 毫升','10 個小格'],id=>jug(100,'毫升',0,id),'上方刻度是 100 毫升，各小格一樣高。');

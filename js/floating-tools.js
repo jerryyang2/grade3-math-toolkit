@@ -622,7 +622,7 @@
     updateSizeLimit();
     fullscreen();
     window.MathFloatingTools = { open: () => toggle(true), close: () => toggle(false) };
-    toggle(true);
+    toggle(window.innerWidth>=900 && !!document.getElementById('tab-units')?.classList.contains('active'));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

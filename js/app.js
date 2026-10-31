@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     promptLevel: 1
   };
 
+  let ladderAutoPlaying=false,ladderPlayback=0,renderPracticeLadder;
+  function stopPracticeReading(){ladderAutoPlaying=false;ladderPlayback++;window.spEdAudio.stopSpeech();const control=document.getElementById('btn-ladder-auto-play');if(control)control.textContent='▶️ 自動依序邊講邊揭示';}
+
   // 初始化 DOM 參照
   const elements = {
     tokenCount: document.getElementById('token-count'),
@@ -117,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 標籤頁面切換
   function switchToTab(target) {
-    window.spEdAudio.stopSpeech();
+    stopPracticeReading();
     AppState.activeTab = target;
     elements.navTabs.forEach(t => {
       const active = t.dataset.tab === target;
@@ -129,8 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.spEdAudio.playClick();
     document.dispatchEvent(new CustomEvent('math-tab-change', {detail:{tab:target}}));
 
+    if (target !== 'units' && target !== 'sandbox') {
+      window.MathFloatingTools?.close();
+      window.MathToolbox?.close();
+    }
     if (target === 'units') {
-      window.MathFloatingTools?.open();
+      if(window.innerWidth>=900)window.MathFloatingTools?.open();
     } else if (target === 'practice') {
       if (!AppState.filteredPractices.length) loadPracticesForUnit(elements.practiceUnitSelect.value || AppState.currentUnitId);
     } else if (target === 'sandbox') {
@@ -483,17 +490,17 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- 🎚️ 提示階層三段消褪控制面板 (Prompt Fading Selector) -->
           <div class="fading-control-panel">
             <span class="fading-label">
-              🎚️ 提示程度：
+              🎚️ 視覺支持：
             </span>
             <div class="fading-btn-group">
-              <button class="fading-btn ${AppState.promptLevel === 1 ? 'active' : ''}" data-level="1" title="完全支持：全色彩位值框與高亮">
-                1 全提示
+              <button class="fading-btn ${AppState.promptLevel === 1 ? 'active' : ''}" data-level="1" title="彩色位值框與高亮">
+                1 彩色輔助
               </button>
-              <button class="fading-btn ${AppState.promptLevel === 2 ? 'active' : ''}" data-level="2" title="部分消褪：去強烈色彩，保留黑白對齊線">
-                2 部分提示
+              <button class="fading-btn ${AppState.promptLevel === 2 ? 'active' : ''}" data-level="2" title="降低色彩，保留對齊線">
+                2 減少色彩
               </button>
-              <button class="fading-btn ${AppState.promptLevel === 3 ? 'active' : ''}" data-level="3" title="獨立檢測：模擬段考純淨黑白算式">
-                3 自己試試
+              <button class="fading-btn ${AppState.promptLevel === 3 ? 'active' : ''}" data-level="3" title="改為黑白顯示；教具仍可使用，不自動判定獨立">
+                3 黑白顯示
               </button>
             </div>
           </div>
@@ -633,6 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
       slot.onchange = null;
       slot.oninput = null;
       slot.onkeydown = null;
+      slot.replaceChildren();
     }
     switch (uid) {
       case 'u1':
@@ -720,6 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (elements.btnPracticeSpeech) {
       elements.btnPracticeSpeech.addEventListener('click', () => {
+        stopPracticeReading();
         const p = AppState.filteredPractices[AppState.currentPracticeIndex];
         if (p) {
           elements.btnPracticeSpeech.classList.add('playing');
@@ -731,9 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 逐步拆解解題鷹架渲染器（邊講邊揭示步驟化教學）
-    let ladderAutoPlaying = false;
-
-    function renderPracticeLadder(p, autoSpeakNewStep = false) {
+    renderPracticeLadder = function(p, autoSpeakNewStep = false) {
       if (!p || !p.stepScaffolds || !elements.practiceLadderBox) return;
 
       const totalSteps = p.stepScaffolds.length;
@@ -900,6 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPracticeLadder(p, false);
             return;
           }
+          const playback=++ladderPlayback;
           ladderAutoPlaying = true;
           if (AppState.currentLadderStep >= totalSteps) {
             AppState.currentLadderStep = 1;
@@ -907,14 +915,14 @@ document.addEventListener('DOMContentLoaded', () => {
           renderPracticeLadder(p, false);
 
           function playNextAutoStep() {
-            if (!ladderAutoPlaying) return;
+            if (!ladderAutoPlaying || playback!==ladderPlayback) return;
             const curStep = AppState.currentLadderStep;
             const text = p.stepScaffolds[curStep - 1];
             window.spEdAudio.speak(text, null, () => {
-              if (!ladderAutoPlaying) return;
+              if (!ladderAutoPlaying || playback!==ladderPlayback) return;
               if (AppState.currentLadderStep < totalSteps) {
                 setTimeout(() => {
-                  if (!ladderAutoPlaying) return;
+                  if (!ladderAutoPlaying || playback!==ladderPlayback) return;
                   AppState.currentLadderStep++;
                   renderPracticeLadder(p, false);
                   playNextAutoStep();
@@ -953,6 +961,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 點擊「🔊 聽解題音檔」按鈕：邊講解邊依序揭示題目步驟！
     if (elements.btnPracticeSolutionSpeech) {
       elements.btnPracticeSolutionSpeech.addEventListener('click', () => {
+        stopPracticeReading();
         const p = AppState.filteredPractices[AppState.currentPracticeIndex];
         if (p && elements.practiceLadderBox) {
           elements.practiceLadderBox.style.display = 'block';
@@ -966,6 +975,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (elements.btnPracticeHint) {
       elements.btnPracticeHint.addEventListener('click', () => {
+        stopPracticeReading();
         const p = AppState.filteredPractices[AppState.currentPracticeIndex];
         if (p && elements.practiceFeedback) {
           elements.practiceFeedback.className = 'feedback-box hint show';
@@ -1026,27 +1036,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let bank = NANI_G3S1_DATA.practiceBank.filter(p => AppState.practiceFilter === 'all' || p.sectionId === AppState.practiceFilter || p.unitId === AppState.practiceFilter);
     const difficulty = document.getElementById('practice-difficulty')?.value || 'all';
     if (difficulty !== 'all') bank = bank.filter(p => p.level === Number(difficulty));
+    bank = window.MathPracticeSession.orderBank(bank);
     AppState.availablePractices = bank;
     const length = document.getElementById('practice-length')?.value || '5';
     const size = length === 'all' ? bank.length : Number(length);
     AppState.filteredPractices = bank.slice(AppState.practiceOffset, AppState.practiceOffset + size);
+    AppState.roundPractices=AppState.filteredPractices.slice();
     AppState.currentPracticeIndex = 0;
     renderCurrentPractice();
   }
   document.addEventListener('practice-filter-change', () => loadPracticesForUnit(elements.practiceUnitSelect.value));
   document.addEventListener('practice-new-session', () => loadPracticesForUnit(elements.practiceUnitSelect.value));
   document.addEventListener('practice-student-change', renderCurrentPractice);
+  document.getElementById('practice-read-options').addEventListener('click',()=>{
+    stopPracticeReading();
+    const p=AppState.filteredPractices[AppState.currentPracticeIndex];if(p)window.spEdAudio.speak(p.options.map((option,i)=>`${['A','B','C','D'][i]}，${option}`).join('。'));
+  });
+  document.getElementById('practice-stop-reading').addEventListener('click',stopPracticeReading);
+  document.addEventListener('math-review-section',event=>{
+    const {unitId,sectionId,target,studentId}=event.detail||{};
+    const unit=NANI_G3S1_DATA.units.find(u=>u.id===unitId);if(!unit)return;
+    if(target==='teach'){selectUnit(unitId);switchToTab('units');elements.unitDetailContainer.scrollIntoView({block:'start'});}
+    else{const picker=document.getElementById('practice-student-select');if(studentId&&[...picker.options].some(o=>o.value===studentId)){picker.value=studentId;picker.dispatchEvent(new Event('change',{bubbles:true}));}elements.practiceUnitSelect.value=sectionId;loadPracticesForUnit(sectionId);switchToTab('practice');elements.practiceQuestionText.focus();}
+  });
 
   function renderCurrentPractice() {
+    stopPracticeReading();
     const p = AppState.filteredPractices[AppState.currentPracticeIndex];
     if (!p) {
       elements.practiceQuestionText.textContent = '這個範圍尚無所選難度的題目，請調整難度或練習範圍。';
       elements.practiceOptions.replaceChildren(); elements.practiceFeedback.textContent = '';
+      document.getElementById('practice-question-figure').replaceChildren();
+      document.getElementById('practice-question-layout').classList.remove('has-figure');
+      elements.practiceLadderBox.replaceChildren(); elements.practiceLadderBox.style.display='none';
+      document.getElementById('practice-read-options').disabled = true;
       elements.practiceMetaBadge.textContent = '0 題';
       elements.btnPracticePrev.disabled = true; elements.btnPracticeNext.disabled = true;
       return;
     }
     window.LearningRecords?.beginQuestion(p);
+    document.getElementById('practice-read-options').disabled = false;
+    const figure = document.getElementById('practice-question-figure');
+    figure.innerHTML = window.WorksheetDiagrams?.render(p) || '';
+    document.getElementById('practice-question-layout').classList.toggle('has-figure', !!figure.firstElementChild);
     elements.btnPracticePrev.disabled = AppState.currentPracticeIndex === 0;
     elements.btnPracticeNext.disabled = false;
     const unit = NANI_G3S1_DATA.units.find(u => u.id === p.unitId);
@@ -1099,19 +1131,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (AppState.currentPracticeIndex + 1 < AppState.filteredPractices.length) {
       AppState.currentPracticeIndex++;
       renderCurrentPractice();
+      elements.practiceQuestionText.focus({preventScroll:true});
+      elements.practiceQuestionText.scrollIntoView({block:'nearest',behavior:'instant'});
       return;
     }
     elements.practiceFeedback.className = 'feedback-box show';
-    elements.practiceFeedback.innerHTML = '<strong>本組題目已瀏覽完畢。</strong><p>未作答不會計入觀察，請先看實際紀錄，再決定休息、再教或繼續。</p><button class="btn btn-primary" id="practice-next-group">下一組題目</button>';
+    const summary = window.LearningRecords.roundSummary(AppState.roundPractices.map(p=>p.id));
+    elements.practiceFeedback.innerHTML = `<section class="round-summary" aria-labelledby="round-summary-title"><h3 id="round-summary-title" tabindex="-1">這一小回合，先停下來看看</h3><p>已作答 ${summary.answered} / ${summary.total} 題；還有 ${summary.unanswered} 題尚未作答。</p><div class="round-metrics"><span>首次獨立完成 <strong>${summary.independent}</strong></span><span>支持後完成 <strong>${summary.supported}</strong></span><span>還需要練習 <strong>${summary.pending}</strong></span></div><p>未作答不算答錯；同一回合重練不會改寫首次紀錄，也不重複發星星。</p><div class="round-actions"><button class="btn btn-outline" id="practice-review" ${summary.reviewIds.length?'':'disabled'}>複習需要支持的題目</button><button class="btn btn-outline" id="practice-return-unanswered" ${summary.unanswered?'':'disabled'}>回到尚未作答的題目</button><button class="btn btn-primary" id="practice-next-group">下一組題目</button></div></section>`;
+    document.getElementById('practice-review').onclick = () => {AppState.filteredPractices=AppState.roundPractices.filter(p=>summary.reviewIds.includes(p.id));AppState.currentPracticeIndex=0;renderCurrentPractice();elements.practiceQuestionText.focus();};
+    document.getElementById('practice-return-unanswered').onclick = () => {AppState.filteredPractices=AppState.roundPractices.slice();AppState.currentPracticeIndex=window.LearningRecords.firstUnanswered(AppState.filteredPractices.map(p=>p.id));renderCurrentPractice();elements.practiceQuestionText.focus();};
+    document.getElementById('round-summary-title').focus({preventScroll:true});
     document.getElementById('practice-next-group').onclick = () => {
-      const offset = (AppState.practiceOffset || 0) + AppState.filteredPractices.length;
+      const size=document.getElementById('practice-length')?.value || '5';
+      const offset = (AppState.practiceOffset || 0) + (size==='all'?AppState.availablePractices.length:Number(size));
       AppState.practiceOffset = offset < AppState.availablePractices.length ? offset : 0;
       loadPracticesForUnit(AppState.practiceFilter, true);
     };
-    elements.practiceFeedback.scrollIntoView({ block: 'nearest' });
+    elements.practiceFeedback.scrollIntoView({ block: 'nearest',behavior:'instant' });
   }
 
   function handleAnswer(chosenIndex, p) {
+    stopPracticeReading();
     const isCorrect = chosenIndex === p.answerIndex;
     const evidence = window.LearningRecords.record(p, isCorrect);
     const allBtns = elements.practiceOptions.querySelectorAll('.option-btn');
@@ -1311,6 +1351,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // IEP 隨堂評量紀錄模組
+  const indicatorLibrary=NANI_G3S1_DATA.specialNeedsIndicators;
+  for(const [id,items] of [['guide-strategy-indicators',indicatorLibrary.strategy],['guide-life-indicators',indicatorLibrary.dailyLife]]){
+    document.getElementById(id).innerHTML=items.map(item=>`<li><strong>${item.code} ${item.title}</strong><span>平台應用：${item.desc}</span></li>`).join('');
+  }
   function initIepModule() {
     renderClinicDashboard('嘉');
     if (!elements.iepUnitSelect) return;
@@ -1349,8 +1393,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const notes = elements.iepTeacherNotes.value.trim();
     const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
-    const promptLevelName = AppState.promptLevel === 1 ? 'Level 1: 全鷹架模式（全彩位值定錨與完整支持）' :
-                            (AppState.promptLevel === 2 ? 'Level 2: 半鷹架消褪（去除強烈色彩，保留骨架）' : 'Level 3: 無鷹架獨立模式（模擬普通班段考試卷純淨黑白格式）');
+    const promptLevelName = AppState.promptLevel === 1 ? 'Level 1: 彩色視覺支持（保留教學引導）' :
+                            (AppState.promptLevel === 2 ? 'Level 2: 減少色彩（保留對齊線與教學引導）' : 'Level 3: 黑白顯示（教具仍可使用；不代表獨立完成）');
 
     const specialNeedsDetails = unit.specialNeedsCodes.map(code => {
       const info = getSpecialNeedsDetail(code);

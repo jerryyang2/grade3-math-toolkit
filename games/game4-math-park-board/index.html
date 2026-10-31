@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../../css/i18n.css?v=language-zh-20261101">
-  <script src="../../js/i18n-en.js?v=division-grid-20261101-2"></script>
+  <script src="../../js/i18n-en.js?v=teaching-audit-20261101"></script>
   <script src="../../js/i18n.js?v=division-grid-20261101-2"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>學習教室數學樂園</title>
   
+  <script src="../../js/game-answer-validation.js?v=teaching-audit-20261101"></script>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -103,7 +105,7 @@
   <link rel="stylesheet" href="../../css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="../../css/floating-toolbar.css?v=hand-20261031">
   <link rel="stylesheet" href="../../css/math-toolbox.css?v=classroom-refine-20261101">
-  <script defer src="../../js/female-audio-manifest.js?v=female-voice-20261031"></script>
+  <script defer src="../../js/female-audio-manifest.js?v=teaching-audit-20261101"></script>
   <script defer src="../../js/audio.js?v=female-voice-20261031"></script>
 </head>
 
@@ -297,7 +299,7 @@
             class="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white rounded-2xl font-black text-sm transition shadow-md shadow-sky-200 flex items-center justify-center gap-2 active:scale-98 cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>生成個別化練習題</span>
-          </button>
+          </button><p id="generation-notice" role="status" class="text-amber-900 font-bold mt-3"></p>
         </form>
       </div>
 
@@ -795,7 +797,7 @@
       const grade = document.getElementById('gradeSelect').value;
       const isPure = (state.mode === 'pure_calc');
 
-      state.currentTopic = topic;
+      const notice=document.getElementById('generation-notice');if(notice)notice.textContent='';
       const btn = document.getElementById('btnGenerate');
       if (btn) {
         btn.disabled = true;
@@ -805,6 +807,8 @@
       setTimeout(() => {
         try {
           const generatedData = generateElementaryMathQuestions(topic, count, grade, isPure);
+          if(generatedData.unsupported){const message='這個主題目前沒有出題模板。請選上方主題，或回主平台的對應單元練習；原本題目保留。';if(notice)notice.textContent=message;showToast(message);return;}
+          state.currentTopic=generatedData.unitName;
           state.questions = generatedData.questions;
           renderQuestions(generatedData);
           showToast(`已生成 ${count} 題【${topic}】！`);
@@ -869,6 +873,7 @@
       const isBasic20Add = t.includes("20以內進位");
       const isBasic20Sub = t.includes("20以內退位");
 
+      if(![isTime,isMoney,isQueue,isTriangleOrTrapezoid,isPerimeterOrArea,isThreeByOne,isThreeByTwo,isTwoByTwo,isTwoByOne,isNineNine,isDivThreeByTwo,isDivThreeByOne,isDivTwoByOne,isGeneralDivision,isGcdLcm,isSpeed,isRatio,isMixedOp,isFractionTimesInt,isDiffDenominator,isFraction,isDecimalMulDiv,isDecimal,isFourDigit,isBasic10,isBasic20Add,isBasic20Sub].some(Boolean)&&!/[加減]/.test(t))return {unitName:topic,questions:[],unsupported:true};
       for (let i = 1; i <= count; i++) {
         let qText = "", ans = "", expectedFormula = "", hint = "", visual = "", options = [], signature = "";
         let attempts = 0;
@@ -1246,7 +1251,7 @@
             let numAns = Math.round((a + b) * 10) / 10;
             ans = String(numAns);
             expectedFormula = `${a}+${b}`;
-            qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `小強的身高是 ${a} 公尺，站在高 ${b} 公尺的木箱上，現在離地總高度是多少公尺？`;
+            qText = isPure ? `${a} ＋ ${b} ＝ (    )` : `一條紅緞帶長 ${a} 公尺，一條藍緞帶長 ${b} 公尺，不重疊接起來共長多少公尺？`;
             hint = `小數加法：小數點一定要對齊！`;
             visual = `🧍 ${a} ＋ ${b} ＝ ${numAns}`;
             options = [ans, String(Math.round((numAns + 1) * 10) / 10), String(Math.max(0.2, Math.round((numAns - 1) * 10) / 10))];
@@ -1496,7 +1501,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
             "每分鐘", "底長", "下底", "上底", "高", "平分", "平均", "裝滿", "還剩下",
             "商", "餘數", "百分率", "最大公因數", "最小公倍數", "通分", "速度"
           ],
-          praise: "太厲害了！題目概念與計算完全正確！"
+          praise: "答案數值正確，請再說說你怎麼算的。"
         });
       }
 
@@ -1686,13 +1691,8 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
         return;
       }
 
-      const cleanUser = userVal.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
-      const cleanCorrect = correctAnswer.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
-      
-      const isRight = (cleanUser === cleanCorrect) || 
-                      (cleanUser.replace(/[^0-9\/\.餘%]/g, '') === cleanCorrect.replace(/[^0-9\/\.餘%]/g, '') && cleanCorrect.length > 0) ||
-                      (cleanUser.replace(/[^0-9]/g, '') === cleanCorrect.replace(/[^0-9]/g, '') && !cleanCorrect.includes('餘') && !cleanCorrect.includes('/'));
-      
+      const isRight = MathGameAnswers.equivalent(userVal,correctAnswer,state.questions.find(q=>q.id===qId)?.text);
+
       const feedback = document.getElementById(`feedbackBox_${qId}`);
       feedback.classList.remove('hidden');
 
@@ -1748,17 +1748,13 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
         return;
       }
 
-      const cleanUserAns = userAns.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
-      const cleanCorrectAns = correctAnswer.replace(/\s+/g, '').replace(/⋯/g, '餘').replace(/\.\.\./g, '餘').toLowerCase();
-      
-      const isAnsRight = (cleanUserAns === cleanCorrectAns) || 
-                         (cleanUserAns.replace(/[^0-9餘\/\.%]/g, '') === cleanCorrectAns.replace(/[^0-9餘\/\.%]/g, '') && cleanCorrectAns.length > 0) ||
-                         (cleanUserAns.replace(/[^0-9]/g, '') === cleanCorrectAns.replace(/[^0-9]/g, '') && !cleanCorrectAns.includes('餘') && !cleanCorrectAns.includes('/'));
+      const isAnsRight = MathGameAnswers.equivalent(userAns,correctAnswer,state.questions.find(q=>q.id===qId)?.text);
+      const formulaCheck = MathGameAnswers.checkFormula(userFormula,expectedFormula,correctAnswer);
 
       const feedback = document.getElementById(`feedbackBox_${qId}`);
       feedback.classList.remove('hidden');
 
-      if (isAnsRight) {
+      if (isAnsRight && formulaCheck !== false) {
         playSuccessSound();
         confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 } });
         if (!state.answeredMap[qId]) {
@@ -1770,8 +1766,8 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
         feedback.innerHTML = `
           <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
           <div>
-            <span>${praise || '算式列得好，答案也完全正確！太棒了！'}</span>
-            <span class="text-xs text-emerald-600 block mt-0.5">完整解題歷程，獲得成就星星 ⭐ +1！</span>
+            <span>答案數值正確。請說明算式中的數字代表什麼，再由老師確認是否符合題意。</span>
+            <span class="text-xs text-emerald-600 block mt-0.5">星星回饋依本題首次答對發給；不代表已完成解題歷程評量。</span>
           </div>
         `;
       } else {
@@ -1780,7 +1776,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
         feedback.innerHTML = `
           <i class="fa-solid fa-face-smile text-rose-400 text-lg"></i>
           <div>
-            <span>答的部分差一點點喔！請檢查公式與計算！</span>
+            <span>請再檢查答案與算式。數值正確時，也要確認列式的計算結果相同。</span>
             <span class="text-xs text-rose-600 block mt-0.5">💡 您的算式是 ${escapeHtml(userFormula)}，再仔細計算一次！</span>
           </div>
         `;
@@ -2198,8 +2194,8 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
     }
   </script>
   <script src="../../js/magnifier.js?v=toolbar-strips-20261031"></script>
-  <script src="../../js/floating-tools.js?v=paired-tools-drag-20261031"></script>
+  <script src="../../js/floating-tools.js?v=teaching-audit-20261101"></script>
   <script src="../../js/math-whiteboard.js?v=classroom-refine-20261101"></script>
-  <script src="../../js/math-toolbox.js?v=icon-only-20261101"></script>
+  <script src="../../js/math-toolbox.js?v=teaching-audit-20261101"></script>
 </body>
 </html>

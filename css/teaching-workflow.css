@@ -92,3 +92,23 @@
   #unit-manipulative-slot:has(> .fraction-compare-details[open]), #sandbox-stage:has(> .fraction-compare-details[open]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
   .fraction-compare-details[open] { margin-top: 0; }
 }
+
+/* 題意與圖像並列，支持閱讀；待求量沿用已檢核的留白圖。 */
+#practice-question-layout{display:grid;gap:20px;align-items:center;margin:14px 0 22px;min-width:0}
+#practice-question-layout .question-text{margin:0;min-width:0;padding:20px;border-left:6px solid #9a6b25;border-radius:12px;background:#fff4d7;color:#533e1c;line-height:1.8;overflow-wrap:anywhere}
+#practice-question-figure:empty{display:none}
+#practice-question-figure .ws-diagram{margin:0;padding:14px;border:2px solid #ccd8ca;border-radius:14px;background:white;color:#172f27}
+#practice-question-figure svg{display:block;width:100%;max-height:360px}
+#practice-question-figure figcaption{font-size:1rem;line-height:1.6;margin-top:10px}
+.practice-reading-actions,.round-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.round-summary h3{font-size:1.4rem;margin:0 0 12px}.round-summary p{line-height:1.8}
+.round-metrics{display:flex;flex-wrap:wrap;gap:12px}.round-metrics>span{flex:1 1 150px;display:grid;padding:12px;background:#edf3e6;border:1px solid #b8c8aa;border-radius:10px;color:#214633}.round-metrics strong{font-size:1.8rem}
+#round-summary-title:focus,#practice-question-text:focus{outline:3px solid #577b8b;outline-offset:4px}
+.reteaching-summary{margin:24px 0}.reteaching-summary>p,.reteaching-list p{line-height:1.7}
+.reteaching-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.reteaching-list article{border:1px solid #b8cabb;background:#f5f7ee;border-radius:12px;padding:18px}.reteaching-list h4{font-size:1.2rem;margin:0 0 12px}.reteaching-list article>div{display:flex;gap:10px;flex-wrap:wrap}
+.evidence-card button{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #60846e;border-radius:8px;background:#fffdf4;color:#214633;cursor:pointer}.evidence-card td{max-width:40ch;overflow-wrap:anywhere;line-height:1.7}
+.guide-indicators li{margin:12px 0;line-height:1.7}.guide-indicators li>span{display:block;font-size:1rem;margin-top:4px}
+@media(min-width:1000px){#practice-question-layout.has-figure{grid-template-columns:minmax(0,1.3fr) minmax(260px,1fr)}}
+@media(max-width:600px){#practice-question-layout .question-text{padding:14px}#practice-question-figure svg{max-height:290px}.practice-reading-actions button{flex:1}#practice-options{grid-template-columns:1fr}}
+.high-contrast-mode #practice-question-layout .question-text{background:#101010!important;color:#fff!important;border-color:#ffe585!important}.high-contrast-mode .round-metrics>span,.high-contrast-mode .reteaching-list article{background:#161616!important;color:#fff!important;border-color:#fff!important}

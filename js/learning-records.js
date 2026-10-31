@@ -60,15 +60,21 @@
     const root = document.getElementById('learning-records-dashboard');
     if (!root) return;
     const selected = (typeof preferred === 'string' && preferred) || root.querySelector('select')?.value || studentId || String(students()[0]?.id || '');
-    const stats = summarize(entries, selected);
+    const unitFilter=root.querySelector('#records-unit-select')?.value || '';
+    const stats = summarize(entries, selected, unitFilter);
+    const bank=window.NANI_G3S1_DATA?.practiceBank || [],units=window.NANI_G3S1_DATA?.units || [];
+    const sections=window.MathPracticeSession.sectionSummary(entries,selected,bank).filter(row=>!unitFilter||row.unitId===unitFilter);
     root.innerHTML = `<section class="card evidence-card"><h2>實際學習觀察</h2><p>只計入本瀏覽器的練習作答；首次答對、獨立答對與提示後完成分開呈現，不推斷障礙類型。${!writable ? '目前無法安全儲存，請匯出備份。' : ''}</p>
-      <div class="evidence-toolbar"><label>學生代號 <select id="records-student-select">${students().map(s => `<option translate="no" value="${s.id}" ${String(s.id) === selected ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}</select></label><button type="button" id="export-learning-records">匯出此生紀錄</button><button type="button" id="clear-learning-records">清除此生紀錄</button></div>
+      <div class="evidence-toolbar"><label>學生代號 <select id="records-student-select">${students().map(s => `<option translate="no" value="${s.id}" ${String(s.id) === selected ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}</select></label><label>觀察單元<select id="records-unit-select"><option value="">全部單元</option>${units.map(u=>`<option value="${u.id}" ${u.id===unitFilter?'selected':''}>${escapeHtml(u.title)}</option>`).join('')}</select></label><button type="button" id="export-learning-records">匯出此生紀錄</button><button type="button" id="clear-learning-records">清除此生紀錄</button></div>
       <div class="evidence-metrics"><span>題目觀察<strong>${stats.total}</strong></span><span>首次答對<strong>${stats.firstRate === null ? '尚無資料' : stats.firstRate + '%'}</strong></span><span>獨立首次答對<strong>${stats.independentRate === null ? '尚無資料' : stats.independentRate + '%'}</strong></span><span>最終完成<strong>${stats.final} / ${stats.total}</strong></span></div>
       <p>累計包含不同回合，不能直接當成精熟率或教學介入成效。請搭配學生口述、實物操作與不同題型觀察。</p>
-      ${stats.total ? `<div class="evidence-table"><table><caption>最近 20 筆題目觀察（最新在前）</caption><thead><tr><th>日期／單元</th><th>首次作答</th><th>所需支持</th><th>最終結果</th></tr></thead><tbody>${stats.rows.slice(-20).reverse().map(e => `<tr><td>${escapeHtml(new Date(e.time).toLocaleDateString('zh-TW'))}／${escapeHtml(e.unitId)}</td><td>${e.firstCorrect ? '答對' : '尚未答對'}</td><td>${SUPPORTS[e.support]}</td><td>${e.finalCorrect ? '完成' : '待再教'}（${e.attempts} 次嘗試）</td></tr>`).join('')}</tbody></table></div>` : '<div class="evidence-empty">尚無實際作答資料。請到「隨堂練習」選擇學生代號，再進行練習。</div>'}</section>`;
-    root.querySelector('select').addEventListener('change', renderDashboard);
+      ${sections.length?`<section class="reteaching-summary" aria-labelledby="reteaching-title"><h3 id="reteaching-title">下一步教什麼？</h3><p>每題只取最近回合的觀察。同一題反覆練習只算一題；沒有作答的小節不推定已會或不會。</p><div class="reteaching-list">${sections.map(section=>`<article><h4>${escapeHtml(section.title)}</h4><p>已觀察 ${section.total} 題：首次獨立 ${section.independent}、支持後完成 ${section.supported}、待再教 ${section.pending}。</p><p>${section.pending?'先回教具操作，再換一題確認。':section.supported?'先減少提示，再用不同題目確認。':'可換情境或隔天再確認，不以少量題目判定精熟。'}</p><div><button type="button" data-review-section="${section.id}" data-unit="${section.unitId}" data-target="teach">回本單元教具再教</button><button type="button" data-review-section="${section.id}" data-unit="${section.unitId}" data-target="practice">練習這個小節</button></div></article>`).join('')}</div></section>`:''}
+      ${stats.total ? `<div class="evidence-table"><table><caption>最近 20 筆題目觀察（最新在前）</caption><thead><tr><th>日期／題目</th><th>首次作答</th><th>所需支持</th><th>最終結果</th></tr></thead><tbody>${stats.rows.slice(-20).reverse().map(e => `<tr><td>${escapeHtml(new Date(e.time).toLocaleDateString('zh-TW'))}／${escapeHtml(bank.find(p=>p.id===e.questionId)?.sectionTitle || e.unitId)}<br>${escapeHtml(bank.find(p=>p.id===e.questionId)?.question || e.questionId)}</td><td>${e.firstCorrect ? '答對' : '尚未答對'}</td><td>${SUPPORTS[e.support]}</td><td>${e.finalCorrect ? '完成' : '待再教'}（${e.attempts} 次嘗試）</td></tr>`).join('')}</tbody></table></div>` : '<div class="evidence-empty">尚無實際作答資料。請到「隨堂練習」選擇學生代號，再進行練習。</div>'}</section>`;
+    root.querySelector('#records-student-select').addEventListener('change', event=>renderDashboard(event.target.value));
+    root.querySelector('#records-unit-select').addEventListener('change',()=>renderDashboard(selected));
+    root.querySelectorAll('[data-review-section]').forEach(button=>button.addEventListener('click',()=>document.dispatchEvent(new CustomEvent('math-review-section',{detail:{unitId:button.dataset.unit,sectionId:button.dataset.reviewSection,target:button.dataset.target,studentId:selected}}))));
     root.querySelector('#export-learning-records').addEventListener('click', () => {
-      const data = { schema: 1, studentId: selected, exportedAt: new Date().toISOString(), records: stats.rows };
+      const data = { schema: 1, studentId: selected, exportedAt: new Date().toISOString(), records: entries.filter(e=>e.studentId===selected) };
       const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
       const a = document.createElement('a'); a.href = url; a.download = 'math-learning-records.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000);
     });
@@ -107,6 +113,9 @@
     const label = window.MathI18n?.protect(name) ?? name;
     return `本回合練習代號：${label}；本單元 ${data.total} 題觀察，首次答對 ${data.first} 題、獨立首次答對 ${data.independent} 題、最終完成 ${data.final} 題。請確認此代號與報告學生一致；不是概念精熟或診斷結論。`;
   }
+function currentRows(){return studentId?entries.filter(e=>e.sessionId===sessionId&&e.studentId===studentId):(demoAttempts.get('records')||[]);}
+  function roundSummary(ids){return window.MathPracticeSession.roundSummary(currentRows(),ids);}
+  function firstUnanswered(ids){const answered=new Set(currentRows().map(e=>e.questionId));return Math.max(0,ids.findIndex(id=>!answered.has(id)));}
   function strategyPrompt(p) {
     return {
       u1: '先找千、百、十、個的位置。想一想：數量改變的是哪一位？',
@@ -120,13 +129,13 @@
       u9: '先找圓心；半徑從圓心到圓周，直徑要穿過圓心。'
     }[p.unitId] || '先說出題目已知什麼、要找什麼，再用教具或畫圖試試看。';
   }
-  window.LearningRecords = { beginQuestion, markSupport, record, report, renderDashboard, escapeHtml, strategyPrompt };
+    window.LearningRecords = { roundSummary, firstUnanswered, beginQuestion, markSupport, record, report, renderDashboard, escapeHtml, strategyPrompt };
   document.addEventListener('DOMContentLoaded', () => {
     const slot = document.getElementById('practice-session-controls');
     slot.innerHTML = `<details class="practice-settings-wrap" ${window.matchMedia('(min-width: 601px)').matches ? 'open' : ''}><summary id="practice-settings-summary">練習設定與紀錄</summary><section class="card practice-settings"><div class="practice-settings-grid">
       <label>練習對象<select id="practice-student-select"><option value="">示範模式（不記錄）</option>${students().map(s => `<option translate="no" value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></label>
       <label>題目難度<select id="practice-difficulty"><option value="all">混合程度</option><option value="1">基礎觀念</option><option value="2">熟練運算</option><option value="3">生活應用</option></select></label>
-      <label>練習份量<select id="practice-length"><option value="5">5 題小回合</option><option value="10">10 題</option><option value="all">全部題目</option></select></label>
+      <label>練習份量<select id="practice-length"><option value="3">3 題先試試</option><option value="5" selected>5 題小回合</option><option value="10">10 題</option><option value="all">全部題目</option></select></label>
       <label>本題支持程度<select id="practice-support">${Object.entries(SUPPORTS).map(([v,label]) => `<option value="${v}">${label}</option>`).join('')}</select></label>
       <button type="button" id="new-practice-session">開始新回合</button></div><p id="practice-record-status" role="status"></p><p class="practice-privacy">使用學生代號即可。紀錄僅在此瀏覽器；匯出檔請存於本機，不要放入公開網站。</p></section></details>`;
     slot.querySelector('#practice-student-select').addEventListener('change', event => {

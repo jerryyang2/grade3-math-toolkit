@@ -397,7 +397,8 @@
     window.addEventListener('resize', () => { render(); clampHost(); });
     setOrientation(orientation, false);
     fullscreen();
-    toggle(true);
+    window.MathToolbox={open:()=>toggle(true),close:()=>toggle(false)};
+    toggle(window.innerWidth>=900 && !!document.getElementById('tab-units')?.classList.contains('active'));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
