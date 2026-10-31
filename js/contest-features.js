@@ -566,7 +566,7 @@
               <div>
                 <h3 id="worksheet-title" style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
                 <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 大字點陣對齊格 · 課程調整參考註記</span>
-                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題，保留大字與書寫空間，列印時自動分頁。</p>
+                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題 · A4 直式雙欄 · 四邊各 1.5 公分；保留大字與書寫格，依內容自動分頁。</p>
               </div>
             </div>
             <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
@@ -680,125 +680,37 @@
           <meta charset="UTF-8">
           <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
           <title>學習教室個別化學習單 - ${unit.title}</title>
-          <style>
-            @page { size: A4; margin: 15mm; }
-            body {
-              font-family: ${withZihi ? "'字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'KaiTi', serif" : "'Microsoft JhengHei', sans-serif"};
-              color: #000;
-              line-height: 1.6;
-              padding: 0;
-              margin: 0;
-            }
-            .ws-header {
-              text-align: center;
-              border-bottom: 2px solid #000;
-              padding-bottom: 8px;
-              margin-bottom: 16px;
-            }
-            .ws-title {
-              font-size: 20pt;
-              font-weight: bold;
-              margin: 0;
-            }
-            .ws-meta-row {
-              display: flex;
-              justify-content: space-between;
-              margin-top: 10px;
-              font-size: 12pt;
-              font-weight: bold;
-            }
-            .ws-question-box {
-              margin-bottom: 16px;
-              padding: 10px;
-              border: 1px solid #ccc;
-              border-radius: 6px;
-              break-inside: avoid;
-              page-break-inside: avoid;
-            }
-            .ws-q-num {
-              font-size: 13pt;
-              font-weight: bold;
-            }
-            .ws-q-text {
-              font-size: 14pt;
-              margin: 4px 0 10px 0;
-              letter-spacing: 0.05em;
-            }
-            .ws-grid-area {
-              display: flex;
-              gap: 8px;
-              margin: 8px 0;
-            }
-            .dot-grid {
-              width: 38px;
-              height: 48px;
-              border: 1.5px dashed #666;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              position: relative;
-            }
-            .dot-grid::before {
-              content: '';
-              position: absolute;
-              width: 100%;
-              height: 1px;
-              border-top: 1px dotted #aaa;
-            }
-            .ws-options {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 8px;
-              font-size: 12pt;
-              margin-top: 6px;
-            }
-            .ws-footer-stamp {
-              margin-top: 24px;
-              border: 2px solid #333;
-              padding: 10px;
-              border-radius: 6px;
-              font-size: 10pt;
-              page-break-inside: avoid;
-            }
-            .stamp-title {
-              font-weight: bold;
-              font-size: 11pt;
-              border-bottom: 1px solid #666;
-              padding-bottom: 4px;
-              margin-bottom: 6px;
-            }
-          </style>
+          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=two-columns-20261031', window.location.href).href}">
         </head>
-        <body>
-          <div class="print-preview-controls" style="padding:12px; margin-bottom:16px; background:#eef2ff;"><button onclick="window.print()" style="font:inherit; padding:10px;">列印／另存 PDF</button> 請先核對題目與支援選項。</div>
-          <style>@media print { .print-preview-controls { display: none !important; } }</style>
-          <div class="ws-header">
+        <body class="${withZihi ? 'ws-zihi' : ''}">
+          <nav class="print-preview-controls" aria-label="學習單預覽工具"><button type="button" onclick="window.print()">列印／另存 PDF</button><p><strong>A4 直式雙欄 · 四邊各 1.5 公分</strong><span>列印設定：A4、邊界選「預設」（套用 1.5 公分）、比例 100%，關閉頁首及頁尾。題目先讀左欄，再讀右欄。</span></p></nav>
+          <main class="ws-sheet">
+          <header class="ws-header">
             <h1 class="ws-title">南一版三年級上學期數學 學習教室個別化學習單</h1>
-            <div style="font-size: 13pt; margin-top: 4px;">單元 ${unit.number}：${unit.title} · 共 ${problems.length} 題 · 實體紙筆精熟挑戰</div>
+            <div class="ws-unit">單元 ${unit.number}：${unit.title} · 共 ${problems.length} 題</div>
             <div class="ws-meta-row">
               <span>學生姓名：<strong>${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
               <span>評量日期：<strong>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
               <span>得分：_______</span>
             </div>
-          </div>
+          </header>
 
           <div class="ws-body">
             ${problems.map((p, idx) => `
               <div class="ws-question-box">
-                <div class="ws-q-num">第 ${idx + 1} 題【${p.level === 1 ? '基礎觀念' : (p.level === 2 ? '熟練運算' : '生活應用')}】</div>
+                <div class="ws-q-num"><strong>第 ${idx + 1} 題</strong><span>${p.level === 1 ? '基礎觀念' : (p.level === 2 ? '熟練運算' : '生活應用')}</span><span class="ws-answer">答：____</span></div>
                 <div class="ws-q-text">${p.question}</div>
                 ${withGrid ? `
-                  <div style="font-size: 10pt; color: #555; margin-bottom: 4px;">計算過程點陣對齊格（請由個位靠右書寫）：</div>
+                  <div class="ws-grid-label">計算格（從右邊個位開始寫）</div>
                   <div class="ws-grid-area">
                     <span class="dot-grid"></span>
                     <span class="dot-grid"></span>
                     <span class="dot-grid"></span>
                     <span class="dot-grid"></span>
-                    <span style="display:flex; align-items:center; margin-left:12px; font-weight:bold;">答：( &nbsp;&nbsp;&nbsp;&nbsp; )</span>
                   </div>
                 ` : ''}
-                <div class="ws-options">
-                  ${p.options.map((opt, oIdx) => `<div>(${['A', 'B', 'C', 'D'][oIdx]}) ${opt}</div>`).join('')}
+                <div class="ws-options${p.options.some(opt => String(opt).length > 12) ? ' ws-options-long' : ''}">
+                  ${p.options.map((opt, oIdx) => `<div class="ws-option"><span>(${['A', 'B', 'C', 'D'][oIdx]})</span><span>${opt}</span></div>`).join('')}
                 </div>
               </div>
             `).join('')}
@@ -806,8 +718,8 @@
 
           ${withStamp ? `
             <div class="ws-footer-stamp">
-              <div class="stamp-title">🏛️ 108 特教課綱·課程調整與個別化支持紀錄欄（教師勾選實際提供項目）</div>
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+              <div class="stamp-title">108 特教課綱·個別化支持紀錄（教師勾選實際提供項目）</div>
+              <div class="stamp-items">
                 <div>☐ <strong>學習內容</strong>：簡化題意長句、字嗨注音雙軌表徵</div>
                 <div>☐ <strong>學習歷程</strong>：點陣大字對齊防呆、C-R-A 具體操作後銜接</div>
                 <div>☐ <strong>學習環境</strong>：低視覺焦慮、無倒扣增強機制</div>
@@ -815,8 +727,7 @@
               </div>
             </div>
           ` : ''}
-
-
+          </main>
         </body>
         </html>
       `);
