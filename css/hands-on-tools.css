@@ -1,0 +1,110 @@
+/* 教具圖像與操作步驟，限定於新工具及新增的教學圖。 */
+.ho-tool { color:#203d32; min-width:0; }
+.ho-tool *, .ho-visual * { box-sizing:border-box; }
+.ho-tool h4, .ho-tool h5, .ho-tool p, .ho-visual h5, .ho-visual p { margin:0; }
+.ho-tool h4 { font-size:clamp(1.25rem,2.3vw,1.6rem); line-height:1.5; }
+.ho-tool h5, .ho-visual h5 { font-size:1.125rem; line-height:1.6; font-weight:850; }
+.ho-tool p, .ho-visual p { line-height:1.8; }
+.ho-tool button, .ho-tool select { font:inherit; font-size:1rem; font-weight:750; min-height:48px; padding:8px 12px; border:2px solid #78917f; border-radius:10px; background:#fff; color:#203d32; max-width:100%; }
+.ho-tool button { cursor:pointer; }
+.ho-tool button:hover:not(:disabled) { background:#fff0b7; border-color:#22583e; }
+.ho-tool button:disabled { opacity:.5; cursor:default; }
+.ho-tool button[aria-pressed="true"] { border-color:#1d573b; background:#e0f0d8; box-shadow:0 2px 0 #365e40; }
+.ho-heading { margin-bottom:14px; }
+.ho-heading > span { font-size:.9375rem; font-weight:800; color:#546c50; }
+.ho-announcement { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; padding:0; border:0; }
+.ho-tool .ho-guide { padding:14px 16px; border:2px solid #a8b99b; background:#f0f7e7; border-radius:13px 18px 13px 16px; margin:14px 0; scroll-margin-top:20px; }
+.ho-guide > ol { display:flex; gap:7px; list-style:none; margin:0 0 12px; padding:0; }
+.ho-guide > ol li { flex:1; border-bottom:3px solid #c3cbbd; padding:7px 4px; color:#53624c; font-size:.9375rem; font-weight:800; text-align:center; }
+.ho-guide > ol .current { border-color:#7151a9; background:#eee7fb; color:#4c3185; border-radius:6px 6px 0 0; }
+.ho-guide > ol .done { border-color:#50845b; color:#2b5c39; }
+.ho-guide > div { display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+.ho-guide > p { font-size:1.125rem; font-weight:750; padding:8px 0; }
+.ho-guide nav { display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+.ho-guide [data-ho-action="next"] { background:#265c3f; border-color:#173e2a; color:#fff; box-shadow:0 3px 0 #1e432d; margin-left:auto; }
+.ho-guide [data-ho-action="next"]:hover:not(:disabled) { background:#17452d; }
+.ho-tool .ho-options, .ho-tool .ho-inputs { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:12px 0; }
+.ho-tool .ho-inputs label, .ho-tool .ho-radius-label { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:1rem; font-weight:800; }
+.ho-tool .ho-inputs input[type="range"] { width:min(100%,250px); accent-color:#326b4b; min-height:44px; cursor:pointer; }
+.ho-tool .ho-result { border:2px solid #688b60; border-radius:12px; background:#edf7e5; padding:14px 18px; margin:16px 0; font-weight:800; font-size:1.25rem; line-height:1.8; }
+.ho-tool .ho-result p { font-size:1.0625rem; margin-top:5px; }
+.ho-tool .ho-note { font-size:1rem; color:#50614a; margin:12px 0; }
+.ho-visual { padding:14px; margin:16px 0; background:#f8f9f0; border:2px solid #adbaa2; border-radius:12px; color:#203d32; min-width:0; }
+.ho-tool svg, .ho-visual svg { display:block; max-width:100%; height:auto; }
+.ho-align > div { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:10px 0; }
+.ho-align article { display:grid; justify-items:center; padding:6px; background:#fff; border:1px solid #b3c1aa; border-radius:8px; }
+.ho-align svg { width:80px; }
+.ho-piece { width:52px; display:inline-grid; position:relative; flex:0 0 auto; }
+.ho-piece svg { width:100%; }
+.ho-piece.is-removed { opacity:.58; }
+.ho-piece.is-removed b { position:absolute; inset:0; display:grid; place-items:center; color:#a92b2c; font:800 38px/1 sans-serif; }
+.ho-piece-group { display:flex; align-items:center; gap:3px; flex-wrap:wrap; max-width:430px; padding:8px; margin-top:5px; border:1px solid #bdc8b2; border-radius:8px; background:#fff; min-height:60px; }
+.ho-empty { display:inline-block; color:#57674e; padding:8px; }
+.ho-material-equation { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin:12px 0; }
+.ho-material-equation > div { flex:1 1 220px; min-width:0; }
+.ho-material-equation > div > span { font-weight:800; }
+.ho-material-equation > b { font-size:1.5rem; }
+.ho-trade-picture { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:12px; margin:12px 0; padding:10px; border:1px dashed #b77952; border-radius:10px; background:#fff6e8; }
+.ho-trade-picture > div { display:flex; flex-wrap:wrap; align-items:center; gap:4px; }
+.ho-trade-picture > .ho-ten { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); border:2px solid #a65737; border-radius:10px; padding:5px; max-width:100%; }
+.ho-ten .ho-piece { width:43px; max-width:100%; }
+.ho-trade-picture > b { font-size:1.5rem; }
+.ho-scroll { overflow-x:auto; max-width:100%; overscroll-behavior-x:contain; }
+.ho-array .ho-scroll svg { width:100%; min-width:500px; }
+.ho-tool .ho-ruler { width:100%; min-width:650px; }
+.ho-tool .ho-angle-scene svg { width:min(100%,440px); margin:auto; }
+.ho-tool .ho-plates { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr)); gap:12px; }
+.ho-tool .ho-plate { display:flex; flex-direction:column; justify-content:space-between; gap:10px; min-height:150px; border:3px solid #a4b99e; border-radius:36px; background:#fafff5; padding:14px; }
+.ho-tool .ho-plate:disabled { opacity:1; }
+.ho-tool .ho-plate.is-next { border-color:#8c671b; outline:3px solid #f0c14e; outline-offset:2px; background:#fff4c7; }
+.ho-tool .ho-plate > span:last-child { font-size:1rem; }
+.ho-tool .ho-apples { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:4px; padding:8px 0; }
+.ho-tool .ho-apples svg { width:30px; height:32px; flex:0 0 30px; }
+.ho-tool .ho-capacity-stage { display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }
+.ho-tool .ho-capacity-stage > svg { width:350px; }
+.ho-tool .ho-pour-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.ho-tool .ho-pour-controls [data-ho-action="pour"] { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.ho-tool .ho-pour-controls svg { width:64px; }
+.ho-tool .ho-litre-equivalence { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:14px; margin:16px 0; border:2px dashed #7b9f8b; border-radius:12px; background:#f1f8ed; }
+.ho-tool .ho-litre-equivalence > div { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px; max-width:100%; }
+.ho-tool .ho-litre-equivalence svg { width:48px; }
+.ho-tool .ho-litre-equivalence strong { font-size:1.25rem; }
+.ho-tool .ho-fraction-stage, .ho-tool .ho-circle-stage { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:24px; }
+.ho-tool .ho-fraction-stage > svg { width:280px; }
+.ho-tool .ho-circle-stage > svg { width:340px; }
+.ho-tool .ho-fraction-stage [data-slice] { cursor:pointer; }
+.ho-tool .ho-fraction-stage [data-slice]:focus-visible { outline:none; stroke:#1d54a5; stroke-width:6px; }
+.ho-tool .ho-fraction-symbol { display:grid; justify-items:center; gap:6px; min-width:100px; font-size:2.2rem; line-height:1.25; }
+.ho-tool .ho-fraction-symbol > span { display:block; height:4px; width:80px; background:currentColor; }
+.ho-tool .ho-fraction-symbol p { font-size:1.125rem; margin-top:8px; font-weight:800; }
+.ho-tool .ho-circle-stage p { flex:1 1 220px; }
+.high-contrast-mode :is(.ho-tool,.ho-visual) { color:#fff; }
+.high-contrast-mode :is(.ho-tool .ho-guide,.ho-tool .ho-result,.ho-visual,.ho-tool .ho-litre-equivalence,.ho-align article,.ho-piece-group,.ho-trade-picture,.ho-tool .ho-plate) { background:#18181b; color:#fff; border-color:#facc15; }
+.high-contrast-mode .ho-tool :is(button,select) { background:#18181b; color:#fff; border-color:#eee; }
+.high-contrast-mode .ho-tool :is(h4,h5,p,.ho-heading > span,.ho-note,.ho-empty), .high-contrast-mode .ho-visual :is(h5,p,.ho-empty) { color:#fff; }
+.high-contrast-mode .ho-tool .ho-guide [data-ho-action="next"], .high-contrast-mode .ho-tool .ho-plate.is-next { color:#111; background:#facc15; border-color:#fff; }
+.high-contrast-mode .ho-tool .ho-guide .current { background:#473368; color:#fff; }
+.high-contrast-mode .ho-tool .ho-guide .done { color:#d8ffc5; }
+@media(max-width:700px) {
+  .ho-tool .ho-guide { padding:12px; }
+  .ho-guide > ol { gap:4px; }
+  .ho-guide > ol li { font-size:.875rem; padding-inline:2px; }
+  .ho-tool .ho-guide > p { font-size:1.0625rem; }
+  .ho-guide nav [data-ho-action="next"] { flex:1 1 150px; }
+  .ho-material-equation { flex-direction:column; align-items:stretch; }
+  .ho-material-equation > div { flex:auto; }
+  .ho-material-equation > b { text-align:center; }
+  .ho-tool .ho-pour-controls { width:100%; }
+  .ho-tool .ho-capacity-stage { gap:10px; }
+  .ho-tool .ho-plates { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .ho-tool .ho-plate { padding:10px 6px; min-height:135px; border-radius:24px; }
+  .ho-tool .ho-result { padding:12px; font-size:1.125rem; }
+}
+@media print { .ho-guide nav, .ho-tool .ho-options, .ho-tool .ho-pour-controls { display:none; } .ho-scroll { overflow:visible; } }
+/* 保留圖像內深色刻度的清晰度，外圍介面仍使用黑底高對比。 */
+.high-contrast-mode .ho-tool :is(.ho-angle-scene,.ho-capacity-stage,.ho-fraction-stage,.ho-circle-stage) > svg,
+.high-contrast-mode .ho-tool .ho-ruler,
+.high-contrast-mode .ho-tool .ho-visual > svg,
+.high-contrast-mode .ho-array .ho-scroll > svg { background:#fffdf2; border:1px solid #facc15; border-radius:8px; }
+
+.high-contrast-mode .ho-tool .ho-guide > ol li { color:#eee; }

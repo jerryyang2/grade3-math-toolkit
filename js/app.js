@@ -625,6 +625,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function mountUnitManipulative(uid, targetSlotId) {
+    // 切換教具前清除容器擁有的事件，避免分數子工具冒泡到上一個教具。
+    const slot = document.getElementById(targetSlotId);
+    if (slot) {
+      slot.onclick = null;
+      slot.onchange = null;
+      slot.oninput = null;
+      slot.onkeydown = null;
+    }
     switch (uid) {
       case 'u1':
         Manipulatives.renderU1Money(targetSlotId);
