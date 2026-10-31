@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup } = require('../js/math-whiteboard.js');
+const { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke } = require('../js/math-whiteboard.js');
 
 const stroke = { color: '#273b5b', width: 4, points: [{ x: 20, y: 30 }, { x: 100, y: 30 }, { x: 100, y: 90 }] };
 
@@ -83,5 +83,33 @@ test('all published toolbox pages load the whiteboard before the toolbox exactly
     const html = fs.readFileSync(path.join(root, page), 'utf8');
     assert.equal((html.match(/js\/math-whiteboard\.js/g) || []).length, 1);
     assert.ok(html.lastIndexOf('js/math-whiteboard.js') < html.lastIndexOf('js/math-toolbox.js'));
+    assert.match(html, /js\/math-whiteboard\.js\?v=board-tools-20261031/);
+    assert.match(html, /css\/math-toolbox\.css\?v=board-tools-20261031/);
   }
+});
+
+test('ruler and set-square lines are clipped to the board and stored in board-local coordinates', () => {
+  const bounds = { left: 100, top: 200, width: 400, height: 300 };
+  for (const [start, end, expected] of [
+    [{ x: 50, y: 250 }, { x: 550, y: 250 }, [{ x: 0, y: 50 }, { x: 400, y: 50 }]],
+    [{ x: 200, y: 150 }, { x: 200, y: 550 }, [{ x: 100, y: 0 }, { x: 100, y: 300 }]],
+    [{ x: 550, y: 550 }, { x: 50, y: 50 }, [{ x: 400, y: 300 }, { x: 100, y: 0 }]],
+    [{ x: 100, y: 200 }, { x: 100, y: 200 }, [{ x: 0, y: 0 }, { x: 0, y: 0 }]]
+  ]) assert.deepEqual(geometryStroke({ type: 'line', start, end }, bounds).points, expected);
+  assert.equal(geometryStroke({ type: 'line', start: { x: 10, y: 10 }, end: { x: 90, y: 90 } }, bounds), null);
+  assert.equal(geometryStroke({ type: 'line', start: { x: 50, y: 250 }, end: { x: 50, y: 450 } }, bounds), null);
+});
+
+test('compass circles preserve their center and radius on the board and support erasing and undo', () => {
+  const bounds = { left: 100, top: 200, width: 400, height: 300 };
+  const circle = geometryStroke({ type: 'circle', x: 300, y: 350, radius: 80 }, bounds);
+  for (const point of circle.points) assert.ok(Math.abs(Math.hypot(point.x - 200, point.y - 150) - 80) < .00001);
+  assert.equal(hitsStroke(circle, { x: 280, y: 150 }), true);
+  assert.equal(hitsStroke(circle, { x: 200, y: 150 }), false);
+  const history = new WhiteboardHistory();
+  history.save([circle]); history.save([]); history.undo();
+  assert.deepEqual(history.marks, [circle]);
+  assert.equal(geometryStroke({ type: 'circle', x: 10, y: 10, radius: 20 }, bounds), null);
+  assert.equal(geometryStroke({ type: 'circle', x: 300, y: 350, radius: 500 }, bounds), null);
+  assert.ok(geometryStroke({ type: 'circle', x: 90, y: 350, radius: 50 }, bounds));
 });

@@ -67,6 +67,22 @@ test('main page and all five games load toolbox assets once in the actual docume
     assert.match(head, /href="(?:\.\.\/\.\.\/)?css\/math-toolbox\.css\?/);
     assert.equal((html.match(/css\/math-toolbox\.css/g) || []).length, 1);
     assert.equal((html.match(/js\/math-toolbox\.js/g) || []).length, 1);
+    assert.match(html, /js\/math-toolbox\.js\?v=board-tools-20261031/);
     assert.match(html.slice(html.lastIndexOf('<script')), /js\/math-toolbox\.js/);
   }
+});
+
+test('toolbox expands once after initialization using the existing toggle controls', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../js/math-toolbox.js'), 'utf8');
+  assert.match(source, /setOrientation\(orientation, false\);\s*fullscreen\(\);\s*toggle\(true\);\s*}/);
+});
+
+test('instruments stay above the whiteboard and below toolbox controls', () => {
+  const css = fs.readFileSync(path.join(__dirname, '../css/math-toolbox.css'), 'utf8');
+  const stack = selector => Number(css.match(new RegExp(`\\${selector} \\{[^}]*z-index: (\\d+)`))[1]);
+  assert.ok(stack('.math-board') < stack('.math-kit-layer'));
+  assert.ok(stack('.math-kit-layer') < stack('.math-kit'));
+  assert.ok(stack('.math-kit-layer') < stack('.math-board-footer'));
+  assert.ok(stack('.math-kit-layer') < stack('.math-board-resize'));
+  assert.ok(stack('.math-kit-layer') < stack('.math-board-dimensions'));
 });

@@ -279,7 +279,12 @@
       if (!instrument) return;
       if (action === 'rotate') { save(); instrument.angle = (instrument.angle + 45) % 360; render(); }
       if (action === 'draw') {
-        save(); marks.push(markFor(instrument));
+        const mark = markFor(instrument);
+        if (window.MathWhiteboard?.drawGeometry(mark)) {
+          announce(instrument.type === 'compass' ? '已在白板畫好圓，可用白板復原或擦除。' : '已沿尺邊畫在白板上，可用白板復原或擦除。');
+          return;
+        }
+        save(); marks.push(mark);
         if (marks.length > 100) marks.shift();
         render(); announce(instrument.type === 'compass' ? '已畫好圓。移開圓規看看。' : '已沿著尺邊畫好線。');
       }
@@ -393,6 +398,7 @@
     window.addEventListener('resize', () => { render(); clampHost(); });
     setOrientation(orientation, false);
     fullscreen();
+    toggle(true);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

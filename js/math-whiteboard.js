@@ -45,7 +45,32 @@
     if (stroke.points.length === 1) return `<circle cx="${first.x}" cy="${first.y}" r="${stroke.width / 2}" fill="${stroke.color}"/>`;
     return `<path d="${stroke.points.map((point, index) => `${index ? 'L' : 'M'}${point.x} ${point.y}`).join(' ')}" stroke="${stroke.color}" stroke-width="${stroke.width}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
   }
-  if (typeof module !== 'undefined' && module.exports) module.exports = { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup };
+  function geometryStroke(mark, bounds) {
+    if (!bounds.width || !bounds.height) return null;
+    const right = bounds.left + bounds.width;
+    const bottom = bounds.top + bounds.height;
+    let points;
+    if (mark.type === 'circle') {
+      const nearest = Math.hypot(Math.max(bounds.left - mark.x, 0, mark.x - right), Math.max(bounds.top - mark.y, 0, mark.y - bottom));
+      const farthest = Math.hypot(Math.max(Math.abs(bounds.left - mark.x), Math.abs(right - mark.x)), Math.max(Math.abs(bounds.top - mark.y), Math.abs(bottom - mark.y)));
+      if (nearest > mark.radius || farthest < mark.radius) return null;
+      points = Array.from({ length: 129 }, (_, index) => ({ x: mark.x + mark.radius * Math.cos(index * Math.PI / 64), y: mark.y + mark.radius * Math.sin(index * Math.PI / 64) }));
+    } else if (mark.type === 'line') {
+      const deltaX = mark.end.x - mark.start.x;
+      const deltaY = mark.end.y - mark.start.y;
+      let startRatio = 0;
+      let endRatio = 1;
+      for (const [direction, distance] of [[-deltaX, mark.start.x - bounds.left], [deltaX, right - mark.start.x], [-deltaY, mark.start.y - bounds.top], [deltaY, bottom - mark.start.y]]) {
+        if (direction === 0) { if (distance < 0) return null; }
+        else if (direction < 0) startRatio = Math.max(startRatio, distance / direction);
+        else endRatio = Math.min(endRatio, distance / direction);
+        if (startRatio > endRatio) return null;
+      }
+      points = [startRatio, endRatio].map(ratio => ({ x: mark.start.x + deltaX * ratio, y: mark.start.y + deltaY * ratio }));
+    } else return null;
+    return { color: '#315d9b', width: 3, points: points.map(point => ({ x: point.x - bounds.left, y: point.y - bounds.top })) };
+  }
+  if (typeof module !== 'undefined' && module.exports) module.exports = { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke };
   if (typeof document === 'undefined') return;
 
   let board = null;
@@ -131,6 +156,8 @@
       const unavailable = full?.tagName === 'IFRAME' || (window.self !== window.top && !full);
       (full && !unavailable ? full : document.body).append(root);
       root.classList.toggle('math-board-unavailable', unavailable);
+      const geometry = document.querySelector('.math-kit-layer');
+      if (geometry && !root.hidden && !unavailable) root.append(geometry);
       applyBox();
     }
     function open() {
@@ -144,7 +171,19 @@
       cancelGesture();
       showDimensions(false);
       root.hidden = true;
+      const geometry = root.querySelector('.math-kit-layer');
+      const full = document.fullscreenElement || document.webkitFullscreenElement;
+      if (geometry) (full && full.tagName !== 'IFRAME' ? full : document.body).append(geometry);
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+    }
+    function drawGeometry(mark) {
+      if (root.hidden || root.classList.contains('math-board-unavailable')) return false;
+      const stroke = geometryStroke(mark, surface.getBoundingClientRect());
+      if (!stroke) return false;
+      cancelGesture();
+      history.save([...history.marks, stroke]);
+      render();
+      return true;
     }
     root.addEventListener('click', event => {
       const nextMode = event.target.closest('[data-board-mode]')?.dataset.boardMode;
@@ -250,7 +289,7 @@
     document.addEventListener('fullscreenchange', synchronize);
     document.addEventListener('webkitfullscreenchange', synchronize);
     render();
-    return { open, close };
+    return { open, close, drawGeometry };
   }
-  window.MathWhiteboard = { open() { if (!board) board = createBoard(); board.open(); }, close() { board?.close(); } };
+  window.MathWhiteboard = { open() { if (!board) board = createBoard(); board.open(); }, close() { board?.close(); }, drawGeometry(mark) { return board?.drawGeometry(mark) || false; } };
 })();
