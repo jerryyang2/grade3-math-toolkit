@@ -9,7 +9,7 @@
     const settings={...payload.settings,t,language:i18n?.language||'zh-Hant'};
     try{
       const plan=window.WorksheetLayout.plan(sheet,settings);
-      document.getElementById('worksheet-pages').innerHTML=plan.pages.map((page,i)=>`<section class="ws-sheet" data-page="${i+1}" translate="no"><div class="ws-readable"><h2>${esc(t(`本份第 ${i+1} / ${plan.pages.length} 頁 得分：______`))}</h2>${page.questions.map(q=>{const p=sheet.problems.find(p=>p.id===q.id);return `<article data-question-id="${esc(p.id)}"><h3>${esc(t(`第 ${sheet.problems.indexOf(p)+1} 題`))}</h3><p>${esc(p.question)}</p><ol type="A">${p.options.map(o=>`<li>${esc(o)}</li>`).join('')}</ol></article>`;}).join('')}</div><div aria-hidden="true">${window.WorksheetLayout.svgPage(page)}</div></section>`).join('');
+      document.getElementById('worksheet-pages').innerHTML=plan.pages.map((page,i)=>`<section class="ws-sheet" data-page="${i+1}" translate="no"><div class="ws-readable"><h2>${esc(t(`本份第 ${i+1} / ${plan.pages.length} 頁 得分：______`))}</h2>${page.questions.map(q=>{const p=sheet.problems.find(p=>p.id===q.id),description=p.svg?new DOMParser().parseFromString(p.svg,'image/svg+xml').documentElement.getAttribute('aria-label')||'':'';return `<article data-question-id="${esc(p.id)}"><h3>${esc(t(`第 ${sheet.problems.indexOf(p)+1} 題`))}</h3><p>${esc(p.question)}</p>${description?`<p>${esc(description)}</p>`:''}<ol type="A">${p.options.map(o=>`<li>${esc(o)}</li>`).join('')}</ol></article>`;}).join('')}</div><div aria-hidden="true">${window.WorksheetLayout.svgPage(page)}</div></section>`).join('');
       document.getElementById('worksheet-error').hidden=true;
     }catch(error){
       document.getElementById('worksheet-pages').replaceChildren();
