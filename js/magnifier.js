@@ -73,7 +73,7 @@
     page = root;
     // 這份規則放最後，確保遊戲和首頁都只顯示靜止、不可操作的複本。
     const rules = document.createElement('style');
-    rules.textContent = `:host{pointer-events:none}*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important} .mft-lens-label{position:absolute;right:12px;bottom:9px;z-index:2147483647;background:#172f25;color:white;border:1px solid white;border-radius:7px;padding:1px 7px;font:700 14px/1.5 sans-serif} html::-webkit-scrollbar{display:none}`;
+    rules.textContent = `:host{pointer-events:none}*,*::before,*::after{animation-play-state:paused!important;transition:none!important;caret-color:transparent!important} .mft-lens-label{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:2147483647;background:#172f25;color:white;border:1px solid white;border-radius:7px;padding:1px 7px;font:700 14px/1.5 sans-serif} html::-webkit-scrollbar{display:none}`;
     head.appendChild(rules);
     scrollCopies.forEach(([copy, x, y]) => { copy.scrollLeft = x; copy.scrollTop = y; });
     positionLens();
