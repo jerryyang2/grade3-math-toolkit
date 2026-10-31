@@ -566,6 +566,7 @@
               <div>
                 <h3 id="worksheet-title" style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
                 <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 大字點陣對齊格 · 課程調整參考註記</span>
+                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題，保留大字與書寫空間，列印時自動分頁。</p>
               </div>
             </div>
             <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
@@ -663,7 +664,7 @@
     generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true) {
       const data = window.NANI_G3S1_DATA || {};
       const unit = (data.units || []).find(u => u.id === unitId) || { number: 1, title: '數學' };
-      const problems = (data.practiceBank || []).filter(p => p.unitId === unitId).slice(0, 5);
+      const problems = (data.practiceBank || []).filter(p => p.unitId === unitId).slice(0, 10);
       const dateDisplay = customDate ? customDate : '____ 年 ___ 月 ___ 日';
 
       const printWindow = window.open('', '_blank');
@@ -711,6 +712,7 @@
               padding: 10px;
               border: 1px solid #ccc;
               border-radius: 6px;
+              break-inside: avoid;
               page-break-inside: avoid;
             }
             .ws-q-num {
@@ -772,7 +774,7 @@
           <style>@media print { .print-preview-controls { display: none !important; } }</style>
           <div class="ws-header">
             <h1 class="ws-title">南一版三年級上學期數學 學習教室個別化學習單</h1>
-            <div style="font-size: 13pt; margin-top: 4px;">單元 ${unit.number}：${unit.title} · 實體紙筆精熟挑戰</div>
+            <div style="font-size: 13pt; margin-top: 4px;">單元 ${unit.number}：${unit.title} · 共 ${problems.length} 題 · 實體紙筆精熟挑戰</div>
             <div class="ws-meta-row">
               <span>學生姓名：<strong>${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
               <span>評量日期：<strong>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
