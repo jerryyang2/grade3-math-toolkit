@@ -327,5 +327,19 @@
   "停止朗讀": "Stop Reading",
   "普通教材版本：南一版 國小數學三年級上學期（108課綱普通數學：": "Textbook: Nani Grade 3, Semester 1 (Taiwan 108 curriculum:",
   "普通教材版本：南一版 國小數學三年級上學期（108課綱普通數學：⟦2⟧）": "Textbook: Nani Grade 3, Semester 1 (Taiwan 108 curriculum: ⟦2⟧)",
-  "數學慢慢懂，來玩數學吧！：回到主畫面": "Math at Your Pace — Let's Play! Home"
+  "數學慢慢懂，來玩數學吧！：回到主畫面": "Math at Your Pace — Let's Play! Home",
+  "🚨 進位小1": "🚨 Regrouped 1 (+1)",
+  "使用進位小1提示": "Used the +1 regrouping prompt",
+  "視覺色塊對位與進位小1提示": "Color-coded place values and a +1 regrouping prompt",
+  "✨ 滿10個1 ➔ 打包換成1條10！": "✨ Trade ten ones for one ten!",
+  "💡 個位有 ⟦0⟧＋⟦1⟧＝⟦2⟧ 個小方塊（超過 10 個了！），快按右上角「✨ 滿10個1 ➔ 打包換成1條10」！": "💡 The ones give ⟦0⟧ + ⟦1⟧ = ⟦2⟧ cubes (ten or more). Select “Trade ten ones for one ten”!",
+  "個小方塊（超過 10 個了！），快按右上角「✨ 滿10個1 ➔ 打包換成1條10」！": "unit cubes (ten or more). Select “Trade ten ones for one ten”!",
+  "5題闖關奪寶・色塊直式對位・進位小1救援・積木點數發聲・鍵盤與觸控雙支援": "Five-question adventures · Color-coded columns · Regrouping support · Count with blocks · Keyboard and touch controls",
+  "可輸入教師課堂觀察備註（如：能主動點擊進位小1、透過10元硬幣換幣理解滿十進一）...": "Teacher notes (e.g., independently used the +1 prompt or traded ten NT$1 coins for one NT$10 coin)…",
+  "- ⟦0⟧ ⟦1⟧：累積 ⟦2⟧ 顆星｜答對 ⟦3⟧ 題｜進位小1提示 ⟦4⟧ 次｜教具打包/換幣 ⟦5⟧ 次": "- ⟦0⟧ ⟦1⟧: ⟦2⟧ stars | ⟦3⟧ correct | +1 regrouping prompts: ⟦4⟧ | Block/coin trades: ⟦5⟧",
+  "題｜進位小1提示": "questions | +1 regrouping prompts",
+  "自由看地圖 · 拖曳移動": "Free view · Drag to pan",
+  "跟隨訪客 · 拖曳旋轉視角": "Following visitor · Drag to rotate",
+  "訪客行走地圖：點地面移動；點島名自動沿橋前往；方向鍵或 WASD 行走；未跟隨時拖曳移動地圖，跟隨時拖曳旋轉視角": "Walking map: click the ground to move; select an island to walk across bridges; use arrow keys or WASD. Drag to pan when Follow is off, or rotate when Follow is on.",
+  "也可點島名過橋、用方向鍵／WASD 行走。未跟隨時拖曳移動地圖；跟隨時拖曳旋轉視角。": "Select an island to cross the bridges, or walk with arrow keys / WASD. Drag to pan with Follow off; drag to rotate with Follow on."
 }
