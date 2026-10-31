@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>數學小探險｜三年級備課與練習</title>
-  <meta name="description" content="學習教室三年級上學期數學備課平台，深度結合南一版三上數學教材、108普通數學課綱、十二年國教特殊教育課程實施規範（課程調整四向度）、特殊需求領域課綱（學習策略與生活管理）、C-R-A具體教學鷹架、TTS語音朗讀與IEP隨堂質性評量。">
+  <title>數學慢慢懂，來玩數學吧！</title>
+  <meta name="description" content="數學慢慢懂，來玩數學吧！三年級上學期數學備課平台，深度結合南一版三上數學教材、108普通數學課綱、十二年國教特殊教育課程實施規範（課程調整四向度）、特殊需求領域課綱（學習策略與生活管理）、C-R-A具體教學鷹架、TTS語音朗讀與IEP隨堂質性評量。">
   
   <!-- 依據規範標準引入專屬設計主題 Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=forest-20261031">
@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="css/animal-garden.css?v=forest-20261031">
   <link rel="stylesheet" href="css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="css/forest-home.css?v=forest-20261031">
-  <link rel="stylesheet" href="css/classroom-updates.css?v=classroom-tools-20261031-2">
+  <link rel="stylesheet" href="css/classroom-updates.css?v=home-voice-20261031">
   <link rel="stylesheet" href="css/floating-toolbar.css?v=hand-20261031">
   <link rel="stylesheet" href="css/battle-mondrian.css?v=mondrian-20261031">
 </head>
@@ -33,15 +33,15 @@
   <!-- 頂部應用程式導覽與特教無障礙工具列 -->
   <header class="app-header" role="banner">
     <div class="header-container">
-      <div class="brand-section">
-        <img src="favicon.svg?v=forest-20261031" alt="數學小探險：葉芽與數學積木" class="brand-logo" width="48" height="48">
-        <div>
+      <a class="brand-section" id="brand-home" href="./index.html" aria-label="數學慢慢懂，來玩數學吧！：回到主畫面" title="回到主畫面">
+        <img src="favicon.svg?v=forest-20261031" alt="" class="brand-logo" width="48" height="48">
+        <div class="brand-copy">
           <h1 class="brand-title">
-            數學小探險
-            <span class="brand-caption">三年級上學期</span>
+            <span class="brand-name">數學慢慢懂，<span>來玩數學吧！</span></span>
           </h1>
+          <span class="brand-caption">三年級上學期</span>
         </div>
-      </div>
+      </a>
 
       <div class="token-counter" title="已累積的學習星星代幣" aria-live="polite">
           ⭐ <span id="token-count">0</span> 顆星
@@ -215,9 +215,9 @@
         <figure class="storybook-art animal-scene decorative-item" aria-label="森林動物數學花園">
           <div class="animal-stage">
           <img class="animal-garden-ground" src="assets/animals/garden.svg?v=forest-20261031" width="640" height="320" alt="" aria-hidden="true">
-          <div id="animal-garden" class="animal-garden" role="group" aria-label="九位動物夥伴，點擊角色打招呼"></div>
+          <div id="animal-garden" class="animal-garden" role="group" aria-label="九位動物夥伴，點擊角色聽小提醒"></div>
           </div>
-          <figcaption id="storybook-speech" class="storybook-speech" role="status" aria-live="polite">點點小動物，打個招呼！</figcaption>
+          <figcaption id="storybook-speech" class="storybook-speech" role="status" aria-live="polite">點點小動物，聽聽牠的小提醒！</figcaption>
         </figure>
         <div class="storybook-launch">
           <div class="lesson-quick-picker"><label for="lesson-unit-quick-select"><span>準備出發</span>今天探索哪一站？</label><select id="lesson-unit-quick-select" class="form-control"></select></div>
@@ -734,7 +734,7 @@
 
   <!-- 腳本載入順序：資料庫 ➔ 音效與語音 ➔ 聲光特效與吉祥物 ➔ 雙人搶答擂台 ➔ 9大教具 ➔ 特教工具箱 ➔ 旗艦競賽功能 ➔ 主應用程式 -->
   <script src="js/data.js?v=20261031-teaching"></script>
-  <script src="js/audio.js?v=20261031-teaching"></script>
+  <script src="js/audio.js?v=home-voice-20261031"></script>
   <script src="js/confetti-effects.js?v=forest-20261031"></script>
   <script src="js/battle.js?v=mondrian-20261031"></script>
   <script src="js/manipulatives.js?v=20261031-teaching"></script>
@@ -743,10 +743,10 @@
   <script src="js/learning-records.js?v=20261031-teaching"></script>
   <script src="js/number-line.js?v=20261031-teaching"></script>
   <script src="js/geometry-shapes.js?v=20261031-teaching"></script>
-  <script src="js/animal-garden.js?v=forest-20261031"></script>
+  <script src="js/animal-garden.js?v=home-voice-20261031"></script>
   <script src="js/storybook-theme.js?v=classroom-tools-20261031"></script>
   <script src="js/forest-home.js?v=forest-20261031"></script>
-  <script src="js/app.js?v=classroom-hand-20261031"></script>
+  <script src="js/app.js?v=home-voice-20261031"></script>
   <script src="js/magnifier.js?v=toolbar-strips-20261031"></script>
   <script src="js/floating-tools.js?v=hand-20261031"></script>
 </body>

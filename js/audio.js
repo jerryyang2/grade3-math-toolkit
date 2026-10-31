@@ -216,7 +216,7 @@ class SpecialEdAudioSystem {
   }
 
   stopSpeech() {
-    if (this.speechSynth && this.speechSynth.speaking) {
+    if (this.speechSynth && (this.speechSynth.speaking || this.speechSynth.pending)) {
       this.speechSynth.cancel();
       this.isSpeaking = false;
     }

@@ -241,6 +241,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function initTabNavigation() {
+    document.getElementById('brand-home').addEventListener('click', event => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      switchToTab('units');
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    });
     document.getElementById('btn-nav-worksheet').addEventListener('click', () => window.WorksheetGenerator.openWorksheetModal());
     elements.navTabs.forEach(tab => {
       tab.addEventListener('click', () => {

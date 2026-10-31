@@ -39,14 +39,16 @@
   document.addEventListener('DOMContentLoaded', () => {
     const garden = document.getElementById('animal-garden');
     if (!garden) return;
-    garden.innerHTML = Object.entries(friends).map(([type, friend], i) => `<button type="button" class="animal-friend animal-${type}" data-animal="${type}" style="--order:${i}" aria-label="和${friend.name}打招呼" title="${friend.name}">${character(type)}</button>`).join('');
+    garden.innerHTML = Object.entries(friends).map(([type, friend], i) => `<button type="button" class="animal-friend animal-${type}" data-animal="${type}" style="--order:${i}" aria-label="聽${friend.name}的小提醒" title="點擊聽${friend.name}說話">${character(type)}</button>`).join('');
     const speech = document.getElementById('storybook-speech');
     garden.addEventListener('click', event => {
       const friend = event.target.closest('[data-animal]');
       if (!friend) return;
       garden.querySelectorAll('.is-cheering').forEach(item => item.classList.remove('is-cheering'));
       friend.classList.add('is-cheering');
-      speech.textContent = friends[friend.dataset.animal].message;
+      const message = friends[friend.dataset.animal].message;
+      speech.textContent = message;
+      window.spEdAudio?.speak(message);
     });
     garden.addEventListener('animationend', event => {
       if (event.animationName === 'animal-cheer') event.target.closest('.animal-friend')?.classList.remove('is-cheering');
