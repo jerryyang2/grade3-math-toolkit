@@ -142,12 +142,27 @@
       const players = this.getAvailablePlayers();
 
       container.innerHTML = `
+        <header class="battle-mondrian-heading">
+          <div class="battle-title-block">
+            <span class="battle-eyebrow">MATH / TEAM CHALLENGE</span>
+            <h2>分組搶答<span aria-hidden="true">↗</span></h2>
+            <p>先算一算，再把解法說出來。</p>
+          </div>
+          <div class="battle-rule-block">
+            <span>今天的挑戰</span>
+            <strong>${this.questions.length || this.roundCount}<small>題一回合</small></strong>
+            <p>答對 +10 分 · 答錯不扣分</p>
+          </div>
+          <div class="battle-art-block" aria-hidden="true"><i></i><i>×</i><i></i><i></i></div>
+        </header>
         <div class="battle-stage-card">
           <!-- 頂部控制列：單元選擇、小節選擇、局數與選手設定 -->
-          <div class="battle-top-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-            <div class="battle-unit-picker-group" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <label for="battle-unit-select"><strong>🎯 搶答單元：</strong></label>
-              <select id="battle-unit-select" class="form-control" style="font-weight:700; width:auto; min-width:180px;">
+          <div class="battle-top-bar">
+            <h3 class="battle-controls-heading">對局設定</h3>
+            <div class="battle-unit-picker-group">
+              <div class="battle-control-field">
+              <label for="battle-unit-select">搶答單元</label>
+              <select id="battle-unit-select" class="form-control">
                 <option value="all" ${this.currentUnitId === 'all' ? 'selected' : ''}>🌟 全冊跨單元大亂鬥 (10題)</option>
                 ${(data ? data.units : []).map(u => `
                   <option value="${u.id}" ${u.id === this.currentUnitId ? 'selected' : ''}>
@@ -155,21 +170,22 @@
                   </option>
                 `).join('')}
               </select>
-
-              <label for="battle-section-select"><strong>📖 小節：</strong></label>
-              <select id="battle-section-select" class="form-control" style="font-weight:700; width:auto; min-width:210px;">
+              </div>
+              <div class="battle-control-field">
+              <label for="battle-section-select">練習小節</label>
+              <select id="battle-section-select" class="form-control">
                 <!-- 動態注入小節列表 -->
               </select>
-
-              <button class="kid-btn kid-btn-secondary" id="btn-battle-restart" style="padding: 6px 14px; font-size: 0.95rem;">
-                🔄 重新抽 10 題
+              </div>
+              <button class="kid-btn kid-btn-secondary" id="btn-battle-restart">
+                ↻ 重新抽題
               </button>
             </div>
 
-            <div class="battle-meta-info" style="display:flex; align-items:center; gap:8px;">
-              <button class="btn btn-primary" id="btn-battle-next" disabled>討論完了，下一題</button>
+            <div class="battle-meta-info">
               <span class="battle-round-badge" id="battle-round-indicator">第 1 / ${this.questions.length || 10} 題</span>
-              <button class="btn btn-speech btn-sm" id="btn-battle-tts-toggle" style="background:#f1f5f9; border:1px solid #cbd5e1; font-size:0.85rem; padding:4px 10px;">
+              <button class="btn btn-primary" id="btn-battle-next" disabled>討論完了，下一題 →</button>
+              <button class="btn btn-speech btn-sm" id="btn-battle-tts-toggle">
                 ${this.autoRead ? '🔊 自動念題：開啟' : '🔇 自動念題：關閉'}
               </button>
             </div>
@@ -180,7 +196,7 @@
             <!-- 藍方（左）選手資訊 -->
             <div class="battle-player-card player-blue" id="card-player-blue">
               <div class="battle-player-header">
-                <span class="battle-player-badge">🔵 勇氣藍隊</span>
+                <span class="battle-player-badge">勇氣藍隊 <small>BLUE</small></span>
                 <select class="battle-player-select" id="select-player-blue" aria-label="藍隊學生代號">
                   ${players.map(p => `
                     <option value="${escapeText(p.name)}" data-avatar="${p.avatar || '🦁'}" ${p.name === this.player1.name ? 'selected' : ''}>
@@ -208,7 +224,7 @@
             <!-- 紅方（右）選手資訊 -->
             <div class="battle-player-card player-red" id="card-player-red">
               <div class="battle-player-header">
-                <span class="battle-player-badge">🔴 智慧紅隊</span>
+                <span class="battle-player-badge">智慧紅隊 <small>RED</small></span>
                 <select class="battle-player-select" id="select-player-red" aria-label="紅隊學生代號">
                   ${players.map(p => `
                     <option value="${escapeText(p.name)}" data-avatar="${p.avatar || '🦊'}" ${p.name === this.player2.name ? 'selected' : ''}>
@@ -246,7 +262,7 @@
             <!-- 藍方控制台 (左側按鈕區) -->
             <div class="battle-station station-blue" id="station-blue">
               <div class="station-label">
-                <span>🔵 藍隊作答區</span>
+                <span>藍隊作答區</span>
                 <span class="key-hint">支援鍵盤 Q / W / E / R</span>
               </div>
               <div class="station-options-grid" id="options-blue">
@@ -257,7 +273,7 @@
             <!-- 紅方控制台 (右側按鈕區) -->
             <div class="battle-station station-red" id="station-red">
               <div class="station-label">
-                <span>🔴 紅隊作答區</span>
+                <span>紅隊作答區</span>
                 <span class="key-hint">支援鍵盤 U / I / O / P (或 1 2 3 4)</span>
               </div>
               <div class="station-options-grid" id="options-red">
