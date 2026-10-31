@@ -721,7 +721,7 @@
           <title>數學學習單 - ${escape(unit.title)} - ${escape(scopeTitle)}</title>
           <link rel="stylesheet" href="${asset('css/worksheet-print.css?v=shared-layout-20261101')}">
           <script src="${asset('js/worksheet-font-metrics.js?v=shared-worksheet-20261101')}"><\/script>
-          <script src="${asset('js/worksheet-layout.js?v=shared-worksheet-20261101')}"><\/script>
+          <script src="${asset('js/worksheet-layout.js?v=division-grid-20261101-2')}"><\/script>
         </head><body class="${withZihi ? 'ws-zihi' : ''}">
           <nav class="print-preview-controls" aria-label="學習單預覽工具">
             <button type="button" id="worksheet-print">列印／另存 PDF</button>

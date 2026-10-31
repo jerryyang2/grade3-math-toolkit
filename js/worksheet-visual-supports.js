@@ -179,11 +179,22 @@ const WorksheetVisualSupports = (() => {
     return svg(body,152,'物品已依題目或範例平分到框內，框外物品是尚未分完的部分');
   }
   function longDivision(s) {
-    if(s.positions)return svg(center(164,18,'十位',14)+center(194,18,'個位',14)+rect(150,27,58,23)+line(179,27,179,50)+line(137,56,243,56)+line(137,56,137,100)+center(111,85,s.divisor,24)+center(164,85,String(s.dividend)[0],24)+center(194,85,String(s.dividend)[1],24)+center(150,126,'商應寫在哪一格？',16),144);
-    let body=center(190,24,'商：？',17)+line(100,37,254,37)+line(100,37,100,111);
-    body+=center(72,67,s.divisor,24)+center(178,67,s.dividend,24);
-    body+=center(152,91,'計算區留空',14)+center(185,122,'餘數：？',16);
-    return svg(body,140,'直式除法的已知被除數與除數，商與餘數留空');
+    const places=[148,190],digits=String(s.dividend).split('');
+    const barY=s.positions?57:46,baseline=barY+30;
+    // 弧形除號只包住被除數；數字與上、下方空格以同一個位值座標對齊。
+    let body=`<path data-division-bracket="true" d="M99 ${barY}Q114 ${barY+19} 99 ${barY+38} M99 ${barY}H214" stroke-width="2"/>`;
+    body+='<g data-division-divisor="true">'+center(75,baseline,s.divisor,28)+'</g>';
+    body+='<g data-division-dividend="true">'+digits.map((digit,i)=>center(places[i],baseline,digit,28)).join('')+'</g>';
+    if(s.positions) {
+      body+=center(148,17,'十位',14)+center(190,17,'個位',14);
+      body+='<g data-division-quotient="true">'+places.map(x=>rect(x-17,26,34,24)).join('')+'</g>';
+      body+=center(150,128,'商應寫在哪一格？',16);
+      return svg(body,144,'直式除法：除數在弧形除號外，被除數按十位與個位對齊，上方兩格供判斷商的位置');
+    }
+    body+='<g data-division-quotient="true">'+rect(173,14,34,24)+text(220,32,'商',16)+'</g>';
+    body+='<g data-division-subtraction="true">'+places.map(x=>rect(x-17,85,34,23,'#fff','stroke-dasharray="3 3"')).join('')+center(111,104,'−',24)+line(122,115,214,115)+'</g>';
+    body+='<g data-division-remainder="true">'+rect(173,123,34,24)+text(220,141,'餘數',16)+'</g>';
+    return svg(body,160,'直式除法：商在上方，除數在左側，被除數在除號內；下方保留乘減與餘數的空格');
   }
   function fractionBars(s,id) {
     let body=`<defs><pattern id="h-${esc(id)}" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 6L6 0" stroke="#333" stroke-width="1"/></pattern></defs>`;

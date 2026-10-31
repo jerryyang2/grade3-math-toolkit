@@ -79,7 +79,6 @@ c.setKeywords('南一版本,三年級上學期,數學,學習單,本機彙整')
 
 def footer(page):
     c.setFont('BookHei',8);c.setFillColor(GRAY)
-    c.drawString(M,M+3,'三年級上學期數學｜學習單彙編')
     c.drawRightString(W-M,M+3,f'{page} / {TOTAL}')
 
 def rule(y,color=RULE):

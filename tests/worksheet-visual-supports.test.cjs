@@ -83,3 +83,32 @@ test('unit conversion results are separate from mixed-unit columns and reverse w
     assert.doesNotMatch(visibleText(html),/總毫米/);
   }
 });
+
+test('long division keeps the curved bracket, blank quotient and subtraction cells aligned by place value',()=>{
+  const {parseHTML}=require('linkedom');
+  for(const id of ['p6_2_6','p6_2_7']){
+    const {document}=parseHTML(figures.render(problem(id))),svg=document.querySelector('svg');
+    const bracket=svg.querySelector('[data-division-bracket]');
+    assert.match(bracket.getAttribute('d'),/Q/,'division uses a curved bracket');
+    const dividend=[...svg.querySelectorAll('[data-division-dividend] text')];
+    const centers=dividend.map(e=>Number(e.getAttribute('x')));
+    assert.equal(dividend.map(e=>e.textContent).join(''),String(specs[id].dividend));
+    assert.ok(Number(svg.querySelector('[data-division-divisor] text').getAttribute('x'))<centers[0]);
+    const quotient=[...svg.querySelectorAll('[data-division-quotient] rect')];
+    const midpoint=rect=>Number(rect.getAttribute('x'))+Number(rect.getAttribute('width'))/2;
+    const numeric=[...svg.querySelectorAll('text')].map(e=>e.textContent).filter(t=>/^\d+$/.test(t));
+    assert.deepEqual(numeric,[String(specs[id].divisor),...String(specs[id].dividend)],'no computed answer is printed');
+    assert.ok(quotient.every(r=>centers.includes(midpoint(r))));
+    assert.ok(quotient.every(r=>Number(r.getAttribute('y'))+Number(r.getAttribute('height'))<Number(dividend[0].getAttribute('y'))));
+    if(specs[id].positions){
+      assert.equal(quotient.length,2,'both positions stay blank for the position question');
+      assert.equal(svg.querySelector('[data-division-subtraction]'),null);
+    }else{
+      assert.equal(quotient.length,1);
+      assert.equal(midpoint(quotient[0]),centers.at(-1));
+      assert.deepEqual([...svg.querySelectorAll('[data-division-subtraction] rect')].map(midpoint),centers);
+      assert.equal(midpoint(svg.querySelector('[data-division-remainder] rect')),centers.at(-1));
+    }
+    assert.doesNotMatch(svg.textContent,/計算區/);
+  }
+});

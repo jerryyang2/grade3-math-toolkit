@@ -518,5 +518,8 @@
   "🛠️ 特教個別化學習單支援選項：": "🛠️ Worksheet Supports",
   "📐 顯示計算區對齊格 (視動協調)": "📐 Calculation grids (visual–motor support)",
   "🖼️ 加入題目示意圖（圖像理解）": "🖼️ Question diagrams",
-  "🏛️ 頁尾附 108 特教課綱四向度調整參考欄": "🏛️ Curriculum support checklist in footer"
+  "🏛️ 頁尾附 108 特教課綱四向度調整參考欄": "🏛️ Curriculum support checklist in footer",
+  "直式除法：除數在弧形除號外，被除數按十位與個位對齊，上方兩格供判斷商的位置": "Long division: the divisor is outside the curved bracket. The dividend digits line up by place value; the two empty boxes above are possible quotient positions.",
+  "直式除法：商在上方，除數在左側，被除數在除號內；下方保留乘減與餘數的空格": "Long division: the quotient goes above, the divisor on the left, and the dividend inside the bracket. Multiplication, subtraction, and remainder boxes are left blank.",
+  "商": "Quotient"
 }

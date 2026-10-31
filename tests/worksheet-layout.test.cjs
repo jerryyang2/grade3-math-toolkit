@@ -56,7 +56,7 @@ test('place value, chronological changes, and circular fractions use matching re
 test('English figures use math vocabulary and repeated unit fractions cannot look like mixed numbers',()=>{
  const i18n=create(require('../js/i18n-en.js'));i18n.setLanguage('en');
  for(const p of data.practiceBank)for(const label of diagrams.render(p).matchAll(/<text[^>]*>([^<]*)<\/text>/g))assert.doesNotMatch(i18n.t(label[1]),/[\u3400-\u9fff]/u,p.id);
- assert.equal(i18n.t('商：？'),'Quotient: ?');assert.equal(i18n.t('3個1/5'),'3 × 1/5');
+ assert.equal(i18n.t('商：？'),'Quotient: ?');assert.equal(i18n.t('商'),'Quotient');assert.equal(i18n.t('3個1/5'),'3 × 1/5');
  const lines=layout.wrap('水桶裡有6公升的水，倒出600毫升後，還有多少？',80,14);
  assert.ok(lines.every(line=>!/[（「【『(]$/.test(line)&&!(/^[，。？！）』」】]/.test(line))));
 });

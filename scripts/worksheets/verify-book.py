@@ -32,6 +32,8 @@ assert not re.search(r'output/artifacts',alltext)
 assert '\x00' not in alltext
 assert all('數學慢慢懂' not in text for text in texts[1:])
 assert '點選小節名稱或 PDF 書籤可跳頁' not in alltext
+assert '三年級上學期數學｜學習單彙編' not in alltext
+assert not re.search(r'(?m)^計算區$', '\n'.join(texts[3:]))
 fontpath=next(Path('/System/Library/AssetsV2/com_apple_MobileAsset_Font8').glob('*/AssetData/Kaiti.ttc'))
 kai=TTFont('CheckKai',str(fontpath),subfontIndex=2).face.charWidths
 chars=set(''.join(normalize(p['question']+''.join(p['options'])) for s in sheets for p in s['problems']))

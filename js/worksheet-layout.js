@@ -30,7 +30,7 @@
     paragraph(p.question,left,inner,opts.language==='en'?12:14);y+=4;
     if(opts.withIllustrations&&p.svg){
       const vb=p.svg.match(/viewBox="\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)"/);if(!vb)throw Error('Missing diagram viewBox '+p.id);
-      const iw=Number(vb[3]),ih=Number(vb[4]),scale=Math.min(inner/iw,Math.max(profile.diagram_mm,opts.language!=='en'&&p.svg.includes('data-capacity-measures')&&p.sectionTitle.startsWith('7-2')?30:0)*MM/ih);
+      const iw=Number(vb[3]),ih=Number(vb[4]),scale=Math.min(inner/iw,Math.max(profile.diagram_mm,p.svg.includes('data-division-bracket')?26:(opts.language!=='en'&&p.svg.includes('data-capacity-measures')&&p.sectionTitle.startsWith('7-2')?30:0))*MM/ih);
       ops.push({type:'diagram',id:p.id,svg:p.svg,x:left+(inner-iw*scale)/2,y:y+2,w:iw*scale,h:ih*scale});y+=ih*scale+3;
     }
     const optionSize=opts.language==='en'?10.5:12;
@@ -41,7 +41,7 @@
     for(let i=0;i<4;i+=columns)rowHeights.push(Math.max(...rows.slice(i,i+columns).map(l=>l.length*optionSize*leading))+2);
     const gridH=profile.grid_mm*MM,sideWidth=inner*.55-4,sideLines=optionLines(sideWidth),sideHeight=Math.max(sideLines.reduce((n,l)=>n+l.length*optionSize*leading+2,0),gridH+11);
     const grid=(x,top,w)=>{
-      addText(opts.t('計算區'),x,top+8,8,'hei','#555555');const gy=top+11;
+      const gy=top+11;
       if(!opts.withGrid){ops.push({type:'rect',x,y:gy,w,h:gridH,stroke:'#999999',lineWidth:.35});return;}
       for(let j=0;j<=6;j++)ops.push({type:'line',x1:x+j*w/6,y1:gy,x2:x+j*w/6,y2:gy+gridH,stroke:'#999999',lineWidth:.35,dash:[1,2]});
       for(let j=0;j<=3;j++)ops.push({type:'line',x1:x,y1:gy+j*gridH/3,x2:x+w,y2:gy+j*gridH/3,stroke:'#999999',lineWidth:.35,dash:[1,2]});
@@ -90,7 +90,7 @@
       const bounds=[];cols.forEach((col,j)=>{let y=TOP;const x=M+j*(CW+GAP);for(const q of col){ops.push({type:'group',x,y,ops:q.ops});bounds.push({id:q.id,x,top:H-y,bottom:H-y-q.height,width:CW});y+=q.height+3*MM;}});
       if(opts.withStamp&&i===pages.length-1){const y=H-M-44;ops.push({type:'rect',x:M,y,w:W-2*M,h:30,lineWidth:.5,stroke:'#999999'});ops.push(text('個別化支持紀錄（教師依實際提供的支持勾選）',M+5,y+8,9));
         ['學習內容：題意簡化、圖像提示','學習歷程：計算對齊、分段引導','學習環境：減少干擾、安心練習','學習評量：延長時間、報讀題目'].forEach((s,k)=>{const x=M+5+(k%2)*(W-2*M)/2,yy=y+12+Math.floor(k/2)*9;ops.push({type:'rect',x,y:yy,w:5,h:5,stroke:'#999999',lineWidth:.5},text(s,x+9,yy+5,opts.language==='en'?7:8.4));});}
-      ops.push(text('三年級上學期數學｜學習單彙編',M,H-M-3,8),text(`${i+1} / ${pages.length}`,W-M,H-M-3,8,'hei','end'));
+      ops.push(text(`${i+1} / ${pages.length}`,W-M,H-M-3,8,'hei','end'));
       return {ops,questions:bounds};
     });
     return {id:sheet.id,width:W,height:H,profile,pages:results};
