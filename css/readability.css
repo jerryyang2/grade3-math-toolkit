@@ -79,7 +79,8 @@ body.storybook-site, body.storybook-game {
 .theme-credit { font-size: .875rem; color: #354b33; }
 /* 工具箱與獨立遊戲沿用同一組可讀的字級與邊界。 */
 :is(.storybook-site,.storybook-game) .mft-ui { font-size: 16px; }
-:is(.storybook-site,.storybook-game) .mft-launcher { background: #21663d; border-color: #174b2c; }
+:is(.storybook-site,.storybook-game) .mft-launcher { background: #bf2828; border-color: #8e1d1d; box-shadow: 2px 3px 0 #efb7ac; }
+:is(.storybook-site,.storybook-game) .mft-launcher:hover { background: #9f1f1f; }
 :is(.storybook-site,.storybook-game) .mft-launcher > span:nth-child(2) { font-size: 17px; }
 :is(.storybook-site,.storybook-game) .mft-launcher small { font-size: 14px; color: #fff; }
 :is(.storybook-site,.storybook-game) :is(.mft-heading span,.mft-width,.mft-footer,.mft-count,.mft-note) { font-size: 14px; color: #344a3c; }
