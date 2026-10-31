@@ -26,8 +26,9 @@ try{
     const hooks=configured?path.resolve(root,configured):path.resolve(root,git('rev-parse','--git-path','hooks'));
     const file=path.join(hooks,'pre-push');
     if(fs.existsSync(file)&&!fs.readFileSync(file,'utf8').includes('# worksheet-pdf-sync'))throw Error('已有其他 pre-push hook，未覆寫。');
-    fs.mkdirSync(hooks,{recursive:true});fs.writeFileSync(file,'#!/bin/sh\n# worksheet-pdf-sync\nset -eu\ncd "$(git rev-parse --show-toplevel)"\nexec node scripts/sync-worksheet-pdf.cjs --pre-push "$@"\n',{mode:0o755});
-    console.log('已安裝本機學習單 PDF 推送前同步檢查。');
+    fs.mkdirSync(hooks,{recursive:true});fs.writeFileSync(file,'#!/bin/sh\n# worksheet-pdf-sync\nset -eu\ncd "$(git rev-parse --show-toplevel)"\nexec node scripts/pre-push-local-pdfs.cjs "$@"\n',{mode:0o755});
+    if(fs.existsSync(path.join(root,'Codex/website-guide')))git('config','--local','localGuide.required','true');
+    console.log('已安裝本機學習單與使用手冊 PDF 推送前同步檢查。');
     process.exit(0);
   }
   const prePush=process.argv.includes('--pre-push');

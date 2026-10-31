@@ -7,6 +7,8 @@
     "worksheets:pdf": "node scripts/sync-worksheet-pdf.cjs",
     "worksheets:pdf:check": "node scripts/sync-worksheet-pdf.cjs --check",
     "worksheets:install-hook": "node scripts/sync-worksheet-pdf.cjs --install-hook",
+    "manual:pdf": "node scripts/local-guide.cjs --build",
+    "manual:check": "node scripts/local-guide.cjs --check",
     "audio:build": "node scripts/generate-female-audio.cjs",
     "audio:check": "node scripts/generate-female-audio.cjs --check",
     "islands:audio:build": "node scripts/generate-island-audio.cjs",
