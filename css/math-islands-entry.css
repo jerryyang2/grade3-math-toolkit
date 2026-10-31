@@ -1,3 +1,13 @@
 .math-islands-entry{display:flex;align-items:center;gap:18px;background:#e9efe3;border:1px solid #b8cbb1;border-radius:18px;padding:22px 26px;margin:22px 0;text-decoration:none;color:#294b4c;box-shadow:0 6px 16px #35574608}.math-islands-entry>span{display:grid;gap:5px;flex:1}.math-islands-entry small{font-size:11px;letter-spacing:.07em;color:#74856b}.math-islands-entry strong{font-size:22px;letter-spacing:.04em}.math-islands-entry>span>span{font-size:12px;line-height:1.8;color:#607666}.math-islands-entry>b{font-size:13px;white-space:nowrap}.math-islands-entry:hover{background:#e2ecda;border-color:#7f9d78}.math-islands-entry:focus-visible{outline:3px solid #a97837;outline-offset:4px}@media(max-width:600px){.math-islands-entry{padding:18px 15px;gap:12px}.math-islands-entry img{width:40px;height:40px}.math-islands-entry strong{font-size:17px}.math-islands-entry small{font-size:9px}.math-islands-entry>b{font-size:11px}.math-islands-entry>span>span{font-size:11px}}
 
 .nav-island-link{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:14px 18px;border-bottom:4px solid transparent;text-decoration:none;color:#2e4836;font-size:1.0625rem;font-weight:800}.nav-island-link:hover{background:#dceccf;border-bottom-color:#548665}.nav-island-link:focus-visible{outline:3px solid #ad7636;outline-offset:-4px}.high-contrast-mode .nav-island-link{color:#fff}@media(max-width:768px){.nav-island-link{padding:10px 13px;font-size:1rem}}
+
+/* 課堂入口和全螢幕控制共用一列，保留足夠的觸控範圍。 */
+#tab-units > .lesson-focus-entry{align-items:center;flex-wrap:wrap;gap:12px}
+.math-islands-quick-entry{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:8px 16px;border:2px solid #205745;border-radius:12px;background:#246449;color:#fffdf2;text-decoration:none;font:800 1rem/1.3 var(--font-base,system-ui);box-shadow:0 3px 0 #153e30;transition:background .15s,box-shadow .15s}
+.math-islands-quick-entry img{width:28px;height:28px;flex-shrink:0}
+.math-islands-quick-entry:hover{background:#174c36;box-shadow:0 4px 0 #153e30;text-decoration:none}
+.math-islands-quick-entry:active{box-shadow:none}
+.math-islands-quick-entry:focus-visible{outline:3px solid #e79915;outline-offset:4px}
+.high-contrast-mode .math-islands-quick-entry{background:#facc15;color:#111;border-color:#111;box-shadow:0 3px 0 #fff}
+@media(max-width:480px){#tab-units > .lesson-focus-entry{gap:8px;justify-content:space-between}.math-islands-quick-entry{padding:8px 10px;gap:6px}.math-islands-quick-entry img{width:24px;height:24px}}

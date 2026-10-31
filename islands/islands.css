@@ -19,3 +19,9 @@
 .certificate-dialog #certificate-art svg{max-height:58vh}@media print{body.printing-certificate #certificate-art svg{max-height:none!important}}
 
 .coin-column.active-place{background:#e1ebcf;outline:2px solid #91af79;border-radius:9px;padding:7px 0}
+
+/* 題目使用獨立標籤、粗體與高對比底色，不只依靠顏色區分。 */
+.mission-question{margin:18px 0 14px;padding:17px 18px 19px;background:#fff3cd;border:2px solid #d4a347;border-left:6px solid #a96416;border-radius:12px;box-shadow:0 3px 0 #e9d9af}
+.mission-question h4{display:flex;align-items:center;gap:6px;margin:0 0 9px;color:#70410e;font-size:16px;font-weight:700;line-height:1.5}
+.mission-question #question{margin:0;color:#733b0c;font-size:24px;font-weight:800;line-height:1.8;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+@media(max-width:520px){.mission-question{padding:15px 14px 16px}.mission-question #question{font-size:23px}.mission-question h4{font-size:15px}}
