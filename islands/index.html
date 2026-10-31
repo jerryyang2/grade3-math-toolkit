@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#173f4b"><meta name="description" content="三年級數學九座探索島：在 3D 群島中操作錢幣、烘焙乘法、測量造橋、平分點心與分數披薩。每單元三個任務，不限時、可提示、可自由選島。">
 <title>慢慢島・數學探險｜一個單元，一座島</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="islands.css?v=20261031-controls-1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="islands.css?v=20261031-toolbar-1">
 <script src="../js/data.js?v=20261031-teaching" defer></script><script src="../js/hands-on-tools.js?v=all-units-20261031" defer></script><script src="../js/female-audio-manifest.js?v=female-voice-20261031" defer></script><script src="../js/audio.js?v=female-voice-20261031" defer></script><script src="vendor/three.min.js" defer></script><script src="curriculum.js?v=20261031-life-3" defer></script><script src="navigation.js?v=20261031-life-3" defer></script><script src="visitors.js?v=20261031-life-3" defer></script><script src="teaching.js?v=20261031-life-3" defer></script><script src="narration.js?v=20261031-life-3" defer></script><script src="audio-manifest.js?v=20261031-life-3" defer></script><script src="rewards.js?v=20261031-life-3" defer></script><script src="sea-life.js?v=20261031-life-3" defer></script><script src="world.js?v=20261031-life-3" defer></script><script src="adventure.js?v=20261031-life-3" defer></script>
 </head>
 <body>
@@ -28,15 +28,15 @@
 <div class="buddy-line"><span id="buddy-icon" aria-hidden="true"></span><span id="buddy-name"></span><span class="unhurried">慢慢來就好</span></div>
 <div class="mission-tabs" role="group" aria-label="本島三個任務" id="mission-tabs"></div>
 <div class="mission-title"><span id="mission-number"></span><h3 id="mission-title"></h3></div>
-<section class="mission-question" aria-labelledby="question-label"><h4 id="question-label"><span aria-hidden="true">✎</span> 這一題，請你挑戰</h4><p id="question"></p></section><div class="question-read"><button id="read-question">🔈 朗讀題目</button><button id="meet-resident">和本島居民說話</button></div>
-<div class="support-tools"><button id="hint-button" aria-expanded="false" aria-controls="hint">☼ 給我一點提示</button><label><input type="checkbox" id="independent">獨立試試</label></div>
+<section class="mission-question" aria-labelledby="question-label"><h4 id="question-label"><span aria-hidden="true">✎</span> 這一題，請你挑戰</h4><p id="question"></p></section><div class="mission-toolbar" role="group" aria-label="題目輔助工具"><button id="read-question" aria-label="朗讀題目" title="朗讀題目">🔈 朗讀</button><button id="meet-resident" aria-label="和本島居民說話" title="和本島居民說話">居民</button><button id="hint-button" aria-label="給我一點提示" aria-expanded="false" aria-controls="hint">☼ 提示</button><label><input type="checkbox" id="independent">獨立試試</label></div>
 <p id="hint" class="hint" hidden></p>
-<section class="teaching-method" aria-labelledby="method-title"><h3 id="method-title">跟課堂一樣，這樣想</h3><p id="method-route"></p><div class="method-actions"><button id="guide-open" aria-expanded="false" aria-controls="guide-panel">🪜 帶我一步一步</button><button id="read-method">🔈 聽解題方法</button></div><div id="guide-panel" hidden><span id="guide-count"></span><h4 id="guide-title"></h4><p id="guide-text"></p><p id="guide-formula"></p><div class="guide-controls"><button id="guide-prev">← 上一步</button><button id="guide-read">🔈 朗讀這一步</button><button id="guide-next">下一步 →</button></div></div></section>
+
 <div id="manipulative" class="manipulative"></div>
 <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
 <button id="feedback-read" hidden>🔈 朗讀解答</button><div id="award-notice" class="award-notice" role="status" hidden><p id="award-message"></p><div><button id="unit-certificate">領取本島小證書</button><button id="grand-certificate" hidden>領取九島大證書</button></div></div>
 <div class="task-actions"><button class="primary" id="check">完成了，檢查一下 ↗</button><button id="reset" aria-label="重做目前這題">重做</button></div>
 <div class="next-actions"><button id="next" hidden>下一個任務 →</button><button id="random">↻ 同概念換一題</button></div>
+<section class="teaching-method" aria-labelledby="method-title"><h3 id="method-title">跟課堂一樣，這樣想</h3><p id="method-route"></p><div class="method-actions"><button id="guide-open" aria-expanded="false" aria-controls="guide-panel">🪜 帶我一步一步</button><button id="read-method">🔈 聽解題方法</button></div><div id="guide-panel" hidden><span id="guide-count"></span><h4 id="guide-title"></h4><p id="guide-text"></p><p id="guide-formula"></p><div class="guide-controls"><button id="guide-prev">← 上一步</button><button id="guide-read">🔈 朗讀這一步</button><button id="guide-next">下一步 →</button></div></div></section>
 <details class="teacher-note"><summary>給老師：本島學什麼？</summary><p id="learning-goal"></p><p><b>口述與遷移：</b><span id="teacher-say"></span></p><p>每島三個任務先操作、再說明。獨立試試會收起提示；使用提示或修正後完成會記為「支持後完成」。每位訪客各有護照，姓名、位置與進度僅記在這台瀏覽器，換題不額外增加島章；完成不代表已精熟。</p><a id="unit-link" href="../index.html">回平台查看教具與練習 ↗</a></details>
 </aside>
 </div>

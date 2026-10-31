@@ -70,3 +70,13 @@ dialog header>button,.resident-dialogue #resident-close{font-size:22px;min-width
 #world .resident-dialogue{top:110px}#world .cruise-exit{top:64px;min-height:48px;font-size:18px}#world .map-watermark{bottom:24px}#world .compass-rose{bottom:30px}
 
 #world.flat{height:470px}#world.flat #island-labels{padding:66px 12px 20px;gap:12px}#world.flat #flat-bridges{inset:66px 12px 20px;width:calc(100% - 24px);height:calc(100% - 86px)}
+
+/* 題目後保留一列輔助工具，操作與檢查在解題說明之前。 */
+.mission-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:13px 0 10px}
+.mission-panel .mission-toolbar button{font-size:17px;line-height:1.5;min-height:44px;padding:7px 6px;white-space:nowrap}
+.mission-toolbar #hint-button{background:#f4f0e4}
+.mission-toolbar label{display:flex;align-items:center;gap:5px;margin-left:auto;min-height:44px;font-size:17px;white-space:nowrap;color:#536b58;cursor:pointer}
+.mission-toolbar input{width:20px;height:20px;margin:0;accent-color:#538473}
+.mission-toolbar~.manipulative{margin-top:10px}
+.mission-panel>.teaching-method{margin:22px 0 16px}
+@media(max-width:360px){.mission-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.mission-toolbar label{margin:0;justify-content:center}}

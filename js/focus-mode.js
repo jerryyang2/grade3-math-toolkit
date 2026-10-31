@@ -3,7 +3,7 @@
   'use strict';
   function initialize() {
     const panes = [...document.querySelectorAll('.tab-pane')];
-    const labels = {prep:'備課指引', units:'課堂教學', sandbox:'數位教具操作箱', practice:'隨堂練習', battle:'分組搶答', arcade:'互動遊戲', guide:'課程調整指南', iep:'隨堂診斷'};
+    const labels = {prep:'備課指引', units:'課堂教學', sandbox:'數位教具操作箱', practice:'隨堂練習', battle:'分組搶答', arcade:'互動遊戲', guide:'課程調整', iep:'隨堂診斷'};
     const expandIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>';
     const buttons = panes.map(pane => {
       const row = pane.querySelector(':scope > .lesson-focus-entry') || document.createElement('div');
