@@ -607,7 +607,7 @@
               <label for="ws-student-select" style="font-weight:800; font-size:0.95rem; color:#334155;">指定學習教室學生：</label>
               <select id="ws-student-select" class="form-control" style="font-weight:700; width:100%;">
                 <option value="空白">（印空白卷由學童自填）</option>
-                ${students.map(s => `<option value="${window.LearningRecords.escapeHtml(s.name)}">${s.avatar} ${window.LearningRecords.escapeHtml(s.name)} 同學</option>`).join('')}
+                ${students.map(s => `<option translate="no" value="${window.LearningRecords.escapeHtml(s.name)}">${s.avatar} ${window.LearningRecords.escapeHtml(s.name)}</option>`).join('')}
               </select>
             </div>
           </div>
@@ -679,7 +679,9 @@
         btnToday.onclick = () => {
           const d = new Date();
           const rocYear = d.getFullYear() - 1911;
-          modal.querySelector('#ws-date-input').value = `民國 ${rocYear} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
+          const field = modal.querySelector('#ws-date-input');
+          if (window.MathI18n) window.MathI18n.generated(field, language => language === 'en' ? d.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'}) : `民國 ${rocYear} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`);
+          else field.value = `民國 ${rocYear} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
         };
       }
 
@@ -724,6 +726,7 @@
         <html lang="zh-TW">
         <head>
           <meta charset="UTF-8">
+          ${window.MathI18n?.popupHead() || ''}
           <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
           <title>數學學習單 - ${escape(unit.title)} - ${escape(scopeTitle)}</title>
           <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=section-worksheets-20261031', window.location.href).href}">
@@ -736,8 +739,8 @@
             <div class="ws-unit">單元 ${unit.number}：${escape(unit.title)}</div>
             <div class="ws-scope">${escape(scopeTitle)} · 共 ${problems.length} 題</div>
             <div class="ws-meta-row">
-              <span>學生姓名：<strong>${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
-              <span>評量日期：<strong>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
+              <span>學生姓名：<strong translate="no">${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
+              <span>評量日期：<strong ${customDate ? 'translate="no"' : ''}>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
               <span>得分：_______</span>
             </div>
           </header>

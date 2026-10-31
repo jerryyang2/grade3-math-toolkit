@@ -53,6 +53,7 @@
       <section><h3>製作與維護方式</h3><ol><li>依九單元整理目標、先備能力、常見迷思、具體到抽象的教學步驟及題庫。</li><li>以 HTML、CSS、JavaScript 製作互動教具；動物為程式繪製的原創 SVG，動作由 CSS 呈現。</li><li>在電腦與手機瀏覽器檢查答案、操作、字級及鍵盤互動，再以 Git 版本控制保存修改。</li><li>透過 GitHub Pages 發布靜態網站。教師以網址操作；沒有學生帳號或跨裝置同步服務。</li></ol></section><section><h3>開始使用與保存</h3><ol><li>以可上網的電腦或平板開啟網站，選取單元；不必註冊。</li><li>從「顯示與朗讀」調整語速、高對比或低刺激模式；鍵盤 Tab 可移動焦點。</li><li>使用課堂教具、隨堂練習、分組活動及學習單，依教學需要切換。</li><li>實際紀錄儲存在本機瀏覽器；換裝置不會自動同步，請由教師匯出備份。</li></ol><p>語音可用聲線依裝置而異；部分遊戲及字型需要網路。未另提供完整離線版本。</p></section>
       <details class="ai-planning"><summary>AI 輔助備課：複製本單元提示詞</summary><p>複製後貼到你使用的 AI 工具，產出的教案與答案由教師檢核後使用。這裡提供提示詞草稿，不會自動產生教案。</p><label for="ai-lesson-prompt">本單元備課提示詞</label><textarea id="ai-lesson-prompt" readonly rows="10">${escape(aiPrompt(unit))}</textarea><button type="button" data-guide-copy>複製備課提示詞</button><p id="ai-copy-status" role="status"></p></details>
       </div><footer class="lesson-guide-footer"><button type="button" data-guide-records>前往學習觀察</button><button type="button" data-guide-print>列印教學流程</button><form method="dialog"><button>回到課堂</button></form></footer>`;
+    if (window.MathI18n) window.MathI18n.generated(dialog.querySelector('#ai-lesson-prompt'), aiPrompt(unit));
     dialog.querySelector('[data-guide-copy]').addEventListener('click', async () => {
       const field = dialog.querySelector('#ai-lesson-prompt');
       try { await navigator.clipboard.writeText(field.value); dialog.querySelector('#ai-copy-status').textContent = '已複製，請貼到你使用的 AI 工具。'; }

@@ -21,12 +21,18 @@ function audioFixture(options = {}) {
     removeAttribute() {}
   }
   const context = vm.createContext({
-    window: { speechSynthesis: synth, Audio:Recording, MathFemaleAudio:options.catalog },
+    window: { speechSynthesis: synth, Audio:Recording, MathFemaleAudio:options.catalog, MathI18n:options.i18n },
     SpeechSynthesisUtterance: class { constructor(text) { this.text = text; } }
   });
   vm.runInContext(source, context);
   return { audio: context.window.spEdAudio, synth, voice, recordings };
 }
+
+test('English mode reads the English question with an English female voice and bypasses Chinese recordings',()=>{
+  const i18n=require('../js/i18n.js').create(require('../js/i18n-en.js'));
+  const {audio,synth,recordings}=audioFixture({i18n,voices:[{lang:'en-US',name:'Samantha'}],catalog:{clips:{'下一題':'chinese.mp3'}}});
+  audio.speak('下一題');assert.equal(recordings.length,0);assert.equal(synth.queue[0].lang,'en-US');assert.doesNotMatch(synth.queue[0].text,/[\u3400-\u9fff]/);
+});
 
 test('a second animal reminder replaces speech that is still waiting to start', () => {
   const { audio, synth } = audioFixture();

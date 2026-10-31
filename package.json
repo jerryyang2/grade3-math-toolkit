@@ -10,9 +10,14 @@
     "audio:build": "node scripts/generate-female-audio.cjs",
     "audio:check": "node scripts/generate-female-audio.cjs --check",
     "islands:audio:build": "node scripts/generate-island-audio.cjs",
-    "islands:audio:check": "node scripts/generate-island-audio.cjs --check"
+    "islands:audio:check": "node scripts/generate-island-audio.cjs --check",
+    "i18n:extract": "node scripts/i18n/extract.cjs",
+    "i18n:build": "node scripts/i18n/build.cjs",
+    "i18n:check": "node scripts/i18n/check.cjs"
   },
   "devDependencies": {
+    "acorn": "^8.15.0",
+    "linkedom": "^0.18.12",
     "node-edge-tts": "1.2.12"
   }
 }

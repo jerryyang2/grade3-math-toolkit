@@ -216,7 +216,7 @@
       const st = students.find(s => s.id === studentId);
       if (!st) return;
       window.spEdAudio.playCelebration();
-      alert(`🙌 與 ${st.name} 擊掌成功！數學小英雄超棒的！`);
+      alert(`🙌 與 ${window.MathI18n?.protect(st.name) ?? st.name} 擊掌成功！數學小英雄超棒的！`);
     },
 
     editName(studentId) {
@@ -583,7 +583,7 @@ ${taskText}
 —— 學習教室特教老師 敬上 (${today})`;
 
     const lineTextEl = document.getElementById('commLineText');
-    if (lineTextEl) lineTextEl.value = lineText;
+    if (lineTextEl) { if (window.MathI18n) window.MathI18n.generated(lineTextEl, lineText); else lineTextEl.value = lineText; }
 
     // 2. 特教通報網 IEP 質性評量紀錄草稿
     const iepText = `【特教通報網 / IEP 隨堂診斷評量紀錄】
@@ -601,7 +601,7 @@ ${taskText}
 以上調整為建議計畫，是否實際提供及成效均須教師核對。`;
 
     const iepTextEl = document.getElementById('commIepText');
-    if (iepTextEl) iepTextEl.value = iepText;
+    if (iepTextEl) { if (window.MathI18n) window.MathI18n.generated(iepTextEl, iepText); else iepTextEl.value = iepText; }
 
     // 3. A4 每頁4張省紙實體聯絡單
     const slipsContainer = document.getElementById('commSlipsGrid');
@@ -616,7 +616,7 @@ ${taskText}
             <span class="slip-date">${today}</span>
           </div>
           <div class="slip-body">
-            <div class="slip-unit">👤 學生：<strong>${escapeText(st.name)}</strong> ｜ 第 ${unit.number} 單元【${unit.title}】</div>
+            <div class="slip-unit">👤 學生：<strong translate="no">${escapeText(st.name)}</strong> ｜ 第 ${unit.number} 單元【${unit.title}】</div>
             <div class="slip-task">🏠 <strong>今晚生活實踐小任務：</strong><br/>${taskDescription}</div>
             <div class="slip-stars">⭐ 存摺累計：<strong>${st.stars}</strong> 顆（非今日成績或精熟率）</div>
           </div>
@@ -650,14 +650,14 @@ ${taskText}
     if (!content) return;
     const preview = window.open('', '_blank');
     if (!preview) { alert('請允許彈出視窗以預覽聯絡單。'); return; }
-    preview.document.write(`<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>數學親師聯絡單</title><link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', location.href).href}"><style>
+    preview.document.write(`<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8">${window.MathI18n?.popupHead() || ''}<title>數學親師聯絡單</title><link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', location.href).href}"><style>
       @page { size:A4; margin:12mm; } body { font-family:'Microsoft JhengHei',sans-serif; color:#111; margin:0; }
       .print-controls { padding:12px; background:#eef2ff; margin-bottom:12px; } button { padding:10px; font:inherit; }
       .slips { display:grid; grid-template-columns:1fr 1fr; gap:10mm; }
       .comm-slip-card { box-sizing:border-box; border:1px dashed #555; padding:8mm; min-height:115mm; break-inside:avoid; font-size:12pt; line-height:1.7; }
       .slip-header { border-bottom:1px solid #aaa; padding-bottom:8px; margin-bottom:12px; } .slip-date { display:block; } .slip-task,.slip-stars,.slip-footer { margin-top:14px; } .slip-footer span { display:block; }
       @media print { .print-controls { display:none; } }
-      </style></head><body><div class="print-controls"><button onclick="window.print()">列印／另存 PDF</button> 每頁最多 4 張，請先核對單元、代號與內容。</div><div class="slips">${content.innerHTML}</div></body></html>`);
+      </style></head><body><div class="print-controls"><button onclick="window.print()">列印／另存 PDF</button> 每頁最多 4 張，請先核對單元、代號與內容。</div><div class="slips">${window.MathI18n?.canonicalHTML(content) ?? content.innerHTML}</div></body></html>`);
     preview.document.close();
   };
 

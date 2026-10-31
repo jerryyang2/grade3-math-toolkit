@@ -2,6 +2,10 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../css/i18n.css?v=language-1">
+  <script src="../../js/i18n-en.js?v=language-1"></script>
+  <script src="../../js/i18n.js?v=language-1"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>學習教室數學樂園</title>
   
@@ -759,7 +763,7 @@
           result += char;
         }
       }
-      return result;
+      return `<span data-i18n-rich>${result}</span>`;
     }
 
     function escapeHtml(str) {
@@ -781,7 +785,7 @@
         });
       }
       if (useZhuyin) return applyZhuyinMarkup(safeText);
-      return safeText;
+      return `<span data-i18n-rich>${safeText}</span>`;
     }
 
     function handleGenerate(event) {
@@ -2116,7 +2120,8 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
     }
 
     function printInNewWindow() {
-      const printContents = document.getElementById('printSheetBody').innerHTML;
+      const printRoot = document.getElementById('printSheetBody');
+      const printContents = window.MathI18n?.canonicalHTML(printRoot) ?? printRoot.innerHTML;
       const win = window.open('', '_blank');
       if (!win) {
         showToast("彈出視窗被瀏覽器阻擋，請使用「直接列印」");
@@ -2124,7 +2129,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
       }
       win.document.write(`<!DOCTYPE html>
 <html lang="zh-TW">
-<head>
+<head>${window.MathI18n?.popupHead() || ''}
   <meta charset="UTF-8">
   <title>學習教室數學練習單</title>
   <link rel="icon" type="image/svg+xml" href="${new URL('../../favicon.svg', window.location.href).href}">
@@ -2180,7 +2185,7 @@ ${numB} 的倍數：${numB}, ${numB*2}, ${numB*3}...
       });
 
       const temp = document.createElement('textarea');
-      temp.value = text;
+      temp.value = window.MathI18n?.t(text) ?? text;
       document.body.appendChild(temp);
       temp.select();
       try {

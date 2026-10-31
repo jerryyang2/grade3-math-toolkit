@@ -1357,10 +1357,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return `  ● 【${info.code}】${info.title}（${info.desc}）`;
     }).join('\n');
 
+    const reportName = window.MathI18n?.protect(studentName) ?? studentName;
+    const reportNotes = window.MathI18n?.protect(notes) ?? notes;
     const reportText = `【數學領域評量草稿｜需經教師核對】
 此草稿包含教學計畫與參考目標；不是自動診斷或達標證明。
 評量日期：${today}
-學生姓名／代號：${studentName}
+學生姓名／代號：${reportName}
 普通教材版本：南一版 國小數學三年級上學期（108課綱普通數學：${unit.curriculumCode}）
 評量單元：第 ${unit.number} 單元【${unit.title}】
 
@@ -1395,13 +1397,14 @@ ${specialNeedsDetails}
 ${window.LearningRecords.report(unitId)}
 
 六、教師質性觀察與後續調整：
-${notes ? notes : '未填寫教師觀察，不推定進步、精熟或提示消褪成效。'}
+${notes ? reportNotes : '未填寫教師觀察，不推定進步、精熟或提示消褪成效。'}
 
 七、親師溝通參考：
 在家中可維持生活情境實踐任務，透過真實貨幣與容量容器進行對話，促進概念類化。`;
 
     if (elements.iepOutput) {
-      elements.iepOutput.textContent = reportText;
+      if (window.MathI18n) window.MathI18n.generated(elements.iepOutput, reportText, 'textContent');
+      else elements.iepOutput.textContent = reportText;
     }
     window.spEdAudio.playCorrect();
   }

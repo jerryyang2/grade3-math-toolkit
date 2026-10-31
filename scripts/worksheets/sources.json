@@ -9,5 +9,8 @@
   "scripts/worksheets/build-book.py",
   "scripts/worksheets/export-data.cjs",
   "scripts/worksheets/verify-book.py",
-  "scripts/worksheets/sources.json"
+  "scripts/worksheets/sources.json",
+  "js/i18n.js",
+  "js/i18n-en.js",
+  "css/i18n.css"
 ]

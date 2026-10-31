@@ -1,0 +1,39 @@
+/* Language is a persistent display preference, independent of learner progress. */
+.language-switch{display:inline-flex;align-items:center;gap:7px;position:relative;flex:0 0 auto;max-width:100%;padding:6px 10px;border:2px solid #254f46;border-radius:10px;background:#fffdf4;color:#183d35;box-shadow:0 2px 0 #254f4626;font:700 14px/1.3 system-ui,sans-serif}
+.language-switch select{appearance:auto;max-width:150px;border:0;background:transparent;color:inherit;cursor:pointer;font:inherit;min-height:30px;outline-offset:3px}
+.language-switch:focus-within{outline:3px solid #e79a28;outline-offset:3px}
+.language-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.language-switch-floating{position:fixed;right:12px;top:10px;z-index:500}
+html[lang="en"]{--font-base:"Trebuchet MS",Arial,sans-serif;--font-reading:"Trebuchet MS",Arial,sans-serif}
+html[lang="en"] body,html[lang="en"] button,html[lang="en"] select,html[lang="en"] input,html[lang="en"] textarea{font-family:"Trebuchet MS",Arial,sans-serif}
+html[lang="en"] .brand-title{font-size:clamp(1.1rem,2.2vw,1.65rem);line-height:1.18;letter-spacing:0}
+html[lang="en"] .brand-caption{font-size:.8rem;letter-spacing:0}
+html[lang="en"] .brand-name>span{margin-left:.25em}
+html[lang="en"] .nav-tabs{flex-wrap:wrap}
+html[lang="en"] .nav-tab{white-space:normal;line-height:1.25;min-height:48px;overflow-wrap:normal}
+html[lang="en"] :is(.kid-btn,.btn,.tool-btn,.mft-button,.mft-action,.island-card){letter-spacing:0;line-height:1.3;white-space:normal;overflow-wrap:normal}
+html[lang="en"] .mft-host{--font-base:"Trebuchet MS",Arial,sans-serif}
+html[lang="en"] .mft-ui[data-orientation] :is(.mft-tool,.mft-options-toggle,.mft-orientation,.mft-actions button){flex-basis:76px;width:76px;min-width:76px;font-size:12px;padding:4px;white-space:normal}
+html[lang="en"] .mft-ui[data-orientation="vertical"] .mft-panel{width:90px}
+html[lang="en"] .math-kit[data-orientation] :is(.math-kit-tool,.math-kit-actions button,.math-kit-orientation){min-width:72px;font-size:12px;white-space:normal}
+html[lang="en"] .math-kit .math-kit-panel button{width:72px;min-width:72px;flex-basis:72px;font-size:12px;white-space:normal}
+html[lang="en"] .math-kit[data-orientation="vertical"] .math-kit-panel{width:90px}
+html[lang="en"] .math-kit[data-orientation="vertical"] :is(.math-kit-header,.math-kit-body,.math-kit-choices,.math-kit-footer){width:72px}
+html[lang="en"] .main-nav .nav-tab{font-size:.9rem;padding:12px 10px}
+html[lang="en"] #tab-battle .battle-opt-btn.btn-correct-burst::after{content:"✓ Correct"}
+html[lang="en"] .world-panel:has(#world.flat) .walking-help::after{content:"Flat map: select an island to visit"}
+html[lang="en"] .ws-zihi{font-family:Arial,sans-serif}
+html[lang="en"] .ws-q-text{font-size:13pt;line-height:1.35}
+html[lang="en"] .ws-title{font-size:15pt}
+html[lang="en"] .ws-options{font-size:11.5pt}
+html[lang="en"] .ws-diagram svg{height:30mm}
+html[lang="en"] .dot-grid{height:9.3mm}
+html[lang="en"] #worksheet-modal label:has(#ws-chk-zihi){display:none!important}
+html[lang="en"] .topbar nav{flex-wrap:wrap}
+html[lang="en"] .sp-ed-game-navbar{flex-wrap:wrap;gap:8px}
+html[lang="en"] .sp-ed-game-navbar>div{flex-wrap:wrap;gap:8px!important}
+html[lang="en"] .island-label{max-width:145px;white-space:normal;line-height:1.2}
+html[lang="en"] .island-label b{font-size:12px}
+html[lang="en"] .certificate-dialog text{letter-spacing:0}
+@media(max-width:600px){.language-switch{font-size:13px;padding:3px 7px}.language-switch-floating{top:6px;right:6px}html[lang="en"] .brand-title{font-size:1.15rem}html[lang="en"] .header-tools{flex-wrap:wrap}html[lang="en"] .topbar nav{gap:6px}}
+@media print{.language-switch{display:none!important}html[lang="en"] .ws-title{font-size:15pt}}

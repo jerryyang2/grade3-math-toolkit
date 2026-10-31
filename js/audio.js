@@ -193,14 +193,15 @@ class SpecialEdAudioSystem {
   speak(text, onStart, onEnd, options = {}) {
     if (this.isMuted) return;
     this.stopSpeech();
-    const lang = options.lang || 'zh-TW';
-    const cleanText = lang.startsWith('en') ? String(text || '').replace(/<[^>]+>/g, '').trim() : this.cleanMathTextForTTS(text);
+    const lang = options.lang || (typeof window !== 'undefined' && window.MathI18n?.language === 'en' ? 'en-US' : 'zh-TW');
+    const localizedText = lang.startsWith('en') && typeof window !== 'undefined' ? window.MathI18n?.t(text) ?? text : text;
+    const cleanText = lang.startsWith('en') ? String(localizedText || '').replace(/<[^>]+>/g, '').replace(/(\d+)\s*\/\s*(\d+)/g,'$1 over $2').replace(/×/g,' times ').replace(/÷/g,' divided by ').replace(/\+/g,' plus ').replace(/[−－]/g,' minus ').replace(/=/g,' equals ').trim() : this.cleanMathTextForTTS(text);
     if (!cleanText) return;
     const token = this.speechGeneration;
     const catalog = typeof window !== 'undefined' ? window.MathFemaleAudio : null;
     const parts = catalog?.sequences?.[cleanText] || [cleanText];
     const paths = parts.map(part => catalog?.clips?.[part]);
-    if (paths.length && paths.every(Boolean) && typeof window.Audio === 'function') {
+    if (!lang.startsWith('en') && paths.length && paths.every(Boolean) && typeof window.Audio === 'function') {
       this.playRecording(paths, token, onStart, onEnd, () => this.speakDeviceVoice(cleanText, token, onStart, onEnd, lang));
     } else {
       this.speakDeviceVoice(cleanText, token, onStart, onEnd, lang);

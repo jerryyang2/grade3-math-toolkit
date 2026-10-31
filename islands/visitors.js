@@ -10,7 +10,7 @@ function cleanVisitor(v){if(!v||typeof v.id!=='string'||!/^[-\w]{1,80}$/.test(v.
 function create(storage){
  let saved=true,data,raw;
  try{raw=storage.getItem(key);const parsed=JSON.parse(raw);if(parsed?.version===2&&Array.isArray(parsed.visitors)){const ids=new Set();const visitors=parsed.visitors.slice(0,60).map(cleanVisitor).filter(v=>v&&!ids.has(v.id)&&ids.add(v.id));if(visitors.length)data={version:2,activeId:visitors.some(v=>v.id===parsed.activeId)?parsed.activeId:visitors[0].id,visitors};}}catch{saved=false;}
- if(!data){let progress={};try{progress=C.readProgress(storage.getItem('slow-math-islands-v1'));}catch{saved=false;}const visitor={id:idOf(),name:'訪客 1',color:colors[0],progress,islandId:'u1',position:null};data={version:2,activeId:visitor.id,visitors:[visitor]};}
+ if(!data){let progress={};try{progress=C.readProgress(storage.getItem('slow-math-islands-v1'));}catch{saved=false;}const visitor={id:idOf(),name:root.MathI18n?.language==='en'?'Visitor 1':'訪客 1',color:colors[0],progress,islandId:'u1',position:null};data={version:2,activeId:visitor.id,visitors:[visitor]};}
  function save(){try{storage.setItem(key,JSON.stringify(data));saved=true;}catch{saved=false;}return saved;}
  const active=()=>data.visitors.find(v=>v.id===data.activeId);
  function unique(name,except){return !data.visitors.some(v=>v.id!==except&&v.name===name);}

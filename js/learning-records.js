@@ -62,7 +62,7 @@
     const selected = (typeof preferred === 'string' && preferred) || root.querySelector('select')?.value || studentId || String(students()[0]?.id || '');
     const stats = summarize(entries, selected);
     root.innerHTML = `<section class="card evidence-card"><h2>實際學習觀察</h2><p>只計入本瀏覽器的練習作答；首次答對、獨立答對與提示後完成分開呈現，不推斷障礙類型。${!writable ? '目前無法安全儲存，請匯出備份。' : ''}</p>
-      <div class="evidence-toolbar"><label>學生代號 <select id="records-student-select">${students().map(s => `<option value="${s.id}" ${String(s.id) === selected ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}</select></label><button type="button" id="export-learning-records">匯出此生紀錄</button><button type="button" id="clear-learning-records">清除此生紀錄</button></div>
+      <div class="evidence-toolbar"><label>學生代號 <select id="records-student-select">${students().map(s => `<option translate="no" value="${s.id}" ${String(s.id) === selected ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}</select></label><button type="button" id="export-learning-records">匯出此生紀錄</button><button type="button" id="clear-learning-records">清除此生紀錄</button></div>
       <div class="evidence-metrics"><span>題目觀察<strong>${stats.total}</strong></span><span>首次答對<strong>${stats.firstRate === null ? '尚無資料' : stats.firstRate + '%'}</strong></span><span>獨立首次答對<strong>${stats.independentRate === null ? '尚無資料' : stats.independentRate + '%'}</strong></span><span>最終完成<strong>${stats.final} / ${stats.total}</strong></span></div>
       <p>累計包含不同回合，不能直接當成精熟率或教學介入成效。請搭配學生口述、實物操作與不同題型觀察。</p>
       ${stats.total ? `<div class="evidence-table"><table><caption>最近 20 筆題目觀察（最新在前）</caption><thead><tr><th>日期／單元</th><th>首次作答</th><th>所需支持</th><th>最終結果</th></tr></thead><tbody>${stats.rows.slice(-20).reverse().map(e => `<tr><td>${escapeHtml(new Date(e.time).toLocaleDateString('zh-TW'))}／${escapeHtml(e.unitId)}</td><td>${e.firstCorrect ? '答對' : '尚未答對'}</td><td>${SUPPORTS[e.support]}</td><td>${e.finalCorrect ? '完成' : '待再教'}（${e.attempts} 次嘗試）</td></tr>`).join('')}</tbody></table></div>` : '<div class="evidence-empty">尚無實際作答資料。請到「隨堂練習」選擇學生代號，再進行練習。</div>'}</section>`;
@@ -103,7 +103,8 @@
   function report(unitId) {
     if (!studentId) return '尚未指定練習學生；無可引用的實際作答證據。';
     const data = summarize(entries.filter(e => e.sessionId === sessionId), studentId, unitId);
-    const label = students().find(s => String(s.id) === studentId)?.name || studentId;
+    const name = students().find(s => String(s.id) === studentId)?.name || studentId;
+    const label = window.MathI18n?.protect(name) ?? name;
     return `本回合練習代號：${label}；本單元 ${data.total} 題觀察，首次答對 ${data.first} 題、獨立首次答對 ${data.independent} 題、最終完成 ${data.final} 題。請確認此代號與報告學生一致；不是概念精熟或診斷結論。`;
   }
   function strategyPrompt(p) {
@@ -123,7 +124,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     const slot = document.getElementById('practice-session-controls');
     slot.innerHTML = `<details class="practice-settings-wrap" ${window.matchMedia('(min-width: 601px)').matches ? 'open' : ''}><summary id="practice-settings-summary">練習設定與紀錄</summary><section class="card practice-settings"><div class="practice-settings-grid">
-      <label>練習對象<select id="practice-student-select"><option value="">示範模式（不記錄）</option>${students().map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></label>
+      <label>練習對象<select id="practice-student-select"><option value="">示範模式（不記錄）</option>${students().map(s => `<option translate="no" value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}</select></label>
       <label>題目難度<select id="practice-difficulty"><option value="all">混合程度</option><option value="1">基礎觀念</option><option value="2">熟練運算</option><option value="3">生活應用</option></select></label>
       <label>練習份量<select id="practice-length"><option value="5">5 題小回合</option><option value="10">10 題</option><option value="all">全部題目</option></select></label>
       <label>本題支持程度<select id="practice-support">${Object.entries(SUPPORTS).map(([v,label]) => `<option value="${v}">${label}</option>`).join('')}</select></label>
@@ -146,7 +147,7 @@
     ['practice-difficulty', 'practice-length'].forEach(id => slot.querySelector('#' + id).addEventListener('change', () => document.dispatchEvent(new CustomEvent('practice-filter-change'))));
     document.addEventListener('student-bank-renamed', () => {
       const picker = slot.querySelector('#practice-student-select');
-      picker.innerHTML = '<option value="">示範模式（不記錄）</option>' + students().map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+      picker.innerHTML = '<option value="">示範模式（不記錄）</option>' + students().map(s => `<option translate="no" value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
       picker.value = studentId;
       renderDashboard();
     });
