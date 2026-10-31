@@ -143,7 +143,7 @@
       const current = gesture;
       gesture = null;
       if (current.target.hasPointerCapture(current.pointerId)) current.target.releasePointerCapture(current.pointerId);
-      if (current.kind === 'move' || current.kind === 'resize') { box = current.box; applyBox(); }
+      if (current.kind === 'move' || current.kind === 'resize') applyBox();
       render();
     }
     function showDimensions(open) {
@@ -259,8 +259,11 @@
       if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
       render();
     });
-    root.addEventListener('pointercancel', cancelGesture);
-    root.addEventListener('lostpointercapture', () => { if (gesture) cancelGesture(); });
+    function cancelPointer(event) {
+      if (gesture?.pointerId === event.pointerId) cancelGesture();
+    }
+    root.addEventListener('pointercancel', cancelPointer);
+    root.addEventListener('lostpointercapture', cancelPointer);
     root.addEventListener('keydown', event => {
       event.stopPropagation();
       if (event.target.matches('input,select,textarea')) return;
@@ -285,7 +288,10 @@
       applyBox();
     });
     new ResizeObserver(updateSurface).observe(surface);
-    window.addEventListener('resize', () => { cancelGesture(); applyBox(); });
+    window.addEventListener('resize', () => {
+      if (gesture && gesture.kind !== 'move' && gesture.kind !== 'resize') cancelGesture();
+      applyBox();
+    });
     document.addEventListener('fullscreenchange', synchronize);
     document.addEventListener('webkitfullscreenchange', synchronize);
     render();

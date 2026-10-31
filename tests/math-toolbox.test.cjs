@@ -67,7 +67,8 @@ test('main page and all five games load toolbox assets once in the actual docume
     assert.match(head, /href="(?:\.\.\/\.\.\/)?css\/math-toolbox\.css\?/);
     assert.equal((html.match(/css\/math-toolbox\.css/g) || []).length, 1);
     assert.equal((html.match(/js\/math-toolbox\.js/g) || []).length, 1);
-    assert.match(html, /js\/math-toolbox\.js\?v=board-tools-20261031/);
+    assert.match(html, /js\/math-toolbox\.js\?v=paired-tools-drag-20261031/);
+    assert.match(html, /js\/floating-tools\.js\?v=paired-tools-drag-20261031/);
     assert.match(html.slice(html.lastIndexOf('<script')), /js\/math-toolbox\.js/);
   }
 });
@@ -75,6 +76,13 @@ test('main page and all five games load toolbox assets once in the actual docume
 test('toolbox expands once after initialization using the existing toggle controls', () => {
   const source = fs.readFileSync(path.join(__dirname, '../js/math-toolbox.js'), 'utf8');
   assert.match(source, /setOrientation\(orientation, false\);\s*fullscreen\(\);\s*toggle\(true\);\s*}/);
+});
+
+test('drawing and math toolbars both open on entry without the math toolbar closing drawing tools', () => {
+  const toolbox = fs.readFileSync(path.join(__dirname, '../js/math-toolbox.js'), 'utf8');
+  const drawing = fs.readFileSync(path.join(__dirname, '../js/floating-tools.js'), 'utf8');
+  assert.doesNotMatch(toolbox, /MathFloatingTools\?\.close\(/);
+  assert.match(drawing, /window\.MathFloatingTools =[^\n]+;\s*toggle\(true\);\s*}/);
 });
 
 test('instruments stay above the whiteboard and below toolbox controls', () => {

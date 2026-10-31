@@ -180,7 +180,6 @@
       launcher.hidden = open;
       launcher.setAttribute('aria-expanded', String(open));
       settingsOpen = false;
-      if (open) window.MathFloatingTools?.close();
       controls();
     }
     function controls() {

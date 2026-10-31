@@ -2,9 +2,75 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 const { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke } = require('../js/math-whiteboard.js');
 
 const stroke = { color: '#273b5b', width: 4, points: [{ x: 20, y: 30 }, { x: 100, y: 30 }, { x: 100, y: 90 }] };
+
+function draggableBoard() {
+  const controls = new Map();
+  const viewportEvents = new Map();
+  const document = { activeElement: null, fullscreenElement: null, querySelector: () => null, addEventListener() {}, body: { append() {} } };
+  function element(selector = '') {
+    const listeners = new Map();
+    const captures = new Set();
+    const node = {
+      style: {}, dataset: {}, hidden: false, value: '4', listeners,
+      classList: { contains: () => false, toggle() {} },
+      setAttribute() {}, append() {}, contains: () => false,
+      closest: target => target === selector ? node : null,
+      focus: () => { document.activeElement = node; },
+      addEventListener: (event, handler) => listeners.set(event, handler),
+      setPointerCapture: pointerId => captures.add(pointerId),
+      hasPointerCapture: pointerId => captures.has(pointerId),
+      releasePointerCapture: pointerId => { captures.delete(pointerId); root.listeners.get('lostpointercapture')?.({ pointerId }); },
+      querySelector: target => {
+        if (!controls.has(target)) controls.set(target, element(target));
+        return controls.get(target);
+      },
+      querySelectorAll: () => [],
+      getBoundingClientRect: () => ({ left: Number.parseFloat(root.style.left) + 2, top: Number.parseFloat(root.style.top) + 88, width: Number.parseFloat(root.style.width) - 4, height: Number.parseFloat(root.style.height) - 112 })
+    };
+    return node;
+  }
+  const root = element();
+  document.createElement = () => root;
+  const window = { addEventListener: (event, handler) => viewportEvents.set(event, handler) };
+  window.self = window; window.top = window;
+  const source = fs.readFileSync(path.join(__dirname, '../js/math-whiteboard.js'), 'utf8');
+  vm.runInNewContext(source, { document, window, innerWidth: 1440, innerHeight: 900, ResizeObserver: class { observe() {} } });
+  window.MathWhiteboard.open();
+  const handle = element('.math-board-move');
+  function pointer(type, clientX, clientY, pointerId = 1) {
+    root.listeners.get(type)({ button: 0, isPrimary: true, pointerId, clientX, clientY, target: handle, preventDefault() {}, stopPropagation() {} });
+  }
+  return { root, pointer, resize: () => viewportEvents.get('resize')() };
+}
+
+test('an interrupted board drag retains its latest position instead of jumping to its start', () => {
+  for (const interruption of ['pointercancel', 'lostpointercapture']) {
+    const board = draggableBoard();
+    board.pointer('pointerdown', 800, 200);
+    board.pointer('pointermove', 900, 300);
+    const moved = { ...board.root.style };
+    board.pointer(interruption, 900, 300);
+    assert.deepEqual(board.root.style, moved);
+  }
+});
+
+test('viewport resize and another pointer do not cancel an active board drag', () => {
+  const board = draggableBoard();
+  board.pointer('pointerdown', 800, 200);
+  board.pointer('pointermove', 850, 250);
+  board.resize();
+  board.pointer('pointercancel', 850, 250, 2);
+  board.pointer('pointermove', 900, 300);
+  assert.equal(board.root.style.left, '804px');
+  assert.equal(board.root.style.top, '280px');
+  board.pointer('pointerup', 900, 300);
+  assert.equal(board.root.style.left, '804px');
+  assert.equal(board.root.style.top, '280px');
+});
 
 test('whiteboard undo/redo restores erased and cleared writing and discards abandoned redo branches', () => {
   const history = new WhiteboardHistory();
@@ -83,7 +149,7 @@ test('all published toolbox pages load the whiteboard before the toolbox exactly
     const html = fs.readFileSync(path.join(root, page), 'utf8');
     assert.equal((html.match(/js\/math-whiteboard\.js/g) || []).length, 1);
     assert.ok(html.lastIndexOf('js/math-whiteboard.js') < html.lastIndexOf('js/math-toolbox.js'));
-    assert.match(html, /js\/math-whiteboard\.js\?v=board-tools-20261031/);
+    assert.match(html, /js\/math-whiteboard\.js\?v=paired-tools-drag-20261031/);
     assert.match(html, /css\/math-toolbox\.css\?v=board-tools-20261031/);
   }
 });

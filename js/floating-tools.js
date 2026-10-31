@@ -622,8 +622,7 @@
     updateSizeLimit();
     fullscreen();
     window.MathFloatingTools = { open: () => toggle(true), close: () => toggle(false) };
-    // 首次載入預設就是課堂教學；之後由分頁切換開啟，讓手動收合持續有效。
-    if (document.querySelector('.nav-tab.active')?.dataset.tab === 'units') toggle(true);
+    toggle(true);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
