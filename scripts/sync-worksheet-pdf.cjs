@@ -16,7 +16,8 @@ function fresh(fromGit=false){
   if(!fs.existsSync(pdf)||!fs.existsSync(reportFile))return false;
   const r=JSON.parse(fs.readFileSync(reportFile,'utf8'));
   if(r.status!=='PASS'||r.pdf_sha256!==hash(fs.readFileSync(pdf)))return false;
-  return sources.every(file=>r.source_sha256?.[file]===hash(fromGit?execFileSync('git',['show','HEAD:'+file],{cwd:root}):fs.readFileSync(path.join(root,file))));
+  // The bilingual display catalog exceeds Node's default 1 MiB output buffer.
+  return sources.every(file=>r.source_sha256?.[file]===hash(fromGit?execFileSync('git',['show','HEAD:'+file],{cwd:root,maxBuffer:32*1024*1024}):fs.readFileSync(path.join(root,file))));
 }
 try{
   if(process.argv.includes('--install-hook')){
