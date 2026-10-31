@@ -81,8 +81,6 @@ body.storybook-site, body.storybook-game {
 :is(.storybook-site,.storybook-game) .mft-ui { font-size: 16px; }
 :is(.storybook-site,.storybook-game) .mft-launcher { background: #bf2828; border-color: #8e1d1d; box-shadow: 2px 3px 0 #efb7ac; }
 :is(.storybook-site,.storybook-game) .mft-launcher:hover { background: #9f1f1f; }
-:is(.storybook-site,.storybook-game) .mft-launcher > span:nth-child(2) { font-size: 17px; }
-:is(.storybook-site,.storybook-game) .mft-launcher small { font-size: 14px; color: #fff; }
 :is(.storybook-site,.storybook-game) :is(.mft-heading span,.mft-width,.mft-footer,.mft-count,.mft-note) { font-size: 14px; color: #344a3c; }
 :is(.storybook-site,.storybook-game) .mft-tool { font-size: 16px; border-color: #859689 !important; }
 :is(.storybook-site,.storybook-game) .mft-tool[aria-pressed='true'] { background: #21663d; color: #fff; }

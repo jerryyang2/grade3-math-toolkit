@@ -145,7 +145,6 @@ body.storybook-site, body.storybook-game {
 .storybook-site .dropdown-menu-item:hover { background: #f4f9eb; }
 /* 畫記工具也像一本小速寫簿。保留畫筆顏色、選中及禁用狀態。 */
 :is(.storybook-site,.storybook-game) .mft-launcher { background: #4c8865; border: 1px solid #3a6b4f; border-radius: 12px 17px 12px 15px; box-shadow: 2px 3px 0 #c7dfc9; }
-:is(.storybook-site,.storybook-game) .mft-launcher small { color: #e5f4e4; }
 :is(.storybook-site,.storybook-game) .mft-panel { background: #fffef9; border: 1px solid #b8d0b6; border-radius: 14px 19px 12px 16px; box-shadow: 3px 5px 0 #c9dfc6; }
 :is(.storybook-site,.storybook-game) .mft-header { background: #edf5e5; border-color: #c6d8bb; }
 :is(.storybook-site,.storybook-game) .mft-heading strong { color: #416146; }

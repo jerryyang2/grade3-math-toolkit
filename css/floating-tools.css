@@ -35,19 +35,18 @@
 .mft-launcher {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 58px;
-  padding: 10px 17px 10px 10px;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
   border-radius: 19px;
   background: #25264b;
   color: #fff;
   box-shadow: 0 8px 26px #27255730, 0 0 0 4px #ffffffd9;
 }
 .mft-launcher:hover { background: #37376c; }
-.mft-launcher > span:nth-child(2) { font-size: 15px; line-height: 1.35; }
-.mft-launcher small { display: block; margin-top: 3px; color: #c7d2fe; font-size: 11px; font-weight: 500; }
-.mft-launch-icon { display: grid; place-items: center; width: 37px; height: 37px; border-radius: 12px; background: #ffffff18; color: #e0e7ff; }
-.mft-launch-count { border-radius: 50%; min-width: 23px; padding: 2px 6px; background: #e0e7ff; color: #3730a3; font-size: 12px; }
+.mft-launch-icon { display: grid; place-items: center; color: inherit; }
+.mft-launcher .mft-launch-icon svg { width: 28px; height: 28px; }
 .mft-panel {
   width: 530px;
   max-width: calc(100vw - 16px);

@@ -98,8 +98,8 @@
     host.className = 'mft-ui';
     host.setAttribute('aria-label', '浮動教學畫記工具');
     host.innerHTML = `
-      <button type="button" class="mft-launcher" aria-expanded="false" aria-controls="mft-panel" title="開啟畫筆、螢光筆與解題步驟標示">
-        <span class="mft-launch-icon">${icon('pen')}</span><span>教學畫記<small>圈重點・寫步驟</small></span><span class="mft-launch-count" hidden>0</span>
+      <button type="button" class="mft-launcher" aria-label="開啟教學畫記工具" aria-expanded="false" aria-controls="mft-panel" title="開啟畫筆、螢光筆與解題步驟標示">
+        <span class="mft-launch-icon">${icon('pen')}</span>
       </button>
       <section id="mft-panel" class="mft-panel" aria-label="課堂畫記工具列" hidden>
         <header class="mft-header">
@@ -217,9 +217,6 @@
       host.querySelector('[data-action="clear"]').disabled = !history.marks.length;
       host.querySelector('.mft-count').textContent = `此頁 ${history.marks.length} 筆`;
       host.querySelector('.mft-next-number').textContent = history.nextNumber();
-      const badge = host.querySelector('.mft-launch-count');
-      badge.textContent = history.marks.length;
-      badge.hidden = !history.marks.length;
     }
     function closeEditor() {
       if (!editor) return;
