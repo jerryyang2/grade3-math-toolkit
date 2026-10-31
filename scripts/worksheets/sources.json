@@ -12,5 +12,8 @@
   "scripts/worksheets/sources.json",
   "js/i18n.js",
   "js/i18n-en.js",
-  "css/i18n.css"
+  "css/i18n.css",
+  "js/worksheet-layout.js",
+  "js/worksheet-font-metrics.js",
+  "js/worksheet-preview.js"
 ]

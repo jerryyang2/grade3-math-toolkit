@@ -5,6 +5,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
 const data = require(path.join(root, 'js/data.js'));
 const diagrams = require(path.join(root, 'js/worksheet-diagrams.js'));
+const layout = require(path.join(root, 'js/worksheet-layout.js'));
 const unreviewed=diagrams.audit(data.practiceBank).filter(item=>!item.reviewed);
 if(unreviewed.length)throw new Error('請先檢查題目更新後的圖像：'+unreviewed.map(item=>item.id).join('、'));
 const context = { window: { NANI_G3S1_DATA: data, addEventListener() {} } };
@@ -27,6 +28,7 @@ for (const unit of data.units) {
     });
   }
 }
+for(const sheet of sheets) sheet.layout=layout.plan(sheet);
 if (sheets.length !== 36) throw new Error('Expected 36 worksheets');
 fs.mkdirSync(path.join(root, 'tmp/pdfs'), {recursive:true});
 fs.writeFileSync(path.join(root, 'tmp/pdfs/worksheets.json'), JSON.stringify(sheets, null, 2));

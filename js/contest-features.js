@@ -590,7 +590,7 @@
               <div>
                 <h3 id="worksheet-title" style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
                 <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 三排計算對齊格 · 課程調整參考註記</span>
-                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；題目 14pt、選項 12pt，每題保留三排計算區，依內容自動分頁。</p>
+                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；與本機彙整本共用版型，每份 2 頁，保留三排計算區。</p>
               </div>
             </div>
             <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
@@ -634,7 +634,7 @@
                 <strong>📐 顯示計算區對齊格 (視動協調)</strong>
               </label>
               <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                <input type="checkbox" id="ws-chk-zihi" checked>
+                <input type="checkbox" id="ws-chk-zihi">
                 <strong>🔤 套用字嗨注音標楷體 (字詞免焦慮)</strong>
               </label>
               <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
@@ -704,7 +704,7 @@
       };
     },
 
-    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true, withIllustrations = true, sectionId = '') {
+    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = false, withIllustrations = true, sectionId = '') {
       const worksheet = this.getWorksheet(unitId, sectionId);
       if (!worksheet || worksheet.problems.length !== 10) {
         alert('目前無法取得這個範圍的十題學習單，請重新選擇單元與小節。');
@@ -721,63 +721,33 @@
         return false;
       }
 
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="zh-TW">
-        <head>
-          <meta charset="UTF-8">
+      const sheet = {
+        id: section?.id || `${unit.id}_review`, unitNumber: unit.number, unitTitle: unit.title,
+        title: scopeTitle, review: !section,
+        problems: problems.map(p => ({...p, sectionTitle:p.sectionTitle || (unit.sections || []).find(item => item.id === p.sectionId)?.title || '',
+          svg:withIllustrations ? (window.WorksheetDiagrams?.render(p) || '').match(/<svg[\s\S]*?<\/svg>/)?.[0] || '' : ''}))
+      };
+      const payload = JSON.stringify({sheet,settings:{withGrid,withStamp,withIllustrations,studentName:studentName === '空白' ? '' : studentName,date:customDate}})
+        .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+      const asset = path => new URL(path, window.location.href).href;
+      printWindow.document.write(`<!DOCTYPE html>
+        <html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
           ${window.MathI18n?.popupHead() || ''}
-          <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
+          <link rel="icon" type="image/svg+xml" href="${asset('favicon.svg')}">
           <title>數學學習單 - ${escape(unit.title)} - ${escape(scopeTitle)}</title>
-          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=section-worksheets-20261031', window.location.href).href}">
-        </head>
-        <body class="${withZihi ? 'ws-zihi' : ''}">
-          <nav class="print-preview-controls" aria-label="學習單預覽工具"><button type="button" onclick="window.print()">列印／另存 PDF</button><p><strong>A4 直式雙欄 · 四邊各 1 公分</strong><span>列印設定：A4、邊界選「預設」（套用 1 公分）、比例 100%，關閉頁首及頁尾。題目先讀左欄，再讀右欄。</span></p></nav>
-          <main class="ws-sheet">
-          <header class="ws-header">
-            <h1 class="ws-title">南一版三年級上學期數學 學習教室個別化學習單</h1>
-            <div class="ws-unit">單元 ${unit.number}：${escape(unit.title)}</div>
-            <div class="ws-scope">${escape(scopeTitle)} · 共 ${problems.length} 題</div>
-            <div class="ws-meta-row">
-              <span>學生姓名：<strong translate="no">${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
-              <span>評量日期：<strong ${customDate ? 'translate="no"' : ''}>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
-              <span>得分：_______</span>
-            </div>
-          </header>
-
-          <div class="ws-body">
-            ${problems.map((p, idx) => `
-              <div class="ws-question-box" data-question-id="${escape(p.id)}">
-                <div class="ws-q-num"><strong>第 ${idx + 1} 題</strong><span>${p.level === 1 ? '基礎觀念' : (p.level === 2 ? '熟練運算' : '生活應用')}</span><span class="ws-answer">答：____</span></div>
-                ${!section ? `<div class="ws-section-label">${escape(p.sectionTitle || (unit.sections || []).find(item => item.id === p.sectionId)?.title || '')}</div>` : ''}
-                <div class="ws-q-text">${p.question}</div>
-                ${withIllustrations ? window.WorksheetDiagrams?.render(p) || '' : ''}
-                <div class="ws-grid-label">計算區${withGrid ? '（直式從右邊個位開始寫）' : ''}</div>
-                <div class="ws-grid-area${withGrid ? '' : ' ws-grid-blank'}" role="img" aria-label="${withGrid ? '三排六欄計算對齊格' : '空白計算區'}">
-                  ${withGrid ? '<span class="dot-grid"></span>'.repeat(18) : ''}
-                </div>
-                <div class="ws-options${p.options.some(opt => String(opt).length > 12) ? ' ws-options-long' : ''}">
-                  ${p.options.map((opt, oIdx) => `<div class="ws-option"><span>(${['A', 'B', 'C', 'D'][oIdx]})</span><span>${opt}</span></div>`).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-
-          ${withStamp ? `
-            <div class="ws-footer-stamp">
-              <div class="stamp-title">108 特教課綱·個別化支持紀錄（教師勾選實際提供項目）</div>
-              <div class="stamp-items">
-                <div>☐ <strong>學習內容</strong>：簡化題意長句、字嗨注音雙軌表徵</div>
-                <div>☐ <strong>學習歷程</strong>：點陣大字對齊防呆、C-R-A 具體操作後銜接</div>
-                <div>☐ <strong>學習環境</strong>：低視覺焦慮、無倒扣增強機制</div>
-                <div>☐ <strong>學習評量</strong>：延長評量時間、語音報讀念題、多步驟分段計分</div>
-              </div>
-            </div>
-          ` : ''}
-          </main>
-        </body>
-        </html>
-      `);
+          <link rel="stylesheet" href="${asset('css/worksheet-print.css?v=shared-layout-20261101')}">
+          <script src="${asset('js/worksheet-font-metrics.js?v=shared-worksheet-20261101')}"><\/script>
+          <script src="${asset('js/worksheet-layout.js?v=shared-worksheet-20261101')}"><\/script>
+        </head><body class="${withZihi ? 'ws-zihi' : ''}">
+          <nav class="print-preview-controls" aria-label="學習單預覽工具">
+            <button type="button" id="worksheet-print">列印／另存 PDF</button>
+            <p><strong>A4 直式雙欄 · 四邊各 1 公分</strong><span>與彙整本共用版型，每份 10 題、共 2 頁。列印選 A4、比例 100%，關閉頁首及頁尾。</span></p>
+            <label translate="no">◎ <select data-language-select aria-label="Language / 語言"><option value="zh-Hant">繁體中文</option><option value="en">English</option></select></label>
+          </nav>
+          <p id="worksheet-error" role="alert" hidden></p><main id="worksheet-pages"></main>
+          <script id="worksheet-payload" type="application/json" translate="no">${payload}<\/script>
+          <script src="${asset('js/worksheet-preview.js?v=shared-worksheet-20261101')}"><\/script>
+        </body></html>`);
       printWindow.document.close();
       return true;
     }

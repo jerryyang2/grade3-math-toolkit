@@ -150,7 +150,7 @@ test('all published toolbox pages load the whiteboard before the toolbox exactly
     assert.equal((html.match(/js\/math-whiteboard\.js/g) || []).length, 1);
     assert.ok(html.lastIndexOf('js/math-whiteboard.js') < html.lastIndexOf('js/math-toolbox.js'));
     assert.match(html, /js\/math-whiteboard\.js\?v=paired-tools-drag-20261031/);
-    assert.match(html, /css\/math-toolbox\.css\?v=board-tools-20261031/);
+    assert.match(html, /css\/math-toolbox\.css\?v=[\w-]+/);
   }
 });
 

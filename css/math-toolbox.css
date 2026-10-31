@@ -5,7 +5,7 @@
 .math-kit button, .math-kit input, .math-instrument button, .math-board :is(button,input,select) { font: inherit; }
 .math-kit button, .math-instrument button, .math-board button { cursor: pointer; color: inherit; }
 .math-kit :is(button,input):focus-visible, .math-instrument:focus-visible, .math-instrument button:focus-visible, .math-board :is(button,input,select,svg):focus-visible { outline: 3px solid #336caf; outline-offset: 3px; }
-.math-kit-launcher { display: flex; align-items: center; gap: 9px; min-height: 52px; padding: 8px 16px 8px 10px; border: 2px solid #66648f; border-bottom: 5px solid #4a496e; border-radius: 16px; background: #f3edff; box-shadow: 0 4px 14px #282a4620; font-weight: 800 !important; touch-action: none; }
+.math-kit-launcher { display: flex; align-items: center; justify-content: center; width: 54px; height: 54px; padding: 8px; border: 2px solid #66648f; border-bottom: 5px solid #4a496e; border-radius: 16px; background: #f3edff; box-shadow: 0 4px 14px #282a4620; font-weight: 800 !important; touch-action: none; }
 .math-kit-launcher svg { width: 32px; height: 32px; }
 .math-kit-panel { display: flex; align-items: stretch; gap: 6px; width: max-content; max-width: calc(100vw - 16px); max-height: calc(100dvh - var(--math-kit-safe-top, 8px) - 8px); padding: 6px; background: #fffdf5; border: 2px solid #9b96b8; border-radius: 14px; box-shadow: 0 3px 0 #b5afc9, 0 5px 18px #27293e28; }
 .math-kit-header, .math-kit-body, .math-kit-choices, .math-kit-footer { display: flex; align-items: center; gap: 5px; }
@@ -73,5 +73,5 @@
 .math-board[data-mode=eraser] .math-board-surface { cursor: cell; }
 .math-board-footer { flex: 0 0 auto; height: 22px; padding: 2px 28px 2px 8px; color: #6b7285; font-size: 11px; background: #fbfcff; border-radius: 0 0 10px 10px; }
 .math-board-resize { position: absolute; z-index: 2147483003; right: 0; bottom: 0; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px 0 8px 0; background: #e2e9f5; color: #4e5689; cursor: nwse-resize !important; touch-action: none; }
-@media (max-width: 600px) { .math-kit { left: 8px; bottom: 104px; } .math-kit-launcher { min-height: 46px; padding: 5px 10px; font-size: 12px; } }
+@media (max-width: 600px) { .math-kit { left: 8px; bottom: 104px; } .math-kit-launcher { width: 50px; height: 50px; padding: 6px; } }
 @media print { .math-kit, .math-kit-layer, .math-board { display: none !important; } }

@@ -23,8 +23,8 @@
     return numberWords(sum+section+digit);
   }
   function create(catalog = {}, options = {}) {
-    let language = 'en';
-    try { if (options.storage?.getItem(KEY) === 'zh-Hant') language = 'zh-Hant'; } catch (_) {}
+    let language = 'zh-Hant';
+    try { const saved = options.storage?.getItem(KEY); if (saved === 'en' || saved === 'zh-Hant') language = saved; } catch (_) {}
     const dictionary = new Map(Object.entries(catalog).map(([a,b]) => [normalize(a), b]));
     const patterns = [];
     const phrases = new Map();
@@ -205,7 +205,7 @@
   // Popups share the origin preference and local assets, including on GitHub Pages subpaths.
   api.popupHead = function() {
     const base = new URL('../', new URL('i18n.js', scriptUrl));
-    return `<link rel="stylesheet" href="${new URL('css/i18n.css',base)}"><script src="${new URL('js/i18n-en.js',base)}"><\/script><script src="${new URL('js/i18n.js',base)}"><\/script>`;
+    return `<link rel="stylesheet" href="${new URL('css/i18n.css',base)}"><script src="${new URL('js/i18n-en.js?v=language-zh-20261101',base)}"><\/script><script src="${new URL('js/i18n.js?v=language-zh-20261101',base)}"><\/script>`;
   };
   const scriptUrl = doc.currentScript?.src || new URL('js/i18n.js',root.location.href).href;
   function watch() {
@@ -275,7 +275,7 @@
     if(printView)ready();else setTimeout(ready,0);
   });else ready();
   root.addEventListener('storage',event=>{
-    if(event.key===KEY)api.setLanguage(event.newValue==='zh-Hant'?'zh-Hant':'en',false);
+    if(event.key===KEY)api.setLanguage(event.newValue==='en'?'en':'zh-Hant',false);
   });
   // A same-origin iframe may not receive storage in its own window when its parent toggles.
   doc.addEventListener('math-language-change',()=>{

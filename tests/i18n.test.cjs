@@ -8,21 +8,21 @@ const catalog=require('../js/i18n-en.js');
 const C=require('../islands/curriculum.js');
 const T=require('../islands/teaching.js');
 
-test('English is the first-visit default; language persists independently of learner data',()=>{
+test('Traditional Chinese is the first-visit default; language persists independently of learner data',()=>{
   const values=new Map([['math-stars','17']]);
   const storage={getItem:k=>values.get(k),setItem:(k,v)=>values.set(k,v)};
-  const app=create(catalog,{storage});assert.equal(app.language,'en');
+  const app=create(catalog,{storage});assert.equal(app.language,'zh-Hant');
   app.setLanguage('zh-Hant');assert.equal(create(catalog,{storage}).language,'zh-Hant');
   assert.equal(values.get('math-stars'),'17');app.setLanguage('en');assert.equal(create(catalog,{storage}).language,'en');
   assert.equal(app.setLanguage('fr'),false);assert.equal(values.get(key),'en');
 });
 test('blocked/corrupt preference storage still permits English and Chinese switching',()=>{
   const app=create(catalog,{storage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}});
-  assert.equal(app.language,'en');app.setLanguage('zh-Hant');assert.equal(app.t('課堂教學'),'課堂教學');
-  assert.equal(create(catalog,{storage:{getItem:()=>'<invalid>'}}).language,'en');
+  assert.equal(app.language,'zh-Hant');app.setLanguage('en');assert.equal(app.t('課堂教學'),'Teach a Lesson');app.setLanguage('zh-Hant');assert.equal(app.t('課堂教學'),'課堂教學');
+  assert.equal(create(catalog,{storage:{getItem:()=>'<invalid>'}}).language,'zh-Hant');
 });
 test('dynamic math text retains numbers, full sentence structure, and protected teacher text',()=>{
-  const app=create(catalog);
+  const app=create(catalog);app.setLanguage('en');
   assert.equal(app.t('第 5 題'),'Question 5');
   assert.match(app.t('看圖，在千位放入3張1000元鈔票。'),/3.*1[,.]?000/);
   assert.equal(app.t('三千二百五十四'),'three thousand two hundred fifty-four');
@@ -31,7 +31,7 @@ test('dynamic math text retains numbers, full sentence structure, and protected 
   app.setLanguage('zh-Hant');assert.equal(app.t('看圖，在千位放入3張1000元鈔票。'),'看圖，在千位放入3張1000元鈔票。');
 });
 test('all island random task prompts, hints, explanations, and teaching steps have English copy',()=>{
-  const app=create(catalog);
+  const app=create(catalog);app.setLanguage('en');
   for(const unit of C.islands)for(let mission=0;mission<3;mission++)for(const seed of [0,.13,.57,.99]){
     const task=C.task(unit.id,mission,()=>seed);
     for(const text of [task.prompt,task.hint,C.solution(task),...T.steps(task).flatMap(s=>[s.title,s.text,s.formula])].filter(Boolean))
@@ -43,7 +43,7 @@ function page(){
   const {window,document}=parseHTML('<!doctype html><html><head><title>課堂教學</title></head><body><div class="header-tools"></div><p id="copy">課堂教學</p><button id="next" title="下一題">下一題</button><select id="level"><option>基礎觀念</option></select><p translate="no" id="name">小明</p><textarea id="notes">我的觀察</textarea><div id="live"></div></body></html>');
   // Linkedom intentionally omits a writable select.value; real Chrome supplies it.
   for(const select of document.querySelectorAll('select'))Object.defineProperty(select,'value',{value:select.textContent,writable:true});
-  const storage=new Map();const w={document,MathEnglishCatalog:catalog,localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},location:{href:'https://example.invalid/project/index.html'},addEventListener(){}};
+  const storage=new Map([[key,'en']]);const w={document,MathEnglishCatalog:catalog,localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},location:{href:'https://example.invalid/project/index.html'},addEventListener(){}};
   // The control is intentionally pre-mounted for a small DOM test without a browser engine.
   const label=document.createElement('label');label.setAttribute('translate','no');label.innerHTML='<select data-language-select><option value="en">English</option><option value="zh-Hant">繁體中文</option></select>';document.body.append(label);
   Object.defineProperty(label.querySelector('select'),'value',{value:'en',writable:true});

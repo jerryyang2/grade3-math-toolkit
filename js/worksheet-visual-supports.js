@@ -137,7 +137,7 @@ const WorksheetVisualSupports = (() => {
     let body='';const square=(x,y,w,h)=>rect(x,y,w,h)+[0,1,2,3].map(i=>circle(x+(i===1||i===2?w:0),y+(i>1?h:0),3,'#111')).join('');
     if(s.both)body=square(22,30,78,78)+square(166,43,110,52)+center(61,131,'甲',16)+center(221,131,'乙',16);
     else {
-      const w=s.rectangle?150:90,h=90,x=s.rectangle?50:65;
+      const w=s.rectangle?150:90,h=s.ratio?150*s.ratio[1]/s.ratio[0]:90,x=s.rectangle?50:65;
       body=square(x,24,w,h);
       if(s.top)body+=center(x+w/2,16,s.top,16);
       if(s.right)body+=text(x+w+8,74,s.right,15);
@@ -185,7 +185,59 @@ const WorksheetVisualSupports = (() => {
     });
     return svg(body,rows.length*46+17,'每一列代表相同大小的一個整體，等分與標記依題目給定條件繪製');
   }
-  const drawers={numberLine,cards:s=>cards(s.values,s.labels),places,money,exchange,barModel,compareBars,grouping,unitTable,angle,quadrilateral,tokens,ribbonDivision,remainder,longDivision,fractionBars};
+  function capacityScale(maximum,value,divisions=10) {
+    if(!(maximum>0)||value<0||value>maximum||!Number.isInteger(divisions)||divisions<1)throw new RangeError('Invalid capacity scale');
+    const at=amount=>128-amount/maximum*96;
+    return {at,water:at(value),ticks:Array.from({length:divisions+1},(_,i)=>({value:maximum*i/divisions,y:at(maximum*i/divisions)}))};
+  }
+  function capacityMeasures(s,id) {
+    const count=s.items.length,slot=284/count,max=Math.max(...s.items.map(i=>i.value));
+    const maximum=Math.max(1000,Math.ceil(max/1000)*1000),divisions=maximum/1000*2;
+    let body=`<defs><pattern id="water-${esc(id)}" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 6L6 0" stroke="#555" stroke-width=".8"/></pattern></defs>`;
+    s.items.forEach((item,i)=>{
+      const x=(count===1?100:8+i*slot+10),w=count===3?43:count===2?52:80,g=capacityScale(maximum,item.value,divisions);
+      // 直壁量杯：相同容量刻度具有相同高度差，避免用杯子的外形高度猜容量。
+      body+=`<path d="M${x} 28h${w}l7-7v111H${x}Z" fill="#fff"/><path d="M${x+w+7} 48q20-8 20 19t-20 19"/>`;
+      body+=rect(x+1,g.water,w+5,128-g.water,`url(#water-${esc(id)})`)+line(x,g.water,x+w+6,g.water,'stroke-width="2"');
+      for(const tick of g.ticks){const major=tick.value%1000===0;body+=line(x,tick.y,x+(major?17:9),tick.y);if(major)body+=text(x+20,tick.y+4,tick.value,12);}
+      body+=center(x+w/2,17,'mL',12)+center(8+(i+.5)*slot,153,item.label,count===3?11:13);
+      if(s.operation&&i<count-1)body+=center(8+(i+1)*slot-4,78,s.operation,19);
+    });
+    // 小於100 mL的餘量放在旁邊的小量杯；主量杯仍保留完整零起點。
+    const residual=s.items.map(i=>i.value%1000),needInset=residual.some(v=>v>0&&v<100);
+    if(needInset){
+      const largest=Math.max(...residual),limit=largest<=10?10:largest<=100?100:largest<=200?200:1000;
+      s.items.forEach((item,i)=>{
+        const v=residual[i],x=(count===1?222:8+i*slot+94),w=count===1?34:26,at=v=>118-v/limit*58;
+        body+=rect(x,60,w,58)+rect(x+1,at(v),w-2,118-at(v),`url(#water-${esc(id)})`);
+        for(let j=0;j<=10;j++){const y=at(j*limit/10);body+=line(x,y,x+(j%5?4:9),y);if(j%5===0)body+=text(x+3,y+11,j*limit/10,8);}
+        body+=center(x+w/2,40,'餘量',11)+center(x+w/2,53,'mL',10);
+      });
+    }
+    const h=178;body+=center(150,h-6,needInset?'小量杯放大不足 1 L 的部分':'依刻度與標示思考，結果：？',12);
+    return svg(body,h,'有刻度的直壁量杯，mL 刻度從零等距增加；比較時使用相同刻度，水位表示題目已知的量').replace('<svg ','<svg data-capacity-measures="true" ');
+  }
+  function baseTen(s){
+    const slot=268/s.items.length;let body='';
+    s.items.forEach(([value,quantity],i)=>{
+      const x=16+i*slot;
+      if(value>=1000)body+=`<path d="M${x+10} 40l20-12 30 12v32l-20 12-30-12Z M${x+10} 40l30 12 20-12 M${x+40} 52v32" fill="#eee"/>`;
+      else if(value===100){body+=rect(x+12,32,48,48,'#eee');for(let j=1;j<5;j++)body+=line(x+12+j*9.6,32,x+12+j*9.6,80)+line(x+12,32+j*9.6,x+60,32+j*9.6);}
+      else if(value===10){body+=rect(x+30,28,12,55,'#eee');for(let j=1;j<10;j++)body+=line(x+30,28+j*5.5,x+42,28+j*5.5);}
+      else body+=rect(x+28,48,16,16,'#eee');
+      body+=center(x+36,20,value,15)+center(x+36,111,quantity+' 個',16);
+    });return svg(body,132,'十進位積木的位值與題目給定的份數，並非錢幣或紙鈔');
+  }
+  function sequence(s){
+    let body='';s.values.forEach((value,i)=>{const y=12+i*45;body+=rect(18,y,264,30)+center(150,y+21,value,16);if(i<2)body+=arrow(150,y+32,150,y+42);});
+    body+=center(150,167,'現在：？元',17);return svg(body,180,'依時間先後花錢再得到錢，兩個步驟的結果留白');
+  }
+  function fractionCircle(s){
+    const row=s.rows[0],r=48,cx=80,cy=64;let body=circle(cx,cy,r);
+    for(let j=0;j<row.denominator;j++){const a=j*2*Math.PI/row.denominator;body+=line(cx,cy,cx+r*Math.cos(a),cy+r*Math.sin(a));}
+    body+=text(145,60,'同一個完整蛋糕',15)+text(145,86,'每一份一樣大',14);return svg(body,132,'同一個完整的圓形蛋糕，平分成四個相等扇形，待求分數留白');
+  }
+  const drawers={capacityMeasures,baseTen,sequence,fractionCircle,numberLine,cards:s=>cards(s.values,s.labels),places,money,exchange,barModel,compareBars,grouping,unitTable,angle,quadrilateral,tokens,ribbonDivision,remainder,longDivision,fractionBars};
   function render(problem) {
     if(!isReviewed(problem))return '';
     const entry=specs[problem.id],draw=drawers[entry.kind];
@@ -196,7 +248,7 @@ const WorksheetVisualSupports = (() => {
   function audit(problems) {
     return problems.map(problem=>({id:problem.id,sectionId:problem.sectionId,reviewed:isReviewed(problem),kind:specs?.[problem.id]?.kind||'unreviewed',reason:specs?.[problem.id]?.reason||'尚未檢核'}));
   }
-  return {render,audit,isReviewed,fingerprint,numberLineGeometry};
+  return {render,audit,isReviewed,fingerprint,numberLineGeometry,capacityScale};
 })();
 if(typeof window!=='undefined')window.WorksheetVisualSupports=WorksheetVisualSupports;
 if(typeof module!=='undefined'&&module.exports)module.exports=WorksheetVisualSupports;

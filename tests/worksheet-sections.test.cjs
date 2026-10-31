@@ -4,6 +4,8 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const data = require('../js/data.js');
 const figures = require('../js/worksheet-diagrams.js');
+const layout = require('../js/worksheet-layout.js');
+const payloadOf=html=>JSON.parse(html.match(/<script id="worksheet-payload"[^>]*>([\s\S]*?)<\/script>/)[1]);
 function fixture() {
   let html='',opens=0,blocked=false;
   const alerts=[];
@@ -47,15 +49,17 @@ test('all 36 print views preserve their scope, ten questions, calculation space 
     const result=f.generator.generateAndPrint(unit.id,'空白',true,true,'',true,true,section?.id||'');
     assert.equal(result,true);
     const html=f.html();
-    const ids=[...html.matchAll(/data-question-id="([^"]+)"/g)].map(m=>m[1]);
+    const payload=payloadOf(html),plan=layout.plan(payload.sheet,payload.settings);
+    const ids=plan.pages.flatMap(page=>page.questions.map(q=>q.id));
     assert.equal(ids.length,10);
-    assert.equal((html.match(/class="ws-grid-area/g)||[]).length,10);
-    assert.equal((html.match(/class="dot-grid"/g)||[]).length,180);
+    assert.equal(plan.pages.length,2);
+    assert.ok(plan.pages.every(page=>page.questions.every(q=>q.bottom>=layout.constants.H-layout.constants.BOTTOM)));
+    assert.equal(plan.pages.flatMap(page=>page.ops.filter(op=>op.type==='group')).length,10);
     assert.ok(html.includes('rel="icon"'));
     assert.ok(html.includes('四邊各 1 公分'));
     assert.ok(html.includes(section?.title||'單元總複習'));
     if(section) assert.ok(ids.every(id=>data.practiceBank.find(p=>p.id===id).sectionId===section.id));
-    else assert.equal((html.match(/class="ws-section-label"/g)||[]).length,10);
+    else assert.equal(payload.sheet.review,true);
   }
   assert.equal(f.opens(),36);
 });
@@ -73,10 +77,12 @@ test('invalid or cross-unit subsection choices never open a wrong or incomplete 
 test('personal fields are escaped and blocked popups report failure without producing a sheet',()=>{
   const f=fixture();
   f.generator.generateAndPrint('u9','<img src=x>',false,false,'<script>date</script>',false,false,'s9_2');
-  assert.ok(f.html().includes('&lt;img src=x&gt;'));
-  assert.ok(f.html().includes('&lt;script&gt;date&lt;/script&gt;'));
+  assert.ok(!f.html().includes('<img src=x>'));
+  assert.equal(payloadOf(f.html()).settings.studentName,'<img src=x>');
+  assert.ok(!f.html().includes('<script>date</script>'));
+  assert.equal(payloadOf(f.html()).settings.date,'<script>date</script>');
   assert.ok(!f.html().includes('data-ws-figure='));
-  assert.equal((f.html().match(/ws-grid-blank/g)||[]).length,10);
+  assert.equal(payloadOf(f.html()).settings.withGrid,false);
   f.block();
   assert.equal(f.generator.generateAndPrint('u1','空白',true,false),false);
   assert.equal(f.alerts.length,1);

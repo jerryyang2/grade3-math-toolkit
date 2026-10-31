@@ -29,7 +29,7 @@ function audioFixture(options = {}) {
 }
 
 test('English mode reads the English question with an English female voice and bypasses Chinese recordings',()=>{
-  const i18n=require('../js/i18n.js').create(require('../js/i18n-en.js'));
+  const i18n=require('../js/i18n.js').create(require('../js/i18n-en.js'));i18n.setLanguage('en');
   const {audio,synth,recordings}=audioFixture({i18n,voices:[{lang:'en-US',name:'Samantha'}],catalog:{clips:{'下一題':'chinese.mp3'}}});
   audio.speak('下一題');assert.equal(recordings.length,0);assert.equal(synth.queue[0].lang,'en-US');assert.doesNotMatch(synth.queue[0].text,/[\u3400-\u9fff]/);
 });

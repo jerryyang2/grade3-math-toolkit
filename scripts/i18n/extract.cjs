@@ -64,6 +64,9 @@ function inventory() {
       for(const match of source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) if(match[1].trim()) js(match[1],file);
     }
   }
+  // 圖示資料保留原始語意設定，只收集實際畫出的文字，避免漏掉動態 SVG 標籤。
+  const diagrams=require('../../js/worksheet-diagrams.js');
+  for(const problem of require('../../js/data.js').practiceBank)text(diagrams.render(problem),'worksheet-figures');
   return [...entries].sort(([a],[b])=>a.localeCompare(b,'zh-Hant')).map(([source,files])=>({source,files:[...files].sort()}));
 }
 if(require.main===module) {

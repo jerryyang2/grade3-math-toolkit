@@ -18,7 +18,7 @@ for(const {source} of entries){
 Object.assign(catalog,overrides);
 if(missing.length){console.error(JSON.stringify({missing:missing.length,samples:missing.slice(0,10)}));process.exit(1);}
 // Read-aloud follows exactly the English question and reviewed steps shown on screen.
-const i18n=require('../../js/i18n.js').create(catalog);
+const i18n=require('../../js/i18n.js').create(catalog);i18n.setLanguage('en');
 for(const problem of require('../../js/data.js').practiceBank){
   if(problem.speechText)catalog[problem.speechText]=i18n.t(problem.question);
   if(problem.solutionSpeech)catalog[problem.solutionSpeech]=[

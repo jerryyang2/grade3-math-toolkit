@@ -82,7 +82,7 @@
     host.className = 'math-kit';
     host.setAttribute('aria-label', '數學小工具箱');
     host.innerHTML = `
-      <button type="button" class="math-kit-launcher" aria-expanded="false" aria-controls="math-kit-panel">${icon}<span>數學工具箱</span></button>
+      <button type="button" class="math-kit-launcher" aria-expanded="false" aria-controls="math-kit-panel" aria-label="數學工具箱" title="數學工具箱">${icon}</button>
       <section class="math-kit-panel" id="math-kit-panel" aria-label="數學教具工具列" hidden>
         <header class="math-kit-header">
           <span class="math-kit-brand" aria-hidden="true">${icon}<span>數學</span></span>

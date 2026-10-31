@@ -105,10 +105,11 @@ test('illustrations can be switched off while all units retain ten questions and
   vm.runInNewContext(fs.readFileSync(require.resolve('../js/contest-features.js'),'utf8'),context);
   for(const unit of data.units) for(const enabled of [true,false]) {
     context.window.WorksheetGenerator.generateAndPrint(unit.id,'空白',true,true,'',true,enabled);
-    assert.equal((html.match(/class="ws-question-box"/g)||[]).length,10);
-    assert.equal((html.match(/class="ws-grid-area/g)||[]).length,10);
+    const payload=JSON.parse(html.match(/<script id="worksheet-payload"[^>]*>([\s\S]*?)<\/script>/)[1]);
+    assert.equal(payload.sheet.problems.length,10);
+    assert.equal(payload.settings.withGrid,true);
     const printed=context.window.WorksheetGenerator.getWorksheet(unit.id).problems;
-    assert.equal((html.match(/data-ws-figure=/g)||[]).length,enabled?printed.filter(p=>figures.render(p)).length:0);
+    assert.equal(payload.sheet.problems.filter(p=>p.svg).length,enabled?printed.filter(p=>figures.render(p)).length:0);
   }
 });
 

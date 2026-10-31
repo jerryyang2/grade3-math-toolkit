@@ -12,7 +12,7 @@ for(const [source,target]of Object.entries(catalog)) {
   assert.equal(typeof target,'string');
   assert.deepEqual((target.match(/⟦[^⟧]*⟧/g)||[]).sort(),(source.match(/⟦[^⟧]*⟧/g)||[]).sort(),`Damaged template: ${source}`);
 }
-const i18n=create(catalog);
+const i18n=create(catalog);i18n.setLanguage('en');
 for(const problem of data.practiceBank) {
   for(const source of [problem.question,...problem.options,problem.hint,problem.speechText,problem.solutionSpeech,...(problem.stepScaffolds||[])].filter(Boolean))assert.doesNotMatch(i18n.t(source),/[\u3400-\u9fff]/u,problem.id);
   assert.equal(new Set(problem.options.map(v=>i18n.t(v))).size,problem.options.length,`Duplicate English choices: ${problem.id}`);

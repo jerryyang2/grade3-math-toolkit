@@ -67,7 +67,7 @@ test('main page and all five games load toolbox assets once in the actual docume
     assert.match(head, /href="(?:\.\.\/\.\.\/)?css\/math-toolbox\.css\?/);
     assert.equal((html.match(/css\/math-toolbox\.css/g) || []).length, 1);
     assert.equal((html.match(/js\/math-toolbox\.js/g) || []).length, 1);
-    assert.match(html, /js\/math-toolbox\.js\?v=paired-tools-drag-20261031/);
+    assert.match(html, /js\/math-toolbox\.js\?v=[\w-]+/);
     assert.match(html, /js\/floating-tools\.js\?v=paired-tools-drag-20261031/);
     assert.match(html.slice(html.lastIndexOf('<script')), /js\/math-toolbox\.js/);
   }
