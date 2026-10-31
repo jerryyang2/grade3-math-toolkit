@@ -64,6 +64,7 @@
   }
   function toolIcon(type) {
     const shapes = {
+      whiteboard: '<rect x="2" y="3" width="44" height="29" rx="3" fill="white" stroke="#5d6a87" stroke-width="2.5"/><path d="M9 25h17m4-5 8-8 3 3-8 8-5 2Z" fill="#f7d17b" stroke="#5d6a87" stroke-width="2"/><path d="M15 33v3m18-3v3" stroke="#5d6a87" stroke-width="2"/>',
       ruler: '<rect x="2" y="8" width="44" height="22" rx="3" fill="#a9d5ed" stroke="#37698d" stroke-width="2"/><path d="M8 8v13m6-13v8m6-8v13m6-13v8m6-8v13m6-13v8" stroke="#37698d" stroke-width="2"/>',
       triangle45: '<path d="M7 3v30h30ZM14 20v6h6Z" fill="#a8d6be" fill-rule="evenodd" stroke="#377961" stroke-width="2"/><path d="M7 26h7v7" fill="none" stroke="#377961" stroke-width="1.5"/>',
       triangle30: '<path d="M3 9v24h42ZM10 22v5h10Z" fill="#a8d6be" fill-rule="evenodd" stroke="#377961" stroke-width="2"/><path d="M3 26h7v7" fill="none" stroke="#377961" stroke-width="1.5"/>',
@@ -80,7 +81,36 @@
     const host = document.createElement('aside');
     host.className = 'math-kit';
     host.setAttribute('aria-label', '數學小工具箱');
-    host.innerHTML = `<button type="button" class="math-kit-launcher" aria-expanded="false" aria-controls="math-kit-panel">${icon}<span>數學工具箱</span></button><section class="math-kit-panel" id="math-kit-panel" aria-label="數學教具工具列" hidden><header class="math-kit-header"><h2>數學小工具箱</h2><button type="button" class="math-kit-drag" aria-label="移動數學工具箱" title="拖曳移動；方向鍵微調">✥</button><button type="button" data-action="collapse" aria-label="收合數學工具箱">⌄</button></header><div class="math-kit-choices">${Object.entries(definitions).map(([type, definition]) => `<button type="button" data-add="${type}" aria-label="加入${definition.name}">${toolIcon(type)}<span>${definition.name}</span></button>`).join('')}</div><section class="math-kit-selection" hidden><h3></h3><label>旋轉角度 <span><input type="number" data-setting="angle" aria-label="教具旋轉角度" min="-360" max="360" step="5"> °</span></label><label>教具大小 <input type="range" data-setting="scale" aria-label="教具大小" min="20" max="140" step="5"></label><label class="math-kit-radius">半徑 <span><input type="number" data-setting="radius" aria-label="圓規半徑" min=".5" max="3.5" step=".5"> cm</span></label><div class="math-kit-row"><button type="button" data-action="rotate">轉 45°</button><button type="button" data-action="draw" class="math-kit-draw"></button><button type="button" data-action="remove">移除</button></div></section><p class="math-kit-status" role="status" aria-live="polite">選一件教具，拖到想示範的位置。</p><footer class="math-kit-footer"><button type="button" data-action="visibility" aria-pressed="true">隱藏教具</button><button type="button" data-action="undo" disabled>復原</button><button type="button" data-action="clear" disabled>全部清空</button></footer><p class="math-kit-note">拖曳移動・方向鍵微調・Esc 取消選取<br>螢幕刻度為教學示意，非實物尺寸。</p></section>`;
+    host.innerHTML = `
+      <button type="button" class="math-kit-launcher" aria-expanded="false" aria-controls="math-kit-panel">${icon}<span>數學工具箱</span></button>
+      <section class="math-kit-panel" id="math-kit-panel" aria-label="數學教具工具列" hidden>
+        <header class="math-kit-header">
+          <span class="math-kit-brand" aria-hidden="true">${icon}<span>數學</span></span>
+          <button type="button" class="math-kit-drag" aria-label="移動數學工具箱" title="拖曳移動；方向鍵微調">✥</button>
+          <button type="button" data-action="orientation" aria-label="切換為直向數學工具列"><span aria-hidden="true">▥</span><span>直向</span></button>
+        </header>
+        <div class="math-kit-body">
+          <div class="math-kit-choices">${Object.entries(definitions).map(([type, definition]) => `<button type="button" data-add="${type}" aria-label="加入${definition.name}" title="加入${definition.name}，可用設定調整">${toolIcon(type)}<span>${type === 'triangle45' ? '45°板' : type === 'triangle30' ? '30°板' : definition.name}</span></button>`).join('')}
+            <button type="button" data-add="whiteboard" aria-label="開啟計算白板">${toolIcon('whiteboard')}<span>白板</span></button>
+          </div>
+          <button type="button" data-action="settings" aria-label="調整選取教具" aria-controls="math-kit-settings" aria-expanded="false" disabled><span aria-hidden="true">⚙</span><span>設定</span></button>
+          <footer class="math-kit-footer">
+            <button type="button" data-action="visibility" aria-pressed="true"><span aria-hidden="true">◉</span><span>隱藏</span></button>
+            <button type="button" data-action="undo" disabled><span aria-hidden="true">↶</span><span>復原</span></button>
+            <button type="button" data-action="clear" title="清空幾何教具與作圖；仍可復原" disabled><span aria-hidden="true">⌫</span><span>清空</span></button>
+          </footer>
+        </div>
+        <button type="button" class="math-kit-collapse" data-action="collapse" aria-label="收合數學工具箱">⌄</button>
+      </section>
+      <section class="math-kit-selection" id="math-kit-settings" aria-label="選取教具的設定" hidden>
+        <h3></h3>
+        <label>旋轉角度 <span><input type="number" data-setting="angle" aria-label="教具旋轉角度" min="-360" max="360" step="5"> °</span></label>
+        <label>教具大小 <input type="range" data-setting="scale" aria-label="教具大小" min="20" max="140" step="5"></label>
+        <label class="math-kit-radius">半徑 <span><input type="number" data-setting="radius" aria-label="圓規半徑" min=".5" max="3.5" step=".5"> cm</span></label>
+        <div class="math-kit-row"><button type="button" data-action="rotate">轉 45°</button><button type="button" data-action="draw" class="math-kit-draw"></button><button type="button" data-action="remove">移除</button></div>
+        <p class="math-kit-note">拖曳移動・方向鍵微調<br>螢幕刻度為教學示意，非實物尺寸。</p>
+      </section>
+      <p class="math-kit-status" role="status" aria-live="polite">選一件教具，拖到想示範的位置。</p>`;
     const layer = document.createElement('div');
     layer.className = 'math-kit-layer';
     const marksSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -92,6 +122,12 @@
     const launcher = host.querySelector('.math-kit-launcher');
     const selection = host.querySelector('.math-kit-selection');
     const status = host.querySelector('.math-kit-status');
+    const settingsToggle = host.querySelector('[data-action=settings]');
+    const orientationToggle = host.querySelector('[data-action=orientation]');
+    let settingsOpen = false;
+    let orientation = 'horizontal';
+    try { orientation = localStorage.getItem('math-toolbox-orientation') === 'vertical' ? 'vertical' : 'horizontal'; } catch {}
+    host.dataset.orientation = orientation;
     let instruments = [];
     let marks = [];
     let selectedId = null;
@@ -105,22 +141,53 @@
       if (history.length > 30) history.shift();
     }
     function announce(message) { status.textContent = message; }
+    function positionOptions() {
+      if (selection.hidden) return;
+      const bar = panel.getBoundingClientRect();
+      const popup = selection.getBoundingClientRect();
+      let left = bar.left;
+      let top = bar.top - popup.height - 8;
+      if (orientation === 'vertical') {
+        left = bar.right + popup.width + 8 <= innerWidth ? bar.right + 8 : bar.left - popup.width - 8;
+        top = bar.top;
+      } else if (top < 8) top = bar.bottom + 8;
+      selection.style.left = `${Math.max(8, Math.min(left, innerWidth - popup.width - 8))}px`;
+      selection.style.top = `${Math.max(8, Math.min(top, innerHeight - popup.height - 8))}px`;
+    }
+    function setOrientation(next, persist = true) {
+      orientation = next;
+      host.dataset.orientation = orientation;
+      const target = orientation === 'horizontal' ? '直向' : '橫向';
+      orientationToggle.setAttribute('aria-label', `切換為${target}數學工具列`);
+      orientationToggle.innerHTML = `<span aria-hidden="true">${orientation === 'horizontal' ? '▥' : '▤'}</span><span>${target}</span>`;
+      if (persist) {
+        try { localStorage.setItem('math-toolbox-orientation', orientation); } catch {}
+      }
+      clampHost();
+    }
     function clampHost() {
+      const focusBar = document.querySelector('.lesson-focus-bar:not([hidden])');
+      const safeTop = Math.max(8, Math.min(focusBar?.getBoundingClientRect().bottom + 8 || 8, innerHeight - 100));
+      host.style.setProperty('--math-kit-safe-top', `${safeTop}px`);
       const bounds = host.getBoundingClientRect();
       host.style.left = `${Math.max(8, Math.min(bounds.left, innerWidth - bounds.width - 8))}px`;
-      host.style.top = `${Math.max(8, Math.min(bounds.top, innerHeight - bounds.height - 12))}px`;
+      host.style.top = `${Math.max(safeTop, Math.min(bounds.top, innerHeight - bounds.height - 8))}px`;
       host.style.bottom = 'auto';
+      positionOptions();
     }
     function toggle(open) {
       panel.hidden = !open;
       launcher.hidden = open;
       launcher.setAttribute('aria-expanded', String(open));
+      settingsOpen = false;
       if (open) window.MathFloatingTools?.close();
-      clampHost();
+      controls();
     }
     function controls() {
       const instrument = selected();
-      selection.hidden = !instrument;
+      selection.hidden = panel.hidden || !instrument || !settingsOpen;
+      settingsToggle.disabled = !instrument;
+      settingsToggle.setAttribute('aria-expanded', String(!selection.hidden));
       if (instrument) {
         selection.querySelector('h3').textContent = definitions[instrument.type].name;
         const values = { angle: Math.round(instrument.angle), scale: Math.round(instrument.scale * 100), radius: instrument.radius };
@@ -136,7 +203,8 @@
       host.querySelector('[data-action=undo]').disabled = !history.length;
       host.querySelector('[data-action=clear]').disabled = !instruments.length && !marks.length;
       host.querySelector('[data-action=visibility]').setAttribute('aria-pressed', String(visible));
-      host.querySelector('[data-action=visibility]').textContent = visible ? '隱藏教具' : '顯示教具';
+      host.querySelector('[data-action=visibility]').innerHTML = `<span aria-hidden="true">${visible ? '◉' : '◌'}</span><span>${visible ? '隱藏' : '顯示'}</span>`;
+      host.querySelector('[data-action=visibility]').setAttribute('aria-label', visible ? '隱藏幾何教具' : '顯示幾何教具');
       clampHost();
     }
     function position(instrument, element) {
@@ -178,6 +246,12 @@
       if (event.target.closest('.math-kit-launcher')) { toggle(true); return; }
       const add = event.target.closest('[data-add]');
       if (add) {
+        if (add.dataset.add === 'whiteboard') {
+          settingsOpen = false;
+          controls();
+          window.MathWhiteboard.open();
+          return;
+        }
         if (instruments.length >= 8) { announce('先收回一件教具，再加入新的。'); return; }
         save();
         const offset = instruments.length % 4 * 30;
@@ -185,6 +259,7 @@
         instruments.push(instrument);
         selectedId = instrument.id;
         visible = true;
+        settingsOpen = false;
         render();
         announce(`已加入${definitions[instrument.type].name}，可拖曳、旋轉或調整大小。`);
         return;
@@ -192,6 +267,8 @@
       const action = event.target.closest('[data-action]')?.dataset.action;
       const instrument = selected();
       if (action === 'collapse') { toggle(false); launcher.focus(); return; }
+      if (action === 'orientation') { setOrientation(orientation === 'horizontal' ? 'vertical' : 'horizontal'); return; }
+      if (action === 'settings') { settingsOpen = !settingsOpen; controls(); return; }
       if (action === 'visibility') { visible = !visible; render(); return; }
       if (action === 'undo' && history.length) {
         const snapshot = JSON.parse(history.pop());
@@ -279,7 +356,10 @@
       target.addEventListener('pointerup', pointerEnd);
       target.addEventListener('pointercancel', pointerEnd);
       target.addEventListener('keydown', event => {
-        if (event.key === 'Escape') { selectedId = null; render(); if (!panel.hidden) toggle(false); launcher.focus(); }
+        if (event.key === 'Escape') {
+          if (settingsOpen) { settingsOpen = false; controls(); settingsToggle.focus(); }
+          else { selectedId = null; render(); if (!panel.hidden) toggle(false); launcher.focus(); }
+        }
         const element = event.target.closest('.math-instrument');
         const instrument = element && instruments.find(item => item.id === +element.dataset.id);
         if (instrument && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
@@ -307,7 +387,11 @@
       render();
     }
     document.addEventListener('fullscreenchange', fullscreen);
+    document.addEventListener('click', event => {
+      if (!host.contains(event.target) && settingsOpen) { settingsOpen = false; controls(); }
+    });
     window.addEventListener('resize', () => { render(); clampHost(); });
+    setOrientation(orientation, false);
     fullscreen();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
