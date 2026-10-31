@@ -544,8 +544,11 @@
       handle.addEventListener('lostpointercapture', finish);
       handle.addEventListener('keydown', event => {
         if (event.key === 'Home') {
-          compactPosition = null;
           host.style.left = ''; host.style.top = ''; host.style.right = ''; host.style.bottom = '';
+          const style = getComputedStyle(host);
+          compactPosition = { x: window.innerWidth - 56 - parseFloat(style.right), y: window.innerHeight - 56 - parseFloat(style.bottom) };
+          const bounds = host.getBoundingClientRect();
+          clampPosition(bounds.left, bounds.top);
           positionOptions(); event.preventDefault(); return;
         }
         const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
