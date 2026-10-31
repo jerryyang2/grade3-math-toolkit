@@ -75,6 +75,10 @@
 .mft-tool[data-tool="rect"], .mft-tool[data-tool="arrow"] { color: #356cc8; background: #f3f7ff; border-color: #dfeaff !important; }
 .mft-tool[data-tool="ellipse"] { color: #26875a; background: #f0faf4; border-color: #d6efe0 !important; }
 .mft-tool[data-tool="magnify"] { grid-column: 1 / -1; flex-direction: row; color: #215a91; background: #edf6ff; border-color: #9bbbd8 !important; }
+.mft-zoom-settings { margin-top: 10px; padding: 6px 12px; color: #213e54; background: #edf6ff; border: 1px solid #9bbbd8; border-radius: 12px; font-size: 16px; font-weight: 700; }
+.mft-zoom-settings label { display: flex; align-items: center; gap: 12px; }
+.mft-zoom-settings input { flex: 1; min-width: 60px; width: 100%; height: 44px; margin: 0; accent-color: #bf2828; cursor: pointer; }
+.mft-zoom-settings output { min-width: 36px; color: #173a59; font-size: 17px; font-weight: 800; text-align: right; }
 .mft-tool[aria-pressed="true"], .mft-actions [aria-pressed="true"] { background: #3730a3; color: #fff; border-color: #3730a3 !important; box-shadow: 0 3px 9px #3730a329; }
 .mft-next-number { display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 4px; background: #e0e7ff; color: #4338ca; border-radius: 6px; font-size: 11px; }
 .mft-settings { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 13px 0; padding: 11px 12px; border-radius: 12px; background: #f8f9fc; }

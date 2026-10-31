@@ -2,10 +2,10 @@
 (function () {
   'use strict';
   let active = false;
-  let lens, shadow, page;
+  let lens, shadow, page, zoomLabel;
   let point = { x: 0, y: 0 };
   let frame = 0, refreshTimer = 0;
-  const zoom = 2;
+  let zoom = 2;
   const excluded = '.mft-ui,.mft-editor,.mft-toast,.mft-magnifier,.spotlight-layer,#effects-canvas,script,iframe,video,audio';
   function createLens() {
     if (lens) return;
@@ -14,10 +14,10 @@
     lens.setAttribute('aria-hidden', 'true');
     lens.hidden = true;
     shadow = lens.attachShadow({ mode: 'open' });
-    const label = document.createElement('span');
-    label.className = 'mft-lens-label';
-    label.textContent = '2×';
-    shadow.appendChild(label);
+    zoomLabel = document.createElement('span');
+    zoomLabel.className = 'mft-lens-label';
+    zoomLabel.textContent = `${zoom}×`;
+    shadow.appendChild(zoomLabel);
     document.body.appendChild(lens);
   }
   function refresh() {
@@ -96,7 +96,17 @@
     page.style.left = `${(size - 8) / 2 - (point.x + window.scrollX) * zoom}px`;
     page.style.top = `${(size - 8) / 2 - (point.y + window.scrollY) * zoom}px`;
   }
-  function scheduleRefresh() {
+  function setZoom(value) {
+    const next = Number(value);
+    if (!Number.isFinite(next)) return zoom;
+    zoom = Math.min(4, Math.max(1.5, Math.round(next * 2) / 2));
+    if (page) page.style.setProperty('transform', `scale(${zoom})`, 'important');
+    if (zoomLabel) zoomLabel.textContent = `${zoom}×`;
+    positionLens();
+    return zoom;
+  }
+  function scheduleRefresh(event) {
+    if (event?.target?.closest?.('.mft-ui')) return;
     if (active && !refreshTimer) refreshTimer = window.setTimeout(refresh, 90);
   }
   function setActive(value) {
@@ -138,6 +148,6 @@
     observer.observe(document.getElementById('main-content-area') || document.querySelector('main') || document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'src', 'style', 'open'] });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
-  window.MathMagnifier = { setActive };
+  window.MathMagnifier = { setActive, setZoom };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

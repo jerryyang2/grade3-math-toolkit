@@ -92,7 +92,7 @@
       close: '<path d="m6 6 12 12M6 18 18 6"/>'
     };
     const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
-    const tools = [['cursor', '游標'], ['pen', '畫筆'], ['highlight', '螢光筆'], ['text', '文字'], ['rect', '方框'], ['ellipse', '圓框'], ['arrow', '箭頭'], ['number', '步驟'], ['magnify', '放大鏡 2×']];
+    const tools = [['cursor', '游標'], ['pen', '畫筆'], ['highlight', '螢光筆'], ['text', '文字'], ['rect', '方框'], ['ellipse', '圓框'], ['arrow', '箭頭'], ['number', '步驟'], ['magnify', '放大鏡']];
     const colors = [['#ef4444', '紅色'], ['#2563eb', '藍色'], ['#16a34a', '綠色'], ['#f59e0b', '橙黃色'], ['#9333ea', '紫色'], ['#1e293b', '深墨色']];
     const host = document.createElement('aside');
     host.id = 'math-floating-tools';
@@ -111,6 +111,9 @@
         <div class="mft-body">
           <div class="mft-tool-grid" role="group" aria-label="畫記工具">
             ${tools.map(([key, label]) => `<button type="button" class="mft-tool" data-tool="${key}" aria-pressed="${key === 'cursor'}" title="${key === 'cursor' ? '操作網頁、切換單元及捲動' : label}">${icon(key)}<span>${label}</span>${key === 'number' ? '<b class="mft-next-number">1</b>' : ''}</button>`).join('')}
+          </div>
+          <div class="mft-zoom-settings" hidden>
+            <label>倍率 <input type="range" min="1.5" max="4" value="2" step="0.5" aria-label="放大倍率" aria-valuetext="2 倍"><output aria-live="polite">2×</output></label>
           </div>
           <div class="mft-settings">
             <div class="mft-colors" role="group" aria-label="畫記顏色">
@@ -235,9 +238,10 @@
       overlay.dataset.tool = tool;
       overlay.classList.toggle('mft-drawing', tool !== 'cursor' && tool !== 'magnify');
       window.MathMagnifier?.setActive(tool === 'magnify');
+      host.querySelector('.mft-zoom-settings').hidden = tool !== 'magnify';
       host.querySelectorAll('[data-tool]').forEach(button => button.setAttribute('aria-pressed', button.dataset.tool === tool));
       const label = [...tools, ['eraser', '橡皮擦']].find(([key]) => key === tool)[1];
-      modeLabel.textContent = tool === 'cursor' ? '游標可操作網頁' : tool === 'magnify' ? '放大鏡 2× · 移動或觸控定位 · Esc 關閉' : tool === 'eraser' ? '劃過畫記即可整筆擦除' : `${label}模式 · Esc 回到游標`;
+      modeLabel.textContent = tool === 'cursor' ? '游標可操作網頁' : tool === 'magnify' ? '放大鏡 · 移動或觸控定位 · Esc 關閉' : tool === 'eraser' ? '劃過畫記即可整筆擦除' : `${label}模式 · Esc 回到游標`;
     }
     function clampPosition(x, y) {
       const bounds = host.getBoundingClientRect();
@@ -428,9 +432,15 @@
         case 'capture': capture(); break;
       }
     });
-    host.querySelector('input[type="range"]').addEventListener('input', event => {
+    host.querySelector('.mft-zoom-settings input').addEventListener('input', event => {
+      const value = window.MathMagnifier.setZoom(event.target.value);
+      event.target.value = value;
+      event.target.setAttribute('aria-valuetext', `${value} 倍`);
+      host.querySelector('.mft-zoom-settings output').value = `${value}×`;
+    });
+    host.querySelector('.mft-width input').addEventListener('input', event => {
       width = Number(event.target.value);
-      host.querySelector('output').value = width;
+      host.querySelector('.mft-width output').value = width;
     });
     moveButton.addEventListener('pointerdown', event => {
       if (event.button !== 0 || !event.isPrimary) return;
@@ -457,7 +467,12 @@
     });
     document.addEventListener('keydown', event => {
       if (!opened || event.isComposing) return;
-      if (event.key === 'Escape' && (tool !== 'cursor' || editor)) { setTool('cursor'); event.preventDefault(); return; }
+      if (event.key === 'Escape' && (tool !== 'cursor' || editor)) {
+        setTool('cursor');
+        if (event.target.closest('.mft-zoom-settings')) host.querySelector('[data-tool="cursor"]').focus();
+        event.preventDefault();
+        return;
+      }
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
         event.preventDefault();
