@@ -52,3 +52,34 @@ test('changed quantities, changed options, and unknown new questions cannot sile
   }
   assert.equal(support.audit([{id:'new-question',question:'新題目',options:[]}])[0].reviewed,false);
 });
+
+test('graduated jug zero ticks and water share the actual vessel bottom',()=>{
+  for(const p of data.practiceBank.filter(p=>specs[p.id].kind==='capacityMeasures')){
+    const html=figures.render(p),cups=[...html.matchAll(/data-capacity-cup="true" d="M([\d.]+) 28h\d+l7-7V(\d+)H/g)];
+    assert.equal(cups.length,specs[p.id].items.length,p.id);
+    const {document}=require('linkedom').parseHTML(html);
+    for(const cup of document.querySelectorAll('[data-capacity-cup]')){
+      const water=cup.nextElementSibling.nextElementSibling;
+      assert.ok(Math.abs(Number(water.getAttribute('y'))+Number(water.getAttribute('height'))-128)<.001,p.id+' water must reach floor');
+    }
+    for(const [,left,floor] of cups){
+      const x=Number(left),bottom=Number(floor);
+      assert.equal(bottom,support.capacityScale(1000,0).at(0));
+      const zeroLines=[...html.matchAll(/d="M([\d.]+) ([\d.]+)L([\d.]+) ([\d.]+)"/g)];
+      assert.ok(zeroLines.some(([,a,b,c,d])=>Math.abs(Number(a)-x)<.001&&Number(b)===bottom&&Math.abs(Number(c)-x-17)<.001&&Number(d)===bottom),p.id+' zero tick must meet floor');
+    }
+  }
+});
+
+test('unit conversion results are separate from mixed-unit columns and reverse when the total is given',()=>{
+  const {parseHTML}=require('linkedom');
+  for(const p of data.practiceBank.filter(p=>specs[p.id].kind==='unitConversion')){
+    const config=specs[p.id],html=figures.render(p),{document}=parseHTML(html);
+    const parts=[...document.querySelectorAll('[data-conversion-parts] rect')],total=document.querySelector('[data-conversion-total] rect');
+    assert.equal(parts.length,2,p.id);assert.ok(total,p.id);
+    assert.ok(Number(total.getAttribute('x'))>Math.max(...parts.map(r=>Number(r.getAttribute('x'))+Number(r.getAttribute('width'))))+40,p.id);
+    assert.ok(html.includes(config.fromTotal?'M195 51L158 51':'M158 51L195 51'),p.id+' conversion direction');
+    for(const value of [...config.parts,config.total])assert.ok(visibleText(html).includes(value),p.id);
+    assert.doesNotMatch(visibleText(html),/總毫米/);
+  }
+});

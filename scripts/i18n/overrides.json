@@ -502,5 +502,13 @@
   "比較圖中的線段": "Compare these segments",
   "3 公升 20 毫升比較大": "3 L 20 mL is greater",
   "3200 毫升比較大": "3,200 mL is greater",
-  "丙水壺 (2 L)": "Bottle C (2 L)"
+  "丙水壺 (2 L)": "Bottle C (2 L)",
+  "花片": "Flower counter",
+  "一元硬幣": "NT$1 coin",
+  "在白板點一下放一片花片": "Click the whiteboard to place one flower counter",
+  "在白板點一下放一枚一元硬幣": "Click the whiteboard to place one NT$1 coin",
+  "進入數學遊戲島": "Enter Math Game Island",
+  "換成毫米": "Convert to mm",
+  "兩種單位分別記錄，箭頭連接換算前後的量；未知數量留白": "The two units are recorded separately. The arrow connects equivalent measurements; unknown quantities are left blank.",
+  "換成⟦X⟧": "Convert to ⟦X⟧"
 }

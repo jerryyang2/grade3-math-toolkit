@@ -102,6 +102,15 @@ const WorksheetVisualSupports = (() => {
     body+=center(150,rows*55+26,s.note||'全部合起來：？',16);
     return svg(body,rows*55+42,'相同的每份數量，總量尚未計算');
   }
+  function unitConversion(s) {
+    // 混合單位是同一個長度／容量的兩部分，換算結果不當成第三個位值欄。
+    let body='<g data-conversion-parts="true">';
+    s.units.forEach((unit,i)=>{body+=center(46+i*64,23,unit,16)+rect(14+i*64,34,64,34)+center(46+i*64,57,s.parts[i],17);});
+    body+='</g>';
+    body+=s.fromTotal?arrow(195,51,158,51):arrow(158,51,195,51);
+    body+='<g data-conversion-total="true">'+center(250,23,s.fromTotal?s.totalUnit:'換成'+s.totalUnit,15)+rect(208,34,84,34)+center(250,57,s.total,17)+'</g>';
+    return svg(body,100,'兩種單位分別記錄，箭頭連接換算前後的量；未知數量留白');
+  }
   function unitTable(s) {
     let body='';const width=268/s.headings.length;
     s.headings.forEach((heading,i)=>{body+=center(16+(i+.5)*width,23,heading,16);});
@@ -187,8 +196,8 @@ const WorksheetVisualSupports = (() => {
   }
   function capacityScale(maximum,value,divisions=10) {
     if(!(maximum>0)||value<0||value>maximum||!Number.isInteger(divisions)||divisions<1)throw new RangeError('Invalid capacity scale');
-    const at=amount=>128-amount/maximum*96;
-    return {at,water:at(value),ticks:Array.from({length:divisions+1},(_,i)=>({value:maximum*i/divisions,y:at(maximum*i/divisions)}))};
+    const bottom=128,top=32,at=amount=>bottom-amount/maximum*(bottom-top);
+    return {bottom,top,at,water:at(value),ticks:Array.from({length:divisions+1},(_,i)=>({value:maximum*i/divisions,y:at(maximum*i/divisions)}))};
   }
   function capacityMeasures(s,id) {
     const count=s.items.length,slot=284/count,max=Math.max(...s.items.map(i=>i.value));
@@ -197,9 +206,9 @@ const WorksheetVisualSupports = (() => {
     s.items.forEach((item,i)=>{
       const x=(count===1?100:8+i*slot+10),w=count===3?43:count===2?52:80,g=capacityScale(maximum,item.value,divisions);
       // 直壁量杯：相同容量刻度具有相同高度差，避免用杯子的外形高度猜容量。
-      body+=`<path d="M${x} 28h${w}l7-7v111H${x}Z" fill="#fff"/><path d="M${x+w+7} 48q20-8 20 19t-20 19"/>`;
-      body+=rect(x+1,g.water,w+5,128-g.water,`url(#water-${esc(id)})`)+line(x,g.water,x+w+6,g.water,'stroke-width="2"');
-      for(const tick of g.ticks){const major=tick.value%1000===0;body+=line(x,tick.y,x+(major?17:9),tick.y);if(major)body+=text(x+20,tick.y+4,tick.value,12);}
+      body+=`<path data-capacity-cup="true" d="M${x} 28h${w}l7-7V${g.bottom}H${x}Z" fill="#fff"/><path d="M${x+w+7} 48q20-8 20 19t-20 19"/>`;
+      body+=rect(x+1,g.water,w+5,g.bottom-g.water,`url(#water-${esc(id)})`)+line(x,g.water,x+w+6,g.water,'stroke-width="2"');
+      for(const tick of g.ticks){const major=tick.value%1000===0;body+=line(x,tick.y,x+(major?17:9),tick.y);if(major)body+=text(x+20,tick.value===0?tick.y-4:tick.y+4,tick.value,12);}
       body+=center(x+w/2,17,'mL',12)+center(8+(i+.5)*slot,153,item.label,count===3?11:13);
       if(s.operation&&i<count-1)body+=center(8+(i+1)*slot-4,78,s.operation,19);
     });
@@ -237,7 +246,7 @@ const WorksheetVisualSupports = (() => {
     for(let j=0;j<row.denominator;j++){const a=j*2*Math.PI/row.denominator;body+=line(cx,cy,cx+r*Math.cos(a),cy+r*Math.sin(a));}
     body+=text(145,60,'同一個完整蛋糕',15)+text(145,86,'每一份一樣大',14);return svg(body,132,'同一個完整的圓形蛋糕，平分成四個相等扇形，待求分數留白');
   }
-  const drawers={capacityMeasures,baseTen,sequence,fractionCircle,numberLine,cards:s=>cards(s.values,s.labels),places,money,exchange,barModel,compareBars,grouping,unitTable,angle,quadrilateral,tokens,ribbonDivision,remainder,longDivision,fractionBars};
+  const drawers={unitConversion,capacityMeasures,baseTen,sequence,fractionCircle,numberLine,cards:s=>cards(s.values,s.labels),places,money,exchange,barModel,compareBars,grouping,unitTable,angle,quadrilateral,tokens,ribbonDivision,remainder,longDivision,fractionBars};
   function render(problem) {
     if(!isReviewed(problem))return '';
     const entry=specs[problem.id],draw=drawers[entry.kind];

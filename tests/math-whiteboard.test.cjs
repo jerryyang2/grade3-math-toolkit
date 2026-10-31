@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke } = require('../js/math-whiteboard.js');
+const { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke, createStamp } = require('../js/math-whiteboard.js');
 
 const stroke = { color: '#273b5b', width: 4, points: [{ x: 20, y: 30 }, { x: 100, y: 30 }, { x: 100, y: 90 }] };
 
@@ -41,11 +41,46 @@ function draggableBoard() {
   vm.runInNewContext(source, { document, window, innerWidth: 1440, innerHeight: 900, ResizeObserver: class { observe() {} } });
   window.MathWhiteboard.open();
   const handle = element('.math-board-move');
-  function pointer(type, clientX, clientY, pointerId = 1) {
-    root.listeners.get(type)({ button: 0, isPrimary: true, pointerId, clientX, clientY, target: handle, preventDefault() {}, stopPropagation() {} });
+  function pointer(type, clientX, clientY, pointerId = 1, target = handle) {
+    root.listeners.get(type)({ button: 0, isPrimary: true, pointerId, clientX, clientY, target, preventDefault() {}, stopPropagation() {} });
   }
-  return { root, pointer, resize: () => viewportEvents.get('resize')() };
+  const surface = root.querySelector('.math-board-surface');
+  function tool(mode) {
+    root.listeners.get('click')({ target: { closest: selector => selector === '[data-board-mode]' ? { dataset: { boardMode: mode } } : null } });
+  }
+  function action(name) {
+    root.listeners.get('click')({ target: { closest: selector => selector === '[data-board-action]' ? { dataset: { boardAction: name } } : null } });
+  }
+  const onSurface = (type,x,y,id=1) => {
+    const bounds=surface.getBoundingClientRect();pointer(type,bounds.left+x,bounds.top+y,id,surface);
+  };
+  return { root, pointer, surface, tool, action, onSurface, resize: () => viewportEvents.get('resize')() };
 }
+
+test('one tap places one counter at the pointer location; dragging does not stamp a trail', () => {
+  const board=draggableBoard();board.tool('flower');
+  board.onSurface('pointerdown',80,70);board.onSurface('pointermove',180,170);board.onSurface('pointerup',180,170);
+  assert.equal((board.surface.innerHTML.match(/data-stamp="flower"/g)||[]).length,1);
+  assert.match(board.surface.innerHTML,/x="58" y="48" width="44" height="44"/);
+  board.tool('coin');board.onSurface('pointerdown',180,70);board.onSurface('pointerup',180,70);
+  assert.equal((board.surface.innerHTML.match(/data-stamp=/g)||[]).length,2);
+  assert.match(board.surface.innerHTML,/one-dollar-coin\.svg/);
+  board.resize();assert.match(board.surface.innerHTML,/x="58" y="48"/);
+});
+
+test('counter placement, erasing, clearing and canceled touches share undo/redo history', () => {
+  const board=draggableBoard();
+  for(const [mode,x] of [['flower',80],['coin',180]]){board.tool(mode);board.onSurface('pointerdown',x,70);board.onSurface('pointerup',x,70);}
+  board.tool('eraser');board.onSurface('pointerdown',80,70);board.onSurface('pointerup',80,70);
+  assert.doesNotMatch(board.surface.innerHTML,/data-stamp="flower"/);assert.match(board.surface.innerHTML,/data-stamp="coin"/);
+  board.action('undo');assert.equal((board.surface.innerHTML.match(/data-stamp=/g)||[]).length,2);
+  board.action('redo');assert.equal((board.surface.innerHTML.match(/data-stamp=/g)||[]).length,1);
+  board.action('clear');assert.equal(board.surface.innerHTML,'');board.action('undo');assert.match(board.surface.innerHTML,/data-stamp="coin"/);
+  board.tool('flower');board.onSurface('pointerdown',50,90);board.onSurface('pointercancel',50,90);
+  assert.doesNotMatch(board.surface.innerHTML,/data-stamp="flower"/);
+  assert.equal(hitsStroke(createStamp('coin',{x:80,y:70}),{x:100,y:70}),true);
+  assert.equal(hitsStroke(createStamp('flower',{x:80,y:70}),{x:150,y:70}),false);
+});
 
 test('an interrupted board drag retains its latest position instead of jumping to its start', () => {
   for (const interruption of ['pointercancel', 'lostpointercapture']) {
@@ -149,7 +184,7 @@ test('all published toolbox pages load the whiteboard before the toolbox exactly
     const html = fs.readFileSync(path.join(root, page), 'utf8');
     assert.equal((html.match(/js\/math-whiteboard\.js/g) || []).length, 1);
     assert.ok(html.lastIndexOf('js/math-whiteboard.js') < html.lastIndexOf('js/math-toolbox.js'));
-    assert.match(html, /js\/math-whiteboard\.js\?v=paired-tools-drag-20261031/);
+    assert.match(html, /js\/math-whiteboard\.js\?v=[\w-]+/);
     assert.match(html, /css\/math-toolbox\.css\?v=[\w-]+/);
   }
 });

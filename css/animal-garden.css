@@ -13,11 +13,11 @@
 .animal-wing-right { transform-origin: 91px 83px; animation-direction: reverse; }
 .animal-rabbit { --x: 17%; --y: 8%; }
 .animal-fox { --x: 36%; --y: 9%; }
-.animal-bear { --x: 55%; --y: 8%; --size: 82px; }
+.animal-bear { --x: 53%; --y: 6%; --size: 82px; }
 .animal-cat { --x: 75%; --y: 8%; }
 .animal-owl { --x: 83%; --y: 54%; --size: 64px; }
 .animal-hedgehog { --x: 29%; --y: 38%; --size: 64px; }
-.animal-panda { --x: 57%; --y: 36%; --size: 68px; }
+.animal-panda { --x: 64%; --y: 56%; --size: 68px; }
 .animal-duck { --x: 9%; --y: 38%; --size: 64px; }
 .animal-otter { --x: 88%; --y: 23%; --size: 64px; }
 .animal-bear .animal-body { animation-duration: 6s; }

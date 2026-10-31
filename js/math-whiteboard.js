@@ -1,6 +1,15 @@
 (function () {
   'use strict';
 
+  // Resolve from this script so the same icons work on the main page and nested games.
+  const iconRoot = typeof document !== 'undefined' && document.currentScript?.src
+    ? new URL('../assets/icons/', document.currentScript.src).href : 'assets/icons/';
+  const stampIcons = { flower: `${iconRoot}counting-flower.svg`, coin: `${iconRoot}one-dollar-coin.svg` };
+  function createStamp(kind, point) {
+    if (!stampIcons[kind]) throw new RangeError('Unknown whiteboard stamp');
+    return { type: 'stamp', kind, x: point.x, y: point.y, size: 44 };
+  }
+
   class WhiteboardHistory {
     constructor() { this.marks = []; this.past = []; this.future = []; }
     save(marks) {
@@ -30,6 +39,7 @@
     return { width, height, x: Math.max(8, Math.min(box.x, viewportWidth - width - 8)), y: Math.max(insetTop, Math.min(box.y, viewportHeight - height - 8)) };
   }
   function hitsStroke(stroke, point, radius = 12) {
+    if (stroke.type === 'stamp') return Math.hypot(point.x - stroke.x, point.y - stroke.y) <= stroke.size / 2 + radius;
     const tolerance = radius + stroke.width / 2;
     return stroke.points.some((end, index) => {
       const start = stroke.points[Math.max(0, index - 1)];
@@ -41,6 +51,7 @@
     });
   }
   function strokeMarkup(stroke) {
+    if (stroke.type === 'stamp') return `<image class="math-board-stamp" data-stamp="${stroke.kind}" href="${stampIcons[stroke.kind]}" x="${stroke.x - stroke.size / 2}" y="${stroke.y - stroke.size / 2}" width="${stroke.size}" height="${stroke.size}"/>`;
     const first = stroke.points[0];
     if (stroke.points.length === 1) return `<circle cx="${first.x}" cy="${first.y}" r="${stroke.width / 2}" fill="${stroke.color}"/>`;
     return `<path d="${stroke.points.map((point, index) => `${index ? 'L' : 'M'}${point.x} ${point.y}`).join(' ')}" stroke="${stroke.color}" stroke-width="${stroke.width}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -70,7 +81,7 @@
     } else return null;
     return { color: '#315d9b', width: 3, points: points.map(point => ({ x: point.x - bounds.left, y: point.y - bounds.top })) };
   }
-  if (typeof module !== 'undefined' && module.exports) module.exports = { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke };
+  if (typeof module !== 'undefined' && module.exports) module.exports = { WhiteboardHistory, clampBoard, hitsStroke, strokeMarkup, geometryStroke, createStamp };
   if (typeof document === 'undefined') return;
 
   let board = null;
@@ -89,8 +100,10 @@
       <div class="math-board-toolbar" role="toolbar" aria-label="白板書寫工具">
         <button type="button" data-board-mode="pen" aria-pressed="true">畫筆</button>
         <button type="button" data-board-mode="eraser" aria-pressed="false" title="整筆擦除，可復原">橡皮擦</button>
+        <button type="button" data-board-mode="flower" aria-pressed="false" title="在白板點一下放一片花片"><img src="${stampIcons.flower}" alt="" aria-hidden="true"><span>花片</span></button>
+        <button type="button" data-board-mode="coin" aria-pressed="false" title="在白板點一下放一枚一元硬幣"><img src="${stampIcons.coin}" alt="" aria-hidden="true"><span>一元硬幣</span></button>
         <label>顏色<select aria-label="白板畫筆顏色"><option value="#273b5b">深藍</option><option value="#c4473d">紅色</option><option value="#287655">綠色</option><option value="#222222">黑色</option></select></label>
-        <label>粗細<input type="number" aria-label="白板畫筆粗細" value="4" min="1" max="16" step="1"></label>
+        <label>粗細<input type="number" data-board-pen-width aria-label="白板畫筆粗細" value="4" min="1" max="16" step="1"></label>
         <button type="button" data-board-action="undo" title="Ctrl／⌘ Z" disabled>復原</button>
         <button type="button" data-board-action="redo" title="Ctrl／⌘ Shift Z" disabled>重做</button>
         <button type="button" data-board-action="clear" title="清空白板；仍可復原" disabled>清空</button>
@@ -133,7 +146,7 @@
     }
     function render() {
       const marks = gesture?.kind === 'erase' ? gesture.marks : history.marks;
-      surface.innerHTML = marks.map(strokeMarkup).join('') + (gesture?.kind === 'draw' ? strokeMarkup(gesture.stroke) : '');
+      surface.innerHTML = marks.map(strokeMarkup).join('') + (gesture?.kind === 'draw' ? strokeMarkup(gesture.stroke) : gesture?.kind === 'stamp' ? strokeMarkup(gesture.stamp) : '');
       root.querySelector('[data-board-action=undo]').disabled = !history.past.length;
       root.querySelector('[data-board-action=redo]').disabled = !history.future.length;
       root.querySelector('[data-board-action=clear]').disabled = !history.marks.length;
@@ -232,8 +245,9 @@
       if (!target) return;
       event.preventDefault(); event.stopPropagation();
       showDimensions(false);
-      gesture = { kind: move ? 'move' : resize ? 'resize' : mode === 'pen' ? 'draw' : 'erase', pointerId: event.pointerId, target, box: { ...box }, startX: event.clientX, startY: event.clientY };
-      if (gesture.kind === 'draw') gesture.stroke = { color: root.querySelector('select').value, width: Math.max(1, Math.min(16, Number(root.querySelector('[aria-label="白板畫筆粗細"]').value) || 4)), points: [pointFrom(event)] };
+      gesture = { kind: move ? 'move' : resize ? 'resize' : mode === 'pen' ? 'draw' : mode === 'eraser' ? 'erase' : 'stamp', pointerId: event.pointerId, target, box: { ...box }, startX: event.clientX, startY: event.clientY };
+      if (gesture.kind === 'draw') gesture.stroke = { color: root.querySelector('select').value, width: Math.max(1, Math.min(16, Number(root.querySelector('[data-board-pen-width]').value) || 4)), points: [pointFrom(event)] };
+      if (gesture.kind === 'stamp') gesture.stamp = createStamp(mode, pointFrom(event));
       if (gesture.kind === 'erase') { gesture.marks = history.marks.slice(); writeAt(event); }
       target.setPointerCapture(event.pointerId);
       target.focus({ preventScroll: true });
@@ -247,12 +261,13 @@
         const deltaY = event.clientY - gesture.startY;
         box = gesture.kind === 'move' ? { ...gesture.box, x: gesture.box.x + deltaX, y: gesture.box.y + deltaY } : { ...gesture.box, width: gesture.box.width + deltaX, height: gesture.box.height + deltaY };
         applyBox();
-      } else writeAt(event);
+      } else if (gesture.kind !== 'stamp') writeAt(event);
     });
     root.addEventListener('pointerup', event => {
       if (!gesture || gesture.pointerId !== event.pointerId) return;
       if (gesture.kind === 'draw' || gesture.kind === 'erase') writeAt(event);
       if (gesture.kind === 'draw') history.save([...history.marks, gesture.stroke]);
+      if (gesture.kind === 'stamp') history.save([...history.marks, gesture.stamp]);
       if (gesture.kind === 'erase' && gesture.marks.length !== history.marks.length) history.save(gesture.marks);
       const target = gesture.target;
       gesture = null;
