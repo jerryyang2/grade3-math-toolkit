@@ -115,3 +115,22 @@ body[data-view=landing] #world.flat{height:500px}
 @container(max-width:340px){.map-console .map-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 @media(min-width:521px){body[data-view=landing] #world:not(.flat) .landing-label{transform:translate(-160%,0)}}
+
+/* 進場選島：群島佔左側四分之三，操作鍵集中在右側四分之一。 */
+@media(min-width:951px){
+ body[data-view=landing] .world-panel{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);grid-template-rows:auto auto auto}
+ body[data-view=landing] .landing-welcome{grid-column:1/-1;grid-row:1}
+ body[data-view=landing] .traveler-bar{grid-column:1/-1;grid-row:2}
+ body[data-view=landing] #world{grid-column:1;grid-row:3;height:100%;min-height:clamp(540px,calc(100svh - 205px),800px)}
+ body[data-view=landing] .map-console{grid-column:2;grid-row:3;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:22px;padding:18px 14px;border-top:0;border-left:1px solid #b7ceca}
+ body[data-view=landing] .map-console .map-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-view=landing] .movement-controls{flex-direction:column;align-items:stretch;gap:16px;margin:0}
+ body[data-view=landing] .walk-pad{align-self:center}
+ body[data-view=landing] .walking-help{flex:none;font-size:16px;line-height:1.8;min-width:0}
+ body[data-view=landing] #world.flat{height:100%;min-height:540px}
+}
+
+body[data-view=landing] #world:not(.flat) .island-label{font-size:14px;padding:6px 9px;gap:4px;min-height:40px}
+body[data-view=landing] #world:not(.flat) .island-label span{font-size:16px}
+body[data-view=landing] #world:not(.flat) .island-label small{font-size:11px}
+@media(max-width:520px){body[data-view=landing] #world:not(.flat) .island-label{min-height:44px;padding:6px 8px}body[data-view=landing] #world:not(.flat) .island-label small{font-size:15px}body[data-view=landing] #world:not(.flat) .island-label span{font-size:18px}}
