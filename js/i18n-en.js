@@ -8212,7 +8212,12 @@ const catalog={
   "📅 評量日期（可自行填寫，或留空手寫）：": "📅 Date (type a date or leave blank)",
   "計算區（直式從右邊個位開始寫）": "Work Space (start in the ones column on the right)",
   "數學學習單 - ⟦0⟧ - ⟦1⟧": "Math Worksheet - ⟦0⟧ - ⟦1⟧",
-  "小學中年級數學雙雄爭霸戰": "Math Team Battle"
+  "小學中年級數學雙雄爭霸戰": "Math Team Battle",
+  "看島視角": "Island views",
+  "鳥瞰": "Bird view",
+  "俯瞰": "Top view",
+  "平視": "Eye level",
+  "鳥瞰看全景、俯瞰看路線、平視看風景。": "Bird view for the islands, top view for paths, eye level for scenery."
 };
 if(typeof module!=="undefined"&&module.exports)module.exports=catalog;else root.MathEnglishCatalog=Object.freeze(catalog);
 })(typeof window!=="undefined"?window:globalThis);

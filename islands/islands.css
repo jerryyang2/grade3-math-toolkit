@@ -137,3 +137,12 @@ body[data-view=landing] #world:not(.flat) .island-label small{font-size:11px}
 html[lang=en] body[data-view=landing] #world:not(.flat) .island-label{max-width:180px}
 @media(min-width:521px) and (max-width:950px){body[data-view=landing] #world:not(.flat){min-height:540px}}
 @media(max-width:520px){body[data-view=landing] #world:not(.flat) .island-label{min-height:44px;padding:6px 8px}body[data-view=landing] #world:not(.flat) .island-label small{font-size:15px}body[data-view=landing] #world:not(.flat) .island-label span{font-size:18px}}
+
+.camera-controls{border-top:1px solid #cbd9ce;padding-top:14px;margin-top:16px}
+.camera-controls h3{font-size:18px;margin:0 0 10px}
+.camera-controls>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.camera-controls button{font-size:17px;min-height:48px;padding:8px 5px;line-height:1.35;white-space:normal}
+.camera-controls button[aria-pressed=true]{background:#264e55;color:#fff9e5;border-color:#264e55}
+.camera-controls p{font-size:15px;line-height:1.6;margin:10px 0 0;color:#4d6c64}
+body[data-view=landing] .camera-controls{margin-top:0}
+@media(max-width:950px){body[data-view=landing] .camera-controls{margin-top:16px}}

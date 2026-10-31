@@ -341,5 +341,10 @@
   "自由看地圖 · 拖曳移動": "Free view · Drag to pan",
   "跟隨訪客 · 拖曳旋轉視角": "Following visitor · Drag to rotate",
   "訪客行走地圖：點地面移動；點島名自動沿橋前往；方向鍵或 WASD 行走；未跟隨時拖曳移動地圖，跟隨時拖曳旋轉視角": "Walking map: click the ground to move; select an island to walk across bridges; use arrow keys or WASD. Drag to pan when Follow is off, or rotate when Follow is on.",
-  "也可點島名過橋、用方向鍵／WASD 行走。未跟隨時拖曳移動地圖；跟隨時拖曳旋轉視角。": "Select an island to cross the bridges, or walk with arrow keys / WASD. Drag to pan with Follow off; drag to rotate with Follow on."
+  "也可點島名過橋、用方向鍵／WASD 行走。未跟隨時拖曳移動地圖；跟隨時拖曳旋轉視角。": "Select an island to cross the bridges, or walk with arrow keys / WASD. Drag to pan with Follow off; drag to rotate with Follow on.",
+  "看島視角": "Island views",
+  "鳥瞰": "Bird view",
+  "俯瞰": "Top view",
+  "平視": "Eye level",
+  "鳥瞰看全景、俯瞰看路線、平視看風景。": "Bird view for the islands, top view for paths, eye level for scenery."
 }
