@@ -25,3 +25,48 @@
 .mission-question h4{display:flex;align-items:center;gap:6px;margin:0 0 9px;color:#70410e;font-size:16px;font-weight:700;line-height:1.5}
 .mission-question #question{margin:0;color:#733b0c;font-size:24px;font-weight:800;line-height:1.8;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
 @media(max-width:520px){.mission-question{padding:15px 14px 16px}.mission-question #question{font-size:23px}.mission-question h4{font-size:15px}}
+
+/* 操作鍵與教材字級一致；控制區獨立排版，放大後也不遮住地圖。 */
+.topbar{height:auto;min-height:96px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px}
+.topbar nav{gap:12px;flex-wrap:wrap;font-size:17px}
+.topbar nav button{font-size:18px;min-height:48px;padding:10px 14px}
+.topbar nav button span{font-size:17px}
+.traveler-bar{flex-wrap:wrap;gap:12px;padding:14px 16px}
+.traveler-bar>div{min-width:130px}
+.traveler-bar strong{font-size:19px}
+.traveler-bar #travel-location{font-size:16px;line-height:1.6;max-width:none}
+.traveler-bar button{font-size:18px;min-height:48px;padding:10px 13px}
+.map-topline{top:18px;font-size:14px}
+.map-status{top:64px;font-size:16px;line-height:1.7;background:#fff9e4ee;border-radius:8px;padding:7px 10px}
+.map-console{position:relative;background:#f5f5e9;border-top:1px solid #b7ceca;padding:16px}
+.map-console .map-controls{position:static;transform:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;max-width:none;gap:8px;padding:0;background:none;border:0;box-shadow:none;white-space:normal}
+.map-console .map-controls button{font-size:18px;font-weight:700;min-height:50px;min-width:48px;padding:9px 7px;background:#fffdf6;border:1px solid #a5bdb2;border-radius:9px}
+.map-console .map-controls button:hover{background:#e0ebd6;border-color:#6b917a}
+.map-console .map-controls button[aria-pressed=true]{background:#d9e8cc;border:2px solid #577b58}
+.movement-controls{display:flex;align-items:center;gap:22px;margin-top:18px}
+.map-console .walk-pad{position:static;flex-shrink:0;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:6px}
+.map-console .walk-pad button{min-width:52px;min-height:52px;font-size:30px;font-weight:800;background:#fffdf5;border:2px solid #86a794;box-shadow:0 3px 0 #b3c6b2}
+.map-console .walk-pad #walk-stop{font-size:20px;background:#fae8c4;border-color:#b68a45}
+.map-console .walk-pad button:active{background:#d3e5c3;box-shadow:none}
+.map-console .walking-help{position:static;flex:1;margin:0;font-size:16px;line-height:1.9;text-align:left;color:#3f6056}
+.walking-help strong{display:block;font-size:19px;margin-bottom:5px}
+.world-panel:has(#world.flat) .walking-help{font-size:0}
+.world-panel:has(#world.flat) .walking-help strong{display:none}
+.world-panel:has(#world.flat) .walking-help::after{font-size:17px}
+.island-label{min-height:44px;padding:8px 12px;font-size:16px;gap:5px;font-weight:700}
+.island-label span{font-size:19px}.island-label small{font-size:13px}
+#world.flat .island-label{font-size:17px;min-height:96px}
+#traveler-tag b{font-size:16px;max-width:180px}
+.mission-panel button,.island-audio-controls button,.resident-dialogue #resident-read{font-size:18px;min-height:48px}
+.mission-panel :is(.coin-column,.pour-cups,.basket) button{font-size:23px}
+.mission-panel .mission-tabs button{min-height:78px;font-size:17px}
+.visitor-row button,.visitor-form-actions button{font-size:18px;min-height:48px}
+#visitor-form label{font-size:17px}#visitor-form :is(input,select){font-size:18px;min-height:48px}
+dialog header>button,.resident-dialogue #resident-close{font-size:22px;min-width:48px;min-height:48px}
+
+@media(max-width:520px){.topbar nav{justify-content:flex-start;gap:8px}.topbar nav button{font-size:17px;padding:9px 12px}.traveler-bar{gap:10px;padding:14px}.traveler-bar>div{flex-basis:calc(100% - 60px)}.traveler-bar button{flex:1;font-size:18px}.map-topline{top:16px}.map-status{top:60px}.map-console{padding:14px 12px}.map-console .map-controls button{font-size:17px;padding:9px 4px}.movement-controls{gap:14px;flex-wrap:wrap}.map-console .walking-help{min-width:100px;font-size:15px;line-height:1.8}.walking-help strong{font-size:18px}.mission-panel .mission-tabs button{font-size:17px}.island-label small{display:none}}
+@media print{.map-console{display:none}}
+
+#world .resident-dialogue{top:110px}#world .cruise-exit{top:64px;min-height:48px;font-size:18px}#world .map-watermark{bottom:24px}#world .compass-rose{bottom:30px}
+
+#world.flat{height:470px}#world.flat #island-labels{padding:66px 12px 20px;gap:12px}#world.flat #flat-bridges{inset:66px 12px 20px;width:calc(100% - 24px);height:calc(100% - 86px)}
