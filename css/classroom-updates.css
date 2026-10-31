@@ -7,7 +7,7 @@
 .storybook-site .brand-caption { display: block; border: 0; padding: 0; margin-top: 2px; font-size: .875rem; }
 .storybook-site .brand-section:hover .brand-name { text-decoration: underline; text-underline-offset: .2em; }
 /* 主選單固定單排；窄螢幕可橫向捲動，保留清楚文字與觸控範圍。 */
-.storybook-site .main-nav .nav-container { max-width: 1440px; flex-wrap: nowrap; gap: 2px; padding-inline: 12px; overflow-x: auto; }
+.storybook-site .main-nav .nav-container { max-width: 1440px; flex-wrap: nowrap; justify-content: safe center; gap: 2px; padding-inline: 12px; overflow-x: auto; }
 .storybook-site .main-nav :is(.nav-tab,.nav-island-link) { flex: 0 0 auto; white-space: nowrap; padding: 10px; min-height: 48px; }
 .storybook-site .main-nav :is(.nav-tab,.nav-island-link):focus-visible { outline-offset: -4px; }
 html[lang="en"] .storybook-site .main-nav :is(.nav-tab,.nav-island-link) { padding-inline: 8px; font-size: .9rem; }
