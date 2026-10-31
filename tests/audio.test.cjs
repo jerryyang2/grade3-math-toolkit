@@ -4,20 +4,28 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const source = fs.readFileSync(require.resolve('../js/audio.js'), 'utf8');
 
-function audioFixture() {
-  const voice = { lang: 'zh-TW' };
+function audioFixture(options = {}) {
+  const voice = { lang: 'zh-TW', name: 'Meijia' };
   const synth = {
     speaking: false, pending: false, queue: [],
-    getVoices: () => [voice],
+    getVoices: () => options.voices || [voice],
     speak(utterance) { this.queue.push(utterance); this.pending = true; },
     cancel() { this.queue = []; this.pending = false; this.speaking = false; }
   };
+  const recordings = [];
+  class Recording {
+    constructor(src) { this.src = src; recordings.push(this); }
+    play() { return Promise.resolve(); }
+    pause() { this.paused = true; }
+    load() {}
+    removeAttribute() {}
+  }
   const context = vm.createContext({
-    window: { speechSynthesis: synth },
+    window: { speechSynthesis: synth, Audio:Recording, MathFemaleAudio:options.catalog },
     SpeechSynthesisUtterance: class { constructor(text) { this.text = text; } }
   });
   vm.runInContext(source, context);
-  return { audio: context.window.spEdAudio, synth, voice };
+  return { audio: context.window.spEdAudio, synth, voice, recordings };
 }
 
 test('a second animal reminder replaces speech that is still waiting to start', () => {
@@ -55,4 +63,62 @@ test('leaving a page stops speech both before and after it starts', () => {
     assert.equal(synth.queue.length, 0);
     assert.equal(audio.isSpeaking, false);
   }
+});
+
+test('recorded female speech is preferred and preserves pitch when changing speed', () => {
+  const {audio,synth,recordings} = audioFixture({catalog:{clips:{'慢慢想':'audio/female/example.mp3'}}});
+  let starts = 0, ends = 0;
+  audio.speak('慢慢想', () => starts++, () => ends++);
+  assert.equal(synth.queue.length,0);
+  assert.equal(recordings[0].src,'audio/female/example.mp3');
+  recordings[0].onplaying();
+  audio.setSpeechRate(.75);
+  assert.equal(recordings[0].playbackRate,.75);
+  assert.equal(recordings[0].preservesPitch,true);
+  recordings[0].onended();
+  assert.equal(starts,1);
+  assert.equal(ends,1);
+  assert.equal(audio.isSpeaking,false);
+});
+
+test('a cancelled recording cannot play another part or complete a newer question', () => {
+  const {audio,recordings,synth} = audioFixture({catalog:{clips:{'第一步':'a.mp3','第二步':'b.mp3'},sequences:{'第一步。第二步':['第一步','第二步']}}});
+  let ends = 0;
+  audio.speak('第一步。第二步', null, () => ends++);
+  const staleEnd = recordings[0].onended;
+  const staleError = recordings[0].onerror;
+  audio.speak('新的題目');
+  staleEnd(); staleError();
+  assert.equal(recordings.length,1);
+  assert.equal(recordings[0].paused,true);
+  assert.equal(ends,0);
+  assert.equal(synth.queue.length,1);
+  audio.stopSpeech();
+  assert.equal(synth.queue.length,0);
+});
+
+test('recorded sequences complete once and muting stops subsequent segments', () => {
+  const catalog = {clips:{'先想':'a.mp3','再說':'b.mp3'},sequences:{'先想。再說':['先想','再說']}};
+  const {audio,recordings} = audioFixture({catalog});
+  let starts = 0, ends = 0;
+  audio.speak('先想。再說', () => starts++, () => ends++);
+  recordings[0].onplaying(); recordings[0].onended();
+  recordings[1].onplaying(); recordings[1].onended();
+  assert.equal(starts,1); assert.equal(ends,1);
+  audio.speak('先想。再說');
+  const staleEnd = recordings[2].onended;
+  audio.toggleMute(); staleEnd();
+  assert.equal(recordings.length,3);
+  assert.equal(recordings[2].paused,true);
+});
+
+test('a missing recording falls back once to a known female voice and never a male default', () => {
+  const {audio,synth,recordings} = audioFixture({catalog:{clips:{'慢慢想':'missing.mp3'}}});
+  const error = () => recordings[0].onerror();
+  audio.speak('慢慢想'); error(); error();
+  assert.equal(synth.queue.length,1);
+  assert.equal(synth.queue[0].voice.name,'Meijia');
+  const maleOnly = audioFixture({voices:[{lang:'zh-TW',name:'Microsoft YunJhe'}]});
+  maleOnly.audio.speak('動態教具');
+  assert.equal(maleOnly.synth.queue.length,0);
 });

@@ -147,6 +147,8 @@
   <link rel="stylesheet" href="../../css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="../../css/floating-toolbar.css?v=hand-20261031">
   <link rel="stylesheet" href="../../css/math-toolbox.css?v=geometry-kit-20261031">
+  <script defer src="../../js/female-audio-manifest.js?v=female-voice-20261031"></script>
+  <script defer src="../../js/audio.js?v=female-voice-20261031"></script>
 </head>
 <body class="storybook-game bg-game-pattern h-screen max-h-screen overflow-hidden text-slate-800 flex flex-col items-center justify-between p-1.5 sm:p-2.5 box-border">
 
@@ -2141,36 +2143,17 @@
       const icon = document.getElementById('ttsIcon');
       const text = document.getElementById('ttsText');
 
-      if ('speechSynthesis' in window && activeQuestionData) {
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(activeQuestionData.title + '。' + activeQuestionData.hint);
-        utterance.lang = 'zh-TW';
-        utterance.rate = 0.92;
-
-        const voices = window.speechSynthesis.getVoices();
-        const twVoice = voices.find(v => v.lang.includes('zh-TW') || v.lang.includes('cmn-Hant-TW') || v.name.includes('Taiwan') || v.name.includes('Yating') || v.name.includes('Mei-Jia'));
-        if (twVoice) utterance.voice = twVoice;
-
-        utterance.onstart = () => {
+      if (window.spEdAudio && activeQuestionData) {
+        const reset = () => {
+          btn.classList.remove('speaking-glow');
+          icon.innerText = '🔊';
+          text.innerText = '唸題目';
+        };
+        window.spEdAudio.speak(activeQuestionData.title + '。' + activeQuestionData.hint, () => {
           btn.classList.add('speaking-glow');
           icon.innerText = '🗣️';
-          text.innerText = '朗讀中...';
-        };
-
-        utterance.onend = () => {
-          btn.classList.remove('speaking-glow');
-          icon.innerText = '🔊';
-          text.innerText = '唸題目';
-        };
-
-        utterance.onerror = () => {
-          btn.classList.remove('speaking-glow');
-          icon.innerText = '🔊';
-          text.innerText = '唸題目';
-        };
-
-        window.speechSynthesis.speak(utterance);
+          text.innerText = '朗讀中';
+        }, reset);
       }
     }
 

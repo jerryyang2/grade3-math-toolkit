@@ -99,6 +99,8 @@
   <link rel="stylesheet" href="../../css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="../../css/floating-toolbar.css?v=hand-20261031">
   <link rel="stylesheet" href="../../css/math-toolbox.css?v=geometry-kit-20261031">
+  <script defer src="../../js/female-audio-manifest.js?v=female-voice-20261031"></script>
+  <script defer src="../../js/audio.js?v=female-voice-20261031"></script>
 </head>
 
 <body class="storybook-game bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-200">
@@ -606,22 +608,8 @@
     }
 
     function speakText(rawText) {
-      if (!('speechSynthesis' in window)) {
-        showToast("您的瀏覽器不支援語音朗讀功能");
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const cleanText = rawText.replace(/[\(\)\（\）]/g, '')
-                               .replace(/\+/g, '加')
-                               .replace(/\-/g, '減')
-                               .replace(/×/g, '乘以')
-                               .replace(/÷/g, '除以')
-                               .replace(/=/g, '等於')
-                               .replace(/\//g, '分之');
-      const utter = new SpeechSynthesisUtterance(cleanText);
-      utter.lang = 'zh-TW';
-      utter.rate = state.speechRate;
-      window.speechSynthesis.speak(utter);
+      window.spEdAudio?.setSpeechRate(state.speechRate);
+      window.spEdAudio?.speak(rawText);
     }
 
     function toggleSpeechRate() {

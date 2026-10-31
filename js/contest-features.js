@@ -546,6 +546,7 @@
   // =========================================================================
   const WorksheetGenerator = {
     openWorksheetModal() {
+      window.MathFloatingTools?.close();
       const existing = document.getElementById('worksheet-modal');
       if (existing) existing.remove();
 
@@ -608,6 +609,10 @@
                 <strong>🔤 套用字嗨注音標楷體 (字詞免焦慮)</strong>
               </label>
               <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <input type="checkbox" id="ws-chk-illustrations" checked>
+                <strong>🖼️ 加入題目示意圖（圖像理解）</strong>
+              </label>
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
                 <input type="checkbox" id="ws-chk-stamp" checked>
                 <strong>🏛️ 頁尾附 108 特教課綱四向度調整參考欄</strong>
               </label>
@@ -656,12 +661,12 @@
         const customDate = (modal.querySelector('#ws-date-input')?.value || '').trim();
         const withGrid = modal.querySelector('#ws-chk-grid').checked;
         const withStamp = modal.querySelector('#ws-chk-stamp').checked;
-        this.generateAndPrint(uid, student, withGrid, withStamp, customDate, modal.querySelector('#ws-chk-zihi').checked);
+        this.generateAndPrint(uid, student, withGrid, withStamp, customDate, modal.querySelector('#ws-chk-zihi').checked, modal.querySelector('#ws-chk-illustrations').checked);
         modal.remove();
       };
     },
 
-    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true) {
+    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true, withIllustrations = true) {
       const data = window.NANI_G3S1_DATA || {};
       const unit = (data.units || []).find(u => u.id === unitId) || { number: 1, title: '數學' };
       const problems = (data.practiceBank || []).filter(p => p.unitId === unitId).slice(0, 10);
@@ -680,7 +685,7 @@
           <meta charset="UTF-8">
           <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
           <title>學習教室個別化學習單 - ${unit.title}</title>
-          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=calculation-space-20261031', window.location.href).href}">
+          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=worksheet-figures-20261031', window.location.href).href}">
         </head>
         <body class="${withZihi ? 'ws-zihi' : ''}">
           <nav class="print-preview-controls" aria-label="學習單預覽工具"><button type="button" onclick="window.print()">列印／另存 PDF</button><p><strong>A4 直式雙欄 · 四邊各 1 公分</strong><span>列印設定：A4、邊界選「預設」（套用 1 公分）、比例 100%，關閉頁首及頁尾。題目先讀左欄，再讀右欄。</span></p></nav>
@@ -700,6 +705,7 @@
               <div class="ws-question-box">
                 <div class="ws-q-num"><strong>第 ${idx + 1} 題</strong><span>${p.level === 1 ? '基礎觀念' : (p.level === 2 ? '熟練運算' : '生活應用')}</span><span class="ws-answer">答：____</span></div>
                 <div class="ws-q-text">${p.question}</div>
+                ${withIllustrations ? window.WorksheetDiagrams?.render(p) || '' : ''}
                 <div class="ws-grid-label">計算區${withGrid ? '（直式從右邊個位開始寫）' : ''}</div>
                 <div class="ws-grid-area${withGrid ? '' : ' ws-grid-blank'}" role="img" aria-label="${withGrid ? '三排六欄計算對齊格' : '空白計算區'}">
                   ${withGrid ? '<span class="dot-grid"></span>'.repeat(18) : ''}

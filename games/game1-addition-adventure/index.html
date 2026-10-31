@@ -75,6 +75,8 @@
   <link rel="stylesheet" href="../../css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="../../css/floating-toolbar.css?v=hand-20261031">
   <link rel="stylesheet" href="../../css/math-toolbox.css?v=geometry-kit-20261031">
+  <script defer src="../../js/female-audio-manifest.js?v=female-voice-20261031"></script>
+  <script defer src="../../js/audio.js?v=female-voice-20261031"></script>
 </head>
 <body class="storybook-game min-h-screen pb-12">
 
@@ -918,16 +920,7 @@
     // Speech Synthesis (TTS 中英文雙語報讀)
     // =========================================================
     function speakText(text, lang = 'zh-TW') {
-      if (!('speechSynthesis' in window)) {
-        showToast('您的瀏覽器不支援語音報讀功能', '💡');
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = lang;
-      utter.rate = lang === 'en-US' ? 0.88 : 0.92;
-      utter.pitch = 1.08;
-      window.speechSynthesis.speak(utter);
+      window.spEdAudio?.speak(text, null, null, {lang});
     }
 
     function numberToEnglishWords(n) {

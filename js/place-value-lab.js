@@ -233,7 +233,7 @@ const PlaceValueLab = (() => {
     };
     render();
   }
-  return { mount, icon, createState, generateQuestion, questionAt, reduce, total, goal, canNext, canAdd, canTrade };
+  return { mount, icon, createState, generateQuestion, questionAt, reduce, total, goal, canNext, canAdd, canTrade, instruction };
 })();
 if (typeof window !== 'undefined') window.PlaceValueLab = PlaceValueLab;
 if (typeof module !== 'undefined' && module.exports) module.exports = PlaceValueLab;

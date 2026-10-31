@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.tabPanes.forEach(p => p.classList.toggle('active', p.id === `tab-${target}`));
 
     window.spEdAudio.playClick();
+    document.dispatchEvent(new CustomEvent('math-tab-change', {detail:{tab:target}}));
 
     if (target === 'units') {
       window.MathFloatingTools?.open();

@@ -1,0 +1,13 @@
+{
+  "name": "grade3-math-toolkit",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "audio:build": "node scripts/generate-female-audio.cjs",
+    "audio:check": "node scripts/generate-female-audio.cjs --check"
+  },
+  "devDependencies": {
+    "node-edge-tts": "1.2.12"
+  }
+}

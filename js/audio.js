@@ -8,13 +8,18 @@ class SpecialEdAudioSystem {
     this.audioCtx = null;
     this.speechSynth = typeof window !== 'undefined' ? window.speechSynthesis : null;
     this.isMuted = false;
-    this.speechRate = 0.85; // 資源班預設略慢語速，方便聽覺加工
+    this.speechRate = 1; // 預製女聲已略慢；保留自然語調，需要時可再調慢。
     this.preferredVoice = null;
     this.isSpeaking = false;
+    this.currentRecording = null;
+    this.speechGeneration = 0;
+    this.assetBase = typeof document !== 'undefined' && document.currentScript?.src ? new URL('../', document.currentScript.src).href : '';
+    this.availableVoices = [];
 
     if (typeof window !== 'undefined') {
       this.initAudioContext();
       this.initVoices();
+      window.addEventListener?.('pagehide', () => this.stopSpeech());
     }
   }
 
@@ -35,9 +40,12 @@ class SpecialEdAudioSystem {
     if (!this.speechSynth) return;
     const updateVoices = () => {
       const voices = this.speechSynth.getVoices();
-      // 優先選取臺灣國語 (zh-TW)，若無則選任何中文
-      this.preferredVoice = voices.find(v => v.lang === 'zh-TW') ||
-                            voices.find(v => v.lang.startsWith('zh')) || null;
+      this.availableVoices = voices;
+      // 動態教具文字才使用裝置女聲；不讓瀏覽器自行改選男聲。
+      const female = /hsiaochen|hsiaohan|曉臻|曉涵|meijia|美佳|ting.?ting|婷婷|sinji|善怡|ya.?ting|雅婷|hanhan|涵涵|xiaoxiao|xiaoyi|yaoyao|female|woman/i;
+      const male = /yun.?jhe|yun.?yang|yun.?xi|雲哲|男|male(?!.*female)|man\b/i;
+      const candidates = voices.filter(v => v.lang?.startsWith('zh') && female.test(v.name || '') && !male.test((v.name || '').replace(/female|woman/gi, '')));
+      this.preferredVoice = candidates.find(v => v.lang === 'zh-TW') || candidates[0] || null;
     };
 
     updateVoices();
@@ -61,6 +69,7 @@ class SpecialEdAudioSystem {
 
   setSpeechRate(rate) {
     this.speechRate = Math.max(0.5, Math.min(1.5, rate));
+    if (this.currentRecording) this.currentRecording.playbackRate = this.speechRate;
   }
 
   // 數字轉繁體中文口語發音（支援 0 ~ 99999）
@@ -180,46 +189,139 @@ class SpecialEdAudioSystem {
     return s;
   }
 
-  // 語音念題 (TTS)
-  speak(text, onStart, onEnd) {
-    if (this.isMuted || !this.speechSynth) return;
-
+  // 固定教材優先播放預製曉臻女聲；隨機數字的教具說明才使用裝置女聲。
+  speak(text, onStart, onEnd, options = {}) {
+    if (this.isMuted) return;
     this.stopSpeech();
-
-    const cleanText = this.cleanMathTextForTTS(text);
+    const lang = options.lang || 'zh-TW';
+    const cleanText = lang.startsWith('en') ? String(text || '').replace(/<[^>]+>/g, '').trim() : this.cleanMathTextForTTS(text);
     if (!cleanText) return;
+    const token = this.speechGeneration;
+    const catalog = typeof window !== 'undefined' ? window.MathFemaleAudio : null;
+    const parts = catalog?.sequences?.[cleanText] || [cleanText];
+    const paths = parts.map(part => catalog?.clips?.[part]);
+    if (paths.length && paths.every(Boolean) && typeof window.Audio === 'function') {
+      this.playRecording(paths, token, onStart, onEnd, () => this.speakDeviceVoice(cleanText, token, onStart, onEnd, lang));
+    } else {
+      this.speakDeviceVoice(cleanText, token, onStart, onEnd, lang);
+    }
+  }
+
+  playRecording(paths, token, onStart, onEnd, fallback) {
+    let index = 0, started = false;
+    const playNext = () => {
+      if (token !== this.speechGeneration || this.isMuted) return;
+      if (index >= paths.length) {
+        this.currentRecording = null;
+        this.isSpeaking = false;
+        if (typeof onEnd === 'function') onEnd();
+        return;
+      }
+      const relative = paths[index++];
+      const audio = new window.Audio(this.assetBase ? new URL(relative, this.assetBase).href : relative);
+      this.currentRecording = audio;
+      if (typeof document !== 'undefined') {
+        audio.hidden = true;
+        audio.setAttribute('data-math-speech', 'female');
+        document.body.appendChild(audio);
+      }
+      audio.playbackRate = this.speechRate;
+      audio.preservesPitch = true;
+      let failed = false;
+      const fail = () => {
+        if (failed || token !== this.speechGeneration || this.currentRecording !== audio) return;
+        failed = true;
+        audio.pause();
+        audio.remove?.();
+        this.currentRecording = null;
+        this.isSpeaking = false;
+        // 只有尚未開始的音檔才改用裝置女聲，避免重複朗讀已播放的內容。
+        if (!started) fallback();
+        else this.announceSpeechUnavailable();
+      };
+      audio.onplaying = () => {
+        if (token !== this.speechGeneration || this.currentRecording !== audio) return;
+        this.isSpeaking = true;
+        if (typeof document !== 'undefined') document.getElementById('speech-playback-status')?.remove();
+        if (!started) { started = true; if (typeof onStart === 'function') onStart(); }
+      };
+      audio.onended = () => {
+        audio.remove?.();
+        if (token === this.speechGeneration && this.currentRecording === audio) playNext();
+      };
+      audio.onerror = fail;
+      try {
+        const result = audio.play();
+        result?.catch(fail);
+      } catch { fail(); }
+    };
+    playNext();
+  }
+
+  speakDeviceVoice(cleanText, token, onStart, onEnd, lang = 'zh-TW') {
+    if (token !== this.speechGeneration || this.isMuted) return;
+    const voice = lang.startsWith('en') ? this.availableVoices.find(v => v.lang?.startsWith('en') && /samantha|karen|moira|tessa|sandy|shelley|victoria|zira|aria|jenny|female/i.test(v.name || '')) : this.preferredVoice;
+    if (!this.speechSynth || !voice) {
+      this.isSpeaking = false;
+      this.announceSpeechUnavailable();
+      return;
+    }
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    if (this.preferredVoice) {
-      utterance.voice = this.preferredVoice;
-    }
-    utterance.lang = 'zh-TW';
+    utterance.voice = voice;
+    utterance.lang = lang;
     utterance.rate = this.speechRate;
-    utterance.pitch = 1.05; // 略帶親切溫暖音調
+    utterance.pitch = 1;
 
     utterance.onstart = () => {
+      if (token !== this.speechGeneration) return;
       this.isSpeaking = true;
       if (typeof onStart === 'function') onStart();
     };
 
     utterance.onend = () => {
+      if (token !== this.speechGeneration) return;
       this.isSpeaking = false;
       if (typeof onEnd === 'function') onEnd();
     };
 
     utterance.onerror = () => {
+      if (token !== this.speechGeneration) return;
       this.isSpeaking = false;
-      if (typeof onEnd === 'function') onEnd();
+      this.announceSpeechUnavailable();
     };
 
     this.speechSynth.speak(utterance);
   }
 
   stopSpeech() {
+    this.speechGeneration++;
+    if (this.currentRecording) {
+      const audio = this.currentRecording;
+      this.currentRecording = null;
+      audio.onplaying = audio.onended = audio.onerror = null;
+      audio.pause();
+      audio.remove?.();
+      audio.removeAttribute?.('src');
+      audio.load?.();
+    }
     if (this.speechSynth && (this.speechSynth.speaking || this.speechSynth.pending)) {
       this.speechSynth.cancel();
-      this.isSpeaking = false;
     }
+    this.isSpeaking = false;
+  }
+
+  announceSpeechUnavailable() {
+    if (typeof document === 'undefined') return;
+    let status = document.getElementById('speech-playback-status');
+    if (!status) {
+      status = document.createElement('p');
+      status.id = 'speech-playback-status';
+      status.setAttribute('role', 'status');
+      status.className = 'speech-playback-status';
+      document.body.appendChild(status);
+    }
+    status.textContent = '暫時無法播放女聲，請再點一次朗讀，或閱讀畫面上的文字提示。';
   }
 
   // Web Audio 柔和音效（無外部檔案依賴，保護自閉症學童聽覺）

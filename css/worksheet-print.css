@@ -19,6 +19,9 @@ body.ws-zihi { font-family: '字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'Ka
 .ws-q-num > strong { font-size: 12pt; }
 .ws-answer { margin-left: auto; white-space: nowrap; font-size: 11pt; font-weight: 700; }
 .ws-q-text { font-size: 14pt; font-weight: 600; line-height: 1.35; margin: 0 0 2mm; orphans: 2; widows: 2; }
+.ws-diagram { margin: 0 0 2mm; padding: 1mm 0; border-top: .2mm solid #bbb; border-bottom: .2mm solid #bbb; break-inside: avoid; }
+.ws-diagram svg { display: block; width: 100%; height: 32mm; }
+.ws-diagram figcaption { margin-top: .5mm; font-size: 9pt; line-height: 1.35; color: #222; }
 .ws-grid-label { margin: 0 0 1mm; font-size: 9pt; color: #333; }
 .ws-grid-area { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0 0 2mm; border-top: .25mm dashed #666; border-left: .25mm dashed #666; }
 .dot-grid { display: block; height: 10mm; border-right: .25mm dashed #666; border-bottom: .25mm dashed #666; }

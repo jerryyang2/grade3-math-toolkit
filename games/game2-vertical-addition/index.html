@@ -82,6 +82,8 @@
   <link rel="stylesheet" href="../../css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="../../css/floating-toolbar.css?v=hand-20261031">
   <link rel="stylesheet" href="../../css/math-toolbox.css?v=geometry-kit-20261031">
+  <script defer src="../../js/female-audio-manifest.js?v=female-voice-20261031"></script>
+  <script defer src="../../js/audio.js?v=female-voice-20261031"></script>
 </head>
 
 <body class="storybook-game bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-indigo-100">
@@ -392,13 +394,7 @@
      * 2. SPEECH SYNTHESIS (Web Speech API TTS)
      * ========================================================= */
     function speakText(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'zh-TW';
-      utter.rate = 0.88; // Gentle, clear pacing
-      utter.pitch = 1.02;
-      window.speechSynthesis.speak(utter);
+      window.spEdAudio?.speak(text);
     }
 
     function speakCurrentQuestion() {
