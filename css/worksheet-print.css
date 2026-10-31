@@ -11,6 +11,8 @@ body.ws-zihi { font-family: '字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'Ka
 .ws-header { text-align: center; border-bottom: .5mm solid #000; padding-bottom: 3mm; margin-bottom: 4mm; }
 .ws-title { font-size: 16pt; font-weight: 800; line-height: 1.35; margin: 0; }
 .ws-unit { font-size: 12pt; font-weight: 700; margin-top: 1mm; }
+.ws-scope { font-size: 12pt; font-weight: 700; margin-top: 1mm; }
+.ws-section-label { font-size: 9pt; color: #333; margin-bottom: 1mm; }
 .ws-meta-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1mm 3mm; margin-top: 2mm; font-size: 11pt; }
 /* 以每題實際高度緊密排入兩欄，避免表格等高列造成大塊留白。 */
 .ws-body { column-count: 2; column-gap: 6mm; column-rule: .25mm solid #bbb; }

@@ -107,6 +107,16 @@ test('illustrations can be switched off while all units retain ten questions and
     context.window.WorksheetGenerator.generateAndPrint(unit.id,'空白',true,true,'',true,enabled);
     assert.equal((html.match(/class="ws-question-box"/g)||[]).length,10);
     assert.equal((html.match(/class="ws-grid-area/g)||[]).length,10);
-    assert.equal((html.match(/data-ws-figure=/g)||[]).length,enabled?firstTen(unit.id).filter(p=>figures.render(p)).length:0);
+    const printed=context.window.WorksheetGenerator.getWorksheet(unit.id).problems;
+    assert.equal((html.match(/data-ws-figure=/g)||[]).length,enabled?printed.filter(p=>figures.render(p)).length:0);
   }
+});
+
+test('all circle subsections have figures and numeric diagrams do not fill in the requested length', () => {
+  const problems=data.practiceBank.filter(p=>p.unitId==='u9');
+  assert.equal(problems.length,20);
+  assert.ok(problems.every(p=>figures.render(p).includes('<svg')));
+  for(const [id,answer] of [['p9_2_2','8 公分'],['p9_2_3','5 公分'],['p9_2_5','3 公分'],['p9_2_6','10 公分'],['p9_2_8','4 公分'],['p9_2_9','15 公尺'],['p9_2_10','12 公分']]) assert.ok(!figures.render(problems.find(p=>p.id===id)).includes(answer),id);
+  const changed=problems.find(p=>p.id==='p9_2_8');
+  assert.equal(figures.render({...changed,question:changed.question.replace('8 公分','10 公分')}),'');
 });

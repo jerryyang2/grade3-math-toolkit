@@ -223,12 +223,60 @@ const WorksheetDiagrams = (() => {
     return svg('千、百、十、個四個位值欄，格子留空由學生填寫',Array.from({length:4},(_,i)=>`<rect x="${12+i*69}" y="44" width="69" height="58"/>${label(46+i*69,29,['千位','百位','十位','個位'][i],'text-anchor="middle"')}`).join(''),118);
   }
 
+  function circleMeasure(kind, given) {
+    const cx=85,cy=74,r=44;
+    let body='';
+    if(kind==='compare') {
+      for(const [x,radius,diameter,value] of [[70,48,false,6],[218,40,true,10]]) {
+        body+=`<circle cx="${x}" cy="70" r="${radius}"/>`+dot(x,70);
+        body+=line({x:diameter?x-radius:x,y:70},{x:x+radius,y:70},'stroke-width="3"');
+        body+=label(x,22,x===70?'甲圓':'乙圓','text-anchor="middle"')+label(x,140,`${diameter?'直徑':'半徑'} ${value} 公分`,'text-anchor="middle" font-size="14"');
+      }
+    } else if(kind==='coins') {
+      for(const x of [55,115,175]) body+=`<circle cx="${x}" cy="62" r="30"/>`+dot(x,62);
+      body+=line({x:55,y:62},{x:85,y:62},'stroke-width="3"')+label(150,18,'每枚半徑 2 公分','text-anchor="middle"');
+      body+='<path d="M25 100v8h180v-8"/>'+label(115,138,'整排長度？公分','text-anchor="middle"');
+    } else if(kind==='compass') {
+      body+=`<circle cx="${cx}" cy="${cy}" r="${r}" stroke-dasharray="4 3"/><path d="M${cx} ${cy}L107 15L${cx+r} ${cy}M107 15V5" stroke-width="3"/>`+dot(cx,cy);
+      body+=`<path d="M${cx} 94v8h${r}v-8"/>`+label(190,51,'兩腳張開的距離','text-anchor="middle" font-size="14"')+line({x:177,y:57},{x:111,y:102});
+      if(given)body+=label(107,130,`${given} 公分`,'text-anchor="middle"');
+    } else {
+      if(kind==='inscribed') body+='<rect x="41" y="30" width="88" height="88"/>'+label(185,40,'色紙邊長 8 公分','text-anchor="middle" font-size="14"');
+      body+=`<circle cx="${cx}" cy="${cy}" r="${r}"/>`+dot(cx,cy)+label(cx-5,cy+20,'O','text-anchor="end"');
+      if(kind==='wheel') for(let a=0;a<360;a+=45) {
+        const end=polar(cx,cy,r,a);body+=line({x:cx,y:cy},end)+dot(end.x,end.y,4);
+      }
+      body+=line({x:cx-r,y:cy},{x:cx,y:cy},'stroke-width="3"')+line({x:cx,y:cy},{x:cx+r,y:cy},'stroke-width="3" stroke-dasharray="5 3"');
+      const radiusKnown=kind==='radius';
+      if(kind==='relation') {
+        body+=label(185,49,'實線與虛線各是','text-anchor="middle" font-size="14"')+label(185,74,'一條半徑','text-anchor="middle"');
+      } else {
+        const unit=kind==='wheel'?'公尺':'公分';
+        body+=label(185,69,`半徑 ${radiusKnown?given:'？'} ${unit}`,'text-anchor="middle" font-size="14"');
+        body+=`<path d="M${cx-r} 127v8h${2*r}v-8"/>`+label(188,143,`直徑 ${radiusKnown?'？':given} ${unit}`,'text-anchor="middle" font-size="14"');
+      }
+    }
+    return svg('圓與已知條件示意，問號為待求長度',body,155);
+  }
+
   // 以穩定題號與關鍵條件對應，題意若改變就不套用舊圖，避免圖文不符。
   const entries = Object.create(null);
   const add = (id, required, draw, caption) => { entries[id] = { required, draw, caption }; };
   const circleTypes=['center','edge','radius','diameter','radii','chord','compare','fold-cross','fold-line','parts'];
   const circleTerms=['最正中心','最外圍','從「圓心」','通過「圓心」','幾條半徑','沒有通過圓心','最長','對摺再對摺','接續上題','哪一個是錯誤'];
   circleTypes.forEach((kind,i)=>add(`p9_1_${i+1}`,[circleTerms[i]],()=>circle(kind),i===4?'圖中只畫出部分線段，可以繼續試畫。':kind.startsWith('fold')?'展開後的圓形紙片；虛線表示摺痕。':'對照黑點與線條，依題意判斷。'));
+  [
+    [1,['直徑','半徑'],'relation'],
+    [2,['半徑是 4 公分'],'radius',4],
+    [3,['直徑是 10 公分'],'diameter',10],
+    [4,['兩腳張開的距離'],'compass'],
+    [5,['直徑 6 公分'],'diameter',6],
+    [6,['兩腳張開 5 公分'],'compass',5],
+    [7,['半徑是 6 公分','直徑是 10 公分'],'compare'],
+    [8,['邊長 8 公分','最大的圓'],'inscribed',8],
+    [9,['直徑是 30 公尺'],'wheel',30],
+    [10,['3 個半徑都是 2 公分'],'coins']
+  ].forEach(([i,required,kind,value])=>add(`p9_2_${i}`,required,()=>circleMeasure(kind,value),'圖為教學示意，請依標示的條件思考；不要直接量圖。'));
   const angleTypes=['parts','curved','rectangle','extend','compare','align','fan','scissors','triangle','lengths'];
   const angleTerms=['什麼組成','彎彎曲曲','黑板','邊畫得更長','藍色角','疊合方法','摺扇','剪刀','三角形','3 公分'];
   angleTypes.forEach((kind,i)=>add(`p5_1_${i+1}`,[angleTerms[i]],()=>angle(kind),'觀察圖中的點、邊與張開方向。'));

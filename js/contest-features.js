@@ -545,6 +545,28 @@
   // 5. 🖨️ WorksheetGenerator (A4 特教個別化實體學習單/評量卷)
   // =========================================================================
   const WorksheetGenerator = {
+    getWorksheet(unitId, sectionId = '') {
+      const data = window.NANI_G3S1_DATA || {};
+      const unit = (data.units || []).find(item => item.id === unitId);
+      if (!unit) return null;
+      const section = sectionId ? (unit.sections || []).find(item => item.id === sectionId) : null;
+      if (sectionId && !section) return null;
+      const bank = (data.practiceBank || []).filter(problem => problem.unitId === unitId);
+      if (section) return {unit, section, problems:bank.filter(problem => problem.sectionId === section.id).slice(0, 10)};
+
+      // 各小節平均分配十題，並在每節抽取前、中、後段，涵蓋不同程度。
+      const groups = (unit.sections || []).map(item => bank.filter(problem => problem.sectionId === item.id && !/^(?:接續上題|承上題)/.test(problem.question))).filter(group => group.length);
+      if (!groups.length) return {unit, section:null, problems:bank.slice(0, 10)};
+      const quotas = groups.map((group, i) => Math.min(group.length, Math.floor(10 / groups.length) + (i < 10 % groups.length ? 1 : 0)));
+      while (quotas.reduce((sum, quota) => sum + quota, 0) < Math.min(10, bank.length)) {
+        const next = groups.findIndex((group, i) => quotas[i] < group.length);
+        if (next < 0) break;
+        quotas[next]++;
+      }
+      const problems = groups.flatMap((group, index) => Array.from({length:quotas[index]}, (_, i) => group[quotas[index] === 1 ? 0 : Math.round(i * (group.length - 1) / (quotas[index] - 1))]));
+      return {unit, section:null, problems};
+    },
+
     openWorksheetModal() {
       window.MathFloatingTools?.close();
       const existing = document.getElementById('worksheet-modal');
@@ -556,11 +578,12 @@
       const modal = document.createElement('div');
       modal.className = 'kid-modal-backdrop';
       modal.id = 'worksheet-modal';
+      modal.style.zIndex = '2147483645';
       modal.setAttribute('role', 'dialog');
       modal.setAttribute('aria-modal', 'true');
       modal.setAttribute('aria-labelledby', 'worksheet-title');
       modal.innerHTML = `
-        <div class="kid-modal-card" style="max-width: 680px; text-align: left;">
+        <div class="kid-modal-card" style="max-width:680px; max-height:calc(100dvh - 40px); overflow-y:auto; text-align:left;">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:2rem;">🖨️</span>
@@ -573,7 +596,7 @@
             <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
           </div>
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); gap:12px; margin-bottom:12px;">
             <div>
               <label for="ws-unit-select" style="font-weight:800; font-size:0.95rem; color:#334155;">選擇評量單元：</label>
               <select id="ws-unit-select" class="form-control" style="font-weight:700; width:100%;">
@@ -587,6 +610,12 @@
                 ${students.map(s => `<option value="${window.LearningRecords.escapeHtml(s.name)}">${s.avatar} ${window.LearningRecords.escapeHtml(s.name)} 同學</option>`).join('')}
               </select>
             </div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label for="ws-section-select" style="display:block; font-weight:800; font-size:0.95rem; color:#334155; margin-bottom:4px;">學習單範圍：</label>
+            <select id="ws-section-select" class="form-control" style="font-weight:700; width:100%;" aria-describedby="ws-range-description"></select>
+            <p id="ws-range-description" style="font-size:0.85rem; color:#475569; margin:5px 0 0;">總複習涵蓋本單元各小節；小節學習單聚焦該節內容，每張皆為 10 題。</p>
           </div>
 
           <div style="margin-bottom:16px;">
@@ -655,27 +684,39 @@
       }
 
       modal.querySelector('#ws-unit-select').value = document.getElementById('lesson-unit-quick-select')?.value || 'u1';
+      const updateSections = () => {
+        const unit = units.find(item => item.id === modal.querySelector('#ws-unit-select').value);
+        modal.querySelector('#ws-section-select').innerHTML = '<option value="">單元總複習（各小節綜合，10 題）</option>' + (unit?.sections || []).map(section => `<option value="${window.LearningRecords.escapeHtml(section.id)}">${window.LearningRecords.escapeHtml(section.title)}（10 題）</option>`).join('');
+        modal.querySelector('#ws-section-select').value = '';
+      };
+      modal.querySelector('#ws-unit-select').addEventListener('change', updateSections);
+      updateSections();
       modal.querySelector('#btn-ws-print').onclick = () => {
         const uid = modal.querySelector('#ws-unit-select').value;
         const student = modal.querySelector('#ws-student-select').value;
         const customDate = (modal.querySelector('#ws-date-input')?.value || '').trim();
         const withGrid = modal.querySelector('#ws-chk-grid').checked;
         const withStamp = modal.querySelector('#ws-chk-stamp').checked;
-        this.generateAndPrint(uid, student, withGrid, withStamp, customDate, modal.querySelector('#ws-chk-zihi').checked, modal.querySelector('#ws-chk-illustrations').checked);
-        modal.remove();
+        const result = this.generateAndPrint(uid, student, withGrid, withStamp, customDate, modal.querySelector('#ws-chk-zihi').checked, modal.querySelector('#ws-chk-illustrations').checked, modal.querySelector('#ws-section-select').value);
+        if (result) modal.remove();
       };
     },
 
-    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true, withIllustrations = true) {
-      const data = window.NANI_G3S1_DATA || {};
-      const unit = (data.units || []).find(u => u.id === unitId) || { number: 1, title: '數學' };
-      const problems = (data.practiceBank || []).filter(p => p.unitId === unitId).slice(0, 10);
+    generateAndPrint(unitId, studentName, withGrid, withStamp, customDate = '', withZihi = true, withIllustrations = true, sectionId = '') {
+      const worksheet = this.getWorksheet(unitId, sectionId);
+      if (!worksheet || worksheet.problems.length !== 10) {
+        alert('目前無法取得這個範圍的十題學習單，請重新選擇單元與小節。');
+        return false;
+      }
+      const {unit, section, problems} = worksheet;
+      const escape = value => window.LearningRecords.escapeHtml(value);
+      const scopeTitle = section ? section.title : '單元總複習';
       const dateDisplay = customDate ? customDate : '____ 年 ___ 月 ___ 日';
 
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
         alert('請允許瀏覽器彈出視窗以預覽列印學習單！');
-        return;
+        return false;
       }
 
       printWindow.document.write(`
@@ -684,15 +725,16 @@
         <head>
           <meta charset="UTF-8">
           <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
-          <title>學習教室個別化學習單 - ${unit.title}</title>
-          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=worksheet-figures-20261031', window.location.href).href}">
+          <title>數學學習單 - ${escape(unit.title)} - ${escape(scopeTitle)}</title>
+          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=section-worksheets-20261031', window.location.href).href}">
         </head>
         <body class="${withZihi ? 'ws-zihi' : ''}">
           <nav class="print-preview-controls" aria-label="學習單預覽工具"><button type="button" onclick="window.print()">列印／另存 PDF</button><p><strong>A4 直式雙欄 · 四邊各 1 公分</strong><span>列印設定：A4、邊界選「預設」（套用 1 公分）、比例 100%，關閉頁首及頁尾。題目先讀左欄，再讀右欄。</span></p></nav>
           <main class="ws-sheet">
           <header class="ws-header">
             <h1 class="ws-title">南一版三年級上學期數學 學習教室個別化學習單</h1>
-            <div class="ws-unit">單元 ${unit.number}：${unit.title} · 共 ${problems.length} 題</div>
+            <div class="ws-unit">單元 ${unit.number}：${escape(unit.title)}</div>
+            <div class="ws-scope">${escape(scopeTitle)} · 共 ${problems.length} 題</div>
             <div class="ws-meta-row">
               <span>學生姓名：<strong>${studentName === '空白' ? '___________' : window.LearningRecords.escapeHtml(studentName)}</strong></span>
               <span>評量日期：<strong>${window.LearningRecords.escapeHtml(dateDisplay)}</strong></span>
@@ -702,8 +744,9 @@
 
           <div class="ws-body">
             ${problems.map((p, idx) => `
-              <div class="ws-question-box">
+              <div class="ws-question-box" data-question-id="${escape(p.id)}">
                 <div class="ws-q-num"><strong>第 ${idx + 1} 題</strong><span>${p.level === 1 ? '基礎觀念' : (p.level === 2 ? '熟練運算' : '生活應用')}</span><span class="ws-answer">答：____</span></div>
+                ${!section ? `<div class="ws-section-label">${escape(p.sectionTitle || (unit.sections || []).find(item => item.id === p.sectionId)?.title || '')}</div>` : ''}
                 <div class="ws-q-text">${p.question}</div>
                 ${withIllustrations ? window.WorksheetDiagrams?.render(p) || '' : ''}
                 <div class="ws-grid-label">計算區${withGrid ? '（直式從右邊個位開始寫）' : ''}</div>
@@ -733,6 +776,7 @@
         </html>
       `);
       printWindow.document.close();
+      return true;
     }
   };
 
