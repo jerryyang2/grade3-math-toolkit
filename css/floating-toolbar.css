@@ -1,0 +1,44 @@
+/* 窄長工具列：共同控制固定在兩端，中間工具在小螢幕可捲動。 */
+.mft-ui .mft-launcher { touch-action: none; cursor: grab; user-select: none; }
+.mft-ui.mft-dragging .mft-launcher { cursor: grabbing; }
+.mft-ui[data-orientation] .mft-panel { display: flex; align-items: stretch; gap: 6px; width: max-content; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow: visible; padding: 6px; border-radius: 14px; box-sizing: border-box; }
+.mft-ui[data-orientation] .mft-header { display: flex; flex: 0 0 auto; align-items: center; gap: 4px; padding: 0; background: transparent; border: 0; border-radius: 0; }
+.mft-ui[data-orientation] .mft-body { display: flex; flex: 1 1 auto; min-width: 0; min-height: 0; align-items: center; gap: 6px; padding: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #789582 #edf5e5; }
+.mft-ui[data-orientation] .mft-tool-grid { display: flex; flex: 0 0 auto; gap: 4px; }
+.mft-ui[data-orientation] :is(.mft-tool,.mft-options-toggle,.mft-orientation,.mft-actions button) { display: flex; flex: 0 0 54px; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 54px; min-width: 54px; height: 50px; min-height: 50px; padding: 4px 2px; border-radius: 9px; font-size: 14px; line-height: 1.2; white-space: nowrap; }
+.mft-ui[data-orientation] :is(.mft-move,.mft-collapse) { flex: 0 0 44px; width: 44px; min-width: 44px; height: 50px; min-height: 50px; }
+.mft-ui[data-orientation] .mft-tool svg, .mft-ui[data-orientation] .mft-actions button svg { width: 20px; height: 20px; }
+.mft-ui[data-orientation] .mft-orientation { color: #31535d; background: #e5f2f5; border-color: #a0bac1; }
+.mft-ui[data-orientation] .mft-options-toggle { color: #3a4d2c; background: #edf4df; border-color: #a1b58a; }
+.mft-ui[data-orientation] .mft-options-toggle[aria-expanded='true'] { background: #294f38; color: #fff; }
+.mft-ui[data-orientation] .mft-tool[data-tool='magnify'] { grid-column: auto; }
+.mft-ui[data-orientation] .mft-tool[data-tool='number'] { position: relative; }
+.mft-ui[data-orientation] .mft-next-number { position: absolute; top: 1px; right: 1px; min-width: 16px; height: 16px; padding: 0 3px; font-size: 10px; }
+.mft-ui[data-orientation] .mft-actions { display: flex; flex: 0 0 auto; flex-wrap: nowrap; gap: 4px; margin: 0; padding: 0 0 0 6px; border-top: 0; border-left: 1px solid #b5c5b5; }
+.mft-ui[data-orientation='horizontal'] .mft-panel { flex-direction: row; }
+.mft-ui[data-orientation='horizontal'] .mft-body { overflow-y: hidden; }
+.mft-ui[data-orientation='vertical'] .mft-panel { flex-direction: column; width: 68px; }
+.mft-ui[data-orientation='vertical'] :is(.mft-header,.mft-body,.mft-tool-grid,.mft-actions) { flex-direction: column; }
+.mft-ui[data-orientation='vertical'] .mft-body { flex-basis: auto; overflow-x: hidden; }
+.mft-ui[data-orientation='vertical'] .mft-actions { padding: 6px 0 0; border-left: 0; border-top: 1px solid #b5c5b5; }
+.mft-ui[data-orientation='vertical'] :is(.mft-move,.mft-collapse) { flex-basis: 44px; width: 54px; height: 44px; min-height: 44px; }
+/* 顏色、粗細及鏡片設定按需展開，不佔長條本身的空間。 */
+.mft-options { position: fixed; width: 288px; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow: auto; padding: 12px; border: 2px solid #789582; border-radius: 14px; background: #fffef9; color: #243d30; box-shadow: 0 8px 28px #18372430; }
+.mft-options-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-size: 16px; }
+.mft-options-header button { display: grid; place-items: center; width: 44px; min-height: 44px; border-radius: 9px; color: #3b4e43; background: #ecf2eb; }
+.mft-options .mft-settings { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 0; padding: 12px; }
+.mft-options .mft-colors { flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 100%; }
+.mft-options .mft-swatch { flex-shrink: 0; width: 28px; height: 28px; }
+.mft-options .mft-width { display: flex; flex: 1 0 100%; gap: 8px; font-size: 16px; color: #284334; }
+.mft-options .mft-width input { flex: 1; width: 120px; min-width: 60px; height: 44px; }
+.mft-options :is(.mft-zoom-settings,.mft-size-settings) { margin: 0 0 8px; padding: 6px 10px; border: 1px solid #9bbbd8; border-radius: 10px; color: #213e54; background: #edf6ff; font-size: 16px; font-weight: 700; }
+.mft-options :is(.mft-zoom-settings,.mft-size-settings) label { display: flex; align-items: center; gap: 8px; }
+.mft-options :is(.mft-zoom-settings,.mft-size-settings) input { flex: 1; min-width: 50px; width: 100%; height: 44px; margin: 0; accent-color: #bf2828; }
+.mft-options :is(.mft-zoom-settings,.mft-size-settings) output { min-width: 45px; color: #173a59; font-size: 16px; text-align: right; }
+.mft-options .mft-footer { display: block; border-top: 1px solid #d4dfd1; margin-top: 10px; padding-top: 8px; font-size: 14px; }
+.mft-options .mft-count { display: block; margin-top: 4px; }
+.mft-options .mft-note { font-size: 13px; }
+.high-contrast-mode .mft-options { color: #fff; background: #18181b; border-color: #facc15; }
+.high-contrast-mode .mft-options :is(.mft-footer,.mft-count,.mft-mode,.mft-note) { color: #fff; }
+.mft-ui.mft-dragging { user-select: none; }
+@media print { .mft-options { display: none !important; } }

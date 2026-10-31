@@ -88,6 +88,9 @@
       eraser: '<path d="m10 3 11 11-7 7H7L1 15zM5 11l10 10M14 21h8"/>',
       clear: '<path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
       camera: '<path d="M8 6 10 3h4l2 3h5v15H3V6z"/><circle cx="12" cy="13" r="4"/>',
+      settings: '<path d="M3 6h18M3 12h18M3 18h18"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="18" r="2"/>',
+      horizontal: '<rect x="2" y="7" width="20" height="10" rx="2"/><path d="M8 7v10M15 7v10"/>',
+      vertical: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M7 8h10M7 15h10"/>',
       collapse: '<path d="m6 9 6 6 6-6"/>',
       close: '<path d="m6 6 12 12M6 18 18 6"/>'
     };
@@ -97,30 +100,24 @@
     const host = document.createElement('aside');
     host.id = 'math-floating-tools';
     host.className = 'mft-ui';
+    let orientation = 'horizontal';
+    try { if (localStorage.getItem('math-floating-orientation') === 'vertical') orientation = 'vertical'; } catch (_) {}
+    host.dataset.orientation = orientation;
     host.setAttribute('aria-label', '浮動教學畫記工具');
     host.innerHTML = `
-      <button type="button" class="mft-launcher" aria-label="開啟教學畫記工具" aria-expanded="false" aria-controls="mft-panel" title="開啟畫筆、螢光筆與解題步驟標示">
+      <button type="button" class="mft-launcher" aria-label="開啟教學畫記工具" aria-expanded="false" aria-controls="mft-panel" title="點一下開啟畫記工具；拖曳移動，方向鍵微調位置">
         <span class="mft-launch-icon">${icon('pen')}</span>
       </button>
       <section id="mft-panel" class="mft-panel" aria-label="課堂畫記工具列" hidden>
         <header class="mft-header">
           <button type="button" class="mft-move" data-action="move" aria-label="移動畫記工具列" title="拖曳移動；方向鍵微調位置，Home 回到右下角">${icon('move')}</button>
-          <div class="mft-heading"><strong>課堂畫記</strong><span>圈出重點，讓解題看得見</span></div>
-          <button type="button" class="mft-icon-button" data-action="collapse" aria-label="收合畫記工具列" title="收合並回到游標模式">${icon('collapse')}</button>
+          <button type="button" class="mft-orientation" data-action="orientation"></button>
         </header>
         <div class="mft-body">
           <div class="mft-tool-grid" role="group" aria-label="畫記工具">
             ${tools.map(([key, label]) => `<button type="button" class="mft-tool" data-tool="${key}" aria-pressed="${key === 'cursor'}" title="${key === 'cursor' ? '操作網頁、切換單元及捲動' : label}">${icon(key)}<span>${label}</span>${key === 'number' ? '<b class="mft-next-number">1</b>' : ''}</button>`).join('')}
           </div>
-          <div class="mft-zoom-settings" hidden>
-            <label>倍率 <input type="range" min="1.5" max="4" value="2" step="0.5" aria-label="放大倍率" aria-valuetext="2 倍"><output aria-live="polite">2×</output></label>
-          </div>
-          <div class="mft-settings">
-            <div class="mft-colors" role="group" aria-label="畫記顏色">
-              ${colors.map(([value, label]) => `<button type="button" class="mft-swatch" data-color="${value}" style="--swatch:${value}" aria-label="${label}" aria-pressed="${value === '#2563eb'}" title="${label}"></button>`).join('')}
-            </div>
-            <label class="mft-width">粗細 <input type="range" min="2" max="12" value="4" step="1" aria-label="畫筆粗細"><output>4</output></label>
-          </div>
+          <button type="button" class="mft-options-toggle" data-action="settings" aria-label="工具設定：顏色、粗細與放大鏡" aria-expanded="false" aria-controls="mft-options">${icon('settings')}<span>設定</span></button>
           <div class="mft-actions" role="group" aria-label="畫記管理">
             <button type="button" data-action="undo" title="復原（Ctrl／⌘ Z）" disabled>${icon('undo')}復原</button>
             <button type="button" data-action="redo" title="重做（Ctrl／⌘ Shift Z）" disabled>${icon('redo')}重做</button>
@@ -128,9 +125,24 @@
             <button type="button" data-action="clear" class="mft-clear" title="清除此頁畫記；仍可復原" disabled>${icon('clear')}清除</button>
             <button type="button" data-action="capture" class="mft-capture" title="選擇目前分頁，將教材與畫記下載為 PNG">${icon('camera')}截圖</button>
           </div>
+        </div>
+        <button type="button" class="mft-icon-button mft-collapse" data-action="collapse" aria-label="收合畫記工具列" title="收合並回到游標模式">${icon('collapse')}</button>
+      </section>
+      <section id="mft-options" class="mft-options" aria-label="畫記工具設定" hidden>
+        <div class="mft-options-header"><strong>工具設定</strong><button type="button" data-action="close-settings" aria-label="關閉工具設定">${icon('close')}</button></div>
+          <div class="mft-lens-settings" hidden><div class="mft-zoom-settings">
+            <label>倍率 <input type="range" min="1.5" max="4" value="2" step="0.5" aria-label="放大倍率" aria-valuetext="2 倍"><output aria-live="polite">2×</output></label>
+          </div>
+            <div class="mft-size-settings"><label>範圍 <input type="range" min="70" max="200" value="100" step="10" aria-label="放大鏡範圍" aria-valuetext="100%"><output aria-live="polite">100%</output></label></div>
+          </div>
+          <div class="mft-settings">
+            <div class="mft-colors" role="group" aria-label="畫記顏色">
+              ${colors.map(([value, label]) => `<button type="button" class="mft-swatch" data-color="${value}" style="--swatch:${value}" aria-label="${label}" aria-pressed="${value === '#2563eb'}" title="${label}"></button>`).join('')}
+            </div>
+            <label class="mft-width">粗細 <input type="range" min="2" max="12" value="4" step="1" aria-label="畫筆粗細"><output>4</output></label>
+          </div>
           <footer class="mft-footer"><span class="mft-mode">游標可操作網頁</span><span class="mft-count">此頁 0 筆</span></footer>
           <p class="mft-note">Esc 回到游標 · 各單元／題目分開畫記 · 重新整理後清除</p>
-        </div>
       </section>`;
     const overlay = document.createElementNS(NS, 'svg');
     overlay.classList.add('mft-overlay');
@@ -156,12 +168,17 @@
     let scheduled = false;
     let toastTimer;
     let captureStream = null;
+    let compactPosition = null;
+    let suppressLauncherClickUntil = 0;
     const pages = new Map();
     let history = new DrawingHistory();
     const panel = host.querySelector('.mft-panel');
     const launcher = host.querySelector('.mft-launcher');
     const modeLabel = host.querySelector('.mft-mode');
     const moveButton = host.querySelector('.mft-move');
+    const orientationButton = host.querySelector('.mft-orientation');
+    const options = host.querySelector('.mft-options');
+    const optionsButton = host.querySelector('.mft-options-toggle');
     const scrollPoint = () => {
       const full = document.fullscreenElement;
       return full && full !== document.documentElement && full !== document.body ? { x: full.scrollLeft, y: full.scrollTop } : { x: window.scrollX, y: window.scrollY };
@@ -238,10 +255,31 @@
       overlay.dataset.tool = tool;
       overlay.classList.toggle('mft-drawing', tool !== 'cursor' && tool !== 'magnify');
       window.MathMagnifier?.setActive(tool === 'magnify');
-      host.querySelector('.mft-zoom-settings').hidden = tool !== 'magnify';
+      host.querySelector('.mft-lens-settings').hidden = tool !== 'magnify';
+      host.querySelector('.mft-settings').hidden = tool === 'magnify';
+      setOptionsOpen(tool === 'magnify');
       host.querySelectorAll('[data-tool]').forEach(button => button.setAttribute('aria-pressed', button.dataset.tool === tool));
       const label = [...tools, ['eraser', '橡皮擦']].find(([key]) => key === tool)[1];
       modeLabel.textContent = tool === 'cursor' ? '游標可操作網頁' : tool === 'magnify' ? '放大鏡 · 移動或觸控定位 · Esc 關閉' : tool === 'eraser' ? '劃過畫記即可整筆擦除' : `${label}模式 · Esc 回到游標`;
+    }
+    function positionOptions() {
+      if (options.hidden) return;
+      const bar = panel.getBoundingClientRect();
+      const sideSpace = Math.max(bar.left - 16, window.innerWidth - bar.right - 16);
+      options.style.width = `${orientation === 'vertical' ? Math.min(288, Math.max(196, sideSpace)) : 288}px`;
+      const box = options.getBoundingClientRect();
+      let x = bar.left, y = bar.bottom + 8;
+      if (orientation === 'vertical') {
+        x = bar.right + 8; y = bar.top;
+        if (x + box.width > window.innerWidth - 8) x = bar.left - box.width - 8;
+      } else if (y + box.height > window.innerHeight - 8) y = bar.top - box.height - 8;
+      options.style.left = `${Math.max(8, Math.min(x, window.innerWidth - box.width - 8))}px`;
+      options.style.top = `${Math.max(8, Math.min(y, window.innerHeight - box.height - 8))}px`;
+    }
+    function setOptionsOpen(open) {
+      options.hidden = !open;
+      optionsButton.setAttribute('aria-expanded', String(open));
+      if (open) positionOptions();
     }
     function clampPosition(x, y) {
       const bounds = host.getBoundingClientRect();
@@ -249,17 +287,39 @@
       host.style.bottom = 'auto';
       host.style.left = `${Math.max(8, Math.min(x, window.innerWidth - bounds.width - 8))}px`;
       host.style.top = `${Math.max(8, Math.min(y, window.innerHeight - bounds.height - 8))}px`;
+      positionOptions();
+    }
+    function setOrientation(next, save = true) {
+      const bounds = host.getBoundingClientRect();
+      orientation = next === 'vertical' ? 'vertical' : 'horizontal';
+      host.dataset.orientation = orientation;
+      const target = orientation === 'horizontal' ? '直向' : '橫向';
+      orientationButton.innerHTML = `${icon(orientation === 'horizontal' ? 'vertical' : 'horizontal')}<span>${target}</span>`;
+      orientationButton.setAttribute('aria-label', `切換為${target}工具列`);
+      orientationButton.title = `切換為${target}工具列`;
+      if (save) {
+        try { localStorage.setItem('math-floating-orientation', orientation); } catch (_) {}
+      }
+      if (opened) clampPosition(bounds.left, bounds.top);
     }
     function toggle(open) {
+      const bounds = host.getBoundingClientRect();
+      if (open && !opened) compactPosition = { x: bounds.left, y: bounds.top };
       opened = open;
       launcher.hidden = open;
       panel.hidden = !open;
-      launcher.setAttribute('aria-expanded', open);
+      launcher.setAttribute('aria-expanded', String(open));
+      setOptionsOpen(false);
       if (!open) setTool('cursor');
-      if (host.style.left) {
-        const bounds = host.getBoundingClientRect();
-        clampPosition(bounds.left, bounds.top);
-      }
+      const position = open ? { x: bounds.left, y: bounds.top } : compactPosition || { x: bounds.left, y: bounds.top };
+      clampPosition(position.x, position.y);
+    }
+    function updateSizeLimit() {
+      const input = host.querySelector('.mft-size-settings input');
+      input.max = Math.max(70, Math.min(200, Math.floor((Math.min(window.innerWidth, window.innerHeight) - 24) / 20) * 10));
+      const size = window.MathMagnifier?.setSize(Number(input.value) * 2) || Number(input.value) * 2;
+      host.querySelector('.mft-size-settings output').value = `${size / 2}%`;
+      input.setAttribute('aria-valuetext', `${size / 2}%`);
     }
     function contextKey() {
       const active = document.querySelector('.nav-tab.active')?.dataset.tab || 'game';
@@ -415,7 +475,10 @@
         button.disabled = false;
       }
     }
-    launcher.addEventListener('click', () => toggle(true));
+    launcher.addEventListener('click', event => {
+      if (event.detail && performance.now() < suppressLauncherClickUntil) { event.preventDefault(); return; }
+      toggle(true);
+    });
     host.addEventListener('click', event => {
       const button = event.target.closest('button');
       if (!button) return;
@@ -426,6 +489,9 @@
       }
       switch (button.dataset.action) {
         case 'collapse': toggle(false); launcher.focus(); break;
+        case 'orientation': setOptionsOpen(false); setOrientation(orientation === 'horizontal' ? 'vertical' : 'horizontal'); break;
+        case 'settings': setOptionsOpen(options.hidden); break;
+        case 'close-settings': setOptionsOpen(false); optionsButton.focus(); break;
         case 'undo': cancelGesture(); history.undo(); render(); break;
         case 'redo': cancelGesture(); history.redo(); render(); break;
         case 'clear': cancelGesture(); history.save([]); render(); notify('此頁畫記已清除，可按「復原」找回。'); break;
@@ -438,41 +504,72 @@
       event.target.setAttribute('aria-valuetext', `${value} 倍`);
       host.querySelector('.mft-zoom-settings output').value = `${value}×`;
     });
+    host.querySelector('.mft-size-settings input').addEventListener('input', event => {
+      const size = window.MathMagnifier.setSize(Number(event.target.value) * 2);
+      event.target.value = size / 2;
+      event.target.setAttribute('aria-valuetext', `${size / 2}%`);
+      host.querySelector('.mft-size-settings output').value = `${size / 2}%`;
+    });
     host.querySelector('.mft-width input').addEventListener('input', event => {
       width = Number(event.target.value);
       host.querySelector('.mft-width output').value = width;
     });
-    moveButton.addEventListener('pointerdown', event => {
-      if (event.button !== 0 || !event.isPrimary) return;
-      event.preventDefault();
-      const bounds = host.getBoundingClientRect();
-      drag = { id: event.pointerId, x: event.clientX - bounds.left, y: event.clientY - bounds.top };
-      moveButton.setPointerCapture(event.pointerId);
-      host.classList.add('mft-dragging');
-    });
-    moveButton.addEventListener('pointermove', event => {
-      if (drag?.id === event.pointerId) clampPosition(event.clientX - drag.x, event.clientY - drag.y);
-    });
-    const finishDrag = () => { drag = null; host.classList.remove('mft-dragging'); };
-    moveButton.addEventListener('pointerup', finishDrag);
-    moveButton.addEventListener('pointercancel', finishDrag);
-    moveButton.addEventListener('keydown', event => {
-      if (event.key === 'Home') { host.style.left = ''; host.style.top = ''; host.style.right = ''; host.style.bottom = ''; event.preventDefault(); return; }
-      const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
-      if (!directions[event.key]) return;
-      const bounds = host.getBoundingClientRect();
-      const [x, y] = directions[event.key];
-      clampPosition(bounds.left + x * (event.shiftKey ? 20 : 5), bounds.top + y * (event.shiftKey ? 20 : 5));
-      event.preventDefault();
-    });
+    function bindDrag(handle, compact) {
+      handle.addEventListener('pointerdown', event => {
+        if (event.button !== 0 || !event.isPrimary) return;
+        const bounds = host.getBoundingClientRect();
+        drag = { id: event.pointerId, handle, compact, moved: false, startX: event.clientX, startY: event.clientY, x: event.clientX - bounds.left, y: event.clientY - bounds.top };
+        handle.setPointerCapture(event.pointerId);
+      });
+      handle.addEventListener('pointermove', event => {
+        if (drag?.id !== event.pointerId || drag.handle !== handle) return;
+        if (!drag.moved && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 6) return;
+        drag.moved = true;
+        event.preventDefault();
+        host.classList.add('mft-dragging');
+        clampPosition(event.clientX - drag.x, event.clientY - drag.y);
+      });
+      function finish(event) {
+        if (drag?.id !== event.pointerId || drag.handle !== handle) return;
+        if (drag.moved) {
+          const bounds = host.getBoundingClientRect();
+          compactPosition = { x: bounds.left, y: bounds.top };
+          if (compact && event.type === 'pointerup') suppressLauncherClickUntil = performance.now() + 500;
+        }
+        drag = null;
+        host.classList.remove('mft-dragging');
+      }
+      handle.addEventListener('pointerup', finish);
+      handle.addEventListener('pointercancel', finish);
+      handle.addEventListener('lostpointercapture', finish);
+      handle.addEventListener('keydown', event => {
+        if (event.key === 'Home') {
+          compactPosition = null;
+          host.style.left = ''; host.style.top = ''; host.style.right = ''; host.style.bottom = '';
+          positionOptions(); event.preventDefault(); return;
+        }
+        const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+        if (!directions[event.key]) return;
+        const bounds = host.getBoundingClientRect();
+        const [x, y] = directions[event.key];
+        clampPosition(bounds.left + x * (event.shiftKey ? 20 : 5), bounds.top + y * (event.shiftKey ? 20 : 5));
+        const moved = host.getBoundingClientRect();
+        compactPosition = { x: moved.left, y: moved.top };
+        event.preventDefault();
+      });
+    }
+    bindDrag(launcher, true);
+    bindDrag(moveButton, false);
     document.addEventListener('keydown', event => {
       if (!opened || event.isComposing) return;
       if (event.key === 'Escape' && (tool !== 'cursor' || editor)) {
         setTool('cursor');
-        if (event.target.closest('.mft-zoom-settings')) host.querySelector('[data-tool="cursor"]').focus();
+        setOptionsOpen(false);
+        if (event.target.closest('.mft-options')) host.querySelector('[data-tool="cursor"]').focus();
         event.preventDefault();
         return;
       }
+      if (event.key === 'Escape' && !options.hidden) { setOptionsOpen(false); optionsButton.focus(); event.preventDefault(); return; }
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
         event.preventDefault();
@@ -486,6 +583,9 @@
       const bounds = host.getBoundingClientRect();
       if (host.style.left) clampPosition(bounds.left, bounds.top);
       closeEditor();
+      updateSizeLimit();
+      positionOptions();
+      if (compactPosition) compactPosition = { x: Math.max(8, Math.min(compactPosition.x, innerWidth - 64)), y: Math.max(8, Math.min(compactPosition.y, innerHeight - 64)) };
       scheduleContext();
     });
     function fullscreen() {
@@ -502,6 +602,7 @@
     document.addEventListener('fullscreenchange', fullscreen);
     document.addEventListener('change', scheduleContext);
     document.addEventListener('click', event => {
+      if (!event.target.closest('.mft-ui')) setOptionsOpen(false);
       if (!event.target.closest('.mft-ui, .mft-editor, .mft-overlay')) scheduleContext();
     });
     const observed = document.getElementById('main-content-area') || document.body;
@@ -509,6 +610,8 @@
       if (records.some(record => !record.target.closest?.('.mft-ui, .mft-editor, .mft-overlay, .mft-toast'))) scheduleContext();
     }).observe(observed, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'src'] });
     window.addEventListener('pagehide', () => captureStream?.getTracks().forEach(track => track.stop()));
+    setOrientation(orientation, false);
+    updateSizeLimit();
     fullscreen();
     window.MathFloatingTools = { open: () => toggle(true), close: () => toggle(false) };
   }

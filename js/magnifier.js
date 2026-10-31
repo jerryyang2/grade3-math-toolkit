@@ -6,6 +6,7 @@
   let point = { x: 0, y: 0 };
   let frame = 0, refreshTimer = 0;
   let zoom = 2;
+  let diameter = 200;
   const excluded = '.mft-ui,.mft-editor,.mft-toast,.mft-magnifier,.spotlight-layer,#effects-canvas,script,iframe,video,audio';
   function createLens() {
     if (lens) return;
@@ -81,7 +82,7 @@
   function positionLens() {
     frame = 0;
     if (!active || !page) return;
-    const size = Math.min(200, window.innerWidth - 24, window.innerHeight - 24);
+    const size = Math.min(diameter, window.innerWidth - 24, window.innerHeight - 24);
     const gap = 24;
     let left = point.x + gap, top = point.y + gap;
     if (left + size > window.innerWidth - 8) left = point.x - size - gap;
@@ -95,6 +96,13 @@
     // 來源點放在鏡片中央；以文件座標補償頁面捲動。
     page.style.left = `${(size - 8) / 2 - (point.x + window.scrollX) * zoom}px`;
     page.style.top = `${(size - 8) / 2 - (point.y + window.scrollY) * zoom}px`;
+  }
+  function setSize(value) {
+    const next = Number(value);
+    if (!Number.isFinite(next)) return diameter;
+    diameter = Math.min(400, Math.max(140, Math.round(next / 20) * 20));
+    positionLens();
+    return diameter;
   }
   function setZoom(value) {
     const next = Number(value);
@@ -148,6 +156,6 @@
     observer.observe(document.getElementById('main-content-area') || document.querySelector('main') || document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'src', 'style', 'open'] });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
-  window.MathMagnifier = { setActive, setZoom };
+  window.MathMagnifier = { setActive, setZoom, setSize };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
