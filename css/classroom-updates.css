@@ -43,3 +43,49 @@ html[lang="en"] .storybook-site .main-nav :is(.nav-tab,.nav-island-link) { paddi
   .prep-guide-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media print { .spotlight-layer { display: none !important; } }
+
+/* 存摺入口併入頂部工具列，收合後不占一整列。 */
+#btn-student-bank { display:inline-flex; align-items:center; gap:7px; white-space:nowrap; }
+#btn-student-bank[aria-expanded="true"] { background:#fff0c8; border-color:#967023; }
+#btn-student-bank[aria-expanded="true"] .student-bank-toggle-arrow { transform:rotate(180deg); }
+#student-bank-panel[hidden] { display:none; }
+#student-bank-panel .student-bank-inner { padding-inline:24px; }
+
+/* 學習單設定：桌面一次看完四個欄位、四個支援選項與列印操作。 */
+#worksheet-modal { padding:12px; }
+#worksheet-modal .worksheet-settings { max-width:960px; max-height:calc(100dvh - 24px); padding:20px; display:flex; flex-direction:column; gap:12px; text-align:left; }
+.worksheet-settings-header { display:grid; grid-template-columns:32px minmax(0,1fr) 44px; gap:12px; align-items:start; flex-shrink:0; padding-bottom:12px; border-bottom:1px solid #cbd5e1; }
+.worksheet-settings-icon { font-size:28px; line-height:1.5; }
+.worksheet-settings-header h3 { margin:0 0 3px; font-size:1.25rem; line-height:1.4; font-weight:900; color:#1e1b4b; }
+.worksheet-settings-subtitle { display:block; font-size:.85rem; line-height:1.5; font-weight:700; color:#4f46b5; }
+.worksheet-settings-header p { margin:5px 0 0; font-size:.9rem; line-height:1.5; color:#334155; }
+#btn-close-ws-modal { width:44px; height:44px; background:transparent; border:1px solid #cbd5e1; border-radius:8px; color:#475569; font-size:24px; cursor:pointer; }
+.worksheet-settings-body { min-height:0; overflow-y:auto; display:grid; gap:14px; padding:3px 4px; }
+.worksheet-settings-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 20px; }
+.worksheet-settings-field { min-width:0; }
+.worksheet-settings-field label { display:block; margin:0 0 4px; font-size:.95rem; line-height:1.5; font-weight:800; color:#334155; }
+#worksheet-modal .form-control { width:100%; min-height:44px; padding:8px 12px; font-size:1rem; font-weight:700; }
+.worksheet-settings-field p { margin:5px 0 0; font-size:.85rem; line-height:1.5; color:#475569; }
+.worksheet-settings-date-label { display:flex; align-items:start; justify-content:space-between; gap:8px; }
+.worksheet-settings-date-label label { flex:1; }
+#btn-ws-today { flex-shrink:0; min-height:28px; padding:4px 8px; background:#e0e7ff; color:#3730a3; border:0; border-radius:6px; font-size:.8rem; font-weight:700; cursor:pointer; }
+.worksheet-settings-supports { min-width:0; margin:0; padding:8px 12px 12px; border:1px dashed #9baec5; border-radius:10px; background:#f8fafc; }
+.worksheet-settings-supports legend { padding:0 5px; color:#1e40af; font-size:.9rem; font-weight:800; }
+.worksheet-settings-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px 16px; }
+.worksheet-settings-options label { display:flex; align-items:center; gap:8px; min-height:40px; font-size:.9rem; line-height:1.5; cursor:pointer; }
+.worksheet-settings-options input { flex-shrink:0; width:18px; height:18px; accent-color:#21663d; }
+.worksheet-settings-actions { display:flex; flex-shrink:0; justify-content:flex-end; gap:12px; padding-top:12px; border-top:1px solid #cbd5e1; }
+#worksheet-modal .worksheet-settings-actions .kid-btn { min-height:44px; margin:0; padding:8px 20px; }
+.storybook-site.high-contrast-mode #worksheet-modal :is(.worksheet-settings,.worksheet-settings-supports) { background:#18181b; border-color:#facc15; }
+.storybook-site.high-contrast-mode #worksheet-modal :is(h3,p,label,legend,.worksheet-settings-subtitle,#btn-close-ws-modal) { color:#fff; }
+@media(max-width:700px) {
+  #worksheet-modal .worksheet-settings { padding:14px; gap:10px; }
+  .worksheet-settings-header { grid-template-columns:minmax(0,1fr) 44px; gap:8px; }
+  .worksheet-settings-icon { display:none; }
+  .worksheet-settings-header h3 { font-size:1.125rem; }
+  .worksheet-settings-fields,.worksheet-settings-options { grid-template-columns:minmax(0,1fr); }
+  .worksheet-settings-actions { gap:8px; }
+  #worksheet-modal #btn-ws-print { flex:1; padding-inline:10px; }
+  #student-bank-panel .student-bank-inner { padding-inline:12px; }
+}
+.storybook-site.high-contrast-mode #btn-student-bank[aria-expanded="true"] { background:#facc15; color:#111 !important; border-color:#facc15; }

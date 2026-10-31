@@ -583,77 +583,61 @@
       modal.setAttribute('aria-modal', 'true');
       modal.setAttribute('aria-labelledby', 'worksheet-title');
       modal.innerHTML = `
-        <div class="kid-modal-card" style="max-width:680px; max-height:calc(100dvh - 40px); overflow-y:auto; text-align:left;">
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:2rem;">🖨️</span>
-              <div>
-                <h3 id="worksheet-title" style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
-                <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 三排計算對齊格 · 課程調整參考註記</span>
-                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；與本機彙整本共用版型，每份 2 頁，保留三排計算區。</p>
+        <div class="kid-modal-card worksheet-settings">
+          <header class="worksheet-settings-header">
+            <span class="worksheet-settings-icon" aria-hidden="true">🖨️</span>
+            <div>
+              <h3 id="worksheet-title">108 特教個別化 A4 實體學習單產生器</h3>
+              <span class="worksheet-settings-subtitle">字嗨注音字型（依裝置可用字型顯示） · 三排計算對齊格 · 課程調整參考註記</span>
+              <p>每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；與本機彙整本共用版型，每份 2 頁，保留三排計算區。</p>
+            </div>
+            <button type="button" aria-label="關閉學習單設定" id="btn-close-ws-modal">✕</button>
+          </header>
+
+          <div class="worksheet-settings-body">
+            <div class="worksheet-settings-fields">
+              <div class="worksheet-settings-field">
+                <label for="ws-unit-select">選擇評量單元：</label>
+                <select id="ws-unit-select" class="form-control">
+                  ${units.map(u => `<option value="${u.id}">第 ${u.number} 單元：${u.title}</option>`).join('')}
+                </select>
+              </div>
+              <div class="worksheet-settings-field">
+                <label for="ws-student-select">指定學習教室學生：</label>
+                <select id="ws-student-select" class="form-control">
+                  <option value="空白">（印空白卷由學童自填）</option>
+                  ${students.map(s => `<option translate="no" value="${window.LearningRecords.escapeHtml(s.name)}">${s.avatar} ${window.LearningRecords.escapeHtml(s.name)}</option>`).join('')}
+                </select>
+              </div>
+              <div class="worksheet-settings-field">
+                <label for="ws-section-select">學習單範圍：</label>
+                <select id="ws-section-select" class="form-control" aria-describedby="ws-range-description"></select>
+                <p id="ws-range-description">總複習涵蓋本單元各小節；小節學習單聚焦該節內容，每張皆為 10 題。</p>
+              </div>
+              <div class="worksheet-settings-field">
+                <div class="worksheet-settings-date-label">
+                  <label for="ws-date-input">📅 評量日期（可自行填入或留空手寫）：</label>
+                  <button type="button" id="btn-ws-today">帶入今日日期</button>
+                </div>
+                <input type="text" id="ws-date-input" class="form-control" placeholder="留空則印出「____ 年 ___ 月 ___ 日」由學童自填，亦可在此直接填入">
               </div>
             </div>
-            <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
+
+            <fieldset class="worksheet-settings-supports">
+              <legend>🛠️ 特教個別化學習單支援選項：</legend>
+              <div class="worksheet-settings-options">
+                <label><input type="checkbox" id="ws-chk-grid" checked><strong>📐 顯示計算區對齊格 (視動協調)</strong></label>
+                <label><input type="checkbox" id="ws-chk-zihi"><strong>🔤 套用字嗨注音標楷體 (字詞免焦慮)</strong></label>
+                <label><input type="checkbox" id="ws-chk-illustrations" checked><strong>🖼️ 加入題目示意圖（圖像理解）</strong></label>
+                <label><input type="checkbox" id="ws-chk-stamp" checked><strong>🏛️ 頁尾附 108 特教課綱四向度調整參考欄</strong></label>
+              </div>
+            </fieldset>
           </div>
 
-          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); gap:12px; margin-bottom:12px;">
-            <div>
-              <label for="ws-unit-select" style="font-weight:800; font-size:0.95rem; color:#334155;">選擇評量單元：</label>
-              <select id="ws-unit-select" class="form-control" style="font-weight:700; width:100%;">
-                ${units.map(u => `<option value="${u.id}">第 ${u.number} 單元：${u.title}</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label for="ws-student-select" style="font-weight:800; font-size:0.95rem; color:#334155;">指定學習教室學生：</label>
-              <select id="ws-student-select" class="form-control" style="font-weight:700; width:100%;">
-                <option value="空白">（印空白卷由學童自填）</option>
-                ${students.map(s => `<option translate="no" value="${window.LearningRecords.escapeHtml(s.name)}">${s.avatar} ${window.LearningRecords.escapeHtml(s.name)}</option>`).join('')}
-              </select>
-            </div>
-          </div>
-
-          <div style="margin-bottom:12px;">
-            <label for="ws-section-select" style="display:block; font-weight:800; font-size:0.95rem; color:#334155; margin-bottom:4px;">學習單範圍：</label>
-            <select id="ws-section-select" class="form-control" style="font-weight:700; width:100%;" aria-describedby="ws-range-description"></select>
-            <p id="ws-range-description" style="font-size:0.85rem; color:#475569; margin:5px 0 0;">總複習涵蓋本單元各小節；小節學習單聚焦該節內容，每張皆為 10 題。</p>
-          </div>
-
-          <div style="margin-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <label style="font-weight:800; font-size:0.95rem; color:#334155;">📅 評量日期（可自行填入或留空手寫）：</label>
-              <button type="button" id="btn-ws-today" style="background:#e0e7ff; color:#3730a3; border:none; border-radius:6px; padding:3px 10px; font-size:0.8rem; cursor:pointer; font-weight:700;">帶入今日日期</button>
-            </div>
-            <input type="text" id="ws-date-input" class="form-control" style="font-weight:700; width:100%;" placeholder="留空則印出「____ 年 ___ 月 ___ 日」由學童自填，亦可在此直接填入">
-          </div>
-
-          <div style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:12px; padding:12px; margin-bottom:16px;">
-            <div style="font-weight:800; font-size:0.9rem; color:#1e40af; margin-bottom:6px;">🛠️ 特教個別化學習單支援選項：</div>
-            <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:0.9rem;">
-              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                <input type="checkbox" id="ws-chk-grid" checked>
-                <strong>📐 顯示計算區對齊格 (視動協調)</strong>
-              </label>
-              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                <input type="checkbox" id="ws-chk-zihi">
-                <strong>🔤 套用字嗨注音標楷體 (字詞免焦慮)</strong>
-              </label>
-              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                <input type="checkbox" id="ws-chk-illustrations" checked>
-                <strong>🖼️ 加入題目示意圖（圖像理解）</strong>
-              </label>
-              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                <input type="checkbox" id="ws-chk-stamp" checked>
-                <strong>🏛️ 頁尾附 108 特教課綱四向度調整參考欄</strong>
-              </label>
-            </div>
-          </div>
-
-          <div style="display:flex; gap:12px; justify-content:flex-end;">
+          <footer class="worksheet-settings-actions">
             <button class="kid-btn kid-btn-secondary" id="btn-ws-cancel">取消</button>
-            <button class="kid-btn kid-btn-primary" id="btn-ws-print" style="padding:8px 24px;">
-              🖨️ 即刻預覽並列印 (A4)
-            </button>
-          </div>
+            <button class="kid-btn kid-btn-primary" id="btn-ws-print">🖨️ 即刻預覽並列印 (A4)</button>
+          </footer>
         </div>
       `;
 

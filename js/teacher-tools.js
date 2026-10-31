@@ -798,7 +798,22 @@ ${taskText}
   // 網頁載入後自動渲染學生存摺
   document.addEventListener('DOMContentLoaded', () => {
     StudentBank.render();
-    if (window.matchMedia('(max-width: 600px)').matches) document.querySelector('.student-bank-container').open = false;
+    const toggle = document.getElementById('btn-student-bank');
+    const panel = document.getElementById('student-bank-panel');
+    if (toggle && panel) {
+      const setOpen = open => {
+        panel.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+      };
+      toggle.addEventListener('click', () => setOpen(panel.hidden));
+      panel.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setOpen(false);
+          toggle.focus();
+        }
+      });
+    }
   });
 
 })(window);

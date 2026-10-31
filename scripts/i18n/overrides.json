@@ -361,7 +361,7 @@
   "同一個完整蛋糕": "One whole cake",
   "有刻度的直壁量杯，mL 刻度從零等距增加；比較時使用相同刻度，水位表示題目已知的量": "Straight-sided measuring cups with equal mL intervals from zero. Comparisons use the same scale; liquid levels show the given amounts.",
   "每一份一樣大": "Equal-sized parts",
-  "每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；與本機彙整本共用版型，每份 2 頁，保留三排計算區。": "10 questions on two A4 pages, two columns, 1 cm margins. Same layout as the collected worksheets, with three rows of working space.",
+  "每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；與本機彙整本共用版型，每份 2 頁，保留三排計算區。": "10 questions · 2 A4 pages · 2 columns · 1 cm margins · 3-row work grids.",
   "依刻度與標示思考，結果：？": "Read the scale. Result: ?",
   "依時間先後花錢再得到錢，兩個步驟的結果留白": "First spend money, then receive money. Both intermediate and final results are left blank.",
   "姓名：": "Name: ",
@@ -510,5 +510,13 @@
   "進入數學遊戲島": "Enter Math Game Island",
   "換成毫米": "Convert to mm",
   "兩種單位分別記錄，箭頭連接換算前後的量；未知數量留白": "The two units are recorded separately. The arrow connects equivalent measurements; unknown quantities are left blank.",
-  "換成⟦X⟧": "Convert to ⟦X⟧"
+  "換成⟦X⟧": "Convert to ⟦X⟧",
+  "📅 評量日期（可自行填入或留空手寫）：": "📅 Date (optional)",
+  "（印空白卷由學童自填）": "(Leave name blank)",
+  "留空則印出「____ 年 ___ 月 ___ 日」由學童自填，亦可在此直接填入": "Optional — leave blank for handwriting",
+  "總複習涵蓋本單元各小節；小節學習單聚焦該節內容，每張皆為 10 題。": "Unit Review combines all sections. A section sheet focuses on that section. Each sheet has 10 questions.",
+  "🛠️ 特教個別化學習單支援選項：": "🛠️ Worksheet Supports",
+  "📐 顯示計算區對齊格 (視動協調)": "📐 Calculation grids (visual–motor support)",
+  "🖼️ 加入題目示意圖（圖像理解）": "🖼️ Question diagrams",
+  "🏛️ 頁尾附 108 特教課綱四向度調整參考欄": "🏛️ Curriculum support checklist in footer"
 }

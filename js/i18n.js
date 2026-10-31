@@ -205,7 +205,7 @@
   // Popups share the origin preference and local assets, including on GitHub Pages subpaths.
   api.popupHead = function() {
     const base = new URL('../', new URL('i18n.js', scriptUrl));
-    return `<link rel="stylesheet" href="${new URL('css/i18n.css',base)}"><script src="${new URL('js/i18n-en.js?v=classroom-refine-20261101-2',base)}"><\/script><script src="${new URL('js/i18n.js?v=language-zh-20261101',base)}"><\/script>`;
+    return `<link rel="stylesheet" href="${new URL('css/i18n.css',base)}"><script src="${new URL('js/i18n-en.js?v=compact-settings-bank-20261101',base)}"><\/script><script src="${new URL('js/i18n.js?v=language-zh-20261101',base)}"><\/script>`;
   };
   const scriptUrl = doc.currentScript?.src || new URL('js/i18n.js',root.location.href).href;
   function watch() {
