@@ -68,6 +68,7 @@
 
   if (typeof module !== 'undefined' && module.exports) module.exports = { DrawingHistory, hitsMark, segmentDistance };
   if (typeof document === 'undefined') return;
+  const handIconURL = new URL('../assets/icons/pointing-hand.svg?v=hand-20261031', document.currentScript.src).href;
 
   function init() {
     if (document.getElementById('math-floating-tools')) return;
@@ -75,7 +76,6 @@
     const icons = {
       pen: '<path d="m15 4 5 5M4 16 15 5a3.5 3.5 0 0 1 5 5L9 21H4z"/>',
       magnify: '<circle cx="10" cy="10" r="7"/><path d="m15 15 6 6M6 10h8M10 6v8"/>',
-      cursor: '<path d="m5 3 14 9-7 1-3 7z"/>',
       highlight: '<path d="m14 3 7 7-9 9-7-7zM5 12l-3 7 3 3 7-3M2 22h9"/>',
       text: '<path d="M4 5h16M12 5v15M8 20h8"/>',
       rect: '<rect x="3" y="4" width="18" height="16" rx="2"/>',
@@ -94,7 +94,7 @@
       collapse: '<path d="m6 9 6 6 6-6"/>',
       close: '<path d="m6 6 12 12M6 18 18 6"/>'
     };
-    const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
+    const icon = name => name === 'cursor' ? `<img class="mft-cursor-icon" src="${handIconURL}" alt="" aria-hidden="true" draggable="false" width="22" height="22">` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
     const tools = [['cursor', '游標'], ['pen', '畫筆'], ['highlight', '螢光筆'], ['text', '文字'], ['rect', '方框'], ['ellipse', '圓框'], ['arrow', '箭頭'], ['number', '步驟'], ['magnify', '放大鏡']];
     const colors = [['#ef4444', '紅色'], ['#2563eb', '藍色'], ['#16a34a', '綠色'], ['#f59e0b', '橙黃色'], ['#9333ea', '紫色'], ['#1e293b', '深墨色']];
     const host = document.createElement('aside');
@@ -248,10 +248,14 @@
       gesture = null;
       render();
     }
+    function updatePointerStyle() {
+      document.documentElement.classList.toggle('mft-hand-mode', opened && tool === 'cursor' && !host.classList.contains('mft-unavailable'));
+    }
     function setTool(next) {
       cancelGesture();
       closeEditor();
       tool = next;
+      updatePointerStyle();
       overlay.dataset.tool = tool;
       overlay.classList.toggle('mft-drawing', tool !== 'cursor' && tool !== 'magnify');
       window.MathMagnifier?.setActive(tool === 'magnify');
@@ -309,6 +313,7 @@
       launcher.hidden = open;
       panel.hidden = !open;
       launcher.setAttribute('aria-expanded', String(open));
+      updatePointerStyle();
       setOptionsOpen(false);
       if (!open) setTool('cursor');
       const position = open ? { x: bounds.left, y: bounds.top } : compactPosition || { x: bounds.left, y: bounds.top };
@@ -617,6 +622,8 @@
     updateSizeLimit();
     fullscreen();
     window.MathFloatingTools = { open: () => toggle(true), close: () => toggle(false) };
+    // 首次載入預設就是課堂教學；之後由分頁切換開啟，讓手動收合持續有效。
+    if (document.querySelector('.nav-tab.active')?.dataset.tab === 'units') toggle(true);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

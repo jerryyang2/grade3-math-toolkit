@@ -128,7 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.spEdAudio.playClick();
 
-    if (target === 'practice') {
+    if (target === 'units') {
+      window.MathFloatingTools?.open();
+    } else if (target === 'practice') {
       if (!AppState.filteredPractices.length) loadPracticesForUnit(elements.practiceUnitSelect.value || AppState.currentUnitId);
     } else if (target === 'sandbox') {
       renderSandbox(elements.sandboxUnitSelect.value || AppState.currentUnitId);

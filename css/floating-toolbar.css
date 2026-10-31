@@ -41,4 +41,9 @@
 .high-contrast-mode .mft-options { color: #fff; background: #18181b; border-color: #facc15; }
 .high-contrast-mode .mft-options :is(.mft-footer,.mft-count,.mft-mode,.mft-note) { color: #fff; }
 .mft-ui.mft-dragging { user-select: none; }
+.mft-ui[data-orientation] .mft-cursor-icon { display: block; flex: 0 0 auto; width: 22px; height: 22px; object-fit: contain; }
+/* 游標模式使用斜向手指；拖曳把手、輸入欄位與禁用控制沿用各自的指標。 */
+html.mft-hand-mode,
+html.mft-hand-mode body,
+html.mft-hand-mode body :not(:where(input,textarea,select,[contenteditable='true'],[contenteditable='true'] *,:disabled,:disabled *,[aria-disabled='true'],[aria-disabled='true'] *,.mft-launcher,.mft-launcher *,.mft-move,.mft-move *)) { cursor: url('../assets/icons/pointing-hand-cursor.svg?v=hand-20261031') 6 4, pointer !important; }
 @media print { .mft-options { display: none !important; } }
