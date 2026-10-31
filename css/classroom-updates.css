@@ -11,7 +11,7 @@
 .prep-guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
 .prep-guide-grid > * { min-width: 0; margin: 0; }
 .prep-guide-grid :is(.prereq-body,.clinic-bad-example,.clinic-root-cause,.clinic-buster-solution,.cra-desc) { font-size: 1rem; line-height: 1.8; }
-.storybook-site.high-contrast-mode .prep-guide-heading :is(h2,p,label) { color: #fff; }
+.storybook-site.high-contrast-mode .prep-guide-heading :is(h2,p,label,.home-kicker) { color: #fff; }
 .storybook-site.high-contrast-mode .prep-guide-grid :is(.card,.prerequisite-card,.misconception-clinic-card,.cra-stage-box,.prereq-body,.prereq-check,.clinic-bad-example,.clinic-root-cause,.clinic-buster-solution,[style*='background']) { background: #18181b !important; color: #fff !important; border-color: #facc15 !important; }
 .storybook-site.high-contrast-mode .prep-guide-grid :is(strong,p,div,span) { color: #fff !important; }
 /* 遮罩不攔截操作；設定與退出按鈕保持清晰。 */
