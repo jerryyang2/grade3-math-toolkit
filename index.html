@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="css/math-toolbox.css?v=geometry-kit-20261031">
   <link rel="stylesheet" href="css/math-islands-entry.css?v=20261031-1">
   <link rel="stylesheet" href="css/focus-mode.css?v=lesson-focus-20261031-2">
+  <link rel="stylesheet" href="css/sandbox-mondrian.css?v=mondrian-tools-20261031">
 </head>
 <body class="storybook-site">
   <!-- 無障礙跳至主要內容 -->
@@ -254,20 +255,22 @@
 
     <!-- 2. 獨立數位教具操作箱 (Sandbox) -->
     <section class="tab-pane" id="tab-sandbox">
-      <div class="card" style="margin-bottom: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-          <div>
-            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--primary);">🧰 特教互動數位教具箱 (Sandbox)</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 4px;">
-              老師於資源班上課時，可隨時單獨抽調任何單元的教具在電子白板或平板上自由操作演示，不拘泥於題目。
-            </p>
-          </div>
-          <select id="sandbox-unit-select" class="form-control" style="width: auto; min-width: 280px; font-weight: 700;">
+      <header class="sandbox-mondrian-heading" aria-labelledby="sandbox-title">
+        <div class="sandbox-title-block">
+          <span class="sandbox-eyebrow">看圖 → 動手 → 說方法</span>
+          <h2 id="sandbox-title">數位教具操作箱</h2>
+          <p>把抽象的數學，變成看得見的操作。選一個單元，在白板或平板上一起試試看。</p>
+        </div>
+        <div class="sandbox-picker-block">
+          <label for="sandbox-unit-select">選擇教具</label>
+          <select id="sandbox-unit-select" class="form-control">
             <!-- 動態注入九大教具選項 -->
           </select>
+          <p>依單元自由取用，也能跟著步驟慢慢做。</p>
         </div>
-      </div>
-
+        <div class="sandbox-art-block" aria-hidden="true"><i>＋</i><i></i><i></i><i></i></div>
+      </header>
+      <div class="sandbox-stage-heading"><span aria-hidden="true">↘</span><strong>動手操作桌</strong><small>先觀察，再動手，最後說說看。</small></div>
       <div id="sandbox-stage">
         <!-- 動態掛載所選教具 -->
       </div>
