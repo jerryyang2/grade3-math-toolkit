@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173f4b"><meta name="description" content="三年級數學九座探索島：在 3D 群島中操作錢幣、烘焙乘法、測量造橋、平分點心與分數披薩。每單元三個任務，不限時、可提示、可自由選島。">
+<title>慢慢島・數學探險｜一個單元，一座島</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="islands.css?v=20261031-1">
+<script src="vendor/three.min.js" defer></script><script src="curriculum.js?v=20261031-1" defer></script><script src="world.js?v=20261031-1" defer></script><script src="adventure.js?v=20261031-1" defer></script>
+</head>
+<body>
+<a class="skip" href="#mission-panel">跳至數學任務</a>
+<header class="topbar"><a class="brand" href="./"><img src="favicon.svg" alt="" width="42" height="42"><span><strong>慢慢島<span class="brand-dot">・</span>數學探險</strong><small>一個單元，一座值得探索的島。</small></span></a><nav aria-label="主要導覽"><a href="../index.html">回備課平台 ↗</a><button id="passport-open">探險護照 <span id="stamp-count">0 / 27</span></button></nav></header>
+<main>
+<div class="intro"><div><span class="eyebrow">MATH IS AN ADVENTURE</span><h1>今天，想去哪座島？</h1><p>跟著好奇心靠岸，動手試一試，把數學慢慢弄懂。</p></div><div class="voyage-note"><span class="sun" aria-hidden="true">☀</span><span>九座小島 · 二十七個任務<br><b>自由探索，不限時間。</b></span></div></div>
+<div class="expedition">
+<section class="world-panel" aria-label="九座數學島嶼地圖">
+<div class="map-topline"><span class="map-tag"><i></i> 三上數學群島</span><span id="view-caption">拖曳轉動 · 點島靠岸</span></div>
+<div id="world" aria-label="可拖曳旋轉的三維群島；也可使用下方單元按鈕選島"><canvas id="ocean" aria-hidden="true"></canvas><div id="island-labels"></div><div class="map-watermark" aria-hidden="true">THE SLOW ISLANDS<br><span>每一次嘗試，都是一小步。</span></div><div class="compass-rose" aria-hidden="true">N<br>✥</div></div>
+<div class="map-controls"><button id="overview" aria-label="返回九島全景">⌂ 全景</button><button id="zoom-in" aria-label="放大地圖">＋</button><button id="zoom-out" aria-label="縮小地圖">−</button><button id="map-mode" aria-pressed="false">平面選島</button><button id="motion-toggle" aria-pressed="false">暫停動態</button></div>
+<p id="world-status" class="map-status" role="status"></p>
+</section>
+<aside id="mission-panel" class="mission-panel" aria-labelledby="island-name">
+<div class="island-heading"><span id="island-kicker" class="eyebrow"></span><h2 id="island-name"></h2><p id="island-unit"></p></div>
+<div class="buddy-line"><span id="buddy-icon" aria-hidden="true"></span><span id="buddy-name"></span><span class="unhurried">慢慢來就好</span></div>
+<div class="mission-tabs" role="group" aria-label="本島三個任務" id="mission-tabs"></div>
+<div class="mission-title"><span id="mission-number"></span><h3 id="mission-title"></h3></div>
+<p id="question"></p>
+<div class="support-tools"><button id="hint-button" aria-expanded="false" aria-controls="hint">☼ 給我一點提示</button><label><input type="checkbox" id="independent">獨立試試</label></div>
+<p id="hint" class="hint" hidden></p>
+<div id="manipulative" class="manipulative"></div>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<div class="task-actions"><button class="primary" id="check">完成了，檢查一下 ↗</button><button id="reset" aria-label="重做目前這題">重做</button></div>
+<div class="next-actions"><button id="next" hidden>下一個任務 →</button><button id="random">↻ 同概念換一題</button></div>
+<details class="teacher-note"><summary>給老師：本島學什麼？</summary><p id="learning-goal"></p><p><b>口述與遷移：</b><span id="teacher-say"></span></p><p>每島三個任務先操作、再說明。獨立試試會收起提示；使用提示或修正後完成會記為「支持後完成」。護照只記這台瀏覽器的匿名進度，換題不額外增加島章；完成不代表已精熟。</p><a id="unit-link" href="../index.html">回平台查看教具與練習 ↗</a></details>
+</aside>
+</div>
+<section class="island-directory" aria-labelledby="directory-title"><div class="section-heading"><h2 id="directory-title">選一座島，開始自己的航線</h2><p>從哪裡開始都可以。每一島，都是新的發現。</p></div><div id="island-list" class="island-list"></div></section>
+<details class="design-notes"><summary>這趟探險的靈感與使用方式</summary><p>適用南一三上九單元。可用於課前暖身、課中操作、兩人合作與課後練習。建議一人操作、一人解釋，再交換角色。3D 地圖負責探索，數學操作面板亦可獨立使用；平板可直接點按，無須移動角色。</p><p>參考既有《我的101堂社交技巧課》的群島導覽、<a href="https://moodlela914.github.io/ai-teaching-island/" target="_blank" rel="noopener">AI 教學夢幻島</a>的主題島嶼與<a href="https://mattsue1003.github.io/taiwan-taste-island/" target="_blank" rel="noopener">台灣好味島</a>的地標探索；數學操作設計參考 <a href="https://www.mathlearningcenter.org/apps" target="_blank" rel="noopener">The Math Learning Center</a> 的位值、分數與圖形教具，以及 <a href="https://www.stmath.com/" target="_blank" rel="noopener">ST Math</a> 的視覺解題方向。場景與任務為本平台原創實作，未移植參考網站教材或模型。</p><p>3D 引擎：Three.js（MIT 授權，隨站提供）。無 WebGL 時自動改用平面選島，九單元任務照常可用。</p></details>
+</main><footer>森林動物小隊 · 把每一個「我不會」，變成「我再試試」。</footer>
+<dialog id="passport" aria-labelledby="passport-title"><header><div><span class="eyebrow">MY EXPLORER PASSPORT</span><h2 id="passport-title">我的探險護照</h2></div><button id="passport-close" aria-label="關閉護照">✕</button></header><p>這台裝置的匿名紀錄。每島三格，記得也說說你怎麼做到的。</p><div id="passport-grid"></div><p id="save-status" role="status"></p><p class="passport-note">○ 尚未完成　◐ 支持後完成　● 獨立首次完成<br>記錄用來回顧，不等於診斷或精熟評量。清除瀏覽器資料會移除進度。</p></dialog>
+</body></html>

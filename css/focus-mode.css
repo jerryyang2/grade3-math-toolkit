@@ -8,7 +8,7 @@
 .lesson-focus-button svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
 .lesson-focus-button:hover, .lesson-focus-bar button:hover { background:#e0f1ff; }
 .lesson-focus-button:focus-visible, .lesson-focus-bar :is(button,select):focus-visible { outline:3px solid #e79915; outline-offset:3px; }
-.lesson-focus-bar { position:sticky; top:0; z-index:9000; order:-1; display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:8px max(16px,env(safe-area-inset-right)) 8px max(16px,env(safe-area-inset-left)); background:#fffdf5; border-bottom:2px solid #6c8e81; box-shadow:0 3px 10px #153b2320; }
+.lesson-focus-bar { position:sticky; top:0; z-index:2147483644; order:-1; display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:8px max(16px,env(safe-area-inset-right)) 8px max(16px,env(safe-area-inset-left)); background:#fffdf5; border-bottom:2px solid #6c8e81; box-shadow:0 3px 10px #153b2320; }
 .lesson-focus-bar[hidden], .lesson-focus-bar [hidden] { display:none !important; }
 .lesson-focus-label { color:#173f30; margin-right:auto; font-size:1rem; }
 .lesson-focus-unit { display:flex; align-items:center; gap:6px; color:#203f35; font-size:.9rem; font-weight:700; }
@@ -23,13 +23,18 @@ body.lesson-focus { padding-top:0; }
 body.lesson-focus > :is(.app-header,.main-nav,.student-bank-container,.theme-credit) { display:none !important; }
 .lesson-focus .lesson-focus-entry { display:none; }
 .lesson-focus .main-content { max-width:1600px; padding:18px 24px 100px; }
-.lesson-focus #tab-units > :is(.storybook-welcome,.home-mission,.unit-card-picker,.home-teacher-strip) { display:none !important; }
+.lesson-focus #tab-units > :not(#unit-detail-container) { display:none !important; }
+.lesson-focus #tab-practice :is(#mascot-companion-slot,#practice-session-controls,#btn-practice-launch-battle) { display:none !important; }
+.lesson-focus #tab-practice .practice-container { max-width:1100px; }
+.lesson-focus #tab-practice .practice-range-row select { min-width:0 !important; max-width:320px; }
+.lesson-focus #tab-practice .question-card { padding:20px; }
 .lesson-focus #unit-detail-container { scroll-margin-top:90px; }
 .lesson-focus :is(.ho-guide,.pv-guide,.scaffold-instruction-box) { scroll-margin-top:90px; }
 .lesson-focus .decorative-item { display:none !important; }
 .lesson-focus.high-contrast-mode .lesson-focus-bar { background:#111; border-color:#fff; }
 .lesson-focus.high-contrast-mode .lesson-focus-bar :is(strong,label) { color:#fff; }
 .speech-playback-status { position:fixed; left:50%; bottom:92px; transform:translateX(-50%); z-index:100030; max-width:calc(100vw - 32px); padding:12px 18px; border:2px solid #e4ba5b; border-radius:12px; background:#243c36; color:white; font:700 16px/1.5 var(--font-base,system-ui); box-shadow:0 3px 12px #0003; }
+@media (min-width:701px) { .lesson-focus #tab-practice .options-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; } }
 @media (max-width:700px) {
   .lesson-focus-bar { gap:6px; padding:6px 10px; }
   .lesson-focus-label { flex:1; }
