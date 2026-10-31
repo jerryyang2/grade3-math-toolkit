@@ -1,8 +1,9 @@
 (function(){
 'use strict';
-const $=id=>document.getElementById(id),C=MathIslands,key='slow-math-islands-v1';
-let progress={},saveOK=true;
-try{progress=C.readProgress(localStorage.getItem(key));}catch{saveOK=false;}
+const $=id=>document.getElementById(id),C=MathIslands;
+let storage;try{storage=localStorage;}catch{storage={getItem(){throw Error();},setItem(){throw Error();}};}
+const visitors=MathIslandVisitors.create(storage);
+let progress=visitors.active().progress,saveOK=visitors.saved();
 const evidence=new Map();
 let unit=C.islands[0],mission=0,current,state,attempts=0,hinted=false,solved=false,practice=false,world;
 const coinValues=[1000,100,10,1];
@@ -70,20 +71,39 @@ $('check').addEventListener('click',()=>{
  if(solved)return;attempts++;const correct=C.evaluate(current,state);$('feedback').className=`feedback ${correct?'correct':'retry'}`;
  if(!correct){let message='再看看，還差一小步。可以調整後再檢查，也可以打開提示。';if(current.kind==='divide'){const left=current.total-state.baskets.reduce((a,b)=>a+b,0);message=new Set(state.baskets).size>1?'每個籃子還不一樣多。試著輪流分，讓大家公平。':left>=current.groups?'大家一樣多了，但桌上的點心還能再分一輪喔！':message;}if(current.kind==='array'&&state.groups!==current.groups)message=`先確認烤盤數：訂單需要 ${current.groups} 盤。`;$('feedback').textContent=message;return;}
  solved=true;world?.complete(unit.id,mission);const result=attempts===1&&!hinted?'independent':'supported';progress[unit.id]??={};if(progress[unit.id][mission]?.result!=='independent')progress[unit.id][mission]={attempts,result};
- try{localStorage.setItem(key,JSON.stringify(progress));saveOK=true;}catch{saveOK=false;}
+ saveOK=visitors.record(progress);
  $('feedback').textContent=`靠岸成功！${C.solution(current)} ${result==='independent'?'● 獨立首次完成':'◐ 支持後完成'}${saveOK?'':'（目前無法儲存；進度保留到關閉頁面前。）'}`;$('check').disabled=true;$('check').textContent='✓ 這一步，做到了';$('next').hidden=false;$('next').textContent=mission<2?'下一個任務 →':'前往下一座島 →';
  $('manipulative').querySelectorAll('button,input').forEach(e=>{e.disabled=true;});$('manipulative').querySelectorAll('[data-action="slice"]').forEach(e=>{e.setAttribute('aria-disabled','true');e.tabIndex=-1;});renderTabs();renderDirectory();
 });
 $('hint-button').onclick=()=>{hinted=true;$('hint').hidden=!$('hint').hidden;$('hint-button').setAttribute('aria-expanded',String(!$('hint').hidden));};
 $('independent').onchange=()=>{const independent=$('independent').checked;$('hint-button').disabled=independent;if(independent){$('hint').hidden=true;$('hint-button').setAttribute('aria-expanded','false');}};
 $('reset').onclick=()=>{const wasSupported=hinted||attempts>0||solved;state=initState();solved=false;hinted=wasSupported;$('feedback').textContent='已清空操作，可以重新試試。';$('feedback').className='feedback';$('check').disabled=false;$('check').textContent='完成了，檢查一下 ↗';$('next').hidden=true;renderManipulative();};
-$('random').onclick=()=>loadTask(true);$('next').onclick=()=>{if(mission<2){mission++;loadTask();}else selectIsland(C.islands[(C.islands.indexOf(unit)+1)%9].id,true);};
+$('random').onclick=()=>loadTask(true);$('next').onclick=()=>{if(mission<2){mission++;loadTask();}else world.travelTo(C.islands[(C.islands.indexOf(unit)+1)%9].id,0);};
 $('mission-tabs').onclick=e=>{const b=e.target.closest('[data-mission]');if(b){mission=Number(b.dataset.mission);loadTask();}};
-$('island-list').onclick=e=>{const b=e.target.closest('[data-island]');if(b)selectIsland(b.dataset.island);};
+$('island-list').onclick=e=>{const b=e.target.closest('[data-island]');if(b)world.travelTo(b.dataset.island,0);};
 $('island-labels').innerHTML=C.islands.map((i,n)=>`<button class="island-label" data-island="${i.id}" aria-label="第 ${n+1} 單元 ${i.name}" aria-pressed="${n===0}"><span aria-hidden="true">${i.icon}</span><small>${String(n+1).padStart(2,'0')}</small><b>${i.name}</b></button>`).join('');
-$('island-labels').onclick=e=>{const b=e.target.closest('[data-island]');if(b)selectIsland(b.dataset.island);};
-function openPassport(){ $('passport-grid').innerHTML=C.islands.map(i=>`<div class="passport-row"><span aria-hidden="true">${i.icon}</span><div><strong>${i.name}</strong><small>${i.missions.map((m,j)=>`${stamp(i.id,j)} ${m}`).join('　')}</small></div></div>`).join('');$('save-status').textContent=saveOK?'進度自動保留在這台瀏覽器。':'瀏覽器暫時不允許儲存；目前紀錄會保留到關閉頁面前。';$('passport').showModal();}
+$('island-labels').onclick=e=>{const b=e.target.closest('[data-island]');if(b)world.travelTo(b.dataset.island,0);};
+function openPassport(){ world.stop();$('passport-owner').textContent=visitors.active().name; $('passport-grid').innerHTML=C.islands.map(i=>`<div class="passport-row"><span aria-hidden="true">${i.icon}</span><div><strong>${i.name}</strong><small>${i.missions.map((m,j)=>`${stamp(i.id,j)} ${m}`).join('　')}</small></div></div>`).join('');$('save-status').textContent=saveOK?'目前訪客的進度自動保留在這台瀏覽器。':'瀏覽器暫時不允許儲存；目前紀錄會保留到關閉頁面前。';$('passport').showModal();}
 $('passport-open').onclick=openPassport;$('passport-close').onclick=()=>$('passport').close();$('passport').onclick=e=>{if(e.target===$('passport')){const r=$('passport').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('passport').close();}};
-world=createMathWorld(selectIsland);for(const [id,entries]of Object.entries(progress))for(const m of Object.keys(entries))world.complete(id,Number(m));$('overview').onclick=()=>world.overview();$('zoom-in').onclick=()=>world.zoom(.82);$('zoom-out').onclick=()=>world.zoom(1.22);$('map-mode').onclick=()=>{$('map-mode').setAttribute('aria-pressed',String(world.toggleFlat()));};$('motion-toggle').onclick=()=>{const paused=world.toggleMotion();$('motion-toggle').setAttribute('aria-pressed',String(paused));$('motion-toggle').textContent=paused?'恢復動態':'暫停動態';};
-const requested=location.hash.slice(1)||new URLSearchParams(location.search).get('unit');selectIsland(C.islands.some(i=>i.id===requested)?requested:'u1',!!requested);
+let visitorEdit=false;
+function visitorBadge(){const v=visitors.active();$('active-visitor-name').textContent=v.name;$('visitor-color').style.background=v.color;}
+function visitorList(){
+ $('visitors-list').replaceChildren();
+ for(const v of visitors.list()){
+  const row=document.createElement('div');row.className='visitor-row';
+  const avatar=document.createElement('span');avatar.className='visitor-avatar';avatar.style.background=v.color;avatar.textContent='♟';
+  const copy=document.createElement('div'),name=document.createElement('strong'),detail=document.createElement('small');name.textContent=v.name;detail.textContent=`${Object.values(v.progress).reduce((n,p)=>n+Object.keys(p).length,0)} / 27 個任務`;copy.append(name,detail);
+  const button=document.createElement('button');button.dataset.visitor=v.id;button.textContent=v.id===visitors.active().id?'目前訪客':'切換';button.disabled=v.id===visitors.active().id;row.append(avatar,copy,button);$('visitors-list').append(row);
+ }
+}
+function visitorForm(edit){visitorEdit=edit;$('visitor-name').value=edit?visitors.active().name:'';$('visitor-look').value=edit?visitors.active().color:MathIslandVisitors.colors[0];$('visitor-form-title').textContent=edit?'自訂目前訪客':'新增訪客';$('visitor-submit').textContent=edit?'儲存姓名與造型':'新增並出發 →';$('visitor-add-mode').hidden=!edit;$('visitor-error').textContent='';}
+function openVisitors(edit=false){world.stop();visitorList();visitorForm(edit);$('visitors-dialog').showModal();if(edit)$('visitor-name').focus();}
+function applyVisitor(){const v=visitors.active();progress=v.progress;saveOK=visitors.saved();current=null;evidence.clear();world.setVisitor(v);world.setProgress(progress);visitorBadge();selectIsland(v.islandId,false);}
+$('visitors-open').onclick=()=>openVisitors(false);$('visitor-switch').onclick=()=>openVisitors(false);$('visitor-edit').onclick=()=>openVisitors(true);$('visitors-close').onclick=()=>$('visitors-dialog').close();$('visitor-add-mode').onclick=()=>visitorForm(false);
+$('visitor-form').onsubmit=e=>{e.preventDefault();try{world.stop();if(visitorEdit){visitors.rename($('visitor-name').value,$('visitor-look').value);world.setVisitor(visitors.active());visitorBadge();}else{visitors.add($('visitor-name').value,$('visitor-look').value);applyVisitor();}saveOK=visitors.saved();$('visitors-dialog').close();}catch(error){$('visitor-error').textContent=error.message;}};
+$('visitors-list').onclick=e=>{const button=e.target.closest('[data-visitor]');if(!button)return;world.stop();if(visitors.switchTo(button.dataset.visitor)){applyVisitor();$('visitors-dialog').close();}};
+world=createMathWorld(selectIsland,{onPosition(p,id){saveOK=visitors.locate(p,id);}});world.setProgress(progress);world.setVisitor(visitors.active());visitorBadge();
+$('overview').onclick=()=>world.overview();$('follow-visitor').onclick=()=>world.follow();$('zoom-in').onclick=()=>world.zoom(.82);$('zoom-out').onclick=()=>world.zoom(1.22);$('map-mode').onclick=()=>{$('map-mode').setAttribute('aria-pressed',String(world.toggleFlat()));};$('motion-toggle').onclick=()=>{const paused=world.toggleMotion();$('motion-toggle').setAttribute('aria-pressed',String(paused));$('motion-toggle').textContent=paused?'恢復動態':'暫停動態';};
+const requested=location.hash.slice(1)||new URLSearchParams(location.search).get('unit');selectIsland(visitors.active().islandId,false);if(C.islands.some(i=>i.id===requested)&&requested!==visitors.active().islandId)world.travelTo(requested,0);
+
 })();
