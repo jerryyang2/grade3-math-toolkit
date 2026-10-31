@@ -1,5 +1,5 @@
-/* 學習單獨立預覽與列印共用版型；列印的 15mm 邊界只由 @page 設定。 */
-@page { size: A4 portrait; margin: 15mm; }
+/* 學習單獨立預覽與列印共用版型；列印的 10mm 邊界只由 @page 設定。 */
+@page { size: A4 portrait; margin: 10mm; }
 * { box-sizing: border-box; }
 body { margin: 0; padding: 0; color: #000; background: #e8e9eb; font-family: 'Microsoft JhengHei', sans-serif; line-height: 1.35; }
 body.ws-zihi { font-family: '字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'KaiTi', serif; }
@@ -7,10 +7,10 @@ body.ws-zihi { font-family: '字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'Ka
 .print-preview-controls button { padding: 10px 16px; min-height: 44px; border: 2px solid #284f3b; border-radius: 8px; color: #fff; background: #245a40; font: inherit; font-weight: 800; cursor: pointer; }
 .print-preview-controls p { margin: 0; }
 .print-preview-controls span { display: block; }
-.ws-sheet { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 15mm; background: #fff; box-shadow: 0 2px 12px #0002; }
+.ws-sheet { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 10mm; background: #fff; box-shadow: 0 2px 12px #0002; }
 .ws-header { text-align: center; border-bottom: .5mm solid #000; padding-bottom: 3mm; margin-bottom: 4mm; }
-.ws-title { font-size: 18pt; font-weight: 800; line-height: 1.35; margin: 0; }
-.ws-unit { font-size: 13pt; font-weight: 700; margin-top: 1mm; }
+.ws-title { font-size: 16pt; font-weight: 800; line-height: 1.35; margin: 0; }
+.ws-unit { font-size: 12pt; font-weight: 700; margin-top: 1mm; }
 .ws-meta-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1mm 3mm; margin-top: 2mm; font-size: 11pt; }
 /* 以每題實際高度緊密排入兩欄，避免表格等高列造成大塊留白。 */
 .ws-body { column-count: 2; column-gap: 6mm; column-rule: .25mm solid #bbb; }
@@ -18,12 +18,12 @@ body.ws-zihi { font-family: '字嗨注音標楷', 'BpmfBiauKai', 'DFKai-SB', 'Ka
 .ws-q-num { display: flex; align-items: baseline; flex-wrap: wrap; gap: 1mm 2mm; font-size: 10.5pt; margin-bottom: 1mm; }
 .ws-q-num > strong { font-size: 12pt; }
 .ws-answer { margin-left: auto; white-space: nowrap; font-size: 11pt; font-weight: 700; }
-.ws-q-text { font-size: 16pt; font-weight: 600; line-height: 1.35; margin: 0 0 2mm; orphans: 2; widows: 2; }
+.ws-q-text { font-size: 14pt; font-weight: 600; line-height: 1.35; margin: 0 0 2mm; orphans: 2; widows: 2; }
 .ws-grid-label { margin: 0 0 1mm; font-size: 9pt; color: #333; }
-.ws-grid-area { display: flex; gap: 1mm; margin: 0 0 2mm; }
-.dot-grid { position: relative; display: block; width: 9mm; height: 11mm; border: .3mm dashed #555; flex: 0 0 9mm; }
-.dot-grid::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; border-top: .2mm dotted #888; }
-.ws-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1mm 2mm; font-size: 14pt; line-height: 1.35; }
+.ws-grid-area { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0 0 2mm; border-top: .25mm dashed #666; border-left: .25mm dashed #666; }
+.dot-grid { display: block; height: 10mm; border-right: .25mm dashed #666; border-bottom: .25mm dashed #666; }
+.ws-grid-blank { display: block; height: 30mm; border: .25mm solid #aaa; }
+.ws-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1mm 2mm; font-size: 12pt; line-height: 1.35; }
 .ws-options-long { grid-template-columns: minmax(0, 1fr); }
 .ws-option { display: flex; align-items: baseline; gap: 1mm; min-width: 0; }
 .ws-option > span:first-child { flex: 0 0 auto; }

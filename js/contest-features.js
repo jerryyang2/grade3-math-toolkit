@@ -565,8 +565,8 @@
               <span style="font-size:2rem;">🖨️</span>
               <div>
                 <h3 id="worksheet-title" style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
-                <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 大字點陣對齊格 · 課程調整參考註記</span>
-                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題 · A4 直式雙欄 · 四邊各 1.5 公分；保留大字與書寫格，依內容自動分頁。</p>
+                <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 三排計算對齊格 · 課程調整參考註記</span>
+                <p style="font-size:0.9rem; color:#334155; margin:6px 0 0;">每份 10 題 · A4 直式雙欄 · 四邊各 1 公分；題目 14pt、選項 12pt，每題保留三排計算區，依內容自動分頁。</p>
               </div>
             </div>
             <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
@@ -601,7 +601,7 @@
             <div style="display:flex; gap:16px; flex-wrap:wrap; font-size:0.9rem;">
               <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
                 <input type="checkbox" id="ws-chk-grid" checked>
-                <strong>📐 包含點陣書寫對齊九宮格 (視動協調)</strong>
+                <strong>📐 顯示計算區對齊格 (視動協調)</strong>
               </label>
               <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
                 <input type="checkbox" id="ws-chk-zihi" checked>
@@ -680,10 +680,10 @@
           <meta charset="UTF-8">
           <link rel="icon" type="image/svg+xml" href="${new URL('favicon.svg?v=forest-20261031', window.location.href).href}">
           <title>學習教室個別化學習單 - ${unit.title}</title>
-          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=two-columns-20261031', window.location.href).href}">
+          <link rel="stylesheet" href="${new URL('css/worksheet-print.css?v=calculation-space-20261031', window.location.href).href}">
         </head>
         <body class="${withZihi ? 'ws-zihi' : ''}">
-          <nav class="print-preview-controls" aria-label="學習單預覽工具"><button type="button" onclick="window.print()">列印／另存 PDF</button><p><strong>A4 直式雙欄 · 四邊各 1.5 公分</strong><span>列印設定：A4、邊界選「預設」（套用 1.5 公分）、比例 100%，關閉頁首及頁尾。題目先讀左欄，再讀右欄。</span></p></nav>
+          <nav class="print-preview-controls" aria-label="學習單預覽工具"><button type="button" onclick="window.print()">列印／另存 PDF</button><p><strong>A4 直式雙欄 · 四邊各 1 公分</strong><span>列印設定：A4、邊界選「預設」（套用 1 公分）、比例 100%，關閉頁首及頁尾。題目先讀左欄，再讀右欄。</span></p></nav>
           <main class="ws-sheet">
           <header class="ws-header">
             <h1 class="ws-title">南一版三年級上學期數學 學習教室個別化學習單</h1>
@@ -700,15 +700,10 @@
               <div class="ws-question-box">
                 <div class="ws-q-num"><strong>第 ${idx + 1} 題</strong><span>${p.level === 1 ? '基礎觀念' : (p.level === 2 ? '熟練運算' : '生活應用')}</span><span class="ws-answer">答：____</span></div>
                 <div class="ws-q-text">${p.question}</div>
-                ${withGrid ? `
-                  <div class="ws-grid-label">計算格（從右邊個位開始寫）</div>
-                  <div class="ws-grid-area">
-                    <span class="dot-grid"></span>
-                    <span class="dot-grid"></span>
-                    <span class="dot-grid"></span>
-                    <span class="dot-grid"></span>
-                  </div>
-                ` : ''}
+                <div class="ws-grid-label">計算區${withGrid ? '（直式從右邊個位開始寫）' : ''}</div>
+                <div class="ws-grid-area${withGrid ? '' : ' ws-grid-blank'}" role="img" aria-label="${withGrid ? '三排六欄計算對齊格' : '空白計算區'}">
+                  ${withGrid ? '<span class="dot-grid"></span>'.repeat(18) : ''}
+                </div>
                 <div class="ws-options${p.options.some(opt => String(opt).length > 12) ? ' ws-options-long' : ''}">
                   ${p.options.map((opt, oIdx) => `<div class="ws-option"><span>(${['A', 'B', 'C', 'D'][oIdx]})</span><span>${opt}</span></div>`).join('')}
                 </div>
