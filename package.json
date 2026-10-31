@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
+    "worksheets:pdf": "node scripts/sync-worksheet-pdf.cjs",
+    "worksheets:pdf:check": "node scripts/sync-worksheet-pdf.cjs --check",
+    "worksheets:install-hook": "node scripts/sync-worksheet-pdf.cjs --install-hook",
     "audio:build": "node scripts/generate-female-audio.cjs",
     "audio:check": "node scripts/generate-female-audio.cjs --check",
     "islands:audio:build": "node scripts/generate-island-audio.cjs",

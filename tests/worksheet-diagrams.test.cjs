@@ -8,7 +8,7 @@ const firstTen = id => data.practiceBank.filter(p => p.unitId === id).slice(0, 1
 const distance = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
 
 test('worksheet diagrams cover the intended questions and omit stale diagrams after quantities change', () => {
-  const expected = {u1:2,u2:0,u3:2,u4:10,u5:10,u6:2,u7:8,u8:10,u9:10};
+  const expected = {u1:10,u2:1,u3:9,u4:10,u5:10,u6:10,u7:8,u8:10,u9:10};
   for (const [unit, count] of Object.entries(expected)) assert.equal(firstTen(unit).filter(p=>figures.render(p)).length,count,unit);
   const ruler = data.practiceBank.find(p=>p.id==='p4_1_4');
   assert.equal(figures.render({...ruler,question:ruler.question.replace('3 公分','4 公分')}),'');

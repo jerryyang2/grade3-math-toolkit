@@ -1,6 +1,7 @@
 /* 原創學習單示意圖：使用可黑白列印的 SVG；只呈現題目條件，不寫出解答。 */
 const WorksheetDiagrams = (() => {
   'use strict';
+  const supports = typeof module !== 'undefined' && module.exports ? require('./worksheet-visual-supports.js') : window.WorksheetVisualSupports;
   const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const number = value => Math.round(value * 1000) / 1000;
   const text = (x, y, value, extra = '') => `<text x="${number(x)}" y="${number(y)}" ${extra}>${escape(value)}</text>`;
@@ -110,7 +111,7 @@ const WorksheetDiagrams = (() => {
       const opening = [35, 80];
       body = opening.map((degrees, i) => {
         const x = 45 + i * 150, y = 108, r = 80;
-        if (kind === 'scissors') return angleArm(x, y, r, degrees) + `<circle cx="${x-12}" cy="${y+5}" r="11"/><circle cx="${x-6}" cy="${y+22}" r="11"/>` + label(x+22, 137, i ? '張開後' : '原來', 'text-anchor="middle"');
+        if (kind === 'scissors') return angleArm(x, y, r, degrees) + `<circle cx="${x-12}" cy="${y+5}" r="11"/><circle cx="${x-6}" cy="${y+22}" r="11"/>` + label(x+40, 137, i ? '張開後' : '原來', 'text-anchor="middle" font-size="14"');
         const top = polar(x, y, r, degrees);
         return `<path d="M${x} ${y}H${x+r}A${r} ${r} 0 0 0 ${number(top.x)} ${number(top.y)}Z"/>` + [1,2,3,4].map(n=>line({x,y},polar(x,y,r,degrees*n/5))).join('') + label(x+30, 137, i ? '打開後' : '原來', 'text-anchor="middle"');
       }).join('');
@@ -230,7 +231,7 @@ const WorksheetDiagrams = (() => {
       for(const [x,radius,diameter,value] of [[70,48,false,6],[218,40,true,10]]) {
         body+=`<circle cx="${x}" cy="70" r="${radius}"/>`+dot(x,70);
         body+=line({x:diameter?x-radius:x,y:70},{x:x+radius,y:70},'stroke-width="3"');
-        body+=label(x,22,x===70?'甲圓':'乙圓','text-anchor="middle"')+label(x,140,`${diameter?'直徑':'半徑'} ${value} 公分`,'text-anchor="middle" font-size="14"');
+        body+=label(x,15,x===70?'甲圓':'乙圓','text-anchor="middle"')+label(x,140,`${diameter?'直徑':'半徑'} ${value} 公分`,'text-anchor="middle" font-size="14"');
       }
     } else if(kind==='coins') {
       for(const x of [55,115,175]) body+=`<circle cx="${x}" cy="62" r="30"/>`+dot(x,62);
@@ -319,11 +320,12 @@ const WorksheetDiagrams = (() => {
   add('p6_1_2',['24 塊','6 塊'],()=>division(24,'pack'),'每袋裝一樣多，請自行圈出分組。');
 
   function render(problem) {
+    if (supports && !supports.isReviewed(problem)) return '';
     const entry=entries[problem?.id];
-    if (!entry || !entry.required.every(part=>problem.question.includes(part))) return '';
+    if (!entry || !entry.required.every(part=>problem.question.includes(part))) return supports?.render(problem) || '';
     return `<figure class="ws-diagram" data-ws-figure="${escape(problem.id)}">${entry.draw(problem.id)}<figcaption>${escape(entry.caption)}</figcaption></figure>`;
   }
-  return { render, circleGeometry, rulerGeometry, sectorPath, capacityGeometry };
+  return { render, circleGeometry, rulerGeometry, sectorPath, capacityGeometry, audit: problems => supports.audit(problems) };
 })();
 if (typeof window !== 'undefined') window.WorksheetDiagrams = WorksheetDiagrams;
 if (typeof module !== 'undefined' && module.exports) module.exports = WorksheetDiagrams;

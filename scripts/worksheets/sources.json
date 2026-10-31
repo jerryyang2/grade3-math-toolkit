@@ -1,0 +1,13 @@
+[
+  "js/data.js",
+  "js/contest-features.js",
+  "js/worksheet-diagrams.js",
+  "js/worksheet-visual-data.js",
+  "js/worksheet-visual-supports.js",
+  "css/worksheet-print.css",
+  "scripts/sync-worksheet-pdf.cjs",
+  "scripts/worksheets/build-book.py",
+  "scripts/worksheets/export-data.cjs",
+  "scripts/worksheets/verify-book.py",
+  "scripts/worksheets/sources.json"
+]
