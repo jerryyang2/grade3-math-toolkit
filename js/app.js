@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rateSelector: document.getElementById('speech-rate-selector'),
     unitNavList: document.getElementById('unit-nav-list'),
     unitDetailContainer: document.getElementById('unit-detail-container'),
-    navTabs: document.querySelectorAll('.nav-tab'),
+    navTabs: document.querySelectorAll('.nav-tab[data-tab]'),
     tabPanes: document.querySelectorAll('.tab-pane'),
     // 練習題元素
     practiceQuestionText: document.getElementById('practice-question-text'),
@@ -119,7 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function switchToTab(target) {
     window.spEdAudio.stopSpeech();
     AppState.activeTab = target;
-    elements.navTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === target));
+    elements.navTabs.forEach(t => {
+      const active = t.dataset.tab === target;
+      t.classList.toggle('active', active);
+      t.setAttribute('aria-current', active ? 'page' : 'false');
+    });
     elements.tabPanes.forEach(p => p.classList.toggle('active', p.id === `tab-${target}`));
 
     window.spEdAudio.playClick();
@@ -235,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function initTabNavigation() {
+    document.getElementById('btn-nav-worksheet').addEventListener('click', () => window.WorksheetGenerator.openWorksheetModal());
     elements.navTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         switchToTab(tab.dataset.tab);
@@ -248,6 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const quickSelect = document.getElementById('lesson-unit-quick-select');
     quickSelect.innerHTML = NANI_G3S1_DATA.units.map(u => `<option value="${u.id}">第 ${u.number} 單元：${u.title}</option>`).join('');
     quickSelect.addEventListener('change', () => selectUnit(quickSelect.value));
+    const prepSelect = document.getElementById('prep-unit-select');
+    prepSelect.innerHTML = quickSelect.innerHTML;
+    prepSelect.addEventListener('change', () => selectUnit(prepSelect.value));
 
     elements.unitNavList.innerHTML = NANI_G3S1_DATA.units.map(unit => {
       const theme = UNIT_THEMES[unit.id] || { icon: '📐', theme: '趣味數學探索', color: '#4f46e5' };
@@ -276,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function selectUnit(uid) {
     AppState.currentUnitId = uid;
     document.getElementById('lesson-unit-quick-select').value = uid;
+    document.getElementById('prep-unit-select').value = uid;
     AppState.currentScaffoldStep = 0; // 重置步驟精靈至第一步
     document.querySelectorAll('.unit-card-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.unitId === uid);
@@ -309,12 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.spEdAudio.playClick();
   }
 
-  // 渲染單元詳細內容、先備地圖、迷思除錯卡、微步驟引導精靈與教具
-  function renderUnitDetail(uid) {
-    const unit = NANI_G3S1_DATA.units.find(u => u.id === uid);
-    if (!unit || !elements.unitDetailContainer) return;
-    window.ForestHome?.render(unit);
-
+  function renderPrepGuide(unit) {
     const specialNeedsBadges = unit.specialNeedsCodes.map(code => {
       const info = getSpecialNeedsDetail(code);
       return `
@@ -325,11 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }).join('');
 
-    elements.unitDetailContainer.className = `prompt-level-${AppState.promptLevel}`;
-    elements.unitDetailContainer.innerHTML = `
-      <div class="unit-detail-layout">
-        <!-- 左側：特教四向度、先備回溯、迷思除錯與 C-R-A 鷹架 -->
-        <details class="special-ed-sidebar teacher-guide-details"><summary>備課指引：先備檢核、迷思與課綱對照</summary>
+    document.getElementById('prep-unit-select').value = unit.id;
+    document.getElementById('prep-unit-title').textContent = unit.title;
+    document.getElementById('prep-guide-content').innerHTML = `
           
           <!-- 1. 🔄 先備能力診斷與向下回溯地圖 -->
           <div class="prerequisite-card">
@@ -422,8 +424,28 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="cra-desc">${unit.cra.abstract}</div>
             </div>
           </div>
-        </details>
+            `;
+    // 綁定除錯口訣語音朗讀
+    const btnClinicSpeech = document.getElementById('btn-clinic-speech');
+    if (btnClinicSpeech) {
+      btnClinicSpeech.addEventListener('click', () => {
+        window.spEdAudio.speak(unit.misconception.audioMnemonic);
+      });
+    }
 
+  }
+
+  // 渲染單元詳細內容、先備地圖、迷思除錯卡、微步驟引導精靈與教具
+  function renderUnitDetail(uid) {
+    const unit = NANI_G3S1_DATA.units.find(u => u.id === uid);
+    if (!unit || !elements.unitDetailContainer) return;
+    window.ForestHome?.render(unit);
+
+    renderPrepGuide(unit);
+
+    elements.unitDetailContainer.className = `prompt-level-${AppState.promptLevel}`;
+    elements.unitDetailContainer.innerHTML = `
+      <div class="unit-detail-layout">
         <!-- 右側主區域：單元趣味標頭 + 提示消褪列 + 微步驟引導精靈 + 動態特教教具操作台 -->
         <div class="manipulative-main-area">
           
@@ -475,14 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
-
-    // 綁定除錯口訣語音朗讀
-    const btnClinicSpeech = document.getElementById('btn-clinic-speech');
-    if (btnClinicSpeech) {
-      btnClinicSpeech.addEventListener('click', () => {
-        window.spEdAudio.speak(unit.misconception.audioMnemonic);
-      });
-    }
 
     // 綁定提示階層切換按鈕
     elements.unitDetailContainer.querySelectorAll('.fading-btn').forEach(btn => {

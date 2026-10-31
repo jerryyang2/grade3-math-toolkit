@@ -13,15 +13,16 @@
   <!-- 引入 字嗨注音標楷 (Bpmf Zihi Kai Std) 開源注音字型 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bpmf-zihi-kai-std@latest/index.css">
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=classroom-tools-20261031">
   <link rel="stylesheet" href="css/teacher-tools.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/floating-tools.css?v=icon-tools-20261031">
+  <link rel="stylesheet" href="css/floating-tools.css?v=classroom-tools-20261031">
   <link rel="stylesheet" href="css/teaching-workflow.css?v=20261031-teaching-2">
   <link rel="stylesheet" href="css/storybook-theme.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="css/animal-garden.css?v=forest-20261031">
   <link rel="stylesheet" href="css/readability.css?v=icon-tools-20261031">
   <link rel="stylesheet" href="css/forest-home.css?v=forest-20261031">
+  <link rel="stylesheet" href="css/classroom-updates.css?v=classroom-tools-20261031">
 </head>
 <body class="storybook-site">
   <!-- 無障礙跳至主要內容 -->
@@ -70,15 +71,6 @@
                 </div>
               </button>
 
-              <!-- 2. 🖨️ A4 學習單列印 -->
-              <button class="dropdown-menu-item" onclick="WorksheetGenerator.openWorksheetModal(); window.ToolsDropdown?.close();" role="menuitem">
-                <span class="menu-item-icon" style="background:#eff6ff; color:#1d4ed8;">🖨️</span>
-                <div class="menu-item-content">
-                  <div class="menu-item-title">A4 學習單列印</div>
-                  <div class="menu-item-desc">個別化注音大字點陣卷，支援自填日期</div>
-                </div>
-              </button>
-
               <!-- 3. 🕹️ 單鍵微動開關輔具 -->
               <button id="btn-tool-switch-access" class="dropdown-menu-item" onclick="SwitchAccessManager.toggle(); window.ToolsDropdown?.close();" role="menuitem">
                 <span class="menu-item-icon" style="background:#fef3c7; color:#b45309;">🕹️</span>
@@ -88,12 +80,12 @@
                 </div>
               </button>
 
-              <!-- 4. 📏 閱讀聚焦尺 -->
-              <button id="btn-tool-reading-ruler" class="dropdown-menu-item" onclick="ReadingRulerManager.toggle(); window.ToolsDropdown?.close();" role="menuitem">
-                <span class="menu-item-icon" style="background:#f3e8ff; color:#7e22ce;">📏</span>
+              <!-- 聚光燈：保留游標附近清晰 -->
+              <button id="btn-tool-spotlight" class="dropdown-menu-item" aria-pressed="false" onclick="SpotlightManager.toggle(); window.ToolsDropdown?.close();" role="menuitem">
+                <span class="menu-item-icon" style="background:#f3e8ff; color:#7e22ce;">🔦</span>
                 <div class="menu-item-content">
-                  <div class="menu-item-title">視線專注閱讀聚焦尺</div>
-                  <div class="menu-item-desc">遮蔽干擾區域，協助跟讀與定位</div>
+                  <div class="menu-item-title">聚光燈</div>
+                  <div class="menu-item-desc">跟隨滑鼠或觸控聚焦，周圍加上暗色遮罩</div>
                 </div>
               </button>
 
@@ -164,7 +156,10 @@
   <!-- 主導覽標籤列 (Tabs) -->
   <nav class="main-nav" role="navigation" aria-label="功能標籤">
     <div class="nav-container">
-      <button class="nav-tab active" data-tab="units">
+      <button class="nav-tab" data-tab="prep">
+        📝 備課指引
+      </button>
+      <button class="nav-tab active" data-tab="units" aria-current="page">
         📚 課堂教學
       </button>
       <button class="nav-tab" data-tab="sandbox">
@@ -179,6 +174,9 @@
       <button class="nav-tab" data-tab="arcade">
         🎪 互動遊戲
       </button>
+      <button class="nav-tab nav-action" id="btn-nav-worksheet" aria-haspopup="dialog">
+        🖨️ 學習單列印
+      </button>
       <button class="nav-tab" data-tab="guide">
         🏛️ 課程調整指南
       </button>
@@ -191,6 +189,14 @@
   <!-- 主內容區域 -->
   <main class="main-content" id="main-content-area" role="main">
     
+    <section class="tab-pane" id="tab-prep" aria-labelledby="tab-prep-title">
+      <header class="prep-guide-heading">
+        <div><span class="home-kicker">老師的備課指引</span><h2 id="tab-prep-title">先備檢核、迷思與課綱對照</h2><p>目前單元：<strong id="prep-unit-title"></strong>。先確認起點，再安排適合的教學支持。</p></div>
+        <label for="prep-unit-select">選擇備課單元<select id="prep-unit-select" class="form-control"></select></label>
+      </header>
+      <div class="prep-guide-grid" id="prep-guide-content"></div>
+    </section>
+
     <!-- 1. 單元教學與教具主畫面 -->
     <section class="tab-pane active" id="tab-units" aria-labelledby="tab-units-title">
       <h2 id="tab-units-title" class="sr-only" style="display:none;">單元課程與動態教具</h2>
@@ -731,14 +737,15 @@
   <script src="js/battle.js?v=20261031-teaching"></script>
   <script src="js/manipulatives.js?v=20261031-teaching"></script>
   <script src="js/teacher-tools.js?v=forest-20261031"></script>
-  <script src="js/contest-features.js?v=forest-20261031"></script>
+  <script src="js/contest-features.js?v=classroom-tools-20261031"></script>
   <script src="js/learning-records.js?v=20261031-teaching"></script>
   <script src="js/number-line.js?v=20261031-teaching"></script>
   <script src="js/geometry-shapes.js?v=20261031-teaching"></script>
   <script src="js/animal-garden.js?v=forest-20261031"></script>
-  <script src="js/storybook-theme.js?v=forest-20261031"></script>
+  <script src="js/storybook-theme.js?v=classroom-tools-20261031"></script>
   <script src="js/forest-home.js?v=forest-20261031"></script>
-  <script src="js/app.js?v=forest-20261031"></script>
-  <script src="js/floating-tools.js?v=icon-tools-20261031"></script>
+  <script src="js/app.js?v=classroom-tools-20261031"></script>
+  <script src="js/magnifier.js?v=classroom-tools-20261031"></script>
+  <script src="js/floating-tools.js?v=classroom-tools-20261031"></script>
 </body>
 </html>

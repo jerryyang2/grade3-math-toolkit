@@ -74,6 +74,7 @@
     const NS = 'http://www.w3.org/2000/svg';
     const icons = {
       pen: '<path d="m15 4 5 5M4 16 15 5a3.5 3.5 0 0 1 5 5L9 21H4z"/>',
+      magnify: '<circle cx="10" cy="10" r="7"/><path d="m15 15 6 6M6 10h8M10 6v8"/>',
       cursor: '<path d="m5 3 14 9-7 1-3 7z"/>',
       highlight: '<path d="m14 3 7 7-9 9-7-7zM5 12l-3 7 3 3 7-3M2 22h9"/>',
       text: '<path d="M4 5h16M12 5v15M8 20h8"/>',
@@ -91,7 +92,7 @@
       close: '<path d="m6 6 12 12M6 18 18 6"/>'
     };
     const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
-    const tools = [['cursor', '游標'], ['pen', '畫筆'], ['highlight', '螢光筆'], ['text', '文字'], ['rect', '方框'], ['ellipse', '圓框'], ['arrow', '箭頭'], ['number', '步驟']];
+    const tools = [['cursor', '游標'], ['pen', '畫筆'], ['highlight', '螢光筆'], ['text', '文字'], ['rect', '方框'], ['ellipse', '圓框'], ['arrow', '箭頭'], ['number', '步驟'], ['magnify', '放大鏡 2×']];
     const colors = [['#ef4444', '紅色'], ['#2563eb', '藍色'], ['#16a34a', '綠色'], ['#f59e0b', '橙黃色'], ['#9333ea', '紫色'], ['#1e293b', '深墨色']];
     const host = document.createElement('aside');
     host.id = 'math-floating-tools';
@@ -232,10 +233,11 @@
       closeEditor();
       tool = next;
       overlay.dataset.tool = tool;
-      overlay.classList.toggle('mft-drawing', tool !== 'cursor');
+      overlay.classList.toggle('mft-drawing', tool !== 'cursor' && tool !== 'magnify');
+      window.MathMagnifier?.setActive(tool === 'magnify');
       host.querySelectorAll('[data-tool]').forEach(button => button.setAttribute('aria-pressed', button.dataset.tool === tool));
       const label = [...tools, ['eraser', '橡皮擦']].find(([key]) => key === tool)[1];
-      modeLabel.textContent = tool === 'cursor' ? '游標可操作網頁' : tool === 'eraser' ? '劃過畫記即可整筆擦除' : `${label}模式 · Esc 回到游標`;
+      modeLabel.textContent = tool === 'cursor' ? '游標可操作網頁' : tool === 'magnify' ? '放大鏡 2× · 移動或觸控定位 · Esc 關閉' : tool === 'eraser' ? '劃過畫記即可整筆擦除' : `${label}模式 · Esc 回到游標`;
     }
     function clampPosition(x, y) {
       const bounds = host.getBoundingClientRect();
@@ -259,6 +261,7 @@
       const active = document.querySelector('.nav-tab.active')?.dataset.tab || 'game';
       let detail = '';
       if (active === 'units') detail = document.querySelector('.unit-card-btn.active')?.dataset.unitId || '';
+      if (active === 'prep') detail = document.getElementById('prep-unit-select')?.value || '';
       if (active === 'practice') detail = document.getElementById('practice-question-text')?.textContent || '';
       if (active === 'sandbox') detail = document.getElementById('sandbox-unit-select')?.value || '';
       if (active === 'arcade') detail = document.getElementById('arcade-game-frame')?.getAttribute('src') || '';

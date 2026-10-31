@@ -2,7 +2,7 @@
  * 三年級數學備課平台 - 教學輔助與使用導覽模組 (Contest Flagship Features)
  * 專為全國特殊教育優良教材教具與教學法評選競賽打造：
  * 1. 🕹️ SwitchAccessManager: 重度肢障/腦麻學童「單鍵微動開關掃描輔助模式 (Single-Key Auto Scan)」
- * 2. 📏 ReadingRulerManager: ADHD 與學障「視線專注閱讀導引尺 / 聚焦遮罩 (Visual Focus Ruler)」
+ * 2. 🔦 SpotlightManager: 跟隨游標、觸控與鍵盤焦點的聚光燈
  * 3. 🧠 ErrorPatternDiagnosis: 特教「四大認知錯誤型態診斷雷達圖 (Cognitive Error Pattern Clinic)」
  * 4. 📈 GrowthTracker: 「C-R-A 提示階層三段消褪成效折線圖 (CRA Growth Tracking)」
  * 5. 🖨️ WorksheetGenerator: 一鍵排版「108 特教個別化 A4 注音點陣大字學習單/評量卷」
@@ -249,130 +249,70 @@
 
 
   // =========================================================================
-  // 2. 📏 ReadingRulerManager (視線專注閱讀導引尺 / 聚焦遮罩)
+  // 2. 🔦 SpotlightManager：滑鼠、觸控及鍵盤焦點皆可定位。
   // =========================================================================
-  const ReadingRulerManager = {
+  const SpotlightManager = {
     isActive: false,
-    rulerEl: null,
-    maskTopEl: null,
-    maskBottomEl: null,
-    rulerHeight: 80,
-
+    layer: null,
+    radius: 160,
     init() {
-      this.createRulerElements();
-      this.bindMouseMove();
-    },
-
-    toggle() {
-      if (this.isActive) {
-        this.stop();
-      } else {
-        this.start();
-      }
-    },
-
-    start() {
-      this.isActive = true;
-      if (this.rulerEl) this.rulerEl.style.display = 'block';
-      if (this.maskTopEl) this.maskTopEl.style.display = 'block';
-      if (this.maskBottomEl) this.maskBottomEl.style.display = 'block';
-
-      const btn = document.getElementById('btn-tool-reading-ruler');
-      if (btn) btn.classList.add('active');
-
-      if (window.spEdAudio) {
-        window.spEdAudio.playClick();
-        window.spEdAudio.speak('閱讀聚焦尺已開啟，請移動滑鼠引導視線閱讀。');
-      }
-
-      this.positionAtCenter();
-    },
-
-    stop() {
-      this.isActive = false;
-      if (this.rulerEl) this.rulerEl.style.display = 'none';
-      if (this.maskTopEl) this.maskTopEl.style.display = 'none';
-      if (this.maskBottomEl) this.maskBottomEl.style.display = 'none';
-
-      const btn = document.getElementById('btn-tool-reading-ruler');
-      if (btn) btn.classList.remove('active');
-
-      if (window.spEdAudio) {
-        window.spEdAudio.playClick();
-      }
-    },
-
-    createRulerElements() {
-      // 上方遮罩
-      const maskTop = document.createElement('div');
-      maskTop.id = 'reading-mask-top';
-      maskTop.className = 'reading-mask-curtain';
-      maskTop.style.display = 'none';
-
-      // 閱讀聚焦條 (透明高亮區)
-      const ruler = document.createElement('div');
-      ruler.id = 'reading-ruler-bar';
-      ruler.className = 'reading-ruler-line';
-      ruler.style.display = 'none';
-      ruler.innerHTML = `
-        <div class="ruler-line-guide"></div>
-        <div class="ruler-tip">📏 聚焦讀字條 · 隔絕周圍視覺干擾</div>
-      `;
-
-      // 下方遮罩
-      const maskBottom = document.createElement('div');
-      maskBottom.id = 'reading-mask-bottom';
-      maskBottom.className = 'reading-mask-curtain';
-      maskBottom.style.display = 'none';
-
-      document.body.appendChild(maskTop);
-      document.body.appendChild(ruler);
-      document.body.appendChild(maskBottom);
-
-      this.maskTopEl = maskTop;
-      this.rulerEl = ruler;
-      this.maskBottomEl = maskBottom;
-    },
-
-    updatePosition(y) {
-      if (!this.isActive) return;
-      const topY = Math.max(0, y - this.rulerHeight / 2);
-      const bottomY = topY + this.rulerHeight;
-
-      if (this.maskTopEl) {
-        this.maskTopEl.style.top = '0px';
-        this.maskTopEl.style.height = `${topY}px`;
-      }
-      if (this.rulerEl) {
-        this.rulerEl.style.top = `${topY}px`;
-        this.rulerEl.style.height = `${this.rulerHeight}px`;
-      }
-      if (this.maskBottomEl) {
-        this.maskBottomEl.style.top = `${bottomY}px`;
-        this.maskBottomEl.style.height = `calc(100vh - ${bottomY}px)`;
-      }
-    },
-
-    positionAtCenter() {
-      // 預設對齊題目區域，或視窗中上部
-      const qText = document.getElementById('practice-question-text');
-      if (qText) {
-        const rect = qText.getBoundingClientRect();
-        this.updatePosition(rect.top + rect.height / 2);
-      } else {
-        this.updatePosition(window.innerHeight * 0.4);
-      }
-    },
-
-    bindMouseMove() {
-      window.addEventListener('mousemove', (e) => {
-        if (!this.isActive) return;
-        this.updatePosition(e.clientY);
+      const layer = document.createElement('div');
+      layer.id = 'spotlight-layer';
+      layer.className = 'spotlight-layer';
+      layer.hidden = true;
+      layer.innerHTML = `<div class="spotlight-mask" aria-hidden="true"></div><div class="spotlight-controls" role="group" aria-label="聚光燈設定"><label for="spotlight-radius">聚光範圍 <input id="spotlight-radius" type="range" min="90" max="260" value="160" step="10"><output for="spotlight-radius">160</output></label><button type="button" aria-label="關閉聚光燈">關閉聚光燈</button><small>移動滑鼠或觸控定位 · Esc 關閉</small></div>`;
+      document.body.appendChild(layer);
+      this.layer = layer;
+      layer.querySelector('button').addEventListener('click', () => this.stop(true));
+      layer.querySelector('input').addEventListener('input', event => {
+        this.radius = Number(event.target.value);
+        layer.style.setProperty('--spot-radius', `${this.radius}px`);
+        layer.querySelector('output').value = this.radius;
       });
-      window.addEventListener('touchmove', (e) => {
-        if (!this.isActive || !e.touches || e.touches.length === 0) return;
-        this.updatePosition(e.touches[0].clientY);
-      }, { passive: true });
+      window.addEventListener('pointermove', event => this.updatePosition(event.clientX, event.clientY), { passive: true });
+      window.addEventListener('pointerdown', event => this.updatePosition(event.clientX, event.clientY), { passive: true });
+      document.addEventListener('focusin', event => {
+        if (!this.isActive || event.target.closest('.spotlight-controls')) return;
+        const bounds = event.target.getBoundingClientRect();
+        if (bounds.width && bounds.height) this.updatePosition(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+      });
+      document.addEventListener('keydown', event => {
+        if (this.isActive && event.key === 'Escape') { this.stop(true); event.preventDefault(); }
+      });
+      document.addEventListener('fullscreenchange', () => {
+        const full = document.fullscreenElement;
+        if (full?.tagName === 'IFRAME') this.stop();
+        (full?.tagName === 'IFRAME' ? document.body : full || document.body).appendChild(layer);
+      });
+      window.addEventListener('beforeprint', () => this.stop());
+    },
+    toggle() { if (this.isActive) this.stop(); else this.start(); },
+    start() {
+      if (!this.layer) return;
+      this.isActive = true;
+      this.layer.hidden = false;
+      this.layer.style.setProperty('--spot-radius', `${this.radius}px`);
+      this.updatePosition(window.innerWidth / 2, window.innerHeight * .45);
+      const button = document.getElementById('btn-tool-spotlight');
+      button?.classList.add('active');
+      button?.setAttribute('aria-pressed', 'true');
+      this.layer.querySelector('button').focus();
+      window.spEdAudio?.playClick();
+    },
+    stop(restoreFocus = false) {
+      this.isActive = false;
+      if (this.layer) this.layer.hidden = true;
+      const button = document.getElementById('btn-tool-spotlight');
+      button?.classList.remove('active');
+      button?.setAttribute('aria-pressed', 'false');
+      if (restoreFocus) document.getElementById('btn-tools-dropdown')?.focus();
+    },
+    updatePosition(x, y) {
+      if (!this.isActive) return;
+      // 操作設定時保持閱讀位置，避免亮區被控制列拉走。
+      if (this.layer.querySelector('.spotlight-controls').matches(':hover')) return;
+      this.layer.style.setProperty('--spot-x', `${Math.max(0, Math.min(window.innerWidth, x))}px`);
+      this.layer.style.setProperty('--spot-y', `${Math.max(0, Math.min(window.innerHeight, y))}px`);
     }
   };
 
@@ -615,17 +555,20 @@
       const modal = document.createElement('div');
       modal.className = 'kid-modal-backdrop';
       modal.id = 'worksheet-modal';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('aria-labelledby', 'worksheet-title');
       modal.innerHTML = `
         <div class="kid-modal-card" style="max-width: 680px; text-align: left;">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:16px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:2rem;">🖨️</span>
               <div>
-                <h3 style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
+                <h3 id="worksheet-title" style="font-size:1.35rem; color:#1e1b4b; margin:0; font-weight:900;">108 特教個別化 A4 實體學習單產生器</h3>
                 <span style="font-size:0.85rem; color:#6366f1; font-weight:700;">字嗨注音字型（依裝置可用字型顯示） · 大字點陣對齊格 · 課程調整參考註記</span>
               </div>
             </div>
-            <button id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
+            <button aria-label="關閉學習單設定" id="btn-close-ws-modal" style="background:none; border:none; font-size:1.6rem; color:#94a3b8; cursor:pointer;">✕</button>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
@@ -681,11 +624,20 @@
 
       document.body.appendChild(modal);
 
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+      const returnFocus = document.activeElement;
+      const close = () => { modal.remove(); returnFocus?.focus(); };
+      modal.addEventListener('click', event => { if (event.target === modal) close(); });
+      modal.querySelector('#btn-close-ws-modal').onclick = close;
+      modal.querySelector('#btn-ws-cancel').onclick = close;
+      modal.addEventListener('keydown', event => {
+        if (event.key === 'Escape') { event.preventDefault(); close(); return; }
+        if (event.key !== 'Tab') return;
+        const fields = [...modal.querySelectorAll('button,select,input')].filter(field => !field.disabled);
+        const first = fields[0], last = fields.at(-1);
+        if (event.shiftKey && document.activeElement === first) { last.focus(); event.preventDefault(); }
+        if (!event.shiftKey && document.activeElement === last) { first.focus(); event.preventDefault(); }
       });
-      modal.querySelector('#btn-close-ws-modal').onclick = () => modal.remove();
-      modal.querySelector('#btn-ws-cancel').onclick = () => modal.remove();
+      modal.querySelector('#ws-unit-select').focus();
 
       const btnToday = modal.querySelector('#btn-ws-today');
       if (btnToday) {
@@ -921,7 +873,7 @@
                 🕹️ 體驗單鍵掃描輔具
               </button>
               <button class="kid-btn kid-btn-solution" id="btn-jump-ruler" style="font-size:0.9rem; padding:6px 14px;">
-                📏 體驗閱讀聚焦尺
+                🔦 體驗聚光燈
               </button>
               <button class="kid-btn kid-btn-solution" id="btn-jump-ws" style="font-size:0.9rem; padding:6px 14px;">
                 🖨️ 預覽 A4 特教學習單
@@ -955,7 +907,7 @@
       };
       modal.querySelector('#btn-jump-ruler').onclick = () => {
         modal.remove();
-        ReadingRulerManager.start();
+        SpotlightManager.start();
       };
       modal.querySelector('#btn-jump-ws').onclick = () => {
         modal.remove();
@@ -1061,7 +1013,7 @@
 
   // 全域暴露
   window.SwitchAccessManager = SwitchAccessManager;
-  window.ReadingRulerManager = ReadingRulerManager;
+  window.SpotlightManager = SpotlightManager;
   window.ErrorPatternDiagnosis = ErrorPatternDiagnosis;
   window.GrowthTracker = GrowthTracker;
   window.WorksheetGenerator = WorksheetGenerator;
@@ -1072,7 +1024,7 @@
   if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
       SwitchAccessManager.init();
-      ReadingRulerManager.init();
+      SpotlightManager.init();
       ToolsDropdown.init();
     });
   }

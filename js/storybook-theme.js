@@ -19,6 +19,7 @@
     u8: '<circle cx="32" cy="32" r="25" fill="#f1d493"/><path d="M32 7v25l23 9M32 32L11 46"/><circle cx="21" cy="22" r="3" fill="#d9987c"/><circle cx="40" cy="44" r="3" fill="#d9987c"/><circle cx="20" cy="39" r="3" fill="#8ba378"/>',
     u9: '<circle cx="32" cy="32" r="24" fill="#f7e5b7"/><path d="M8 32h48M32 32l16-18"/><circle cx="32" cy="32" r="4" fill="#d99278"/>'
   };
+  outlines.print = '<path d="M18 24V9h28v15M18 47H9V25h46v22h-9M18 38h28v17H18zM43 31h5M24 44h16M24 49h16"/>';
   function icon(name) {
     return `<svg class="sketch-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${outlines[name] || outlines.book}</svg>`;
   }
@@ -28,12 +29,12 @@
   }
   window.StorybookTheme = { icon, character };
   document.addEventListener('DOMContentLoaded', () => {
-    const map = { units:'book', sandbox:'case', practice:'pencil', battle:'flag', arcade:'star', guide:'leaf', iep:'chart' };
+    const map = { prep:'pencil', units:'book', sandbox:'case', practice:'pencil', battle:'flag', arcade:'star', guide:'leaf', iep:'chart' };
     document.querySelectorAll('.nav-tab').forEach(button => {
       const label = button.textContent.trim();
       const title = label.replace(/^\S+\s+/, '');
       button.setAttribute('aria-label', label);
-      button.innerHTML = `${icon(map[button.dataset.tab])}<span>${title}</span>`;
+      button.innerHTML = `${icon(button.id === 'btn-nav-worksheet' ? 'print' : map[button.dataset.tab])}<span>${title}</span>`;
     });
     const settings = document.getElementById('display-settings');
     document.addEventListener('click', event => {
