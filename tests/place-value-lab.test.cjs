@@ -29,17 +29,95 @@ test('guided placement waits for matching quantities and allows students to corr
 });
 
 test('zero places stay empty and ten thousands are represented correctly at the ten-thousand boundary', () => {
-  for (const target of [1023, 2050, 10000]) {
-    let state = lab.reduce(lab.createState(), 'target', target);
+  for (const question of [lab.questionAt('zero-hundreds', 11), lab.questionAt('zero-hundreds-ones', 13), lab.questionAt('ten-thousands', 3)]) {
+    let state = lab.reduce(lab.createState(), 'question', question);
     for (const value of [1000, 100, 10, 1]) {
-      state = add(state, value, lab.goal(state, value));
+      state = add(state, value, lab.goal(state, value) - state.counts[value]);
       assert.ok(lab.canNext(state));
       state = lab.reduce(state, 'next');
     }
     assert.equal(state.step, 4);
-    assert.equal(lab.total(state.counts), target);
+    assert.equal(lab.total(state.counts), question.target);
     assert.equal(state.counts[100], 0);
-    if (target === 10000) assert.equal(state.counts[1000], 10);
+    if (question.target === 10000) assert.equal(state.counts[1000], 10);
+  }
+});
+
+test('all four question pools preserve their teaching constraints and offer distinct questions', () => {
+  for (const [category, size] of [['all', 6561], ['zero-hundreds', 729], ['zero-hundreds-ones', 81], ['ten-thousands', 9]]) {
+    const seen = new Set();
+    for (let i = 0; i < size; i++) {
+      const question = lab.questionAt(category, i);
+      const digits = String(question.target).split('').map(Number);
+      if (category === 'ten-thousands') {
+        assert.equal(question.target, 10000);
+        assert.ok(question.startThousands >= 1 && question.startThousands <= 9);
+      } else {
+        assert.equal(digits.length, 4);
+        assert.ok(digits[0] > 0 && digits[2] > 0);
+        assert.equal(digits[1] === 0, category !== 'all');
+        assert.equal(digits[3] === 0, category === 'zero-hundreds-ones');
+        assert.equal(question.startThousands, 0);
+      }
+      seen.add(`${question.target}:${question.startThousands}`);
+    }
+    assert.equal(seen.size, size);
+    assert.equal(lab.questionAt(category, size), null);
+  }
+});
+
+test('random questions never immediately repeat, including the first and last pool entries', () => {
+  for (const [category, size] of [['all', 6561], ['zero-hundreds', 729], ['zero-hundreds-ones', 81], ['ten-thousands', 9]]) {
+    for (const variant of [0, Math.floor(size / 2), size - 1]) {
+      const previous = lab.questionAt(category, variant);
+      for (const fraction of [0, 0.5, 1 - Number.EPSILON]) {
+        const next = lab.generateQuestion(category, previous, () => fraction);
+        assert.notEqual(next.variant, previous.variant);
+        assert.deepEqual(next, lab.questionAt(category, next.variant));
+      }
+    }
+    const other = lab.generateQuestion(category, { category: 'another', variant: 0 }, () => 0);
+    assert.equal(other.variant, 0, 'switching categories can draw the first question');
+  }
+  assert.equal(lab.generateQuestion('unknown'), null);
+});
+
+test('new questions restart all steps, while replay and material changes preserve the selected question', () => {
+  let state = lab.reduce(lab.createState(), 'mode', 'blocks');
+  state = add(state, 1000, 1);
+  state = lab.reduce(state, 'next');
+  const question = lab.questionAt('zero-hundreds-ones', 70);
+  state = lab.reduce(state, 'question', question);
+  assert.equal(state.step, 0);
+  assert.equal(state.mode, 'blocks');
+  assert.equal(lab.total(state.counts), 0);
+  assert.equal(state.target, question.target);
+  state = add(state, 1000, 2);
+  const reset = lab.reduce(state, 'reset');
+  assert.equal(reset.variant, state.variant);
+  assert.equal(reset.target, state.target);
+  assert.equal(lab.total(reset.counts), 0);
+  const money = lab.reduce(state, 'mode', 'money');
+  assert.equal(money.target, state.target);
+  assert.deepEqual(money.counts, state.counts);
+});
+
+test('ten-thousand questions keep the given pieces and replay the same starting quantity', () => {
+  for (let variant = 0; variant < 9; variant++) {
+    let state = lab.reduce(lab.createState(), 'question', lab.questionAt('ten-thousands', variant));
+    const start = state.counts[1000];
+    assert.equal(lab.reduce(state, 'remove', 1000), state, 'given pieces stay on the table');
+    state = add(state, 1000, 1);
+    state = lab.reduce(state, 'remove', 1000);
+    assert.equal(state.counts[1000], start, 'student-added pieces can be removed');
+    state = add(state, 1000, 10 - start);
+    assert.equal(lab.total(state.counts), 10000);
+    state = lab.reduce(state, 'reset');
+    assert.equal(state.counts[1000], start);
+    state = lab.reduce(state, 'activity', 'free');
+    assert.equal(lab.total(state.counts), 0);
+    state = lab.reduce(state, 'activity', 'build');
+    assert.equal(state.counts[1000], start);
   }
 });
 

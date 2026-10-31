@@ -25,6 +25,13 @@
 .pv-lab .pv-task-tools label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 1rem; font-weight: 800; min-width: 0; }
 .pv-lab select { max-width: 100%; min-width: 0; background: #fff; }
 .pv-lab .pv-secondary { background: #f4f6f2; border-color: #9aa89e; }
+.pv-lab .pv-new-question { color: #fff; background: #245a40; border-color: #19442e; box-shadow: 0 3px 0 #153824; }
+.pv-lab .pv-new-question:hover:not(:disabled) { background: #174b33; color: #fff; }
+.pv-lab .pv-question { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; padding: 12px 16px; margin-bottom: 14px; background: #fff5d8; border: 2px solid #b78325; border-left-width: 6px; border-radius: 12px; }
+.pv-lab .pv-question > div { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; font-weight: 800; }
+.pv-lab .pv-question strong { color: #693b0b; font: 900 1.8rem/1.3 sans-serif; letter-spacing: .04em; }
+.pv-lab .pv-question p { flex: 1 1 220px; font-weight: 750; line-height: 1.65; }
+.pv-lab .pv-question small { display: block; font-size: .875rem; color: #536044; font-weight: 600; }
 .pv-lab .pv-progress { list-style: none; display: flex; margin: 0 0 14px; padding: 0; gap: 6px; }
 .pv-lab .pv-progress li { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 4px; font-size: .9375rem; font-weight: 800; border-bottom: 3px solid #c1cbbf; color: #526052; }
 .pv-lab .pv-progress li > span { font: 800 .875rem/24px sans-serif; display: inline-block; width: 24px; height: 24px; text-align: center; background: #e5eadf; border-radius: 50%; }
@@ -61,6 +68,8 @@
 .pv-lab .pv-empty { grid-column: 1/-1; text-align: center; align-self: center; font-size: .9375rem; color: #596650; }
 .pv-lab .pv-placed { display: grid; place-items: center; position: relative; padding: 2px; min-height: 48px; width: 100%; border: 1px solid #8c9d85; border-radius: 6px; background: #fff; }
 .pv-lab .pv-placed:disabled { opacity: 1; border-color: #c7d1c1; }
+.pv-lab .pv-placed[data-pv-given] { background: #e9f0fb; border: 2px solid #4776a2; }
+.pv-lab .pv-placed > small { font-size: .75rem; color: #254d70; font-weight: 800; }
 .pv-lab .pv-placed > span { position: absolute; top: -5px; right: -4px; width: 19px; height: 19px; font: 800 17px/17px sans-serif; border: 1px solid #946a65; border-radius: 50%; background: #fff4ee; color: #8f3028; }
 .pv-lab .pv-count { font-size: 1rem; text-align: center; padding-top: 8px; }
 .pv-lab .pv-count strong { font-size: 1.4rem; color: #173d2a; }
@@ -120,10 +129,11 @@
   .pv-lab .pv-digits span, .pv-lab .pv-digits small { font-size: .8125rem; }
 }
 .high-contrast-mode .pv-lab { --pv-ink: #fff; }
-.high-contrast-mode .pv-lab :is(.pv-guide,.pv-lane,.pv-add,.pv-tray,.pv-step-actions,.pv-result,.pv-digits > div,.pv-same-total,.pv-teacher,.pv-free-exchanges article,.pv-material-switch,.pv-ten-group,.pv-one-group,.pv-reference-pieces,.pv-zero-example > span) { background: #18181b; color: #fff; border-color: #facc15; }
+.high-contrast-mode .pv-lab :is(.pv-guide,.pv-lane,.pv-add,.pv-tray,.pv-step-actions,.pv-result,.pv-digits > div,.pv-same-total,.pv-teacher,.pv-free-exchanges article,.pv-material-switch,.pv-ten-group,.pv-one-group,.pv-reference-pieces,.pv-zero-example > span,.pv-question,.pv-placed[data-pv-given]) { background: #18181b; color: #fff; border-color: #facc15; }
+.high-contrast-mode .pv-lab :is(.pv-question strong,.pv-question small,.pv-placed > small) { color: #fff; }
 .high-contrast-mode .pv-lab :is(h4,h5,p,.pv-kicker,.pv-reference > span,.pv-count strong,.pv-limit,.pv-empty,.pv-digits strong,.pv-digits small,.pv-equals,.pv-teacher summary,.pv-teacher a) { color: #fff; }
 .high-contrast-mode .pv-lab :is(button,select) { background: #18181b; border-color: #eee; color: #fff; }
-.high-contrast-mode .pv-lab :is(button[aria-pressed="true"],.pv-primary,.pv-trade-buttons button:not(.pv-secondary)) { background: #facc15; color: #111; border-color: #fff; }
+.high-contrast-mode .pv-lab :is(button[aria-pressed="true"],.pv-primary,.pv-new-question,.pv-trade-buttons button:not(.pv-secondary)) { background: #facc15; color: #111; border-color: #fff; }
 .high-contrast-mode .pv-lab .pv-lane.is-active { outline-color: #facc15; }
 .high-contrast-mode .pv-lab .pv-progress .is-current { color: #fff; background: #493876; }
 .high-contrast-mode .pv-lab .pv-progress .is-done { color: #e4ffc7; }
