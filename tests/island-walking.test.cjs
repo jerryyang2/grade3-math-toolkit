@@ -1,8 +1,8 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const N=require('../islands/navigation.js'),V=require('../islands/visitors.js');
 const memory=(initial={})=>{const items={...initial};return {getItem:k=>items[k]??null,setItem:(k,v)=>{items[k]=v;}};};
-test('twelve bridges connect all nine islands and every bridge center stays walkable',()=>{
- const n=N.create(),reached=new Set([0]);for(let i=0;i<9;i++)for(const [a,b]of N.links){if(reached.has(a))reached.add(b);if(reached.has(b))reached.add(a);}assert.equal(reached.size,9);assert.equal(n.bridges.length,12);
+test('twelve inter-island bridges and the new landing bridge share continuous walkable decks',()=>{
+ const n=N.create(),reached=new Set([0]);for(let i=0;i<9;i++)for(const [a,b]of N.links){if(reached.has(a))reached.add(b);if(reached.has(b))reached.add(a);}assert.equal(reached.size,9);assert.equal(N.links.length,12);assert.equal(n.bridges.length,13);
  for(const b of n.bridges)for(let i=0;i<=50;i++)assert.ok(n.walkable({x:b.a.x+(b.b.x-b.a.x)*i/50,z:b.a.z+(b.b.z-b.a.z)*i/50}),b.id);
 });
 test('walking routes reach every island through continuous land and bridges without crossing the sea',()=>{
@@ -35,4 +35,10 @@ test('unavailable browser storage still permits visitor creation and separate in
 test('long manual walks stay on land or bridge decks, including repeated edge collisions',()=>{
  const n=N.create();let seed=42;const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/2**32;};
  for(const plaza of n.plazas){let p={...plaza};for(let i=0;i<600;i++){const angle=rnd()*2*Math.PI,dx=Math.cos(angle)*1.7,dz=Math.sin(angle)*1.7,q=n.move(p,dx,dz);assert.ok(n.walkable(q));assert.ok(Math.hypot(q.x-p.x,q.z-p.z)<=1.700001);p=q;}}
+});
+
+test('the separate arrival dock reaches every teaching island without crossing open water',()=>{
+ const n=N.create(),start={...N.landing.position};assert.equal(n.islandAt(start),null);assert.ok(n.atLanding(start));assert.ok(n.walkable(start));assert.ok(n.surface(start).landing);
+ for(const destination of n.plazas){const route=n.route(start,destination);assert.ok(route.length);let position={...start},steps=0;for(const waypoint of route){assert.ok(n.clear(position,waypoint));while(Math.hypot(waypoint.x-position.x,waypoint.z-position.z)>.035){const dx=waypoint.x-position.x,dz=waypoint.z-position.z,distance=Math.hypot(dx,dz),step=Math.min(distance,3.6/30);position=n.move(position,dx/distance*step,dz/distance*step);assert.ok(n.walkable(position));assert.ok(++steps<5000,'walking must finish rather than stop at a bridge corner');}}assert.ok(Math.hypot(position.x-destination.x,position.z-destination.z)<.04);const back=n.route(position,start);assert.ok(back.length);let previous=position;for(const p of back){assert.ok(n.clear(previous,p));previous=p;}}
+ assert.equal(n.walkable({x:start.x-4,z:start.z}),false);assert.equal(n.walkable({x:start.x,z:start.z+4}),false);
 });
