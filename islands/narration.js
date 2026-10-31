@@ -1,0 +1,11 @@
+/* 固定片語與自然數字分段共用預製臺灣女聲，隨機題也能朗讀。 */
+(function(root){
+'use strict';
+const AudioSystem=typeof module!=='undefined'?require('../js/audio.js'):null;
+const normalizer=AudioSystem?new AudioSystem():root.spEdAudio;
+function numberParts(n){n=Number(n);if(n<100||n===10000)return [normalizer.numToChinese(n)];const out=[];let rest=n;if(rest>=1000){out.push(normalizer.numToChinese(Math.floor(rest/1000)*1000));rest%=1000;if(rest&&rest<100)out.push('零');}if(rest>=100){out.push(normalizer.numToChinese(Math.floor(rest/100)*100));rest%=100;if(rest&&rest<10)out.push('零');}if(rest)out.push((rest>=10&&rest<20&&out.length?'一':'')+normalizer.numToChinese(rest));return out;}
+function parts(text){if(Array.isArray(text))return text.flatMap(parts);const source=String(text||'').replace(/[−－-]/g,' 減去 ').replace(/[×✕]/g,' 乘以 ').replace(/÷/g,' 除以 ').replace(/[＋+]/g,' 加上 ').replace(/[＝=]/g,' 等於 ').replace(/[＜<]/g,' 小於 ').replace(/[＞>]/g,' 大於 ').replace(/[→↗]/g,'，');const result=[];for(const token of source.split(/(\d[\d,]*\s*\/\s*\d+|\d[\d,]*)/).filter(Boolean)){if(/^\d/.test(token)){if(token.includes('/')){const [a,b]=token.split('/').map(v=>Number(v.replace(/,/g,'')));result.push(...numberParts(b),'分之',...numberParts(a));}else result.push(...numberParts(Number(token.replace(/,/g,''))));}else{const clean=normalizer.cleanMathTextForTTS(token).replace(/^[，。！？、；：\s]+|[，。！？、；：\s]+$/g,'');if(clean)result.push(clean);}}return result;}
+function whole(text){return Array.isArray(text)?null:normalizer.cleanMathTextForTTS(String(text).replace(/(\d),(?=\d{3}(?:\D|$))/g,'$1').replace(/−/g,'-'));}
+function speak(text,onEnd){const audio=root.spEdAudio;if(!audio||audio.isMuted)return false;const catalog=root.MathIslandAudioClips||{},full=whole(text),chunks=full&&catalog[full]?[full]:parts(text),paths=chunks.map(p=>catalog[p]);if(paths.length&&paths.every(Boolean)){audio.stopSpeech();audio.playRecording(paths,audio.speechGeneration,null,onEnd,()=>audio.speak(text,null,onEnd));return true;}audio.speak(text,null,onEnd);return false;}
+const api={parts,numberParts,whole,speak};if(typeof module!=='undefined')module.exports=api;else root.MathIslandNarration=api;
+})(typeof window!=='undefined'?window:globalThis);
