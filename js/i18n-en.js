@@ -2890,7 +2890,7 @@ const catalog={
   "五個一和三個千合起來是多少？": "What is the sum of 5 ones and 3 thousands?",
   "什麼組成": "What does it consist of?",
   "今天，想去哪座島？": "Which island do you want to visit today?",
-  "今天玩什麼？": "What shall we play today?",
+  "今天玩什麼？": "Ready for math?",
   "今天的挑戰": "Today's challenge",
   "今天探索哪一站？": "Which stop to explore today?",
   "今晚生活實踐小任務：": "Small tasks to practice in tonight’s life:",
