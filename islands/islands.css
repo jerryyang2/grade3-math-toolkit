@@ -87,7 +87,7 @@ dialog header>button,.resident-dialogue #resident-close{font-size:22px;min-width
 .landing-welcome p{font-size:18px;line-height:1.8;margin:0;color:#526a58}
 .landing-welcome-mark{font-size:45px}
 .back-to-landing{width:100%;border:0;border-bottom:1px solid #b7ceca;border-radius:0;background:#e6eedb;font-size:18px;min-height:48px;text-align:left;padding:10px 16px}
-.landing-label{position:absolute;z-index:4;transform:translate(-70%,60%);min-height:44px;padding:8px 12px;border:2px solid #b18b3e;border-radius:20px;background:#fff0bc;color:#654713;font-size:17px;font-weight:800;white-space:nowrap;box-shadow:0 3px 8px #4d655326}
+.landing-label{position:absolute;z-index:4;transform:translate(-50%,0);min-height:44px;padding:8px 12px;border:2px solid #b18b3e;border-radius:20px;background:#fff0bc;color:#654713;font-size:17px;font-weight:800;white-space:nowrap;box-shadow:0 3px 8px #4d655326}
 body[data-view=landing] .expedition{grid-template-columns:minmax(0,1fr)}
 body[data-view=landing] .world-panel{position:relative;top:0}
 body[data-view=landing] #world{height:clamp(360px,calc(100svh - 390px),760px)}
@@ -110,11 +110,11 @@ body[data-view=landing] #world.flat{height:500px}
 
 @media(max-width:520px){body[data-view=landing] #world:not(.flat) .island-label{padding:6px 8px;gap:4px}body[data-view=landing] #world:not(.flat) .island-label b{display:none}body[data-view=landing] #world:not(.flat) .island-label small{display:inline;font-size:17px}body[data-view=landing] #world:not(.flat) .island-label span{font-size:20px}}
 
-@media(max-width:520px){body[data-view=landing] #world:not(.flat) .landing-label{left:auto!important;right:12px;top:66px!important;transform:none}}
+@media(max-width:520px){}
 
 @container(max-width:340px){.map-console .map-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-@media(min-width:521px){body[data-view=landing] #world:not(.flat) .landing-label{transform:translate(-160%,0)}}
+
 
 /* 進場選島：群島佔左側四分之三，操作鍵集中在右側四分之一。 */
 @media(min-width:951px){
@@ -133,4 +133,6 @@ body[data-view=landing] #world.flat{height:500px}
 body[data-view=landing] #world:not(.flat) .island-label{font-size:14px;padding:6px 9px;gap:4px;min-height:40px}
 body[data-view=landing] #world:not(.flat) .island-label span{font-size:16px}
 body[data-view=landing] #world:not(.flat) .island-label small{font-size:11px}
+@media(min-width:521px){body[data-view=landing] #world:not(.flat) .island-label{min-height:32px;padding:4px 8px}}
+html[lang=en] body[data-view=landing] #world:not(.flat) .island-label{max-width:180px}
 @media(max-width:520px){body[data-view=landing] #world:not(.flat) .island-label{min-height:44px;padding:6px 8px}body[data-view=landing] #world:not(.flat) .island-label small{font-size:15px}body[data-view=landing] #world:not(.flat) .island-label span{font-size:18px}}
