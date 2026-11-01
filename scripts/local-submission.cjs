@@ -6,10 +6,10 @@ const { spawn, spawnSync } = require('node:child_process');
 const { sha, verifyAndSync: verifyGuide } = require('./local-guide.cjs');
 const { copyPdf } = require('./local-pdf-copy.cjs');
 const ROOT = path.resolve(__dirname, '..');
-const SOURCE = '參賽原稿/數學慢慢懂_作品說明書.txt';
-const WORD = '參賽原稿/數學慢慢懂_作品說明書.docx';
+const SOURCE = '參賽原稿/數學慢慢懂，來玩數學吧！_作品說明書.txt';
+const WORD = '參賽原稿/數學慢慢懂，來玩數學吧！_作品說明書.docx';
 const PDF = 'output/pdf/數學慢慢懂_作品說明書.pdf';
-const SUBMISSION_PDF = '參賽資料/數學慢慢懂_作品說明書.pdf';
+const SUBMISSION_PDF = '參賽資料/數學慢慢懂，來玩數學吧！_作品說明書.pdf';
 const PRIVATE = 'Codex/submission';
 const INPUTS = [SOURCE, 'Codex/contest-description-20261101/build_document.py', 'Codex/submission/build_submission.py', 'Codex/contest-description-20261101/fonts.conf'];
 const read = file => JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -37,7 +37,7 @@ function syncCompanions() {
   const worksheet = 'output/pdf/數學慢慢懂_三上學習單彙整_36份.pdf';
   if (fs.existsSync(path.join(ROOT, worksheet))) {
     run(process.execPath, [path.join(__dirname, 'sync-worksheet-pdf.cjs'), '--check']);
-    copyPdf(path.join(ROOT, worksheet), path.join(ROOT, '參賽資料/數學慢慢懂_三上學習單彙整_36份.pdf'));
+    copyPdf(path.join(ROOT, worksheet), path.join(ROOT, '參賽資料/數學慢慢懂，來玩數學吧！_三上學習單彙整_36份.pdf'));
   }
 }
 function watchSource(root = ROOT, options = {}) {

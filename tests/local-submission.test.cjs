@@ -19,7 +19,7 @@ function fixture(t) {
 }
 test('submission folder receives the reviewed PDF and no editing source', t => {
   const f = fixture(t); assert.equal(verifyAndSync(f.root).pages, 2);
-  assert.deepEqual(fs.readdirSync(path.dirname(f.copy)), [path.basename(PDF)]);
+  assert.deepEqual(fs.readdirSync(path.dirname(f.copy)), [path.basename(SUBMISSION_PDF)]);
   assert.equal(sha(f.copy), sha(path.join(f.root, PDF)));
   f.write(SUBMISSION_PDF, '%PDF-1.7 outdated'); verifyAndSync(f.root);
   assert.equal(sha(f.copy), sha(path.join(f.root, PDF)));
