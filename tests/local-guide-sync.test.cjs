@@ -3,7 +3,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { RELATIVE_PDF, PRIVATE_DIR, sha, siteSources, inputHashes, verify } = require('../scripts/local-guide.cjs');
+const { RELATIVE_PDF, RELATIVE_SUBMISSION_PDF, PRIVATE_DIR, sha, siteSources, inputHashes, verify, verifyAndSync } = require('../scripts/local-guide.cjs');
+const { spawnSync } = require('node:child_process');
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'math-guide-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
@@ -16,7 +17,7 @@ function fixture(t) {
   const sources = siteSources(root);
   const write = (file, data) => fs.writeFileSync(path.join(here, file), JSON.stringify(data));
   write('capture-review.json', { site_sources: sources, screenshots: { 'lesson.jpg': { sha256: sha(image) } } });
-  const pdf = path.join(root, RELATIVE_PDF); fs.writeFileSync(pdf, '%PDF fixture');
+  const pdf = path.join(root, RELATIVE_PDF); fs.writeFileSync(pdf, '%PDF-1.7 fixture');
   write('guide-release.json', { pages: 2, pdf: RELATIVE_PDF, pdf_sha256: sha(pdf), site_sources: sources, inputs: inputHashes(root) });
   write('qa-review.json', { status: 'PASS', pages: 2, pdf_sha256: sha(pdf), reviewed_pages: [1, 2] });
   return { root, here, pdf, image, write };
@@ -42,4 +43,33 @@ test('rebuilding without visual review, missing pages, or duplicate reviews stop
     assert.throws(() => verify(f.root), /逐頁視覺檢查/);
   }
   fs.unlinkSync(f.image); assert.throws(() => verify(f.root));
+});
+test('reviewed guide recreates a missing submission copy and replaces an outdated copy', t => {
+  const f = fixture(t), copy = path.join(f.root, RELATIVE_SUBMISSION_PDF);
+  verifyAndSync(f.root); assert.equal(sha(copy), sha(f.pdf));
+  fs.writeFileSync(copy, '%PDF-1.7 outdated');
+  verifyAndSync(f.root); assert.equal(sha(copy), sha(f.pdf));
+});
+test('failed guide review cannot replace the submission copy', t => {
+  const f = fixture(t), copy = path.join(f.root, RELATIVE_SUBMISSION_PDF);
+  verifyAndSync(f.root);
+  const before = sha(copy);
+  f.write('qa-review.json', { status: 'FAIL', pages: 2, pdf_sha256: sha(f.pdf), reviewed_pages: [] });
+  assert.throws(() => verifyAndSync(f.root), /逐頁視覺檢查/);
+  assert.equal(sha(copy), before);
+});
+test('successful builds refresh the submission copy while failed builds preserve it', t => {
+  const f = fixture(t), scripts = path.join(f.root, 'scripts');
+  fs.mkdirSync(scripts);
+  for (const file of ['local-guide.cjs', 'local-pdf-copy.cjs']) fs.copyFileSync(path.join(__dirname, '..', 'scripts', file), path.join(scripts, file));
+  const builder = path.join(f.here, 'build_guide.py');
+  fs.writeFileSync(builder, `require('node:fs').writeFileSync(${JSON.stringify(f.pdf)}, '%PDF-1.7 rebuilt');`);
+  const build = () => spawnSync(process.execPath, [path.join(scripts, 'local-guide.cjs'), '--build'], { env: { ...process.env, GUIDE_PDF_PYTHON: process.execPath }, encoding: 'utf8' });
+  assert.equal(build().status, 0);
+  const copy = path.join(f.root, RELATIVE_SUBMISSION_PDF);
+  assert.equal(fs.readFileSync(copy, 'utf8'), '%PDF-1.7 rebuilt');
+  assert.throws(() => verify(f.root), /重製 PDF/);
+  fs.writeFileSync(builder, 'process.exit(1);');
+  assert.notEqual(build().status, 0);
+  assert.equal(fs.readFileSync(copy, 'utf8'), '%PDF-1.7 rebuilt');
 });

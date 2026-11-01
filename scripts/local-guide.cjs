@@ -4,8 +4,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
+const { copyPdf } = require('./local-pdf-copy.cjs');
 const ROOT = path.resolve(__dirname, '..');
 const RELATIVE_PDF = 'output/pdf/數學慢慢懂_網站使用手冊.pdf';
+const RELATIVE_SUBMISSION_PDF = '參賽資料/數學慢慢懂_網站使用手冊.pdf';
 const PRIVATE_DIR = 'Codex/website-guide';
 const sha = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const read = file => JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -47,6 +49,14 @@ function verify(root = ROOT) {
   if (qa.status !== 'PASS' || qa.pdf_sha256 !== release.pdf_sha256 || qa.pages !== release.pages || qa.reviewed_pages?.length !== release.pages || new Set(qa.reviewed_pages).size !== release.pages || !qa.reviewed_pages.every(p => Number.isInteger(p) && p >= 1 && p <= release.pages)) throw Error('手冊重製後尚未完成逐頁視覺檢查。');
   return { pages: release.pages, screenshots: Object.keys(review.screenshots).length, sources: Object.keys(review.site_sources).length };
 }
+function syncSubmissionCopy(root = ROOT) {
+  copyPdf(path.join(root, RELATIVE_PDF), path.join(root, RELATIVE_SUBMISSION_PDF));
+}
+function verifyAndSync(root = ROOT) {
+  const info = verify(root);
+  syncSubmissionCopy(root);
+  return info;
+}
 function main() {
   if (process.argv.includes('--snapshot')) { console.log(JSON.stringify(siteSources())); return; }
   if (process.argv.includes('--review-check')) { console.log(JSON.stringify(checkCaptureReview())); return; }
@@ -56,7 +66,8 @@ function main() {
     const python = process.env.GUIDE_PDF_PYTHON || path.join(ROOT, 'Codex/pdf-venv/bin/python');
     const result = spawnSync(python, [builder], { cwd: ROOT, stdio: 'inherit' });
     if (result.error || result.status !== 0) throw Error('手冊產製未完成，請檢查本機 Python 與版面；不會沿用舊版推送。');
-    console.log('PDF 已重製；請完成逐頁視覺檢查後執行 npm run manual:check。');
+    syncSubmissionCopy();
+    console.log('PDF 已重製並同步至參賽資料；請完成逐頁視覺檢查後執行 npm run manual:check。');
     return;
   }
   if (process.argv.includes('--pre-push')) {
@@ -72,8 +83,8 @@ function main() {
     const dirty = spawnSync('git', ['diff', 'HEAD', '--name-only', '--', '*.html', '*.css', '*.js', '*.svg', 'assets', 'audio', 'css', 'js', 'games', 'islands'], { cwd: ROOT, encoding: 'utf8' });
     if (dirty.status !== 0 || dirty.stdout.trim()) throw Error('網站仍有未提交修改，請完成手冊同步與提交後再推送。');
   }
-  const info = verify();
-  console.log(`PASS：本機使用手冊 ${info.pages} 頁、${info.screenshots} 張實際截圖、${info.sources} 個網站來源與逐頁覆核版本一致。`);
+  const info = verifyAndSync();
+  console.log(`PASS：本機使用手冊 ${info.pages} 頁、${info.screenshots} 張實際截圖、${info.sources} 個網站來源與逐頁覆核版本一致；參賽資料副本已同步。`);
 }
 if (require.main === module) { try { main(); } catch (e) { console.error(e.code === 'ENOENT' ? '本機手冊同步資料缺少，請重製並完成覆核。' : e.message); process.exitCode = 1; } }
-module.exports = { RELATIVE_PDF, PRIVATE_DIR, sha, siteSources, inputHashes, checkCaptureReview, verify };
+module.exports = { RELATIVE_PDF, RELATIVE_SUBMISSION_PDF, PRIVATE_DIR, sha, siteSources, inputHashes, checkCaptureReview, verify, verifyAndSync };
