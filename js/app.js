@@ -132,13 +132,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.spEdAudio.playClick();
     document.dispatchEvent(new CustomEvent('math-tab-change', {detail:{tab:target}}));
 
-    if (target !== 'units' && target !== 'sandbox') {
+    if (target !== 'units' && target !== 'sandbox' && target !== 'practice') {
       window.MathFloatingTools?.close();
       window.MathToolbox?.close();
     }
     if (target === 'units') {
       if(window.innerWidth>=900)window.MathFloatingTools?.open();
     } else if (target === 'practice') {
+      window.MathFloatingTools?.open();
+      window.MathToolbox?.open();
       if (!AppState.filteredPractices.length) loadPracticesForUnit(elements.practiceUnitSelect.value || AppState.currentUnitId);
     } else if (target === 'sandbox') {
       renderSandbox(elements.sandboxUnitSelect.value || AppState.currentUnitId);

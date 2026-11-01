@@ -4,15 +4,15 @@ function lesson(){
  const {document,HTMLSelectElement,HTMLElement,Event,CustomEvent}=parseHTML(fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'));
  Object.defineProperty(HTMLSelectElement.prototype,'value',{configurable:true,get(){return this.querySelector('option[selected]')?.getAttribute('value')??this.querySelector('option')?.getAttribute('value')??'';},set(value){this.querySelectorAll('option').forEach(o=>{if(o.getAttribute('value')===String(value))o.setAttribute('selected','');else o.removeAttribute('selected');});}});
  let focus=null;Object.defineProperty(document,'activeElement',{get:()=>focus});HTMLElement.prototype.focus=function(){focus=this;};HTMLElement.prototype.scrollIntoView=function(){};
- const saved=new Map(),speech=[],pending=[];let stopped=0,closedTools=0;
+ const saved=new Map(),speech=[],pending=[];let stopped=0,closedTools=0,openedTools=0;
  const audio=new Proxy({speak(text,voice,callback){speech.push(text);if(callback)pending.push(callback);},stopSpeech(){stopped++;}},{get:(o,k)=>o[k]||(()=>{})});
- const context={document,window:{addEventListener(){},scrollTo(){},spEdAudio:audio,MathToolbox:{close(){closedTools++;}},MathFloatingTools:{open(){},close(){closedTools++;}},matchMedia:()=>({matches:true}),StudentBank:{getStudents:()=>[{id:1,name:'示例甲',avatar:'●'}],addStar(){}}},localStorage:{getItem:k=>saved.get(k)??null,setItem:(k,v)=>saved.set(k,v)},CustomEvent,Event,setTimeout,clearTimeout,requestAnimationFrame:fn=>fn(),console};
+ const context={document,window:{addEventListener(){},scrollTo(){},spEdAudio:audio,MathToolbox:{open(){openedTools++;},close(){closedTools++;}},MathFloatingTools:{open(){openedTools++;},close(){closedTools++;}},matchMedia:()=>({matches:true}),StudentBank:{getStudents:()=>[{id:1,name:'示例甲',avatar:'●'}],addStar(){}}},localStorage:{getItem:k=>saved.get(k)??null,setItem:(k,v)=>saved.set(k,v)},CustomEvent,Event,setTimeout,clearTimeout,requestAnimationFrame:fn=>fn(),console};
  context.window.window=context.window;vm.createContext(context);
  for(const file of ['data','place-value-lab','hands-on-tools','manipulatives','geometry-shapes','worksheet-visual-data','worksheet-visual-supports','worksheet-diagrams','practice-session','learning-records','app'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/'+file+'.js'),'utf8'),context,{filename:file+'.js'});
  document.dispatchEvent(new Event('DOMContentLoaded'));
  function choose(id,value){const node=document.getElementById(id);node.value=value;node.dispatchEvent(new Event('change',{bubbles:true}));}
  function click(selector){const node=document.querySelector(selector);assert.ok(node,selector);assert.ok(!node.disabled,selector+' must be enabled');node.click();}
- return {document,choose,click,speech,pending,stopped:()=>stopped,closedTools:()=>closedTools,window:context.window};
+ return {document,choose,click,speech,pending,stopped:()=>stopped,closedTools:()=>closedTools,openedTools:()=>openedTools,window:context.window};
 }
 test('switching between geometry, division, fractions and circle removes unrelated tools but retains intentional comparisons',()=>{
  const h=lesson();h.click('[data-tab="sandbox"]');
@@ -47,7 +47,10 @@ test('round recap retains skipped questions and routes supported work into revie
  h.click('[data-review-section][data-target="teach"]');assert.ok(h.document.getElementById('tab-units').classList.contains('active'));
 });
 
-test('switching into practice closes both drawing palettes while keeping their launchers available',()=>{
- const h=lesson();const before=h.closedTools();h.click('[data-tab="practice"]');assert.equal(h.closedTools(),before+2);
- h.click('[data-tab="sandbox"]');assert.equal(h.closedTools(),before+2);
+test('entering and re-entering practice opens both drawing and math toolbars',()=>{
+ const h=lesson(),closed=h.closedTools(),opened=h.openedTools();
+ h.click('[data-tab="practice"]');assert.equal(h.closedTools(),closed);assert.equal(h.openedTools(),opened+2);
+ h.click('[data-tab="sandbox"]');assert.equal(h.openedTools(),opened+2);
+ h.click('[data-tab="iep"]');assert.equal(h.closedTools(),closed+2);
+ h.click('[data-tab="practice"]');assert.equal(h.openedTools(),opened+4);
 });
