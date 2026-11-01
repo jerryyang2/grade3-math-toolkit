@@ -20,6 +20,16 @@ test('a scrolled classroom entry stays pinned and returns to its row',()=>{
 test('five steps use the main-menu order and allocate exactly forty minutes',()=>{
  const h=classroom();assert.deepEqual(Array.from(h.document.querySelectorAll('[data-lesson-step]'),b=>b.dataset.lessonStep),['units','practice','battle','arcade','islands']);assert.equal(h.window.MathLessonFlow.steps.reduce((n,s)=>n+s[3],0),40);
 });
+test('each activity opens its plan without changing tabs or fullscreen state',async()=>{
+ const h=classroom();let stage;
+ h.window.ForestHome={openGuide(value){stage=value;}};
+ for(const id of ['units','practice','battle','arcade','islands']){
+  h.window.MathLessonFlow.go(id);h.document.querySelector('#tab-'+id+' .lesson-plan-entry').click();assert.equal(stage,id);
+ }
+ await h.window.MathLessonFocus.toggle();h.document.querySelector('[data-lesson-plan]').click();
+ assert.equal(stage,'islands');assert.equal(h.document.fullscreenElement,h.document.documentElement);
+ assert.ok(h.document.querySelector('#tab-islands').classList.contains('active'));
+});
 test('all four activities return to the same unit without leaving fullscreen',async()=>{
  const h=classroom();await h.window.MathLessonFocus.toggle();
  for(const tab of ['practice','battle','arcade','islands']){
@@ -44,4 +54,11 @@ test('island messages require the embedded frame and same origin',()=>{
 });
 test('fullscreen fallback keeps five-step navigation and cleans it up on exit',async()=>{
  const h=classroom(true);await h.window.MathLessonFocus.toggle();assert.ok(h.document.documentElement.classList.contains('lesson-focus-fallback'));assert.equal(h.window.MathLessonFlow.panel.hidden,false);h.window.MathLessonFlow.go('practice');h.window.MathLessonFlow.go('units');assert.ok(h.document.body.classList.contains('lesson-focus'));await h.window.MathLessonFocus.toggle();assert.ok(!h.document.body.classList.contains('lesson-focus'));assert.equal(h.window.MathLessonFlow.panel.hidden,true);assert.equal(h.window.MathLessonFlow.panel.parentElement.id,'main-content-area');
+});
+test('Escape in an open lesson-plan dialog does not also leave fullscreen fallback',async()=>{
+ const h=classroom(true);await h.window.MathLessonFocus.toggle();
+ const dialog=h.document.createElement('dialog');dialog.setAttribute('open','');h.document.body.appendChild(dialog);
+ const escape=()=>{const e=new h.Event('keydown');Object.defineProperty(e,'key',{value:'Escape'});h.document.dispatchEvent(e);};
+ escape();assert.ok(h.document.body.classList.contains('lesson-focus'));
+ dialog.removeAttribute('open');escape();assert.ok(!h.document.body.classList.contains('lesson-focus'));
 });

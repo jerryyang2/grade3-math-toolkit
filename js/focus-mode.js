@@ -8,6 +8,14 @@
     const buttons = panes.map(pane => {
       const row = pane.querySelector(':scope > .lesson-focus-entry') || document.createElement('div');
       row.className = 'lesson-focus-entry';
+      if (['units','practice','battle','arcade','islands'].includes(pane.id.slice(4))) {
+        const plan = document.createElement('button');
+        plan.type = 'button';
+        plan.className = 'lesson-plan-entry';
+        plan.textContent = '📋 本步教案';
+        plan.addEventListener('click', () => window.ForestHome?.openGuide(pane.id.slice(4)));
+        row.appendChild(plan);
+      }
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'lesson-focus-button';
@@ -131,7 +139,7 @@
     document.addEventListener('webkitfullscreenchange', synchronize);
     document.addEventListener('math-tab-change', synchronize);
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && fallback) { fallback = false; synchronize(); }
+      if (event.key === 'Escape' && fallback && !document.querySelector('dialog[open]')) { fallback = false; synchronize(); }
     });
     window.MathLessonFocus = {toggle:toggleFocus};
     synchronize();

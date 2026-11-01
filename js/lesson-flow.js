@@ -15,7 +15,7 @@
     const panel = document.createElement('section');
     panel.className = 'lesson-flow-panel';
     panel.setAttribute('aria-label', '40 分鐘上課路線');
-    panel.innerHTML = `<div class="lesson-flow-heading"><strong>40 分鐘上課路線</strong><span>點選步驟切換；時間可依學生步調調整，不必每堂完成全部活動。</span></div><nav class="lesson-flow-steps" aria-label="上課五步驟">${steps.map(([id,label,time],i)=>`<button type="button" data-lesson-step="${id}"><span class="lesson-flow-number" aria-hidden="true">${i+1}</span><span class="lesson-flow-copy"><strong>${label}</strong><small>${time}</small></span><span class="lesson-flow-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
+    panel.innerHTML = `<div class="lesson-flow-heading"><strong>40 分鐘上課路線</strong><span>點選步驟切換；時間可依學生步調調整，不必每堂完成全部活動。</span><button type="button" class="lesson-plan-open" data-lesson-plan>📋 本步教案</button></div><nav class="lesson-flow-steps" aria-label="上課五步驟">${steps.map(([id,label,time],i)=>`<button type="button" data-lesson-step="${id}"><span class="lesson-flow-number" aria-hidden="true">${i+1}</span><span class="lesson-flow-copy"><strong>${label}</strong><small>${time}</small></span><span class="lesson-flow-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
     main.prepend(panel);
     const frame = document.getElementById('lesson-island-frame');
     const islandLink = document.getElementById('lesson-island-external');
@@ -69,6 +69,7 @@
       window.scrollTo({top:document.body.classList.contains('lesson-focus') ? 0 : main.offsetTop, behavior:'auto'});
     }
     panel.addEventListener('click',event=>{
+      if (event.target.closest('[data-lesson-plan]')) window.ForestHome?.openGuide(tab());
       const button=event.target.closest('[data-lesson-step]');
       if (button) go(button.dataset.lessonStep);
     });
