@@ -7309,7 +7309,6 @@ const catalog={
   "距離 ＝ 速度 × 時間。算式：⟦0⟧ × ⟦1⟧ ＝ ⟦2⟧ 公尺": "Distance = speed × time. Calculation formula: ⟦0⟧ × ⟦1⟧ = ⟦2⟧ meters",
   "距離 80 公里，車速每小時 40 公里，需花幾小時到達？": "The distance is 80 kilometers and the vehicle speed is 40 kilometers per hour. How many hours does it take to reach?",
   "進入 3v3 賽場！鳴笛出戰！": "Enter the 3v3 arena! Sound the whistle and go to war!",
-  "進入數學遊戲島": "Enter Math Game Island",
   "進行中 ⚔️": "In progress ⚔️",
   "進位 +1": "Carry +1",
   "進位加法": "carry addition",
@@ -8474,7 +8473,8 @@ const catalog={
   "商：？": "Quotient: ?",
   "已合計毫升": "Total mL",
   "換成公升": "Change to L",
-  "剩下毫升": "mL left"
+  "剩下毫升": "mL left",
+  "進入數學遊戲島": "Enter Math Game Island"
 };
 if(typeof module!=="undefined"&&module.exports)module.exports=catalog;else root.MathEnglishCatalog=Object.freeze(catalog);
 })(typeof window!=="undefined"?window:globalThis);
