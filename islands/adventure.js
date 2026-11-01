@@ -142,5 +142,16 @@ $('back-to-landing').onclick=()=>world.returnToLanding();$('landing-label').oncl
 document.addEventListener('math-language-change',()=>{if(currentCertificate){if(currentCertificate.issuedAt)currentCertificate.date=new Intl.DateTimeFormat(window.MathI18n?.language==='en'?'en-US':'zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'long',day:'numeric'}).format(new Date(currentCertificate.issuedAt));$('certificate-art').innerHTML=R.svg(currentCertificate);}});
 // 每次開啟、重新整理或切換訪客皆從碼頭出發，護照紀錄仍獨立保留。
 loadTask();showLanding();
+const classroomUnit=new URLSearchParams(location.search).get('lesson');
+if (/^u[1-9]$/.test(classroomUnit)) {
+  requestAnimationFrame(()=>world.travelTo(classroomUnit));
+  window.addEventListener('message',event=>{if(event.source===window.parent && event.origin===location.origin && event.data?.type==='math-lesson-visibility' && !event.data.visible){world.stop();audio.stopSpeech();}});
+  if (window.parent!==window) document.addEventListener('click',event=>{
+    const link=event.target.closest('a');
+    if (link && (link.id==='unit-link' || link.getAttribute('href')==='../index.html') && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();window.parent.postMessage({type:'math-lesson-return',unit:unit.id},location.origin);
+    }
+  });
+}
 
 })();

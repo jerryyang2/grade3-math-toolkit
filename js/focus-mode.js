@@ -3,7 +3,7 @@
   'use strict';
   function initialize() {
     const panes = [...document.querySelectorAll('.tab-pane')];
-    const labels = {prep:'備課指引', units:'課堂教學', sandbox:'數位教具操作箱', practice:'隨堂練習', battle:'分組搶答', arcade:'互動遊戲', guide:'課程調整', iep:'隨堂診斷'};
+    const labels = {prep:'備課指引', units:'課堂教學', sandbox:'數位教具操作箱', practice:'隨堂練習', battle:'分組搶答', arcade:'互動遊戲', guide:'課程調整', iep:'隨堂診斷', islands:'對應數學島'};
     const expandIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>';
     const buttons = panes.map(pane => {
       const row = pane.querySelector(':scope > .lesson-focus-entry') || document.createElement('div');
@@ -28,17 +28,18 @@
         }
         target.classList.toggle('is-pinned', !!pinned);
       });
-    }, {rootMargin:'-12px 0px 0px 0px', threshold:0});
+    }, {rootMargin:'-12px 0px 0px 0px', threshold:1});
     buttons.forEach(button => entryObserver.observe(button.parentElement));
     const bar = document.createElement('div');
     bar.className = 'lesson-focus-bar';
     bar.hidden = true;
     bar.setAttribute('role', 'region');
     bar.setAttribute('aria-label', '全螢幕課堂控制');
-    bar.innerHTML = '<strong class="lesson-focus-label"></strong><label class="lesson-focus-unit">教學單元<select aria-label="全螢幕教學單元"></select></label><button type="button" class="lesson-focus-return" hidden>← 回課堂教學</button><div class="lesson-focus-font" role="group" aria-label="課堂字級"><button type="button" data-font="smaller" aria-label="縮小課堂字級">A−</button><button type="button" data-font="reset" aria-label="還原課堂字級">100%</button><button type="button" data-font="larger" aria-label="放大課堂字級">A＋</button></div><button type="button" class="lesson-focus-exit">⤡ 離開全螢幕</button>';
+    bar.innerHTML = '<strong class="lesson-focus-label"></strong><label class="lesson-focus-unit">教學單元<select aria-label="全螢幕教學單元"></select></label><div class="lesson-focus-font" role="group" aria-label="課堂字級"><button type="button" data-font="smaller" aria-label="縮小課堂字級">A−</button><button type="button" data-font="reset" aria-label="還原課堂字級">100%</button><button type="button" data-font="larger" aria-label="放大課堂字級">A＋</button></div><button type="button" class="lesson-focus-exit">⤡ 離開全螢幕</button>';
     document.body.appendChild(bar);
-    const returnButton = bar.querySelector('.lesson-focus-return');
-    returnButton.addEventListener('click', () => window.switchSpEdTab?.('units'));
+    if (typeof ResizeObserver === 'function') new ResizeObserver(() => {
+      document.documentElement.style.setProperty('--lesson-controls-height', `${bar.hidden ? 0 : bar.getBoundingClientRect().height}px`);
+    }).observe(bar);
     const select = bar.querySelector('select');
     const sourceSelect = document.getElementById('lesson-unit-quick-select');
     if (sourceSelect) select.innerHTML = sourceSelect.innerHTML;
@@ -85,7 +86,7 @@
       const current = document.querySelector('.tab-pane.active');
       bar.querySelector('.lesson-focus-label').textContent = labels[current?.id.slice(4)] || '專心上課';
       bar.querySelector('.lesson-focus-unit').hidden = current?.id !== 'tab-units';
-      returnButton.hidden = current?.id === 'tab-units';
+      window.MathLessonFlow?.setFocus(active, bar);
       if (sourceSelect) select.value = sourceSelect.value;
       if (!active && wasActive) {
         if (previousScroll) window.scrollTo(previousScroll.x, previousScroll.y);

@@ -24,7 +24,7 @@
     document.getElementById('home-concrete-goal').textContent = unit.cra.concrete;
   }
   function aiPrompt(unit) {
-    return `你是協助教師備課的數學教學夥伴。請根據下列公開教材資料，草擬一份可由教師檢核的 30 分鐘教案。\n\n年級：國小三年級上學期\n單元：${unit.title}\n學習重點：${goals[unit.id]}\n數學學習內容：${unit.curriculumCode}\n特殊需求指標：${unit.specialNeedsCodes.join('、')}\n先備檢核：${unit.prerequisite.diagnosticCheck}\n具體操作：${unit.cra.concrete}\n圖像連結：${unit.cra.representational}\n抽象符號：${unit.cra.abstract}\n常見迷思：${unit.misconception.name}\n\n請依序輸出：\n1. 可觀察的目標（條件、表現及達成標準）。\n2. 先備檢核與 30 分鐘流程，寫清楚教師引導及學生行動。\n3. 全提示、部分提示與獨立嘗試三種支持方式；支持依觀察調整，不能只用障礙標籤決定。\n4. 操作員、說明員、檢查員輪替的合作任務。\n5. 五題練習，附答案、逐步解釋與教師複核欄。\n6. 首次作答、提示程度、操作及口述的觀察表。\n\n學生需求由教師另行以不含身分資訊的方式補充。不得編造學生表現、試教成效、研究引文或障礙診斷。請將不確定處標示為需教師確認，計算與課綱代碼均須由教師複核。`;
+    return `你是協助教師備課的數學教學夥伴。請根據下列公開教材資料，草擬一份可由教師檢核的 40 分鐘教案。\n\n年級：國小三年級上學期\n單元：${unit.title}\n學習重點：${goals[unit.id]}\n數學學習內容：${unit.curriculumCode}\n特殊需求指標：${unit.specialNeedsCodes.join('、')}\n先備檢核：${unit.prerequisite.diagnosticCheck}\n具體操作：${unit.cra.concrete}\n圖像連結：${unit.cra.representational}\n抽象符號：${unit.cra.abstract}\n常見迷思：${unit.misconception.name}\n\n請依序輸出：\n1. 可觀察的目標（條件、表現及達成標準）。\n2. 先備檢核與 40 分鐘流程，寫清楚教師引導及學生行動。\n3. 全提示、部分提示與獨立嘗試三種支持方式；支持依觀察調整，不能只用障礙標籤決定。\n4. 操作員、說明員、檢查員輪替的合作任務。\n5. 五題練習，附答案、逐步解釋與教師複核欄。\n6. 首次作答、提示程度、操作及口述的觀察表。\n\n學生需求由教師另行以不含身分資訊的方式補充。不得編造學生表現、試教成效、研究引文或障礙診斷。請將不確定處標示為需教師確認，計算與課綱代碼均須由教師複核。`;
   }
   function openGuide() {
     if (!currentUnit) return;
@@ -37,14 +37,15 @@
       dialog.setAttribute('aria-labelledby', 'lesson-guide-title');
       document.body.appendChild(dialog);
     }
-    const phases = [
-      ['3 分鐘','先備檢核',unit.prerequisite.diagnosticCheck],
-      ['8 分鐘','具體操作',unit.cra.concrete],
-      ['7 分鐘','圖像與步驟',unit.cra.representational],
-      ['8 分鐘','練習與觀察','先確認練習對象與支持程度，再開始作答。把首次答對、提示後完成與獨立作答分開觀察。'],
-      ['4 分鐘','口述與轉移',`請學生說、指認或操作關鍵步驟，再連回生活情境。${unit.scaffoldingSteps.at(-1).checkRule}`]
+    const tasks = [
+      unit.cra.concrete,
+      '先確認練習對象與支持程度，再開始作答。把首次答對、提示後完成與獨立作答分開觀察。',
+      '輪流計算與說明解法；答錯不扣分，確認方法後再前進。',
+      '選擇符合本課概念的遊戲，先示範玩法，再讓學生操作。',
+      '前往目前單元的數學島，完成一個任務並說說怎麼想；最後回顧今天的方法。'
     ];
-    dialog.innerHTML = `<header class="lesson-guide-header"><div><span>教學設計與使用說明</span><h2 id="lesson-guide-title">${escape(unit.title)} · 30 分鐘教學流程</h2></div><form method="dialog"><button class="guide-close" aria-label="關閉教學流程">✕</button></form></header>
+    const phases = window.MathLessonFlow.steps.map(([id,title,time],i)=>[time,title,tasks[i]]);
+    dialog.innerHTML = `<header class="lesson-guide-header"><div><span>教學設計與使用說明</span><h2 id="lesson-guide-title">${escape(unit.title)} · 40 分鐘教學流程</h2></div><form method="dialog"><button class="guide-close" aria-label="關閉教學流程">✕</button></form></header>
       <div class="lesson-guide-body"><p class="guide-notice">這是一份可調整的教學示例。時間、題量及達成標準由教師依先備能力與 IEP 決定，不代表已完成試教。</p>
       <section><h3>這一課要學什麼？</h3><p>${escape(goals[unit.id])}</p><p><strong>目標草案：</strong>在選定的支持程度下，完成本單元 5 次操作或作答，至少 4 次符合目標，並至少一次口述或指認關鍵步驟。教師可依個別需要調整。</p><p class="guide-codes">數學：${escape(unit.curriculumCode)}｜特殊需求：${escape(unit.specialNeedsCodes.join('、'))}</p></section>
       <section><h3>教學流程</h3><ol class="guide-phases">${phases.map(([time,title,task])=>`<li><span>${time}</span><div><strong>${title}</strong><p>${escape(task)}</p></div></li>`).join('')}</ol></section>

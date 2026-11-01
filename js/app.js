@@ -476,17 +476,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="lesson-banner-note">探索 ${String(unit.number).padStart(2, '0')} ／ ${(UNIT_THEMES[unit.id] || {}).theme || ''}</div>
               </div>
             </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="kid-btn kid-btn-solution" onclick="window.switchSpEdTab('battle')" style="font-size:0.95rem; padding:6px 14px;" title="以本單元題目開啟分組搶答對決">
-                ⚔️ 分組搶答大對決
-              </button>
-              <button class="kid-btn kid-btn-solution" onclick="window.switchSpEdTab('arcade')" style="font-size:0.95rem; padding:6px 14px; background:#fdf2f8; color:#be185d; border-color:#fbcfe8;" title="前往互動遊戲冒險館遊玩 5 大精選遊戲">
-                🎪 遊戲冒險館
-              </button>
-              <button class="kid-btn kid-btn-primary" onclick="window.switchSpEdTab('practice')" style="font-size:0.95rem; padding:6px 14px;" title="前往本單元練習與觀察">
-                🎯 練習與觀察
-              </button>
-            </div>
+            <nav class="lesson-shortcuts" aria-label="切換上課活動">
+              <button type="button" onclick="window.MathLessonFlow.go('practice')">2. 隨堂練習 <span aria-hidden="true">›</span></button>
+              <button type="button" onclick="window.MathLessonFlow.go('battle')">3. 分組搶答 <span aria-hidden="true">›</span></button>
+              <button type="button" onclick="window.MathLessonFlow.go('arcade')">4. 互動遊戲 <span aria-hidden="true">›</span></button>
+              <button type="button" onclick="window.MathLessonFlow.go('islands')">5. 對應數學島 <span aria-hidden="true">›</span></button>
+            </nav>
           </div>
 
           <!-- 🎚️ 提示階層三段消褪控制面板 (Prompt Fading Selector) -->
