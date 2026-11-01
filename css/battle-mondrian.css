@@ -1,7 +1,7 @@
 /* 此視覺試作只套用於分組搶答，以及此遊戲自己的結算視窗。 */
 #tab-battle { --m-ink:#161616; --m-paper:#fffef8; --m-blue:#164aad; --m-red:#c72c25; --m-yellow:#f6d234; color:var(--m-ink); }
 #tab-battle #battle-arena-container { border:5px solid var(--m-ink); background:var(--m-ink); }
-#tab-battle .battle-mondrian-heading { display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,.58fr) 140px; gap:5px; margin-bottom:5px; background:var(--m-ink); }
+#tab-battle .battle-mondrian-heading { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,.75fr); gap:5px; margin-bottom:5px; background:var(--m-ink); }
 #tab-battle .battle-title-block { padding:18px 24px; background:var(--m-yellow); }
 #tab-battle .battle-eyebrow { display:block; font-size:12px; font-weight:900; letter-spacing:.16em; }
 #tab-battle .battle-title-block h2 { display:flex; align-items:center; justify-content:space-between; gap:16px; color:var(--m-ink); font-size:clamp(2rem,3.3vw,3rem); font-weight:900; line-height:1.2; letter-spacing:-.04em; margin:7px 0; }
@@ -12,11 +12,6 @@
 #tab-battle .battle-rule-block > strong { display:flex; align-items:baseline; gap:10px; font:900 48px/1.1 var(--font-base); }
 #tab-battle .battle-rule-block small { font-size:16px; font-weight:800; }
 #tab-battle .battle-rule-block p { margin:4px 0 0; color:var(--m-ink); font-size:14px !important; line-height:1.5; }
-#tab-battle .battle-art-block { display:grid; grid-template-columns:1fr .55fr; grid-template-rows:1fr .36fr; gap:5px; background:var(--m-ink); }
-#tab-battle .battle-art-block i { background:var(--m-red); font-style:normal; }
-#tab-battle .battle-art-block i:nth-child(2) { display:flex; align-items:center; justify-content:center; background:var(--m-paper); font-size:32px; font-weight:900; }
-#tab-battle .battle-art-block i:nth-child(3) { background:var(--m-blue); }
-#tab-battle .battle-art-block i:nth-child(4) { background:var(--m-yellow); }
 #tab-battle .battle-stage-card { display:grid; grid-template-columns:200px minmax(0,1fr); grid-template-areas:'setup question' 'setup scores' 'setup answers'; gap:5px; padding:0; margin:0; border:0; border-radius:0; box-shadow:none; background:var(--m-ink); }
 #tab-battle .battle-top-bar { grid-area:setup; display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:16px; min-width:0; padding:18px 14px; border:0; margin:0; background:var(--m-paper); }
 #tab-battle .battle-controls-heading { font-size:16px; font-weight:900; padding-bottom:12px; border-bottom:3px solid var(--m-ink); margin:0; }
@@ -79,13 +74,13 @@
 .calm-focus-mode #tab-battle { --m-yellow:#ebe7cf; --m-blue:#34596d; --m-red:#8a4639; }
 .high-contrast-mode #tab-battle .battle-top-bar :is(button,select), .high-contrast-mode #tab-battle #btn-battle-speak-q { color:#fff !important; background:#111 !important; border-color:#f6d234 !important; }
 @media (max-width:1000px) {
-  #tab-battle .battle-mondrian-heading { grid-template-columns:minmax(0,1fr) 240px 90px; }
+  #tab-battle .battle-mondrian-heading { grid-template-columns:minmax(0,1fr) 300px; }
   #tab-battle .battle-stage-card { grid-template-columns:170px minmax(0,1fr); }
   #tab-battle .battle-player-header { align-items:flex-start; flex-wrap:wrap; }
   #tab-battle .battle-player-badge small { display:none; }
 }
 @media (max-width:760px) {
-  #tab-battle .battle-mondrian-heading { grid-template-columns:minmax(0,1fr) 90px; }
+  #tab-battle .battle-mondrian-heading { grid-template-columns:minmax(0,1fr); }
   #tab-battle .battle-title-block { padding:16px; }
   #tab-battle .battle-rule-block { grid-column:1 / -1; grid-row:2; flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 12px; padding:10px 16px; }
   #tab-battle .battle-rule-block > strong { font-size:28px; }

@@ -153,7 +153,6 @@
             <strong>${this.questions.length || this.roundCount}<small>題一回合</small></strong>
             <p>答對 +10 分 · 答錯不扣分</p>
           </div>
-          <div class="battle-art-block" aria-hidden="true"><i></i><i>×</i><i></i><i></i></div>
         </header>
         <div class="battle-stage-card">
           <!-- 頂部控制列：單元選擇、小節選擇、局數與選手設定 -->
