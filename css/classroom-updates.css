@@ -89,3 +89,9 @@ html[lang="en"] .storybook-site .main-nav :is(.nav-tab,.nav-island-link) { paddi
   #student-bank-panel .student-bank-inner { padding-inline:12px; }
 }
 .storybook-site.high-contrast-mode #btn-student-bank[aria-expanded="true"] { background:#facc15; color:#111 !important; border-color:#facc15; }
+
+/* 拔河卡片：推薦文字位於繩子圖示與玩法標籤之間。 */
+#tab-arcade .arcade-card-banner--recommended { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:10px; }
+#tab-arcade .arcade-card-recommendation { color:#9a3412; font-size:1.25rem; font-weight:900; line-height:1.4; text-align:center; white-space:nowrap; }
+@media(max-width:420px) { #tab-arcade .arcade-card-banner--recommended { gap:6px; } #tab-arcade .arcade-card-recommendation { font-size:1rem; } }
+html[lang="en"] #tab-arcade .arcade-card-recommendation { font-size:1rem; white-space:normal; overflow-wrap:anywhere; }

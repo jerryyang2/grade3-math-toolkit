@@ -7302,6 +7302,7 @@ const catalog={
   "買得起代表價錢要比 4000 元小或剛好等於 4000 元，3890 < 4000 買得起！": "Affordable means the price is less than 4000 NT$ or exactly equal to 4000 NT$, 3890 < 4000 affordable!",
   "超人氣 3v3 團隊拔河或雙人對決！答對題隊伍奮力將繩子拉向己方，具備逼真拔河張力物理、連擊強拉大招與 8-bit 晶片配樂！": "The popular 3v3 team tug of war or duel showdown! The team that answers the correct question strives to pull the rope towards itself, with realistic tug-of-war tension physics, combo-pulling ultimate moves, and 8-bit chip soundtrack!",
   "超大放大鏡刻度盤：公分粗黑線、5毫米藍線、1毫米細刻度，動態顯示讀數。": "Extra large magnifying glass dial: centimeter thick black line, 5mm blue line, 1mm fine scale, dynamic display of readings.",
+  "超級推薦": "Highly recommended",
   "超商收銀機大冒險": "Supermarket cash register adventure",
   "跑步速度": "running speed",
   "跑步量身高小數計算": "Running measurement decimal calculation",
