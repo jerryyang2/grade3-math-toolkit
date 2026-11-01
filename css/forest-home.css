@@ -53,6 +53,19 @@ body.storybook-site,body.storybook-game { background-color:#fff7e3; }
 .home-teacher-strip strong { color:#274b30; margin-right:8px; font-size:1.125rem; }
 .home-teacher-strip button { color:#1e4c30; background:#fffef8; border:1px solid #5c7a51; border-radius:7px; padding:8px 12px; font:inherit; font-size:1rem; font-weight:700; min-height:44px; cursor:pointer; }
 .home-teacher-strip button:hover { background:#ffe6a1; }
+.prep-lesson-plans { padding:18px; margin:0 0 24px; border:2px solid #648b79; border-radius:14px; background:#edf5e9; color:#244b3c; }
+.prep-lesson-plans h3 { margin:0 0 8px; font-size:1.35rem; color:inherit; }
+.prep-lesson-plans p { margin:0 0 14px; line-height:1.8; }
+#prep-lesson-plan-steps { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+#prep-lesson-plan-steps button { display:grid; gap:6px; min-height:100px; padding:12px; border:2px solid #547d66; border-bottom-width:4px; border-radius:10px; background:#fffef8; color:#214c3d; font:800 1rem/1.5 var(--font-base,system-ui); text-align:left; cursor:pointer; }
+#prep-lesson-plan-steps small { font-size:.9rem; }
+#prep-lesson-plan-steps button > span:last-child { color:#176379; }
+#prep-lesson-plan-steps button:hover { background:#dceef2; }
+#prep-lesson-plan-steps button:focus-visible { outline:3px solid #e79915; outline-offset:3px; }
+.storybook-site.high-contrast-mode .prep-lesson-plans,.storybook-site.high-contrast-mode #prep-lesson-plan-steps button { background:#18181b; color:white; border-color:#facc15; }
+.storybook-site.high-contrast-mode #prep-lesson-plan-steps button > span:last-child { color:#facc15; }
+@media (max-width:1000px) { #prep-lesson-plan-steps { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:600px) { #prep-lesson-plan-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .storybook-site .mascot-companion-card { background:#e2edca !important; border:2px solid #6a874b !important; }
 .lesson-guide-dialog { width:min(920px,calc(100% - 24px)); max-height:90dvh; padding:0; margin:auto; color:#203b2b; background:#fffdf5; border:3px solid #335f43; border-radius:16px; font-family:var(--font-base); font-size:17px; line-height:1.8; }
 .lesson-guide-dialog::backdrop { background:#102b35b8; }

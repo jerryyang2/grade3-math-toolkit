@@ -802,5 +802,9 @@
   "請指出你用到的圖像、材料或關係，說明為什麼這樣做。": "Point to the picture, materials, or relationship you used, and explain why your method works.",
   "從千位到個位，一格一格確認；沒有的位值也要留下 0。": "Check each place from thousands to ones; write 0 in any place with no quantity.",
   "哪一格沒有人？零為什麼不能省略？": "Which place is empty? Why must we keep the zero?",
-  "⟦7⟧ · ⟦8⟧ 分鐘": "⟦7⟧ · ⟦8⟧ minutes"
+  "⟦7⟧ · ⟦8⟧ 分鐘": "⟦7⟧ · ⟦8⟧ minutes",
+  "📋 本單元五步教案": "📋 Five-step plans for this unit",
+  "本單元五步教案": "Five-step plans for this unit",
+  "依目前備課單元同步顯示。點選步驟查看教師引導、學生任務、支持與評量，也可列印整套教案。": "Plans follow the selected preparation unit. Choose a step for teacher guidance, student tasks, supports, and assessment, or print the complete set.",
+  "查看教案 ›": "View plan ›"
 }

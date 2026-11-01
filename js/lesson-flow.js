@@ -95,6 +95,7 @@
       if (panel.parentElement!==parent) parent.prepend(panel);
       synchronize();
     }};
+    window.ForestHome?.renderPrepPlans();
     synchronize();
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',initialize); else initialize();

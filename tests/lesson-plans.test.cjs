@@ -30,7 +30,7 @@ test('plans distinguish speed and game progress from individual mathematical und
  assert.match(plans.build(data.units[0],data,curriculum,steps)[0].activity,/照圖放一放.*十個換一個.*自由操作/);
 });
 function guide(){
- const {window,document,HTMLElement}=parseHTML('<html><body><input id="student-answer" value="unfinished"></body></html>');
+ const {window,document,HTMLElement}=parseHTML('<html><body><nav id="prep-lesson-plan-steps"></nav><input id="student-answer" value="unfinished"></body></html>');
  HTMLElement.prototype.showModal=function(){this.open=true;this.setAttribute('open','');};
  HTMLElement.prototype.close=function(){this.open=false;this.removeAttribute('open');};
  Object.assign(window,{MathLessonPlans:plans,MathIslands:curriculum,NANI_G3S1_DATA:data,MathLessonFlow:{steps}});
@@ -56,6 +56,18 @@ test('opening and browsing plans keeps the teaching unit and unfinished student 
  assert.match(h.document.querySelector('#lesson-guide-title').textContent,/圓/);
  assert.equal(h.document.querySelectorAll('#lesson-guide-dialog').length,1);
  assert.match(h.document.querySelector('#guide-plan-units').textContent,/圓心/);
+});
+test('preparation entries follow the selected unit and open the chosen step without changing student work',()=>{
+ const h=guide();
+ for(const unit of [data.units[0],data.units[7]]){
+  h.window.ForestHome.render(unit);
+  const buttons=[...h.document.querySelectorAll('[data-prep-plan]')];
+  assert.deepEqual(buttons.map(b=>b.dataset.prepPlan),steps.map(s=>s[0]));
+  buttons.at(-1).click();
+  assert.match(h.document.querySelector('#lesson-guide-title').textContent,new RegExp(unit.title));
+  assert.equal(h.document.querySelector('.guide-stage-plan:not([hidden])').id,'guide-plan-islands');
+  assert.equal(h.document.querySelector('#student-answer').value,'unfinished');
+ }
 });
 test('printing includes reference answers from all five steps and restores the reading state',()=>{
  const h=guide();h.window.ForestHome.render(data.units[2]);h.window.ForestHome.openGuide('battle');

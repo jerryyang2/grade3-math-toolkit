@@ -14,8 +14,16 @@
   };
   let currentUnit;
   const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+  function renderPrepPlans() {
+    const host = document.getElementById('prep-lesson-plan-steps');
+    const steps = window.MathLessonFlow?.steps;
+    if (!host || !currentUnit || !steps) return;
+    host.innerHTML = steps.map(([id,title,time],i)=>`<button type="button" data-prep-plan="${id}"><span>${i+1}. ${escape(title)}</span><small>${escape(time)}</small><span aria-hidden="true">查看教案 ›</span></button>`).join('');
+    host.querySelectorAll('[data-prep-plan]').forEach(button=>button.addEventListener('click',()=>openGuide(button.dataset.prepPlan)));
+  }
   function render(unit) {
     currentUnit = unit;
+    renderPrepPlans();
     const title = document.getElementById('home-unit-name');
     if (!title) return;
     title.textContent = unit.title;
@@ -92,7 +100,7 @@
     dialog.querySelector('[data-guide-records]').addEventListener('click', () => { dialog.close(); window.switchSpEdTab('iep'); });
     dialog.showModal();
   }
-  window.ForestHome = { render, openGuide };
+  window.ForestHome = { render, openGuide, renderPrepPlans };
   document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', event => {
       const tab = event.target.closest('[data-home-tab]');
