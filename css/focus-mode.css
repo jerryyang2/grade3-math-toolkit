@@ -5,6 +5,10 @@
   cursor:pointer; touch-action:manipulation;
 }
 .lesson-focus-button { display:inline-flex; align-items:center; gap:8px; box-shadow:0 3px 0 #a9c6c9; }
+.lesson-focus-entry.is-pinned .lesson-focus-button {
+  position:fixed; top:max(12px,env(safe-area-inset-top)); right:max(16px,env(safe-area-inset-right));
+  z-index:900; max-width:calc(100vw - 32px); box-shadow:0 3px 0 #a9c6c9,0 5px 16px #173f5326;
+}
 .lesson-focus-button svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
 .lesson-focus-button:hover, .lesson-focus-bar button:hover { background:#e0f1ff; }
 .lesson-focus-button:focus-visible, .lesson-focus-bar :is(button,select):focus-visible { outline:3px solid #e79915; outline-offset:3px; }

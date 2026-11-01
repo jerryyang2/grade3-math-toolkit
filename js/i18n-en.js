@@ -784,6 +784,7 @@ const catalog={
   "° 和": "° and",
   "°，第三個角是多少度？": "°, what is the third angle?",
   "← 上一步": "← Previous",
+  "← 回課堂教學": "← Back to lesson",
   "↓ 現在放這格": "↓ Now put this box",
   "↗ 另開分頁": "↗ Open another page",
   "↺ 從頭操作": "↺ Start from scratch",
