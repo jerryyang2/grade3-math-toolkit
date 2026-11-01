@@ -62,3 +62,7 @@ coverage/
 # 本機學習單彙整 PDF 與製作暫存，不發布至網站或 GitHub
 /output/pdf/
 /tmp/pdfs/
+
+# Local submission drafts and deployment output
+/參賽資料/
+/_site/

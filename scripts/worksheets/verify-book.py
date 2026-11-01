@@ -28,7 +28,7 @@ for page in r.pages:
     assert abs(float(page.mediabox.height)-841.8898)<.1
 assert count==360
 alltext=''.join(texts)+str(r.metadata)
-assert not re.search(r'output/artifacts',alltext)
+assert not re.search(r'/Users/|/home/|[A-Za-z0-9_.+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|09\d{8}|ghp_[A-Za-z0-9]+|sk-[A-Za-z0-9]+',alltext)
 assert '\x00' not in alltext
 assert all('數學慢慢懂' not in text for text in texts[1:])
 assert '點選小節名稱或 PDF 書籤可跳頁' not in alltext
