@@ -4,7 +4,7 @@ from html import escape, unescape
 from functools import lru_cache
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import json, math, re, subprocess
+import json, math, re, subprocess, sys
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -18,13 +18,11 @@ from reportlab.platypus import Paragraph
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/pdf/數學慢慢懂_三上學習單彙整_36份.pdf'
 TMP = ROOT / 'tmp/pdfs'
+sys.path.insert(0, str(ROOT / 'scripts'))
+from pdf_fonts import register_biaukai
+register_biaukai('BookKai', 'BookHei')
 subprocess.run(['node', str(ROOT/'scripts/worksheets/export-data.cjs')], check=True)
 SHEETS = json.loads((TMP/'worksheets.json').read_text())
-FONT_PATH = next(Path('/System/Library/AssetsV2/com_apple_MobileAsset_Font8').glob('*/AssetData/Kaiti.ttc'))
-pdfmetrics.registerFont(TTFont('BookKai', str(FONT_PATH), subfontIndex=2))
-pdfmetrics.registerFont(TTFont('BookHei', '/System/Library/Fonts/STHeiti Medium.ttc', subfontIndex=0))
-pdfmetrics.registerFontFamily('BookKai', normal='BookKai', bold='BookHei')
-pdfmetrics.registerFontFamily('BookHei', normal='BookHei', bold='BookHei')
 W,H = A4
 M = 10*mm
 GAP = 6*mm
@@ -56,7 +54,7 @@ def draw_operations(operations,offset_x=0,offset_y=0):
             draw_operations(op['ops'],offset_x+op['x'],offset_y+op['y']);continue
         if kind=='text':
             font='BookKai' if op['font']=='kai' else 'BookHei'
-            value=op['text'];size=op['size'];actual=pdfmetrics.stringWidth(value,font,size)
+            value=op['text'].replace('−', '－').replace('➔', '→');size=op['size'];actual=pdfmetrics.stringWidth(value,font,size)
             c.saveState();c.setFillColor(colors.HexColor(op.get('color','#000')))
             text=c.beginText(offset_x+op['x'],H-offset_y-op['y']);text.setFont(font,size)
             if actual>0:text.setHorizScale(op['width']/actual*100)

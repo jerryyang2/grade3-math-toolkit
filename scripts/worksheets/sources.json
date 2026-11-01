@@ -15,5 +15,6 @@
   "css/i18n.css",
   "js/worksheet-layout.js",
   "js/worksheet-font-metrics.js",
-  "js/worksheet-preview.js"
+  "js/worksheet-preview.js",
+  "scripts/pdf_fonts.py"
 ]

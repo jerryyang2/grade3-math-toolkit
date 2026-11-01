@@ -9,7 +9,7 @@ sheets=json.loads((ROOT/'tmp/pdfs/worksheets.json').read_text())
 r=PdfReader(pdf)
 assert len(r.pages)==manifest['pages']
 assert manifest['worksheets']==len(sheets)==36
-normalize=lambda s:re.sub(r'\s+','',s.replace('➔','→'))
+normalize=lambda s:re.sub(r'\s+','',s.replace('➔','→').replace('−','－'))
 texts=[p.extract_text() for p in r.pages]
 count=0
 for record,sheet in zip(manifest['sheets'],sheets):
@@ -34,8 +34,10 @@ assert all('數學慢慢懂' not in text for text in texts[1:])
 assert '點選小節名稱或 PDF 書籤可跳頁' not in alltext
 assert '三年級上學期數學｜學習單彙編' not in alltext
 assert not re.search(r'(?m)^計算區$', '\n'.join(texts[3:]))
-fontpath=next(Path('/System/Library/AssetsV2/com_apple_MobileAsset_Font8').glob('*/AssetData/Kaiti.ttc'))
-kai=TTFont('CheckKai',str(fontpath),subfontIndex=2).face.charWidths
+import sys
+sys.path.insert(0, str(ROOT / 'scripts'))
+from pdf_fonts import biaukai_path
+kai=TTFont('CheckKai',str(biaukai_path())).face.charWidths
 chars=set(''.join(normalize(p['question']+''.join(p['options'])) for s in sheets for p in s['problems']))
 missing=[ch for ch in chars if ord(ch) not in kai]
 assert not missing,missing
@@ -53,9 +55,13 @@ assert toc_links==36
 assert len(re.findall(r'第\s*\d+\s*題',''.join(texts)))==360
 assert subprocess.run(['git','check-ignore','-q',str(pdf.relative_to(ROOT))],cwd=ROOT).returncode==0
 assert not subprocess.check_output(['git','ls-files','--','output/pdf/','tmp/pdfs/','Codex/'],cwd=ROOT).strip()
+import pdfplumber
+with pdfplumber.open(pdf) as rendered:
+    used_fonts=sorted({ch['fontname'] for page in rendered.pages for ch in page.chars})
+assert used_fonts and all('BiauKaiTC' in name for name in used_fonts),used_fonts
 result={'status':'PASS','pages':len(r.pages),'worksheets':36,'questions':count,'a4':True,
         'all_question_text_and_options_present':True,'anonymous_metadata':True,'font_coverage':True,
-        'worksheet_bookmarks':len(children),'toc_links':toc_links,'excluded_from_git':True,
+        'embedded_text_fonts':used_fonts,'worksheet_bookmarks':len(children),'toc_links':toc_links,'excluded_from_git':True,
         'pdf_sha256':hashlib.sha256(pdf.read_bytes()).hexdigest(),
         'over_two_pages':manifest['over_two_pages'],
         'source_sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in json.loads((ROOT/'scripts/worksheets/sources.json').read_text())}}

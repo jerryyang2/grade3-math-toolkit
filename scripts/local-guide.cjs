@@ -29,7 +29,10 @@ function inputHashes(root = ROOT) {
   const here = path.join(root, PRIVATE_DIR);
   const files = ['build_guide.py', 'guide-content.json', 'capture-review.json', 'verify_guide_sync.py'].map(f => path.join(here, f));
   files.push(...walk(path.join(here, 'screenshots')));
-  return Object.fromEntries(files.sort().map(f => [path.relative(here, f).split(path.sep).join('/'), sha(f)]));
+  const result = Object.fromEntries(files.sort().map(f => [path.relative(here, f).split(path.sep).join('/'), sha(f)]));
+  const fontHelper = path.join(root, 'scripts/pdf_fonts.py');
+  if (fs.existsSync(fontHelper)) result['shared/pdf_fonts.py'] = sha(fontHelper);
+  return result;
 }
 function checkCaptureReview(root = ROOT) {
   const here = path.join(root, PRIVATE_DIR), review = read(path.join(here, 'capture-review.json'));

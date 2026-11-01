@@ -33,14 +33,14 @@ if (sheets.length !== 36) throw new Error('Expected 36 worksheets');
 fs.mkdirSync(path.join(root, 'tmp/pdfs'), {recursive:true});
 fs.writeFileSync(path.join(root, 'tmp/pdfs/worksheets.json'), JSON.stringify(sheets, null, 2));
 const config=path.join(root,'tmp/pdfs/fonts.conf');
-fs.writeFileSync(config,`<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd"><fontconfig><dir>/System/Library/Fonts</dir><cachedir>${path.join(root,'tmp/pdfs/font-cache')}</cachedir></fontconfig>`);
+fs.writeFileSync(config,`<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd"><fontconfig><dir>/System/Library/Fonts</dir><dir>${path.join(root,'Codex/fonts')}</dir><cachedir>${path.join(root,'tmp/pdfs/font-cache')}</cachedir></fontconfig>`);
 process.env.FONTCONFIG_FILE=config;
 const os=require('node:os');
 const sharp=require(require.resolve('sharp',{paths:[root,process.env.WORKSHEET_PDF_NODE_MODULES||path.join(os.homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules')]}));
 (async()=>{
   const unique=new Map(sheets.flatMap(s=>s.problems).filter(p=>p.svg).map(p=>[p.id,p]));
   for(const p of unique.values()) {
-    const svg=p.svg.replaceAll('font-family="sans-serif"','font-family="Heiti TC"');
+    const svg=p.svg.replaceAll('−','－').replace(/font-family="[^"]*"/g,'font-family="BiauKaiTC"').replace(/font-family\s*:[^;"}]+/g,'font-family:BiauKaiTC');
     await sharp(Buffer.from(svg)).resize({width:1200}).flatten({background:'#ffffff'}).png().toFile(path.join(root,'tmp/pdfs',p.id+'.png'));
   }
   console.log(JSON.stringify({worksheets:sheets.length, questions:sheets.reduce((n,s)=>n+s.problems.length,0),diagrams:unique.size}));

@@ -73,3 +73,16 @@ test('successful builds refresh the submission copy while failed builds preserve
   assert.notEqual(build().status, 0);
   assert.equal(fs.readFileSync(copy, 'utf8'), '%PDF-1.7 rebuilt');
 });
+
+test('changing the shared publishing font helper requires a new guide and visual review', t => {
+  const f = fixture(t), scripts = path.join(f.root, 'scripts');
+  fs.mkdirSync(scripts);
+  const helper = path.join(scripts, 'pdf_fonts.py');
+  fs.writeFileSync(helper, 'reviewed font loader');
+  const release = JSON.parse(fs.readFileSync(path.join(f.here, 'guide-release.json'), 'utf8'));
+  release.inputs = inputHashes(f.root);
+  f.write('guide-release.json', release);
+  assert.equal(verify(f.root).pages, 2);
+  fs.appendFileSync(helper, ' changed font');
+  assert.throws(() => verify(f.root), /重製 PDF/);
+});
