@@ -1,0 +1,48 @@
+.classroom-clock { color: #244a3d; font-family: inherit; }
+.classroom-clock [hidden] { display: none !important; }
+.classroom-clock-panel { position: fixed; z-index: 2147483645; right: 24px; bottom: 24px; width: min(390px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); overflow: auto; border: 1px solid #a9bcaa; border-radius: 22px; background: #fffef8; box-shadow: 0 16px 54px #173d3333; }
+.classroom-clock-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 18px; background: #edf2e7; border-bottom: 1px solid #d8e2d3; }
+.classroom-clock-eyebrow { font-size: 12px; color: #55715e; }
+.classroom-clock-header h2 { margin: 4px 0 0; font-size: 22px; line-height: 1.3; color: #244a3d; }
+.classroom-clock-window-buttons { display: flex; gap: 4px; }
+.classroom-clock button { font: inherit; cursor: pointer; color: #244a3d; background: #fffef8; border: 1px solid #9daf9e; border-radius: 10px; padding: 9px 12px; line-height: 1.3; min-height: 40px; }
+.classroom-clock button:hover { background: #e7eedf; }
+.classroom-clock button:focus-visible, .classroom-clock input:focus-visible, .classroom-clock select:focus-visible { outline: 3px solid #317d78; outline-offset: 3px; }
+.classroom-clock button:disabled { opacity: .5; cursor: default; }
+.classroom-clock-window-buttons button { font-size: 22px; padding: 3px; width: 36px; min-height: 36px; border-color: transparent; background: transparent; }
+.classroom-clock-body { padding: 14px 18px; }
+.classroom-clock-purpose { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; }
+.classroom-clock select, .classroom-clock input[type=number] { font: inherit; color: #244a3d; background: #fff; border: 1px solid #9daf9e; border-radius: 8px; padding: 8px; min-height: 40px; }
+.classroom-clock-readout { text-align: center; font-size: clamp(44px, 8vw, 64px); font-weight: 750; font-variant-numeric: tabular-nums; letter-spacing: -.03em; line-height: 1.3; margin-top: 6px; }
+.classroom-clock-status { text-align: center; font-size: 14px; min-height: 22px; margin: 0 0 10px; }
+.classroom-clock-track { height: 8px; background: #e7ecdf; border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+#classroom-clock-progress { height: 100%; background: #658963; border-radius: inherit; }
+.classroom-clock-settings { border: 0; padding: 0; margin: 0; min-width: 0; }
+.classroom-clock-settings legend { font-size: 13px; margin-bottom: 8px; }
+.classroom-clock-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.classroom-clock-presets button { flex: 1 1 auto; font-size: 12px; padding: 9px 7px; }
+.classroom-clock-presets button[aria-pressed=true] { background: #e2ead9; border-color: #496a47; font-weight: 700; }
+#classroom-clock-form { display: flex; align-items: center; gap: 8px; margin: 12px 0; font-size: 13px; }
+#classroom-clock-minutes { width: 76px; min-width: 0; flex: 1; }
+#classroom-clock-error { font-size: 13px; color: #8a4027; }
+.classroom-clock-actions { display: flex; gap: 8px; margin: 5px 0 12px; }
+.classroom-clock-actions button { flex: 1; }
+.classroom-clock button.classroom-clock-primary { background: #315e4a; color: white; border-color: #315e4a; font-weight: 700; }
+.classroom-clock button.classroom-clock-primary:hover { background: #244a3d; }
+.classroom-clock-extend { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.classroom-clock-extend span { flex: 1; }
+.classroom-clock-extend button { font-size: 12px; }
+.classroom-clock-options { display: flex; gap: 18px; margin-top: 12px; font-size: 13px; }
+.classroom-clock-options label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.classroom-clock input[type=checkbox] { accent-color: #315e4a; width: 17px; height: 17px; }
+.classroom-clock-note { font-size: 12px; line-height: 1.7; color: #61725f; margin: 12px 0 0; }
+.classroom-clock-panel.is-large { width: min(640px, calc(100vw - 24px)); right: max(12px, calc((100vw - 640px) / 2)); }
+.classroom-clock-panel.is-large .classroom-clock-readout { font-size: clamp(64px, 14vw, 128px); }
+.classroom-clock-chip { position: fixed; z-index: 2147483645; right: 18px; bottom: 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 24px #173d3329; max-width: calc(100vw - 36px); }
+.classroom-clock-chip strong { font-size: 23px; font-variant-numeric: tabular-nums; }
+.classroom-clock-chip span { font-size: 13px; }
+.classroom-clock[data-phase=finished] .classroom-clock-readout { color: #406a4d; }
+@media (max-width: 480px) { .classroom-clock-panel { right: 12px; bottom: 12px; } .classroom-clock-body { padding: 14px; } }
+@media print { .classroom-clock { display: none !important; } }
+
+@media (max-width: 380px) { .classroom-clock-purpose, .classroom-clock-extend, .classroom-clock-options { flex-wrap: wrap; } .classroom-clock-header { padding: 12px; } .classroom-clock-window-buttons button { width: 32px; } }
