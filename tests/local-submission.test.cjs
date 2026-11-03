@@ -46,11 +46,17 @@ test('saving the editing source automatically rebuilds the latest version and ke
     built.push(fs.readFileSync(path.join(f.root, SOURCE), 'utf8'));
   }, onError: error => errors.push(error.message) });
   t.after(stop);
-  f.write(SOURCE, 'first edit');
-  for (let i = 0; i < 40 && !errors.length; i++) await pause(15);
+  // fs.watchFile initializes its first stat asynchronously. Re-save the same
+  // contents until observed, so a busy CI worker cannot miss the startup edit.
+  const firstDeadline = Date.now() + 5000;
+  while (!errors.length && Date.now() < firstDeadline) {
+    f.write(SOURCE, 'first edit');
+    await pause(50);
+  }
   assert.deepEqual(errors, ['temporary failure']);
   f.write(SOURCE, 'intermediate draft'); await pause(15);
   f.write(SOURCE, 'latest saved draft');
-  for (let i = 0; i < 40 && !built.length; i++) await pause(15);
+  const rebuildDeadline = Date.now() + 5000;
+  while (!built.length && Date.now() < rebuildDeadline) await pause(15);
   assert.deepEqual(built, ['latest saved draft']);
 });
