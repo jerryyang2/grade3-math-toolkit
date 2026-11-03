@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>森林拔河運動會｜三上九單元</title>
+  <meta name="description" content="三年級上學期九單元、270題，圖像與朗讀支持的雙隊拔河遊戲。">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="../../css/i18n.css?v=language-zh-20261101">
+  <link rel="stylesheet" href="../../css/floating-tools.css?v=forest-tug-20261103">
+  <link rel="stylesheet" href="../../css/math-toolbox.css?v=classroom-refine-20261101">
+  <link rel="stylesheet" href="style.css?v=20261103-layout2">
+  <script src="../../js/i18n-en.js?v=brand-20261103"></script>
+  <script src="../../js/i18n.js?v=division-grid-20261101-2"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至遊戲內容</a>
+  <header class="game-header topbar">
+    <a class="brand" href="../../index.html"><img src="favicon.svg" alt="" width="46" height="46"><span><strong>森林拔河運動會</strong><small>三上九單元 · 一起想，一起拉！</small></span></a>
+    <nav aria-label="遊戲工具"><button id="rules-open">玩法</button><button id="sound" aria-pressed="true">🔊 音效</button><button id="music" aria-pressed="false">♫ 加油音樂</button><button id="calm" aria-pressed="false">減少動態</button></nav>
+  </header>
+  <main id="main">
+    <section id="setup" aria-labelledby="setup-title">
+      <div class="welcome"><div><p class="eyebrow">FOREST TEAM CHALLENGE</p><h1 id="setup-title">小隊集合，<br><em>把數學拉近一點！</em></h1><p>先想清楚，再一起拉。每個人都能出一份力。</p></div><div class="welcome-art" id="welcome-art" aria-hidden="true"></div></div>
+      <div class="setup-grid">
+        <section class="settings card" aria-labelledby="settings-title"><h2 id="settings-title">先選怎麼玩</h2>
+          <fieldset><legend>對戰方式</legend><div class="mode-options"><label><input type="radio" name="mode" value="duo" checked><span>👥 雙隊同機<small>和同學輪流說方法</small></span></label><label><input type="radio" name="mode" value="ai"><span>🤖 單人對電腦<small>依自己的步調練習</small></span></label></div></fieldset>
+          <div class="team-names"><label>藍隊名稱<input id="blue-name" maxlength="16" autocomplete="off" placeholder="藍隊"></label><label>紅隊名稱<input id="red-name" maxlength="16" autocomplete="off" placeholder="紅隊"></label></div>
+          <div class="settings-row"><label>比賽時間<select id="duration"><option value="0">不限時</option><option value="180">3 分鐘</option><option value="300">5 分鐘</option><option value="120">2 分鐘</option></select></label><label>題目難度<select id="level"><option value="0">全部難度</option><option value="1">基礎觀念</option><option value="2">熟練運算</option><option value="3">生活應用</option></select></label></div>
+          <label id="ai-setting" hidden>電腦思考時間<select id="ai-speed"><option value="25">慢慢想 · 25 秒</option><option value="15">從容想 · 15 秒</option><option value="8">快挑戰 · 8 秒</option></select></label>
+          <p class="friendly-note">🛟 答錯不倒退。看提示、再試試，答對仍能幫小隊拉繩！</p>
+        </section>
+        <section class="unit-settings card" aria-labelledby="unit-title"><div class="section-heading"><h2 id="unit-title">今天練哪幾個單元？</h2><button id="select-all" type="button">全選九單元</button></div><div id="unit-picker" class="unit-picker"></div><label class="section-filter">只練一個小節<select id="section"><option value="all">整個單元</option></select></label><p class="pool-note" id="pool-note" role="status"></p><p class="setup-note">題目取自平台正式題庫。選多個單元時會輪流出題；圖像只呈現已知條件。</p></section>
+      </div>
+      <div class="launch-bar"><p>3 位小隊員輪流：先想想 → 操作 → 說方法。</p><button class="primary start" id="start">🚩 出發，進入拔河賽場！</button></div>
+    </section>
+    <section id="match" aria-label="拔河賽場" hidden>
+      <div class="scoreboard"><div class="team-score blue"><span id="blue-label" translate="no"></span><strong id="blue-score">0</strong><small>題完成</small></div><div class="match-controls"><strong id="clock">不限時</strong><button id="pause">暫停比賽</button><button id="finish">結束並回顧</button><button id="arena-toggle" aria-expanded="true">收合賽場</button></div><div class="team-score red"><span id="red-label" translate="no"></span><strong id="red-score">0</strong><small>題完成</small></div></div>
+      <div id="arena" class="arena"><div id="arena-art"></div><div class="rope-progress" role="meter" aria-label="拔河位置" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"><span class="blue-goal">藍隊獲勝線</span><i id="rope-marker"></i><span class="red-goal">紅隊獲勝線</span></div><p id="cheer" role="status">準備好了，就從第一題開始！</p></div>
+      <p id="paused-message" class="paused-message" role="status" hidden>比賽已暫停，準備好再繼續。</p>
+      <div class="question-teams" id="question-teams"></div>
+      <p class="keyboard-note">鍵盤：藍隊 1～4，紅隊 7、8、9、0。請先聽完題目，再選答案。</p>
+    </section>
+    <section id="results" class="card results" aria-labelledby="result-title" hidden><p class="eyebrow">EVERY TRY COUNTS</p><div class="trophy" aria-hidden="true">🏆</div><h1 id="result-title" tabindex="-1">一起完成的挑戰</h1><p id="result-message"></p><div id="result-stats"></div><p class="setup-note">團隊比分與速度是遊戲回饋，不代表個人精熟程度。電腦為模擬陪練，結果不寫入學生作答紀錄。</p><h2>帶回課堂想一想</h2><div id="review-list"></div><div class="result-actions"><button id="rematch" class="primary">🔄 再拉一回合</button><button id="settings-back">調整單元與玩法</button></div></section>
+  </main>
+  <dialog id="rules-dialog" aria-labelledby="rules-title"><h2 id="rules-title">一起想，一起拉！</h2><ol><li>選單元、小節與難度，再選雙隊同機或電腦陪練。</li><li>每隊先想一想，再由輪到的隊員選答案。答對拉近旗子，連續獨立答對三題會加力。</li><li>答錯不倒退；可以看提示再試，或先跳過。答對後按「下一題」繼續。</li><li>先把旗子拉到己方獲勝線就獲勝；限時結束時看旗子位置，中央就是平手。</li><li>需要休息可暫停；離開畫面會自動暫停，回來後按繼續。</li></ol><form method="dialog"><button class="primary">準備好了！</button></form></dialog>
+  <footer>森林動物小隊 · 把每一次嘗試，都變成前進的力量。</footer>
+  <script src="../../js/data.js"></script>
+  <script src="../../js/worksheet-visual-data.js"></script>
+  <script src="../../js/worksheet-visual-supports.js"></script>
+  <script src="../../js/worksheet-diagrams.js"></script>
+  <script src="../../js/female-audio-manifest.js"></script>
+  <script src="../../js/audio.js"></script>
+  <script src="engine.js?v=20261103"></script>
+  <script src="music.js?v=20261103-layout2"></script>
+  <script src="game.js?v=20261103-layout2"></script>
+  <script src="../../js/game-fullscreen.js?v=20261103"></script>
+  <script src="../../js/magnifier.js?v=toolbar-strips-20261031"></script>
+  <script src="../../js/floating-tools.js?v=teaching-audit-20261101"></script>
+  <script src="../../js/math-whiteboard.js?v=classroom-refine-20261101"></script>
+  <script src="../../js/math-toolbox.js?v=forest-tug-20261103"></script>
+</body>
+</html>

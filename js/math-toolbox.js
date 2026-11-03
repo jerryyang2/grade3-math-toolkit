@@ -166,7 +166,7 @@
       clampHost();
     }
     function clampHost() {
-      const focusBar = document.querySelector('.lesson-focus-bar:not([hidden])');
+      const focusBar = document.querySelector('.lesson-focus-bar:not([hidden]), .game-header');
       const safeTop = Math.max(8, Math.min(focusBar?.getBoundingClientRect().bottom + 8 || 8, innerHeight - 100));
       host.style.setProperty('--math-kit-safe-top', `${safeTop}px`);
       const bounds = host.getBoundingClientRect();

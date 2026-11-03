@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/style.css?v=classroom-tools-20261031">
   <link rel="stylesheet" href="css/teacher-tools.css">
   <link rel="stylesheet" href="css/classroom-timer.css?v=resize-fullscreen-20261103">
+  <link rel="stylesheet" href="css/arcade-fullscreen.css?v=forest-tug-20261103">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/floating-tools.css?v=zoom-tools-20261031">
   <link rel="stylesheet" href="css/teaching-workflow.css?v=teaching-audit-20261101">
@@ -381,7 +382,7 @@
       </div>
     </section>
 
-    <!-- 2.8 互動遊戲冒險館 (Interactive Math Arcade - 整合 5 大互動遊戲) -->
+    <!-- 2.8 互動遊戲冒險館 (Interactive Math Arcade - 整合 6 款互動遊戲) -->
     <section class="tab-pane" id="tab-arcade">
       <div class="arcade-container">
         
@@ -400,7 +401,7 @@
             </div>
           </div>
           <div class="arcade-hero-badges">
-            <span class="arcade-tag">🎮 5 大互動遊戲</span>
+            <span class="arcade-tag">🎮 6 款互動遊戲</span>
             <span class="arcade-tag">⭐ 學生代幣同步</span>
             <span class="arcade-tag">⛶ 一鍵全螢幕</span>
           </div>
@@ -415,6 +416,7 @@
                 <strong style="font-size: 1.2rem; color: #1e1b4b;" id="arcade-player-title">遊戲載入中...</strong>
               </div>
               <div style="display: flex; gap: 8px;">
+                <button type="button" class="kid-btn kid-btn-secondary" id="arcade-fullscreen-toggle" aria-pressed="false">⛶ 全螢幕遊玩</button>
                 <button class="kid-btn kid-btn-secondary" onclick="window.openCurrentGameNewTab()" style="font-size: 0.9rem; padding: 6px 14px;" title="在獨立分頁中打開">
                   ↗ 另開分頁
                 </button>
@@ -431,8 +433,20 @@
 
         <a href="islands/index.html" class="math-islands-entry"><img src="islands/favicon.svg" width="52" height="52" alt=""><span><small>九單元完整對應 · 不限時探索</small><strong>慢慢島・數學探險</strong><span>每島三個任務，從具體操作走向數學解題，還有自己的探險護照。</span></span><b aria-hidden="true">前往群島 ↗</b></a>
 
-        <!-- 5 大互動遊戲卡片清單 (Game Cards Grid) -->
+        <!-- 6 款互動遊戲卡片清單 (Game Cards Grid) -->
         <div class="arcade-cards-grid">
+          <div class="arcade-card">
+            <div class="arcade-card-banner" style="background:#deeee0;border-bottom:2px solid #4b866c;">
+              <img class="arcade-card-icon" src="games/game6-grade3-tug/favicon.svg" alt="" width="60" height="60">
+              <span class="arcade-card-badge">三上九單元 · 270 題</span>
+            </div>
+            <div class="arcade-card-body">
+              <h3 class="arcade-card-title">森林拔河運動會｜三上九單元</h3>
+              <p class="arcade-card-desc">九個單元都能拔河！可選單元、小節與難度，和動物隊員一起看圖、聽題、說方法；答錯不倒退，提示後也能前進。</p>
+              <div class="arcade-card-skills"><span>🪢 雙隊或電腦陪練</span><span>🔊 圖像與朗讀</span><span>🛟 不限時慢慢想</span></div>
+              <div class="arcade-card-actions"><button type="button" class="kid-btn kid-btn-primary" data-grade3-tug>🎮 平台內遊玩</button><a id="grade3-tug-external" href="games/game6-grade3-tug/index.html?unit=u1" target="_blank" rel="noopener" class="kid-btn kid-btn-secondary" style="text-decoration:none;">⛶ 獨立分頁</a></div>
+            </div>
+          </div>
           
           <!-- 遊戲 1 -->
           <div class="arcade-card">
@@ -784,9 +798,10 @@
   <script src="js/animal-garden.js?v=home-voice-20261031"></script>
   <script src="js/storybook-theme.js?v=classroom-tools-20261031"></script>
   <script src="islands/curriculum.js?v=lesson-plans-20261101"></script>
-  <script src="js/lesson-plans.js?v=lesson-plans-20261101"></script>
+  <script src="js/lesson-plans.js?v=forest-tug-20261103"></script>
   <script src="js/forest-home.js?v=prep-plans-20261101"></script>
   <script src="js/app.js?v=five-steps-20261101"></script>
+  <script src="js/arcade-fullscreen.js?v=forest-tug-20261103"></script>
   <script src="js/lesson-flow.js?v=prep-plans-20261101"></script>
   <script src="js/focus-mode.js?v=lesson-plans-20261101"></script>
   <script src="js/classroom-timer.js?v=resize-fullscreen-20261103"></script>

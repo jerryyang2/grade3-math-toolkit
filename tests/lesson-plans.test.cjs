@@ -26,7 +26,7 @@ test('plans distinguish speed and game progress from individual mathematical und
   assert.match(p[1].assessment,/首次作答/);assert.match(p[2].assessment,/不當作個人概念達成/);
   assert.match(p[4].assessment,/實際表現/);assert.match(p[4].teacher[2],/不要求五分鐘完成整座島/);
  }
- for(const id of ['u5','u8','u9'])assert.match(plans.build(data.units.find(u=>u.id===id),data,curriculum,steps)[3].teacher[0],/目前遊戲館沒有專門/);
+ for(const unit of data.units)assert.match(plans.build(unit,data,curriculum,steps)[3].teacher[0],/森林拔河運動會/);
  assert.match(plans.build(data.units[0],data,curriculum,steps)[0].activity,/照圖放一放.*十個換一個.*自由操作/);
 });
 function guide(){

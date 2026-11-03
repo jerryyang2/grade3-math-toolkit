@@ -22,10 +22,12 @@
 | 浮動教學工具 | 畫記、步驟編號、放大鏡、拖曳、橫直排列、復原與重做 | [floating-tools.js](js/floating-tools.js)、[math-toolbox.js](js/math-toolbox.js) |
 | 學習單 | 依小節或單元列印，保留圖像、題目範圍與計算空間 | [contest-features.js](js/contest-features.js)、[worksheet-layout.js](js/worksheet-layout.js) |
 | 數學群島 | 九座單元島嶼、每島三項任務，整合探索、操作與回顧 | [群島入口](islands/index.html)、[curriculum.js](islands/curriculum.js) |
-| 課堂遊戲 | 加法冒險、直式加法、數學拔河、棋盤活動與雙人搶答 | [數學拔河](games/game3-math-tug-of-war/index.html)、[雙人搶答](games/game5-dual-math-battle/index.html) |
+| 課堂遊戲 | 九單元森林拔河、加法冒險、直式加法、數學拔河、棋盤活動與雙人搶答 | [森林拔河](games/game6-grade3-tug/index.html)、[雙人搶答](games/game5-dual-math-battle/index.html) |
 | 中英與朗讀 | 繁體中文預設、英文顯示、中文預錄音檔與裝置語音 | [i18n.js](js/i18n.js)、[audio.js](js/audio.js) |
 
 教材目前有 **9 個單元、27 個小節與 270 題固定練習**，涵蓋數到一萬、四位數加減、乘法、毫米、角與四邊形、除法、公升與毫升、分數及圓。
+
+「森林拔河運動會」共用這份正式題庫，可篩單元、小節與難度，提供雙隊同機與電腦陪練；預設不限時，答錯不倒退。結果分開記錄首次獨立答對與提示／重試後完成，僅供當回合回顧。六款遊戲皆可從卡片直接進入全螢幕，切換顯示時保留同一個遊戲頁面。
 
 列印功能提供 27 份小節學習單與 9 份單元複習，共 36 份，每份十題，合計 360 個題目位置。複習單使用既有題庫，因此不能說成 360 道不同的新題目。操作教具另有程式產生的練習，也不與固定題庫數量混算。
 
