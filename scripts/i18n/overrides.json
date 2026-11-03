@@ -1,7 +1,5 @@
 {
-  "數學慢慢懂，來玩數學吧！": "Math at Your Pace — Let's Play!",
-  "數學慢慢懂，": "Math at Your Pace,",
-  "來玩數學吧！": "Let's Play!",
+  "一起把數學玩懂": "Let's Learn Math Through Play!",
   "適用南一版本三年級上學期": "For Nani Math · Grade 3 · Semester 1",
   "回到主畫面": "Home",
   "備課指引": "Plan a Lesson",
@@ -327,7 +325,7 @@
   "停止朗讀": "Stop Reading",
   "普通教材版本：南一版 國小數學三年級上學期（108課綱普通數學：": "Textbook: Nani Grade 3, Semester 1 (Taiwan 108 curriculum:",
   "普通教材版本：南一版 國小數學三年級上學期（108課綱普通數學：⟦2⟧）": "Textbook: Nani Grade 3, Semester 1 (Taiwan 108 curriculum: ⟦2⟧)",
-  "數學慢慢懂，來玩數學吧！：回到主畫面": "Math at Your Pace — Let's Play! Home",
+  "一起把數學玩懂：回到主畫面": "Let's Learn Math Through Play! Home",
   "🚨 進位小1": "🚨 Regrouped 1 (+1)",
   "使用進位小1提示": "Used the +1 regrouping prompt",
   "視覺色塊對位與進位小1提示": "Color-coded place values and a +1 regrouping prompt",
@@ -849,5 +847,6 @@
   "調整計時器大小：拖曳邊框，或使用方向鍵": "Resize timer: drag an edge or use arrow keys",
   "還原視窗大小": "Restore window size",
   "離開計時器全螢幕": "Exit full-screen timer",
-  "顯示計時設定": "Show timer settings"
+  "顯示計時設定": "Show timer settings",
+  "⬅ 返回一起把數學玩懂": "⬅ Back to Let's Learn Math Through Play!"
 }

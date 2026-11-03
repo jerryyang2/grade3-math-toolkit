@@ -153,6 +153,7 @@
   <link rel="stylesheet" href="../../css/math-toolbox.css?v=classroom-refine-20261101">
   <script defer src="../../js/female-audio-manifest.js?v=teaching-audit-20261101"></script>
   <script defer src="../../js/audio.js?v=female-voice-20261031"></script>
+  <link rel="stylesheet" href="../../css/dual-battle-readable.css?v=20261103">
 </head>
 <body class="storybook-game bg-game-pattern h-screen max-h-screen overflow-hidden text-slate-800 flex flex-col items-center justify-between p-1.5 sm:p-2.5 box-border">
 
@@ -160,7 +161,7 @@
 <nav class="sp-ed-game-navbar" style="position:sticky;top:0;left:0;right:0;z-index:99999;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #e2e8f0;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.06);font-family:system-ui,-apple-system,sans-serif;">
   <div style="display:flex;align-items:center;gap:12px;">
     <a href="../../index.html" onclick="if(window.parent && window.parent !== window){window.parent.postMessage('close-game-modal','*'); return false;}" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #4f46e5, #4338ca);color:#ffffff;font-weight:800;font-size:0.95rem;padding:6px 16px;border-radius:12px;box-shadow:0 3px 0 #312e81;transition:all 0.15s;">
-      ⬅ 返回三上數學備課平台
+      ⬅ 返回一起把數學玩懂
     </a>
     <span style="font-weight:800;color:#1e1b4b;font-size:1.05rem;display:none;" class="sm:inline">南一三上數學 🎪 互動遊戲冒險館</span>
   </div>
@@ -173,7 +174,7 @@
 
 
   <!-- 頂部計分板與拔河拉力條 (高度精簡緊湊版) -->
-  <header class="w-full max-w-5xl bg-slate-900/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border-2 border-amber-400 shadow-lg flex-shrink-0 flex flex-col space-y-1">
+  <header class="battle-scoreboard w-full max-w-5xl bg-slate-900/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border-2 border-amber-400 shadow-lg flex-shrink-0 flex flex-col space-y-1">
     <div class="flex items-center justify-between w-full">
       
       <!-- 藍隊分數資訊 -->
@@ -260,7 +261,7 @@
   </header>
 
   <!-- 主對抗競技場：中央題目看板 + 左右兩隊選項面板 (自適應單頁填滿) -->
-  <main class="w-full max-w-5xl flex-grow flex flex-col justify-between items-center relative my-1 min-h-0 overflow-hidden">
+  <main class="battle-main w-full max-w-5xl flex-grow flex flex-col justify-between items-center relative my-1 min-h-0 overflow-hidden">
     
     <div class="w-full flex-grow flex flex-col justify-between space-y-1.5 min-h-0">
       
@@ -286,14 +287,14 @@
           </div>
         </div>
 
-        <div class="flex flex-row items-center w-full gap-2.5 sm:gap-3.5">
+        <div class="battle-question-layout flex flex-row items-center w-full gap-2.5 sm:gap-3.5">
           <!-- 題目向量插圖區 (精簡高度) -->
           <div class="w-28 sm:w-40 h-20 sm:h-24 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center p-1 relative shadow-inner flex-shrink-0" id="illustrationBox">
             <!-- SVG 動態插圖 -->
           </div>
 
           <!-- 題目文字與引導提示 -->
-          <div class="flex-grow text-left overflow-hidden">
+          <div class="battle-question-copy flex-grow text-left overflow-hidden">
             <h2 class="text-sm sm:text-base md:text-lg font-black text-slate-800 leading-snug tracking-wide line-clamp-2" id="questionTitle">
               題目載入中...
             </h2>
@@ -347,7 +348,7 @@
       </div>
 
       <!-- 左右兩隊伍同時作答控制台 (極致緊湊高彈性空間) -->
-      <div class="grid grid-cols-2 gap-2 sm:gap-3 w-full flex-grow min-h-0">
+      <div class="battle-teams grid grid-cols-2 gap-2 sm:gap-3 w-full flex-grow min-h-0">
         
         <!-- 左隊：閃電暴龍隊面板 -->
         <div class="team-card-blue rounded-2xl p-2 sm:p-2.5 flex flex-col justify-between min-h-0" id="panelA">
@@ -394,7 +395,7 @@
     </div>
 
     <!-- 底部控制按鈕列 (精簡留白) -->
-    <div class="w-full flex justify-between items-center mt-1 px-1 flex-shrink-0">
+    <div class="battle-footer w-full flex justify-between items-center mt-1 px-1 flex-shrink-0">
       <div class="text-[10px] text-slate-400 font-bold hidden sm:block">
         💡 首殺 +15 分，補答 +8 分；答錯不扣分，排除該選項後可繼續嘗試！
       </div>

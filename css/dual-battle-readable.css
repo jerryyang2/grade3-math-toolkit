@@ -1,0 +1,102 @@
+/* Classroom projection: reserve the largest type for the shared question and answers. */
+body.storybook-game {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px !important;
+  font-family: system-ui, -apple-system, 'Noto Sans TC', sans-serif;
+}
+.sp-ed-game-navbar { width: 100%; flex-wrap: wrap; gap: 8px; }
+.sp-ed-game-navbar a, .sp-ed-game-navbar button { font-size: 16px !important; min-height: 44px; }
+.battle-scoreboard, .battle-main { width: 100%; max-width: 1440px !important; }
+.battle-scoreboard { padding: 12px 18px !important; }
+.battle-scoreboard > div:first-child { gap: 14px; }
+.battle-scoreboard .text-\[10px\], .battle-scoreboard .text-\[9px\] { font-size: 15px !important; }
+.battle-scoreboard .text-xs, .battle-scoreboard .text-sm { font-size: 19px !important; }
+.battle-scoreboard button, .battle-scoreboard select { font-size: 16px !important; min-height: 42px; }
+#scoreA, #scoreB { font-size: 32px; line-height: 1.15; }
+#tugInfo, #comboTagA, #comboTagB { font-size: 15px !important; }
+.battle-main { flex: 0 0 auto; overflow: visible !important; margin: 0; }
+.battle-main > div:first-child { flex: 0 0 auto; gap: 14px; }
+.battle-main > div:first-child > * { margin-top: 0 !important; }
+.battle-main .arena-board { padding: 16px 20px !important; border-width: 2px; }
+.battle-main .arena-board > div:first-child { gap: 10px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 10px; }
+#unitBadge, #qCounterDisplay, .arena-board > div:first-child span { font-size: 16px !important; line-height: 1.5; }
+#ttsBtn { font-size: 18px !important; min-height: 44px; padding: 8px 14px; }
+.battle-question-layout { gap: 24px !important; min-height: 150px; }
+#illustrationBox { width: 180px !important; height: 144px !important; padding: 8px; }
+.battle-question-copy { min-width: 0; overflow: visible !important; }
+#questionTitle {
+  display: block !important; -webkit-line-clamp: unset !important; overflow: visible !important;
+  font-family: system-ui, -apple-system, 'Noto Sans TC', sans-serif !important;
+  font-size: clamp(30px, 2.8vw, 44px) !important; font-weight: 800;
+  line-height: 1.5 !important; letter-spacing: .02em; margin: 0 0 10px;
+  white-space: normal; overflow-wrap: anywhere; color: #17283b;
+}
+#questionHint { display: block; font-size: clamp(18px, 1.5vw, 23px) !important; line-height: 1.6 !important; white-space: normal !important; overflow: visible !important; padding: 6px 12px; }
+.battle-teams { align-items: stretch; gap: 18px !important; }
+#panelA, #panelB { padding: 14px !important; gap: 10px; border-width: 2px; }
+#panelA > div:first-child, #panelB > div:first-child { gap: 8px; flex-wrap: wrap; margin: 0; }
+#panelA .font-kids, #panelB .font-kids { font-family: inherit !important; font-size: 22px !important; line-height: 1.5; }
+#statusBadgeA, #statusBadgeB { font-size: 17px !important; line-height: 1.4; padding: 6px 12px; }
+#optionsContainerA, #optionsContainerB { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-content: start; margin: 0; }
+#optionsContainerA button, #optionsContainerB button {
+  min-width: 0; min-height: 100px; padding: 14px 12px; height: auto;
+  gap: 8px; border: 2px solid; border-radius: 16px; opacity: 1 !important;
+  font-family: system-ui, -apple-system, 'Noto Sans TC', sans-serif !important;
+  box-shadow: 0 4px 0 #c5d8e5; transition: background .15s, transform .15s;
+}
+#optionsContainerA .btn-3d-cyan { background: #e9f8ff !important; color: #073b58 !important; border-color: #2397c3; }
+#optionsContainerB .btn-3d-crimson { background: #fff0f3 !important; color: #721c35 !important; border-color: #db5778; box-shadow: 0 4px 0 #ecd0d7; }
+#optionsContainerA button:hover:not(:disabled) { background: #ccefff !important; }
+#optionsContainerB button:hover:not(:disabled) { background: #ffdae3 !important; }
+#optionsContainerA button:focus-visible, #optionsContainerB button:focus-visible { outline: 4px solid #17283b; outline-offset: 4px; }
+#optionsContainerA button > span:first-child, #optionsContainerB button > span:first-child { width: auto; min-width: 32px; height: auto; min-height: 32px; flex: 0 0 auto; font-size: 18px !important; line-height: 1.5; padding: 2px 6px; border-radius: 8px; background: #ffffffa6; box-shadow: none; }
+#optionsContainerA button > span:nth-child(2), #optionsContainerB button > span:nth-child(2) {
+  min-width: 0; flex: 1; font-size: clamp(28px, 2.7vw, 40px) !important; font-weight: 800;
+  line-height: 1.35 !important; text-align: center; white-space: normal !important;
+  overflow: visible !important; text-overflow: clip !important; overflow-wrap: anywhere;
+}
+#optionsContainerA button > span:last-child, #optionsContainerB button > span:last-child { display: none; }
+#optionsContainerA button.bg-emerald-500, #optionsContainerB button.bg-emerald-500 { background: #dcfce7 !important; color: #14532d !important; border-color: #16804a; }
+#optionsContainerA button.bg-rose-100, #optionsContainerB button.bg-rose-100 { background: #ffe4e6 !important; color: #881337 !important; border-color: #be3459; }
+#optionsContainerA button.bg-slate-100, #optionsContainerB button.bg-slate-100 { background: #edf1f5 !important; color: #475569 !important; border-color: #bac5d2; }
+#feedbackA, #feedbackB { font-size: 18px !important; line-height: 1.5; min-height: 0; }
+#matchAnnouncement, #roundTimerWrap span { font-size: 20px !important; line-height: 1.5 !important; }
+.battle-footer { gap: 12px; flex-wrap: wrap; padding: 12px 2px; }
+.battle-footer > div:first-child { font-size: 16px !important; color: #334b45; }
+.battle-footer button { font-size: 18px !important; min-height: 46px; padding: 8px 16px; }
+#unitModal button, #unitModal select, #winnerModal button, #scratchpadArea button { min-height: 44px; font-size: 17px !important; }
+#unitModal p, #unitModal .text-xs, #unitModal .text-sm, #unitModal .text-\[10px\], #unitModal .text-\[11px\] { font-size: 16px !important; line-height: 1.6; }
+#unitListContainer button { font-size: 20px !important; white-space: normal; }
+#scratchpadArea { padding: 12px; }
+#scratchpadArea > div:first-child { font-size: 17px !important; }
+#scratchCanvas { height: 180px; }
+@media (max-width: 900px) {
+  .battle-scoreboard > div:first-child { flex-wrap: wrap; }
+  .battle-scoreboard > div:first-child > div:nth-child(2) { order: 3; width: 100%; }
+  .battle-scoreboard > div:first-child > div:last-child { margin-left: auto; }
+  #illustrationBox { width: 140px !important; height: 120px !important; }
+  .battle-question-layout { gap: 16px !important; }
+  #optionsContainerA, #optionsContainerB { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  body.storybook-game { padding: 6px !important; gap: 8px; }
+  .sp-ed-game-navbar { position: relative !important; padding: 6px !important; }
+  .battle-scoreboard { padding: 10px !important; }
+  .battle-main .arena-board { padding: 12px !important; }
+  .battle-question-layout { flex-direction: column !important; align-items: stretch !important; }
+  #illustrationBox { align-self: center; width: 160px !important; height: 108px !important; }
+  #questionTitle { font-size: 28px !important; }
+  #questionHint { font-size: 18px !important; }
+  .battle-teams { gap: 8px !important; }
+  #panelA, #panelB { padding: 8px !important; }
+  #panelA .font-kids, #panelB .font-kids { font-size: 18px !important; }
+  #statusBadgeA, #statusBadgeB { font-size: 15px !important; padding: 4px 6px; }
+  #optionsContainerA button, #optionsContainerB button { flex-direction: column; min-height: 100px; gap: 4px; padding: 10px 6px; }
+  #optionsContainerA button > span:nth-child(2), #optionsContainerB button > span:nth-child(2) { font-size: 27px !important; }
+}
