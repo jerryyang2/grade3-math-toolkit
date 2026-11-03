@@ -776,7 +776,6 @@
           <tr><td>設計趣味</td><td>20%</td><td>原創動物互動、生活情境、合作角色及分組遊戲；可切換低刺激模式。</td></tr>
           </tbody></table></div>
           <p style="color:#334155; line-height:1.8;">AI 備課提示詞可由教師複製到所使用的 AI 工具，經人工檢核後使用。平台目前以預設教材、規則型提示及裝置語音運作；未直接連線生成式 AI。實際試教成效請以匿名化的操作、口述及作答紀錄佐證，不以虛構範例替代。</p>
-          <p><a href="https://education.ylc.edu.tw/News_Content.aspx?n=1334&amp;s=399803" target="_blank" rel="noopener noreferrer">雲林縣 115 學年度官方公告與修正版計畫</a></p>
 
           <!-- 現場即時快速驗證展示專區 -->
           <div style="background:#f1f5f9; border-radius:14px; padding:16px; margin:20px 0;">

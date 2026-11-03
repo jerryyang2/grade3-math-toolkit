@@ -7503,7 +7503,6 @@ const catalog={
   "開關音效": "Switch sound effects",
   "隊伍 A": "Team A",
   "隊伍 B": "Team B",
-  "雲林縣 115 學年度官方公告與修正版計畫": "Yunlin County Official Announcement and Revised Plan for the 115th School Year",
   "項。我們一起說說怎麼想，再換下一題。": "item. Let’s talk about what we think together and then move on to the next question.",
   "黑色": "black",
   "黑板": "blackboard",
