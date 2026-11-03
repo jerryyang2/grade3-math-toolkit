@@ -842,5 +842,12 @@
   "縮成小卡，繼續計時": "Minimize and keep counting",
   "關閉並暫停": "Close and pause",
   "繼續計時": "Continue",
-  "顯示秒數": "Show seconds"
+  "顯示秒數": "Show seconds",
+  "全螢幕計時": "Full-screen timer",
+  "拖曳標題可移動，拖曳邊框可縮放。": "Drag the title to move; drag an edge to resize.",
+  "移動計時器：拖曳標題，或使用方向鍵": "Move timer: drag the title or use arrow keys",
+  "調整計時器大小：拖曳邊框，或使用方向鍵": "Resize timer: drag an edge or use arrow keys",
+  "還原視窗大小": "Restore window size",
+  "離開計時器全螢幕": "Exit full-screen timer",
+  "顯示計時設定": "Show timer settings"
 }

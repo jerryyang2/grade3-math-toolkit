@@ -3828,6 +3828,7 @@ const catalog={
   "全提示：": "Full support:",
   "全提示：先示範並提供位值、圖像或步驟支持。": "Full Tip: Demonstrate first and provide place value, image or step support.",
   "全螢幕上課": "Full screen class",
+  "全螢幕計時": "Full-screen timer",
   "全螢幕教學單元": "Full screen teaching unit",
   "全螢幕課堂控制": "Full screen classroom control",
   "共": "common",
@@ -4630,6 +4631,7 @@ const catalog={
   "拖曳移動・方向鍵微調": "Drag to move and fine-tune with arrow keys",
   "拖曳移動；方向鍵微調": "Drag to move; arrow keys to fine-tune",
   "拖曳移動；方向鍵微調位置，Home 回到右下角": "Drag to move; use the direction keys to fine-tune the position, and Home returns to the lower right corner",
+  "拖曳標題可移動，拖曳邊框可縮放。": "Drag the title to move; drag an edge to resize.",
   "拖曳標題移動白板；拖曳右下角自由調整寬高。方向鍵微調，Shift 加大調整幅度。": "Drag the title to move the whiteboard; drag the lower right corner to freely adjust the width and height. Use the arrow keys to fine-tune, and Shift to increase the adjustment range.",
   "放一放、換一換，用操作找出規律。": "Put it away, change it, and use operations to find out the rules.",
   "放入": "put in",
@@ -4643,7 +4645,6 @@ const catalog={
   "放大鏡": "Magnifier",
   "放大鏡 · 移動或觸控定位 · Esc 關閉": "Magnifying glass · Move or touch position · Esc to close",
   "放大鏡範圍": "magnifying glass range",
-  "放大顯示": "Enlarge",
   "放好了，下一步 →": "Ready — Next Step →",
   "放好了，讀出來 →": "Ready — Read the Number →",
   "放百": "Hundreds",
@@ -5726,6 +5727,7 @@ const catalog={
   "視覺色塊對位與進位小1提示": "Color-coded place values and a +1 regrouping prompt",
   "移除": "Remove",
   "移除⟦2⟧": "Remove⟦2⟧",
+  "移動計時器：拖曳標題，或使用方向鍵": "Move timer: drag the title or use arrow keys",
   "移動計算白板": "Mobile computing whiteboard",
   "移動畫記工具列": "Mobile drawing toolbar",
   "移動滑鼠或觸控定位 · Esc 關閉": "Move mouse or touch position · Esc to close",
@@ -8013,6 +8015,7 @@ const catalog={
   "課綱指標": "Curriculum indicators",
   "課綱指標代碼": "Curriculum indicator code",
   "調整白板大小": "Resize whiteboard",
+  "調整計時器大小：拖曳邊框，或使用方向鍵": "Resize timer: drag an edge or use arrow keys",
   "調整圓規半徑幾公分": "Adjust the radius of the compass by a few centimeters",
   "調整選取教具": "Adjust selected teaching aids",
   "請允許彈出視窗以預覽聯絡單。": "Please allow pop-ups to preview the contact sheet.",
@@ -8297,6 +8300,7 @@ const catalog={
   "還在托盤：⟦3⟧顆": "Still in tray: ⟦3⟧pcs",
   "還有問號格子沒填完喔！請把每個位數都填上數字～": "There are still question mark boxes that have not been filled in! Please fill in each digit with a number~",
   "還沒有材料": "No materials yet",
+  "還原視窗大小": "Restore window size",
   "還原課堂字級": "Restore classroom font level",
   "還原課堂字級，目前": "Restore classroom font level, currently",
   "還原課堂字級，目前 ⟦0⟧%": "Restore classroom font level, currently ⟦0⟧%",
@@ -8411,6 +8415,7 @@ const catalog={
   "雙隊即時搶答！": "Two teams answer questions instantly!",
   "雙隊演算板（手指/滑鼠直式驗算）": "Dual team calculation board (finger/mouse direct calculation)",
   "雞蛋布丁": "Egg pudding",
+  "離開計時器全螢幕": "Exit full-screen timer",
   "題": "question",
   "題 • 累積成就星星中": "Question • Accumulate achievement stars",
   "題・動態生成": "Question・Dynamic generation",
@@ -8502,6 +8507,7 @@ const catalog={
   "讀題目": "Read the question",
   "顯示": "show",
   "顯示秒數": "Show seconds",
+  "顯示計時設定": "Show timer settings",
   "顯示幾何教具": "Display geometry teaching aids",
   "顯示與朗讀": "Display & Speech",
   "驗證餘數嚴格小於除數。": "Verify that the remainder is strictly less than the divisor.",
@@ -8661,7 +8667,8 @@ const catalog={
   "輪流計算與說明解法；答錯不扣分，確認方法後再前進。": "Take turns calculating and explaining. Incorrect answers do not lose points; discuss the method before moving on.",
   "選擇符合本課概念的遊戲，先示範玩法，再讓學生操作。": "Choose a game that matches the lesson concept. Demonstrate the rules before learners play.",
   "前往目前單元的數學島，完成一個任務並說說怎麼想；最後回顧今天的方法。": "Visit the current unit’s math island, try one mission and explain your thinking. Finish by reviewing the method.",
-  "⟦6⟧ · ⟦7⟧ 分鐘": "⟦6⟧ · ⟦7⟧ minutes"
+  "⟦6⟧ · ⟦7⟧ 分鐘": "⟦6⟧ · ⟦7⟧ minutes",
+  "放大顯示": "Enlarge"
 };
 if(typeof module!=="undefined"&&module.exports)module.exports=catalog;else root.MathEnglishCatalog=Object.freeze(catalog);
 })(typeof window!=="undefined"?window:globalThis);

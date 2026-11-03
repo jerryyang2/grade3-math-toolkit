@@ -7,6 +7,22 @@
 })(typeof window !== 'undefined' ? window : globalThis, function () {
   'use strict';
   const MAX = 180 * 60000;
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  function fitFrame(frame, view) {
+    const width = clamp(frame.width, Math.min(280, view.width - 16), view.width - 16);
+    const height = clamp(frame.height, Math.min(260, view.height - 16), view.height - 16);
+    return {width, height, left: clamp(frame.left, 8, view.width - width - 8), top: clamp(frame.top, 8, view.height - height - 8)};
+  }
+  function resizeFrame(frame, edge, dx, dy, view) {
+    let {left, top, width, height} = fitFrame(frame, view);
+    let right = left + width, bottom = top + height;
+    const minWidth = Math.min(280, view.width - 16), minHeight = Math.min(260, view.height - 16);
+    if (edge.includes('w')) left = clamp(left + dx, 8, right - minWidth);
+    if (edge.includes('e')) right = clamp(right + dx, left + minWidth, view.width - 8);
+    if (edge.includes('n')) top = clamp(top + dy, 8, bottom - minHeight);
+    if (edge.includes('s')) bottom = clamp(bottom + dy, top + minHeight, view.height - 8);
+    return {left, top, width: right - left, height: bottom - top};
+  }
   function create({now = () => Date.now(), onChange = () => {}, onFinish = () => {}} = {}) {
     let total = 5 * 60000, remaining = total, deadline = null, phase = 'ready';
     const read = () => ({phase, totalSeconds: total / 1000,
@@ -56,10 +72,13 @@
       const host = doc.createElement('div');
       host.className = 'classroom-clock';
       host.innerHTML = `<section id="classroom-clock-panel" class="classroom-clock-panel" role="dialog" aria-modal="false" aria-labelledby="classroom-clock-title" hidden>
-        <header class="classroom-clock-header"><div><span class="classroom-clock-eyebrow">照自己的步調，掌握時間</span><h2 id="classroom-clock-title">課堂計時器</h2></div><div class="classroom-clock-window-buttons">
-          <button type="button" data-clock="expand" aria-pressed="false" title="放大顯示" aria-label="放大顯示">⤢</button>
+        <header class="classroom-clock-header"><div class="classroom-clock-heading" tabindex="0" role="group" aria-label="移動計時器：拖曳標題，或使用方向鍵"><span class="classroom-clock-eyebrow">照自己的步調，掌握時間</span><h2 id="classroom-clock-title">課堂計時器</h2></div><div class="classroom-clock-window-buttons">
+          <button type="button" data-clock="settings" aria-expanded="false" title="顯示計時設定" aria-label="顯示計時設定" hidden>⚙</button>
+          <button type="button" data-clock="fullscreen" aria-pressed="false" title="全螢幕計時" aria-label="全螢幕計時">⛶</button>
+          <button type="button" data-clock="size-reset" title="還原視窗大小" aria-label="還原視窗大小">↺</button>
           <button type="button" data-clock="minimize" title="縮成小卡，繼續計時" aria-label="縮成小卡，繼續計時">−</button>
           <button type="button" data-clock="close" title="關閉並暫停" aria-label="關閉並暫停">×</button></div></header>
+        <p class="classroom-clock-size-hint">拖曳標題可移動，拖曳邊框可縮放。</p>
         <div class="classroom-clock-body"><label class="classroom-clock-purpose">這段時間用來<select id="classroom-clock-purpose"><option>練習時間</option><option>考試時間</option><option>分組活動</option><option>收拾教具</option></select></label>
           <div class="classroom-clock-readout" role="timer" aria-live="off"><span id="classroom-clock-digits">05:00</span></div>
           <p id="classroom-clock-status" class="classroom-clock-status" role="status" aria-live="polite">準備好了再開始</p>
@@ -71,13 +90,86 @@
           <div class="classroom-clock-extend"><span>需要多一點時間</span><button type="button" data-clock-add="1">＋1 分鐘</button><button type="button" data-clock-add="5">＋5 分鐘</button></div>
           <div class="classroom-clock-options"><label><input id="classroom-clock-seconds" type="checkbox" checked>顯示秒數</label><label><input id="classroom-clock-sound" type="checkbox">結束提示音</label></div>
           <p class="classroom-clock-note">計時可暫停或延長。縮成小卡會繼續計時，關閉則暫停。</p>
-        </div></section>
+        </div>
+        <div class="classroom-clock-grip" data-clock-edge="n" aria-hidden="true"></div><div class="classroom-clock-grip" data-clock-edge="e" aria-hidden="true"></div><div class="classroom-clock-grip" data-clock-edge="s" aria-hidden="true"></div><div class="classroom-clock-grip" data-clock-edge="w" aria-hidden="true"></div>
+        <div class="classroom-clock-grip" data-clock-edge="nw" aria-hidden="true"></div><div class="classroom-clock-grip" data-clock-edge="ne" aria-hidden="true"></div><div class="classroom-clock-grip" data-clock-edge="sw" aria-hidden="true"></div><button type="button" class="classroom-clock-grip" data-clock-edge="se" aria-label="調整計時器大小：拖曳邊框，或使用方向鍵" title="調整計時器大小：拖曳邊框，或使用方向鍵">◢</button></section>
         <button type="button" id="classroom-clock-chip" class="classroom-clock-chip" aria-controls="classroom-clock-panel" aria-expanded="false" hidden><span aria-hidden="true">◷</span><span id="classroom-clock-chip-purpose">練習時間</span><strong id="classroom-clock-chip-time">05:00</strong><span id="classroom-clock-chip-state"></span></button>`;
       doc.body.append(host);
       const panel = host.querySelector('#classroom-clock-panel'), chip = host.querySelector('#classroom-clock-chip');
       const $ = selector => host.querySelector(selector);
       const t = text => win.MathI18n?.t(text) ?? text;
       let interval = null, lastPhase = '', lastTotal = 0, lastFocus = null, audio = null, minimized = false;
+      let frame = null, gesture = null, full = false, ownedNative = false, fullWithin = null, fullscreenPending = false;
+      const viewport = () => ({width: win.innerWidth || 1024, height: win.innerHeight || 768});
+      function place(next) {
+        const body = panel.querySelector('.classroom-clock-body'), scroll = body.scrollTop;
+        frame = fitFrame(next, viewport());
+        Object.assign(panel.style, {left: `${frame.left}px`, top: `${frame.top}px`, width: `${frame.width}px`, height: `${frame.height}px`, right: 'auto', bottom: 'auto'});
+        panel.style.setProperty('--clock-font', `${Math.max(36, Math.min(frame.width * .19, frame.height * .25, 200))}px`);
+        body.scrollTop = scroll;
+      }
+      function defaultSize() {
+        const view = viewport();
+        place({width: 390, height: 640, left: view.width - 414, top: view.height - 664});
+      }
+      function fullscreenUI(value) {
+        full = value; panel.classList.toggle('is-fullscreen', value); panel.classList.remove('show-settings');
+        $('[data-clock="fullscreen"]').setAttribute('aria-pressed', String(value));
+        const label = t(value ? '離開計時器全螢幕' : '全螢幕計時');
+        $('[data-clock="fullscreen"]').setAttribute('aria-label', label); $('[data-clock="fullscreen"]').title = label;
+        $('[data-clock="settings"]').hidden = !value; $('[data-clock="settings"]').setAttribute('aria-expanded', 'false');
+        $('[data-clock="size-reset"]').hidden = value;
+        panel.querySelectorAll('[data-clock-edge]').forEach(el => { el.hidden = value; });
+      }
+      function exitFull() {
+        const exitNative = ownedNative && doc.fullscreenElement === panel;
+        ownedNative = false; fullWithin = null; fullscreenUI(false);
+        if (exitNative) doc.exitFullscreen?.().catch(() => {});
+        if (frame) place(frame);
+      }
+      async function toggleFull() {
+        if (fullscreenPending) return;
+        if (full) { exitFull(); return; }
+        fullscreenUI(true); panel.querySelector('.classroom-clock-body').scrollTop = 0;
+        fullWithin = doc.fullscreenElement || null;
+        // 已在全螢幕上課時直接鋪滿畫面，保留原有課堂模式與教學步驟。
+        if (!fullWithin && panel.requestFullscreen) {
+          fullscreenPending = true;
+          try { await panel.requestFullscreen(); ownedNative = true; if (!full) exitFull(); }
+          catch (_) { /* 不支援或拒絕原生全螢幕時仍保留滿版顯示。 */ }
+          finally { fullscreenPending = false; }
+        }
+      }
+      panel.addEventListener('pointerdown', event => {
+        if (full || (event.button !== undefined && event.button !== 0)) return;
+        const edge = event.target.closest('[data-clock-edge]');
+        const header = event.target.closest('.classroom-clock-header');
+        if (!edge && (!header || event.target.closest('button'))) return;
+        if (!frame) defaultSize();
+        if (edge) panel.querySelector('.classroom-clock-body').scrollTop = 0;
+        gesture = {id: event.pointerId, x: event.clientX, y: event.clientY, frame: {...frame}, edge: edge?.dataset.clockEdge};
+        panel.setPointerCapture?.(event.pointerId); event.preventDefault();
+      });
+      panel.addEventListener('pointermove', event => {
+        if (!gesture || gesture.id !== event.pointerId) return;
+        const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y, start = gesture.frame;
+        place(gesture.edge ? resizeFrame(start, gesture.edge, dx, dy, viewport()) : {...start, left: start.left + dx, top: start.top + dy});
+      });
+      const endGesture = () => { gesture = null; };
+      ['pointerup','pointercancel','lostpointercapture'].forEach(name => panel.addEventListener(name, endGesture));
+      panel.addEventListener('keydown', event => {
+        const resize = event.target.matches('[data-clock-edge="se"]'), move = event.target.matches('.classroom-clock-heading');
+        if (full || (!resize && !move) || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
+        event.preventDefault(); event.stopPropagation();
+        const amount = event.shiftKey ? 20 : 10, dx = event.key === 'ArrowLeft' ? -amount : event.key === 'ArrowRight' ? amount : 0, dy = event.key === 'ArrowUp' ? -amount : event.key === 'ArrowDown' ? amount : 0;
+        if (!frame) defaultSize();
+        if (resize) panel.querySelector('.classroom-clock-body').scrollTop = 0;
+        place(resize ? resizeFrame(frame, 'se', dx, dy, viewport()) : {...frame, left: frame.left + dx, top: frame.top + dy});
+      });
+      win.addEventListener('resize', () => { if (frame && !full) place(frame); });
+      doc.addEventListener('fullscreenchange', () => {
+        if (full && ((ownedNative && doc.fullscreenElement !== panel) || (fullWithin && doc.fullscreenElement !== fullWithin))) exitFull();
+      });
       function render(state) {
         const time = $('#classroom-clock-seconds').checked ? `${String(Math.floor(state.seconds / 60)).padStart(2,'0')}:${String(state.seconds % 60).padStart(2,'0')}` : t(`${Math.ceil(state.seconds / 60)} 分鐘`);
         $('#classroom-clock-digits').textContent = time;
@@ -120,11 +212,12 @@
           lastFocus = doc.activeElement?.closest('#tools-dropdown-menu') ? doc.querySelector('#btn-tools-dropdown') : doc.activeElement;
         }
         panel.hidden = false; chip.hidden = true; minimized = false;
+        if (!frame) defaultSize(); else if (!full) place(frame);
         chip.setAttribute('aria-expanded', 'true'); render(clock.read()); $('[data-clock="toggle"]').focus();
       }
       function close() {
         clock.pause(); panel.hidden = chip.hidden = true; minimized = false;
-        panel.classList.remove('is-large'); $('[data-clock="expand"]').setAttribute('aria-pressed','false');
+        exitFull();
         chip.setAttribute('aria-expanded','false'); lastFocus?.focus();
       }
       host.addEventListener('click', event => {
@@ -140,8 +233,10 @@
         }
         if (button.dataset.clock === 'reset') { clock.reset(); $('#classroom-clock-error').hidden = true; }
         if (button.dataset.clock === 'close') close();
-        if (button.dataset.clock === 'minimize') { minimized = true; panel.hidden = true; chip.hidden = false; chip.setAttribute('aria-expanded','false'); chip.focus(); }
-        if (button.dataset.clock === 'expand') { const expanded = panel.classList.toggle('is-large'); button.setAttribute('aria-pressed',String(expanded)); }
+        if (button.dataset.clock === 'minimize') { exitFull(); minimized = true; panel.hidden = true; chip.hidden = false; chip.setAttribute('aria-expanded','false'); chip.focus(); }
+        if (button.dataset.clock === 'fullscreen') toggleFull();
+        if (button.dataset.clock === 'size-reset') defaultSize();
+        if (button.dataset.clock === 'settings') { const shown = panel.classList.toggle('show-settings'); button.setAttribute('aria-expanded', String(shown)); }
       });
       $('#classroom-clock-form').addEventListener('submit', event => {
         event.preventDefault();
@@ -152,9 +247,9 @@
       $('#classroom-clock-sound').addEventListener('change', prepareAudio);
       $('#classroom-clock-purpose').addEventListener('change', () => render(clock.read()));
       chip.addEventListener('click', open);
-      panel.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); } });
+      panel.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); if (full) exitFull(); else close(); } });
       doc.addEventListener('visibilitychange', () => clock.tick());
-      doc.addEventListener('math-language-change', () => { lastPhase = ''; render(clock.read()); });
+      doc.addEventListener('math-language-change', () => { lastPhase = ''; const wasSettings = panel.classList.contains('show-settings'); fullscreenUI(full); panel.classList.toggle('show-settings', wasSettings); $('[data-clock="settings"]').setAttribute('aria-expanded', String(wasSettings)); render(clock.read()); });
       doc.querySelector('#btn-classroom-timer')?.addEventListener('click', () => { win.ToolsDropdown?.close(); open(); });
       // 全螢幕也保留入口；計時不隨教學活動切換而重建。
       const focusBar = doc.querySelector('.lesson-focus-bar');
@@ -166,5 +261,5 @@
     }
     if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', ready); else ready();
   }
-  return {create, mount};
+  return {create, mount, fitFrame, resizeFrame};
 });
