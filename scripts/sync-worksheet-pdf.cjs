@@ -7,7 +7,7 @@ const crypto=require('node:crypto');
 const {spawnSync,execFileSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..');
 const sources=require('./worksheets/sources.json');
-const pdf=path.join(root,'output/pdf/一起把數學玩懂_三上學習單彙整_36份.pdf');
+const pdf=path.join(root,'output/pdf/慢慢把數學玩懂_三上學習單彙整_36份.pdf');
 const reportFile=path.join(root,'Codex/worksheet-book-verification.json');
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();

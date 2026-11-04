@@ -3,7 +3,7 @@ import json,re,subprocess,hashlib
 from pypdf import PdfReader
 from reportlab.pdfbase.ttfonts import TTFont
 ROOT=Path(__file__).resolve().parents[2]
-pdf=ROOT/'output/pdf/一起把數學玩懂_三上學習單彙整_36份.pdf'
+pdf=ROOT/'output/pdf/慢慢把數學玩懂_三上學習單彙整_36份.pdf'
 manifest=json.loads((ROOT/'Codex/worksheet-book-manifest.json').read_text())
 sheets=json.loads((ROOT/'tmp/pdfs/worksheets.json').read_text())
 r=PdfReader(pdf)
@@ -30,7 +30,7 @@ assert count==360
 alltext=''.join(texts)+str(r.metadata)
 assert not re.search(r'/Users/|/home/|[A-Za-z0-9_.+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|09\d{8}|ghp_[A-Za-z0-9]+|sk-[A-Za-z0-9]+',alltext)
 assert '\x00' not in alltext
-assert all('一起把數學玩懂' not in text for text in texts[1:])
+assert all('慢慢把數學玩懂' not in text for text in texts[1:])
 assert '點選小節名稱或 PDF 書籤可跳頁' not in alltext
 assert '三年級上學期數學｜學習單彙編' not in alltext
 assert not re.search(r'(?m)^計算區$', '\n'.join(texts[3:]))

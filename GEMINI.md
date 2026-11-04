@@ -27,7 +27,7 @@
 
 - 網站學習單題目、選項、範圍、圖像或列印格式更動時，必須在同次任務執行 `npm run worksheets:pdf`，驗證題目完整、圖像與排版後再發布。
 - 圖像檢核涵蓋全部小節；新增或修改題目須更新 `js/worksheet-visual-data.js` 的需求判斷與簽章，避免誤用舊圖或漏圖。待求數值不得預填答案。
-- 彙整電子檔固定存放於 `output/pdf/一起把數學玩懂_三上學習單彙整_36份.pdf`；`output/pdf/`、`tmp/pdfs/` 與 `Codex/` 維持 Git 排除，禁止強制加入或新增網站下載連結。
+- 彙整電子檔固定存放於 `output/pdf/慢慢把數學玩懂_三上學習單彙整_36份.pdf`；`output/pdf/`、`tmp/pdfs/` 與 `Codex/` 維持 Git 排除，禁止強制加入或新增網站下載連結。
 - 本機已安裝推送前同步檢查；`npm run worksheets:pdf:check` 會檢查來源與 PDF 雜湊，過期時重製並驗證，未通過不得推送。新工作副本可執行 `npm run worksheets:install-hook` 安裝，不覆寫其他既有 hook。
 - PDF 內頁不重複網站名稱；名稱只留封面。保留 A4 雙欄、四邊 1 公分與三排計算格，每份十題盡量兩頁，仍超頁時須列出小節及頁數，不以刪題或過度縮字處理。
 
@@ -40,8 +40,8 @@
 
 ## 本機網站使用手冊同步
 
-- 比賽用網站使用手冊存放於 `output/pdf/一起把數學玩懂_網站使用手冊.pdf`；原稿、實際 Chrome 截圖、覆核與版本紀錄存放於 `Codex/website-guide/`。兩個目錄持續 Git 排除，不上傳 GitHub，也不建立網站下載連結。
-- 參賽副本固定存放於 `參賽資料/一起把數學玩懂_網站使用手冊.pdf`，同樣維持 Git 排除。`npm run manual:pdf` 產製成功後自動同步副本；`npm run manual:check` 與推送前檢查僅在原稿、截圖、PDF 及逐頁覆核通過後補齊或更新副本。同步採完整檔案核對，不取代視覺覆核；產製失敗或檢查未通過時不得以舊版冒充新版。
+- 比賽用網站使用手冊存放於 `output/pdf/慢慢把數學玩懂_網站使用手冊.pdf`；原稿、實際 Chrome 截圖、覆核與版本紀錄存放於 `Codex/website-guide/`。兩個目錄持續 Git 排除，不上傳 GitHub，也不建立網站下載連結。
+- 參賽副本固定存放於 `參賽資料/慢慢把數學玩懂_網站使用手冊.pdf`，同樣維持 Git 排除。`npm run manual:pdf` 產製成功後自動同步副本；`npm run manual:check` 與推送前檢查僅在原稿、截圖、PDF 及逐頁覆核通過後補齊或更新副本。同步採完整檔案核對，不取代視覺覆核；產製失敗或檢查未通過時不得以舊版冒充新版。
 - 網站功能、頁面、教學內容、操作流程、顯示或語言更動時，同次任務必須覆核手冊，實際操作並重拍受影響畫面，修改私有 `guide-content.json`，更新 `capture-review.json` 的來源與截圖覆核紀錄，再執行 `npm run manual:pdf`。不可只更新雜湊、沿用未覆核的舊圖或憑空重畫介面。
 - 產製後逐頁渲染並檢查文字、截圖、目錄、書籤與頁碼，將核定 PDF 雜湊及逐頁覆核記於私有 `qa-review.json`，通過 `npm run manual:check` 才能發布。截圖與手冊均不得放入真實學生資料。
 - `npm run worksheets:install-hook` 安裝的推送前檢查同時執行學習單與使用手冊版本檢查；本機已有手冊時，網站、截圖、原稿、PDF 或視覺覆核任一過期即停止推送，不會自動把舊截圖核定為新版。新工作副本若未帶入私有手冊，須先補齊後再維護出版品。
@@ -52,9 +52,9 @@
 - PDF 產製共用 `scripts/pdf_fonts.py`；本機嵌入用字型及快取存放於 Git 排除的 `Codex/fonts/`，不公開字型檔。改動字型或排版後，重新產製、檢查實際使用字型及逐頁視覺覆核，再同步參賽副本。
 - 可編輯的報名表、授權同意書、信封封面與標楷體版完整計畫存放於 `參賽原稿/`；主辦原始 DOC 與換版前 PDF 備份於 `Codex/submission/font-normalization/`，不混入正式送件資料夾。
 
-- 正式參賽作品名稱固定使用「一起把數學玩懂」，作品送件檔名、作品名稱欄及自編文件標題皆使用全名，不得任意縮寫。
+- 正式參賽作品名稱固定使用「慢慢把數學玩懂」，作品送件檔名、作品名稱欄及自編文件標題皆使用全名，不得任意縮寫。
 
 - `參賽資料/` 僅放送件用 PDF 與待填寫簽章的紙本表件；說明書 TXT、可編輯 Word 與製作程式放在資料夾外，維持本機私有。說明書 TXT 與 Word 固定存放於 `參賽原稿/`，同樣 Git 排除。
-- 說明書 TXT 修改後必須同步更新 `output/pdf/一起把數學玩懂_作品說明書.pdf` 與 `參賽資料/一起把數學玩懂_作品說明書.pdf`。以 `npm run submission:pdf` 重製，逐頁檢查 `Codex/submission/description-render/`，將新版 PDF 雜湊與已覆核頁碼記於私有 `Codex/submission/qa-review.json`，再通過 `npm run submission:check`；不可只更新雜湊而略過排版檢查。
+- 說明書 TXT 修改後必須同步更新 `output/pdf/慢慢把數學玩懂_作品說明書.pdf` 與 `參賽資料/慢慢把數學玩懂_作品說明書.pdf`。以 `npm run submission:pdf` 重製，逐頁檢查 `Codex/submission/description-render/`，將新版 PDF 雜湊與已覆核頁碼記於私有 `Codex/submission/qa-review.json`，再通過 `npm run submission:check`；不可只更新雜湊而略過排版檢查。
 - 本機的 TXT 背景監看由 `npm run submission:watch` 提供，儲存 TXT 時會自動重製 Word 與參賽 PDF；自動產製不等於完成新版視覺覆核。發布前仍需確認所有頁面，舊版核定紀錄不能沿用。目前登入期間已載入背景服務；重新登入後可雙擊 `參賽原稿/點我啟動說明書自動同步.command` 啟動。
 - `npm run submission:check` 與推送前流程會攔截過期的說明書，並同步已核定的網站手冊與學習單 PDF 副本。手冊、學習單、說明書原稿、表件與所有產製檔不得加入 Git 或建立公開下載連結。

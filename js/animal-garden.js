@@ -58,7 +58,7 @@
       const assembled = garden.classList.toggle('is-gathered');
       gather.setAttribute('aria-pressed', String(assembled));
       gather.querySelector('span').textContent = assembled ? '自由探索' : '夥伴集合';
-      speech.textContent = assembled ? '動物小隊集合完畢！一起把數學玩懂。' : '出發！點點小動物，聽聽牠們的小提醒。';
+      speech.textContent = assembled ? '動物小隊集合完畢！慢慢把數學玩懂。' : '出發！點點小動物，聽聽牠們的小提醒。';
     });
   });
 })();

@@ -16,7 +16,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'output/pdf/一起把數學玩懂_三上學習單彙整_36份.pdf'
+OUT = ROOT / 'output/pdf/慢慢把數學玩懂_三上學習單彙整_36份.pdf'
 TMP = ROOT / 'tmp/pdfs'
 sys.path.insert(0, str(ROOT / 'scripts'))
 from pdf_fonts import register_biaukai
@@ -69,7 +69,7 @@ def draw_operations(operations,offset_x=0,offset_y=0):
 
 OUT.parent.mkdir(parents=True,exist_ok=True)
 c=canvas.Canvas(str(OUT),pagesize=A4,pageCompression=1)
-c.setTitle('一起把數學玩懂｜三年級上學期學習單彙整')
+c.setTitle('慢慢把數學玩懂｜三年級上學期學習單彙整')
 c.setAuthor('數學教材編輯')
 c.setCreator('本機學習單彙整工具')
 c.setSubject('27份小節學習單與9份單元總複習，每份10題，共360題')
@@ -86,7 +86,7 @@ def cover():
     c.bookmarkPage('cover');c.addOutlineEntry('封面','cover',0)
     c.setFillColor(INK);c.rect(M,H-46*mm,6*mm,31*mm,fill=1,stroke=0)
     c.setFont('BookHei',12);c.drawString(M+12*mm,H-24*mm,'適用南一版本三年級上學期')
-    c.setFont('BookHei',29);c.drawString(M,H-82*mm,'一起把數學玩懂')
+    c.setFont('BookHei',29);c.drawString(M,H-82*mm,'慢慢把數學玩懂')
     c.setFont('BookHei',21);c.drawString(M,H-115*mm,'學習單彙整本')
     c.setStrokeColor(INK);c.setLineWidth(1.5);c.line(M,H-125*mm,W-M,H-125*mm)
     c.setFont('BookHei',14);c.drawString(M,H-144*mm,'9 個單元  /  27 份小節卷  /  9 份總複習')
