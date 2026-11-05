@@ -1,0 +1,64 @@
+/* 教室首頁：展開的直向工具列靠邊，教材只在需要時留出空間。 */
+.storybook-site {
+  --edge-toolbar-width: 70px;
+  --edge-left: max(8px, env(safe-area-inset-left));
+  --edge-right: max(8px, env(safe-area-inset-right));
+  --edge-toolbar-top: clamp(8px, var(--edge-nav-bottom, 8px), 55dvh);
+  --edge-content-max: 1320px;
+  --edge-content-padding: 24px;
+}
+html[lang="en"] .storybook-site { --edge-toolbar-width: 90px; }
+.storybook-site.lesson-focus {
+  --edge-toolbar-top: clamp(8px, calc(var(--lesson-controls-height, 0px) + 8px), 55dvh);
+  --edge-content-max: 1600px;
+}
+.storybook-site :is(.math-kit, .mft-ui)[data-edge-dock]:has(:is(.math-kit-panel, .mft-panel):not([hidden])) {
+  top: var(--edge-toolbar-top);
+  bottom: auto;
+}
+.storybook-site .math-kit[data-edge-dock]:has(.math-kit-panel:not([hidden])) { left: var(--edge-left); }
+.storybook-site .mft-ui[data-edge-dock]:has(.mft-panel:not([hidden])) { right: var(--edge-right); }
+.storybook-site :is(.math-kit, .mft-ui)[data-edge-dock][data-orientation="vertical"] :is(.math-kit-panel, .mft-panel) {
+  width: var(--edge-toolbar-width);
+  max-height: calc(100dvh - var(--edge-toolbar-top) - max(8px, env(safe-area-inset-bottom)));
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.storybook-site [data-edge-dock] :is(.math-kit-collapse, .mft-collapse) { order: -1; }
+.storybook-site [data-edge-dock] :is(.math-kit-header, .mft-header) { flex-shrink: 0; }
+.storybook-site [data-edge-dock] :is(.math-kit-body, .mft-body) { min-height: 88px; }
+.storybook-site:has(.math-kit[data-edge-dock]:not(.math-kit-unavailable) .math-kit-panel:not([hidden])) {
+  --edge-left-clearance: calc(var(--edge-left) + var(--edge-toolbar-width) + 12px);
+}
+.storybook-site:has(.mft-ui[data-edge-dock]:not(.mft-unavailable) .mft-panel:not([hidden])):not(.switch-access-mode) {
+  --edge-right-clearance: calc(var(--edge-right) + var(--edge-toolbar-width) + 12px);
+}
+.storybook-site > #main-content-area {
+  --edge-content-margin: max(0px, calc((100% - var(--edge-content-max)) / 2));
+  padding-left: max(var(--edge-content-padding), calc(var(--edge-left-clearance, 0px) - var(--edge-content-margin)));
+  padding-right: max(var(--edge-content-padding), calc(var(--edge-right-clearance, 0px) - var(--edge-content-margin)));
+}
+.storybook-site .spotlight-controls {
+  --spotlight-left: max(16px, var(--edge-left-clearance, 0px), env(safe-area-inset-left));
+  left: var(--spotlight-left);
+  max-width: calc(100vw - var(--spotlight-left) - max(16px, var(--edge-right-clearance, 0px)));
+}
+@media (max-width: 700px) {
+  html[lang] .storybook-site { --edge-toolbar-width: 54px; --edge-content-padding: 12px; }
+  .storybook-site [data-edge-dock][data-orientation="vertical"] :is(.math-kit-panel, .mft-panel) { padding: 3px; }
+  .storybook-site [data-edge-dock][data-orientation="vertical"] :is(.math-kit-header, .math-kit-body, .math-kit-choices, .math-kit-footer) { width: 44px; }
+  .storybook-site [data-edge-dock][data-orientation="vertical"] :is(.math-kit-panel, .mft-panel) button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    flex-basis: 44px;
+    font-size: 11px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .storybook-site [data-edge-dock][data-orientation="vertical"] .math-kit-choices button > span { font-size: inherit; }
+}
+@media print {
+  .storybook-site > #main-content-area { padding-inline: var(--edge-content-padding); }
+}

@@ -100,8 +100,10 @@
     const host = document.createElement('aside');
     host.id = 'math-floating-tools';
     host.className = 'mft-ui';
-    let orientation = 'horizontal';
-    try { if (localStorage.getItem('math-floating-orientation') === 'vertical') orientation = 'vertical'; } catch (_) {}
+    const classroom = document.getElementById('tab-units');
+    let orientation = classroom ? 'vertical' : 'horizontal';
+    if (classroom) host.dataset.edgeDock = 'right';
+    else try { if (localStorage.getItem('math-floating-orientation') === 'vertical') orientation = 'vertical'; } catch (_) {}
     host.dataset.orientation = orientation;
     host.setAttribute('aria-label', '浮動教學畫記工具');
     host.innerHTML = `
@@ -176,6 +178,7 @@
     const launcher = host.querySelector('.mft-launcher');
     const modeLabel = host.querySelector('.mft-mode');
     const moveButton = host.querySelector('.mft-move');
+    if (classroom) moveButton.title = '拖曳移動；方向鍵微調';
     const orientationButton = host.querySelector('.mft-orientation');
     const options = host.querySelector('.mft-options');
     const optionsButton = host.querySelector('.mft-options-toggle');
@@ -286,6 +289,7 @@
       if (open) positionOptions();
     }
     function clampPosition(x, y) {
+      if (host.dataset.edgeDock) { positionOptions(); return; }
       const bounds = host.getBoundingClientRect();
       host.style.right = 'auto';
       host.style.bottom = 'auto';
@@ -295,6 +299,7 @@
     }
     function setOrientation(next, save = true) {
       const bounds = host.getBoundingClientRect();
+      if (save && next === 'horizontal') delete host.dataset.edgeDock;
       orientation = next === 'vertical' ? 'vertical' : 'horizontal';
       host.dataset.orientation = orientation;
       const target = orientation === 'horizontal' ? '直向' : '橫向';
@@ -532,6 +537,7 @@
         drag.moved = true;
         event.preventDefault();
         host.classList.add('mft-dragging');
+        delete host.dataset.edgeDock;
         clampPosition(event.clientX - drag.x, event.clientY - drag.y);
       });
       function finish(event) {
@@ -550,6 +556,12 @@
       handle.addEventListener('keydown', event => {
         if (event.key === 'Home') {
           host.style.left = ''; host.style.top = ''; host.style.right = ''; host.style.bottom = '';
+          if (classroom) {
+            host.dataset.edgeDock = 'right';
+            setOrientation('vertical', false);
+            compactPosition = null;
+            positionOptions(); event.preventDefault(); return;
+          }
           const style = getComputedStyle(host);
           compactPosition = { x: window.innerWidth - 56 - parseFloat(style.right), y: window.innerHeight - 56 - parseFloat(style.bottom) };
           const bounds = host.getBoundingClientRect();
@@ -559,6 +571,7 @@
         const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
         if (!directions[event.key]) return;
         const bounds = host.getBoundingClientRect();
+        delete host.dataset.edgeDock;
         const [x, y] = directions[event.key];
         clampPosition(bounds.left + x * (event.shiftKey ? 20 : 5), bounds.top + y * (event.shiftKey ? 20 : 5));
         const moved = host.getBoundingClientRect();
@@ -599,7 +612,7 @@
     function fullscreen() {
       const full = document.fullscreenElement;
       const replaced = full?.tagName === 'IFRAME';
-      const parent = full && !replaced ? full : document.body;
+      const parent = full && full !== document.documentElement && !replaced ? full : document.body;
       parent.append(overlay, host, toast);
       const embedded = window.self !== window.top && !full;
       host.classList.toggle('mft-unavailable', replaced || embedded);
@@ -622,7 +635,7 @@
     updateSizeLimit();
     fullscreen();
     window.MathFloatingTools = { open: () => toggle(true), close: () => toggle(false) };
-    toggle(window.innerWidth>=900 && !!document.getElementById('tab-units')?.classList.contains('active'));
+    toggle(!!classroom?.classList.contains('active'));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

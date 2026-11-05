@@ -125,8 +125,10 @@
     const settingsToggle = host.querySelector('[data-action=settings]');
     const orientationToggle = host.querySelector('[data-action=orientation]');
     let settingsOpen = false;
-    let orientation = 'horizontal';
-    try { orientation = localStorage.getItem('math-toolbox-orientation') === 'vertical' ? 'vertical' : 'horizontal'; } catch {}
+    const classroom = document.getElementById('tab-units');
+    let orientation = classroom ? 'vertical' : 'horizontal';
+    if (classroom) host.dataset.edgeDock = 'left';
+    else try { orientation = localStorage.getItem('math-toolbox-orientation') === 'vertical' ? 'vertical' : 'horizontal'; } catch {}
     host.dataset.orientation = orientation;
     let instruments = [];
     let marks = [];
@@ -155,6 +157,13 @@
       selection.style.top = `${Math.max(8, Math.min(top, innerHeight - popup.height - 8))}px`;
     }
     function setOrientation(next, persist = true) {
+      const bounds = host.getBoundingClientRect();
+      if (persist && next === 'horizontal' && host.dataset.edgeDock) {
+        delete host.dataset.edgeDock;
+        host.style.left = `${bounds.left}px`;
+        host.style.top = `${bounds.top}px`;
+        host.style.bottom = 'auto';
+      }
       orientation = next;
       host.dataset.orientation = orientation;
       const target = orientation === 'horizontal' ? '直向' : '橫向';
@@ -169,6 +178,7 @@
       const focusBar = document.querySelector('.lesson-focus-bar:not([hidden]), .game-header');
       const safeTop = Math.max(8, Math.min(focusBar?.getBoundingClientRect().bottom + 8 || 8, innerHeight - 100));
       host.style.setProperty('--math-kit-safe-top', `${safeTop}px`);
+      if (host.dataset.edgeDock) { positionOptions(); return; }
       const bounds = host.getBoundingClientRect();
       host.style.left = `${Math.max(8, Math.min(bounds.left, innerWidth - bounds.width - 8))}px`;
       host.style.top = `${Math.max(safeTop, Math.min(bounds.top, innerHeight - bounds.height - 8))}px`;
@@ -335,6 +345,7 @@
         fitInstrument(gesture.instrument, innerWidth, innerHeight);
         position(gesture.instrument, gesture.element);
       } else {
+        delete host.dataset.edgeDock;
         host.style.left = `${gesture.x + deltaX}px`;
         host.style.top = `${gesture.y + deltaY}px`;
         host.style.bottom = 'auto';
@@ -375,9 +386,16 @@
         }
         if (event.target.closest('.math-kit-drag') && event.key.startsWith('Arrow')) {
           event.preventDefault(); const bounds = host.getBoundingClientRect();
+          delete host.dataset.edgeDock;
           host.style.left = `${bounds.left + (event.key === 'ArrowRight' ? 10 : event.key === 'ArrowLeft' ? -10 : 0)}px`;
           host.style.top = `${bounds.top + (event.key === 'ArrowDown' ? 10 : event.key === 'ArrowUp' ? -10 : 0)}px`;
           host.style.bottom = 'auto'; clampHost();
+        }
+        if (classroom && event.key === 'Home' && event.target.closest('.math-kit-drag, .math-kit-launcher')) {
+          event.preventDefault();
+          host.style.left = ''; host.style.top = ''; host.style.bottom = '';
+          host.dataset.edgeDock = 'left';
+          setOrientation('vertical', false);
         }
         event.stopPropagation();
       });
@@ -385,7 +403,7 @@
     function fullscreen() {
       const full = document.fullscreenElement;
       const unavailable = full?.tagName === 'IFRAME' || (window.self !== window.top && !full);
-      (full && !unavailable ? full : document.body).append(layer, host);
+      (full && full !== document.documentElement && !unavailable ? full : document.body).append(layer, host);
       host.classList.toggle('math-kit-unavailable', unavailable);
       layer.classList.toggle('math-kit-unavailable', unavailable);
       render();
@@ -398,7 +416,7 @@
     setOrientation(orientation, false);
     fullscreen();
     window.MathToolbox={open:()=>toggle(true),close:()=>toggle(false)};
-    toggle(window.innerWidth>=900 && !!document.getElementById('tab-units')?.classList.contains('active'));
+    toggle(!!classroom?.classList.contains('active'));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

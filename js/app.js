@@ -137,7 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
       window.MathToolbox?.close();
     }
     if (target === 'units') {
-      if(window.innerWidth>=900)window.MathFloatingTools?.open();
+      window.MathFloatingTools?.open();
+      window.MathToolbox?.open();
     } else if (target === 'practice') {
       window.MathFloatingTools?.open();
       window.MathToolbox?.open();
@@ -1483,6 +1484,18 @@ ${notes ? reportNotes : '未填寫教師觀察，不推定進步、精熟或提�
   }
 
   // 啟動各模組
+  const mainNav = document.querySelector('.main-nav');
+  if (mainNav) {
+    const updateToolDockTop = () => {
+      document.body.style.setProperty('--edge-nav-bottom', `${mainNav.offsetTop + mainNav.offsetHeight + 8}px`);
+    };
+    if (typeof ResizeObserver === 'function') {
+      const dockObserver = new ResizeObserver(updateToolDockTop);
+      for (const block of document.querySelectorAll('.app-header, .main-nav, .student-bank-container')) dockObserver.observe(block);
+    }
+    window.addEventListener('resize', updateToolDockTop);
+    updateToolDockTop();
+  }
   initHeaderTools();
   initTabNavigation();
   initUnitView();
