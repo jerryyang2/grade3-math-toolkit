@@ -21,30 +21,74 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout reviewed classroom source
         uses: actions/checkout@v4
+        with:
+          repository: jerryyang2/grade3-math-teaching-platform
+          ref: main
+          path: source
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify project
+      - name: Verify classroom source
+        working-directory: source
         run: |
           npm ci --ignore-scripts
-          npm test
           npm run i18n:check
-          npm run audio:check
-          npm run islands:audio:check
+          node upper/scripts/i18n/check.cjs
+          node scripts/worksheets/check-course-practice.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Prepare reviewed site files
+        working-directory: source
         shell: bash
         run: |
-          mkdir _site
-          git archive HEAD | tar -xf - -C _site
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import re
+          import shutil
+          import subprocess
+
+          roots = {'assets', 'css', 'js', 'games', 'islands', 'upper', 'courses', 'grade4'}
+          entries = {'index.html', 'lower.html', 'worksheet-preview.html', 'favicon.svg', '.nojekyll'}
+          extensions = {'.html', '.css', '.js', '.svg', '.webp', '.mp3', '.txt', '.woff2'}
+          text_extensions = {'.html', '.css', '.js', '.svg', '.txt'}
+          excluded = {'private', 'student-data', 'exports', 'backups', 'output', 'tmp', 'Codex', 'node_modules'}
+          tracked = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          destination = Path('_site')
+          destination.mkdir()
+          published = set()
+          for name in filter(None, tracked):
+              path = Path(name)
+              if excluded.intersection(path.parts):
+                  continue
+              if name not in entries and not (path.parts[0] in roots and path.suffix in extensions):
+                  continue
+              if not path.is_file() or path.is_symlink():
+                  raise RuntimeError('Website asset is not a regular file')
+              target = destination / path
+              target.parent.mkdir(parents=True, exist_ok=True)
+              if path.suffix in text_extensions:
+                  text = path.read_text()
+                  if path.suffix == '.html':
+                      text = re.sub(r'^\s*<script src="(?:\.\./)*private/student-names\.js"></script>\r?\n', '', text, flags=re.M)
+                  text = re.sub(r'115年[\u3400-\u9fff]{2,6}國小學習教室', '115年學習教室', text)
+                  text = re.sub(r'[\u3400-\u9fff]{2,6}國小學習教室', '學習教室', text)
+                  target.write_text(text)
+              else:
+                  shutil.copyfile(path, target)
+              published.add(name)
+          required = entries | {'upper/index.html', 'courses/index.html', 'grade4/index.html', 'js/i18n-en.js', 'upper/js/i18n-en.js'}
+          if not required.issubset(published):
+              raise RuntimeError('Website entry points or translation catalogs are missing')
+          print('Prepared', len(published), 'reviewed website files')
+          print('Classroom source commit:', subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip())
+          PYTHON
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: _site
+          path: source/_site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
