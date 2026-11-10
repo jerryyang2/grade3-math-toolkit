@@ -132,7 +132,8 @@ const WorksheetVisualSupports = (() => {
       body+=rect(25,20,96,96)+line(73,20,73,116,'stroke-dasharray="4 3"')+line(25,68,121,68,'stroke-dasharray="4 3"')+circle(73,68,4,'#111')+text(155,56,'展開後的摺痕',16);
     } else if(s.triangle) {
       body+='<path d="M25 110V22L113 110Z"/>'+circle(25,110,4,'#111')+circle(25,22,4,'#111')+circle(113,110,4,'#111');
-      body+=text(146,60,'觀察三個開口',16);
+      body+=text(146,60,s.gridReference?'比一比方格轉角':'觀察三個開口',16);
+      if(s.gridReference)body+=rect(173,78,30,30)+line(173,108,173,78,'stroke-dasharray="3 2"');
     } else {
       const values=s.angles||[s.degrees];
       values.forEach((a,i)=>{
@@ -165,7 +166,7 @@ const WorksheetVisualSupports = (() => {
   }
   function ribbonDivision(s) {
     const sample=264*s.each/s.total;
-    return svg(center(150,20,'整條'+s.total+'公分',17)+rect(18,30,264,23,'#eee')+rect(18,80,sample,23)+text(18+sample+12,98,'每段'+s.each+'公分',17)+center(150,133,'能分成幾段？',16),150);
+    return svg(center(150,20,(s.wholeLabel||'整條')+s.total+(s.unit||'公分'),17)+rect(18,30,264,23,'#eee')+rect(18,80,sample,23)+text(18+sample+12,98,(s.partLabel||'每段')+s.each+(s.unit||'公分'),17)+center(150,133,s.prompt||'能分成幾段？',16),150);
   }
   function remainder(s) {
     let body='';const columns=s.groups===4?2:s.groups;
@@ -249,8 +250,11 @@ const WorksheetVisualSupports = (() => {
     });return svg(body,132,'十進位積木的位值與題目給定的份數，並非錢幣或紙鈔');
   }
   function sequence(s){
-    let body='';s.values.forEach((value,i)=>{const y=12+i*45;body+=rect(18,y,264,30)+center(150,y+21,value,16);if(i<2)body+=arrow(150,y+32,150,y+42);});
-    body+=center(150,167,'現在：？元',17);return svg(body,180,'依時間先後花錢再得到錢，兩個步驟的結果留白');
+    let body='';const gap=45;
+    s.values.forEach((value,i)=>{const y=12+i*gap;body+=rect(18,y,264,30)+center(150,y+21,value,16);if(i<s.values.length-1)body+=arrow(150,y+32,150,y+42);});
+    const h=20+s.values.length*gap;
+    body+=center(150,h-6,s.prompt||'現在：？元',17);
+    return svg(body,h,s.description||'依時間順序呈現各次數量變化，結果留白');
   }
   function fractionCircle(s){
     const row=s.rows[0],r=48,cx=80,cy=64;let body=circle(cx,cy,r);

@@ -26,7 +26,7 @@ test('switching between geometry, division, fractions and circle removes unrelat
 test('practice images, speech, error feedback and solution playback work together without counting read-aloud as math support',()=>{
  const h=lesson();h.click('[data-tab="practice"]');h.choose('practice-student-select','1');
  assert.equal(h.document.querySelector('#practice-question-figure figure').dataset.wsFigure,'p1_1_1');
- h.click('#practice-read-options');assert.ok(h.speech.at(-1).includes('A，3001 個'));assert.equal(h.document.getElementById('practice-support').value,'independent');
+ h.click('#practice-read-options');assert.ok(h.speech.at(-1).includes('A，3001 號'));assert.equal(h.document.getElementById('practice-support').value,'independent');
  h.click('#practice-options [data-index="1"]');assert.equal(h.document.getElementById('practice-support').value,'prompted');
  h.click('#btn-feedback-solution-wrong');assert.ok(h.document.querySelector('#btn-ladder-auto-play'));
  h.click('#practice-read-options');const beforeRead=h.document.querySelector('#practice-ladder-box').textContent;h.pending.forEach(fn=>fn());assert.equal(h.document.querySelector('#practice-ladder-box').textContent,beforeRead,'reading choices cancels pending solution callbacks');
