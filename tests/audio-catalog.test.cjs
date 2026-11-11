@@ -14,15 +14,26 @@ const recorded = text => {
   return Boolean(catalog.clips[clean] || catalog.sequences[clean]?.every(part => catalog.clips[part]));
 };
 
-test('all 270 questions, solutions, scaffolding steps and nine unit cues have recorded female audio', () => {
+test('all teaching speech has recordings or an explicitly reviewed device-female fallback', () => {
   assert.equal(catalog.voice,'zh-TW-HsiaoChenNeural');
+  const fallback=new Set(catalog.deviceVoiceOnly);
+  const reviewed=new Set(['p3_1_8','p6_1_1','p6_1_7','p8_1_1','p1_1_8']);
+  const allowed=new Set(data.practiceBank.filter(p=>reviewed.has(p.id))
+    .flatMap(p=>[p.question,p.speechText,p.solutionSpeech,p.hint,...p.stepScaffolds])
+    .map(text=>normalizer.cleanMathTextForTTS(text)));
+  for(const text of fallback)assert.ok(allowed.has(text),'Unexpected speech fallback');
   for (const p of data.practiceBank) {
-    for (const text of [p.question,p.speechText,p.solutionSpeech,p.hint,...p.stepScaffolds]) assert.ok(recorded(text),p.id);
+    for (const text of [p.question,p.speechText,p.solutionSpeech,p.hint,...p.stepScaffolds])
+      assert.ok(recorded(text)||fallback.has(normalizer.cleanMathTextForTTS(text)),p.id);
   }
   for (const unit of data.units) {
     assert.ok(recorded(unit.misconception.audioMnemonic),unit.id);
     for (const step of unit.scaffoldingSteps) assert.ok(recorded(step.audioCue || step.instruction),unit.id);
   }
+});
+
+test('retired concrete contexts are absent from active questions and speech catalogs',()=>{
+  assert.doesNotMatch(JSON.stringify(data.practiceBank)+JSON.stringify(catalog),/奇美博物館|布朗尼|小可頌/);
 });
 
 test('place value instructions use recorded female audio for every material, quantity and exchange', () => {

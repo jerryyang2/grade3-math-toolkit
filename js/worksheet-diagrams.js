@@ -137,7 +137,7 @@ const WorksheetDiagrams = (() => {
     let body = hatch(pattern);
     if (shape === 'square') {
       body += Array.from({length:4},(_,i)=>`<rect x="${28+i%2*46}" y="${18+Math.floor(i/2)*46}" width="46" height="46" fill="${i<selected ? `url(#${pattern})` : '#fff'}"/>`).join('');
-      body += label(155, 56, '看整塊布朗尼') + label(155, 84, '再數指定的份數');
+      body += label(155, 56, '看整個正方形') + label(155, 84, '再數指定的份數');
     } else if (shape === 'pie') {
       body += Array.from({length:denominator},(_,i)=>`<path d="${sectorPath(80,65,48,i,denominator)}" fill="${i<selected ? `url(#${pattern})` : '#fff'}"/>`).join('');
       body += label(155, 56, '看整個圓形') + label(155, 84, '再數指定的份數');
@@ -213,9 +213,9 @@ const WorksheetDiagrams = (() => {
     let body='';
     const cols=12;
     for(let i=0;i<total;i++) body+=`<rect x="${12+i%cols*23}" y="${14+Math.floor(i/cols)*22}" width="15" height="15" rx="2" fill="#fff"/>`;
-    if(mode==='share') body+=Array.from({length:3},(_,i)=>`<rect x="${25+i*90}" y="75" width="70" height="41" rx="8"/>${label(60+i*90,101,'第'+(i+1)+'人','text-anchor="middle" font-size="14"')}`).join('');
+    if(mode==='share') body+=Array.from({length:3},(_,i)=>`<rect x="${25+i*90}" y="75" width="70" height="41" rx="8"/>${label(60+i*90,101,'模組'+(i+1),'text-anchor="middle" font-size="14"')}`).join('');
     else body+='<path d="M105 78q45-20 90 0l7 40H98Z"/>'+label(150,104,'每袋 6 塊','text-anchor="middle"');
-    return svg(mode==='share'?'十二塊點心與三個空框，尚未分配':'二十四塊餅乾與一個每袋六塊的包裝示意，尚未分袋',body,132);
+    return svg(mode==='share'?'十二點能量與三個模組空框，尚未分配':'二十四塊餅乾與一個每袋六塊的包裝示意，尚未分袋',body,132);
   }
   function banknotes() {
     return svg('十張千元鈔票，尚未寫出合計金額',Array.from({length:10},(_,i)=>`<rect x="${12+i%5*57}" y="${18+Math.floor(i/5)*48}" width="49" height="32" rx="3" fill="#fff"/>${label(36+i%5*57,40+Math.floor(i/5)*48,'1000','text-anchor="middle" font-size="14"')}`).join(''),118);
@@ -294,7 +294,7 @@ const WorksheetDiagrams = (() => {
   rulers.forEach(([i,required,...args])=>add(`p4_1_${i}`,required,()=>ruler(...args),'放大示意，請依刻度判讀，不要直接用尺量圖。'));
   add('p4_1_3',['厚度','毫米'],()=>coinThickness(),'硬幣側面示意；比較厚度與物品長度的差別。');
   add('p4_1_6',['三片','2 毫米'],()=>svg('三片同厚墊片緊密相疊，每片厚2毫米，總厚度留白', '<path d="M35 35h90v18H35Zm0 18h90v18H35Zm0 18h90v18H35Z" fill="#eee"/>'+label(145,49,'每片 2 毫米')+'<path d="M25 35H15v54h10"/>'+label(145,85,'合計？毫米'),115),'三片厚度相同，緊密相疊不留縫。');
-  add('p8_1_1',['平分','4 塊'],id=>fraction(4,1,'square',id),'外框是一整塊布朗尼，斜線表示其中一份。');
+  add('p8_1_1',['1 公尺','4 個等長'],id=>fraction(4,1,'bar',id),'整條長 1 公尺，斜線表示四個等長區段中的一段。');
   add('p8_1_2',['3/8','下面'],()=>fractionSymbol(3,8,'bottom'),'虛線圈出題目指定的數。');
   add('p8_1_3',['5/6','上方'],()=>fractionSymbol(5,6,'top'),'虛線圈出題目指定的數。');
   add('p8_1_4',['8 份','1/8'],id=>fraction(8,1,'bar',id),'外框代表整張色紙，斜線表示其中一份。');
@@ -316,7 +316,7 @@ const WorksheetDiagrams = (() => {
   add('p1_1_8',['五千零六十'],()=>placeTable(),'先想每個位子要填什麼，再讀一次。');
   add('p3_1_1',['20 分','3 回合'],()=>groups(3,20,'分'),'每份相同，想想全部合起來的量。');
   add('p3_1_4',['24 片','3 排'],()=>groups(3,24,'片'),'每個框代表一排，請自行合計。');
-  add('p6_1_1',['12 個','3 位'],()=>division(12,'share'),'上面是全部點心，下方三個框尚未放入點心。');
+  add('p6_1_1',['12 點','3 個模組'],()=>division(12,'share'),'每個小方格表示 1 點能量，下方是三個待分配的模組。');
   add('p6_1_2',['24 塊','6 塊'],()=>division(24,'pack'),'每袋裝一樣多，請自行圈出分組。');
 
   function render(problem) {

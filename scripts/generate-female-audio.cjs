@@ -15,13 +15,22 @@ const clips = new Map();
 const recipes = new Map();
 const clean = text => normalizer.cleanMathTextForTTS(text);
 const filename = text => `${crypto.createHash('sha256').update(JSON.stringify(config) + text).digest('hex').slice(0, 24)}.mp3`;
+// 保守重作的新題採裝置女聲；保留仍可共用的預製數學步驟，不重新公開退役情境。
+const deviceVoiceIds = new Set(['p3_1_8','p6_1_1','p6_1_7','p8_1_1','p1_1_8']);
+const deviceVoiceTexts = new Set(data.practiceBank.filter(p=>deviceVoiceIds.has(p.id))
+  .flatMap(p=>[p.question,p.speechText,p.solutionSpeech,p.hint,...p.stepScaffolds]).map(clean));
+const deviceVoiceOnly = new Set();
 function add(text) {
   const normalized = clean(text);
+  if (deviceVoiceTexts.has(normalized) && !valid(`audio/female/${filename(normalized)}`)) {
+    deviceVoiceOnly.add(normalized); return;
+  }
   if (normalized) clips.set(normalized, `audio/female/${filename(normalized)}`);
 }
 function compose(text, parts) {
   parts.forEach(add);
-  recipes.set(clean(text), parts.map(clean).filter(Boolean));
+  const normalizedParts = parts.map(clean).filter(Boolean);
+  if (normalizedParts.every(part=>clips.has(part))) recipes.set(clean(text), normalizedParts);
 }
 function objectFromSource(file, name) {
   const source = fs.readFileSync(path.join(root, file), 'utf8');
@@ -88,6 +97,7 @@ for (const unit of data.units) {
 
 const manifest = {
   voice: config.voice, rate: config.rate,
+  deviceVoiceOnly: [...deviceVoiceOnly].sort(),
   clips: Object.fromEntries([...clips.entries()].sort(([a], [b]) => a.localeCompare(b, 'zh-TW'))),
   sequences: Object.fromEntries(recipes)
 };

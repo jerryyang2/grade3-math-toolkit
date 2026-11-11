@@ -89,14 +89,16 @@ test('the capacity water level follows the same spacing as the ten equal divisio
   assert.throws(()=>figures.capacityGeometry(10,11));
 });
 
-test('the brownie is four equal squares with exactly one marked share', () => {
+test('the one-meter strip has four equal adjacent sections and one marked share', () => {
   const html=figures.render(data.practiceBank.find(p=>p.id==='p8_1_1'));
   const parts=[...html.matchAll(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" fill="([^"]+)"/g)];
   assert.equal(parts.length,4);
   assert.ok(parts.every(p=>p[3]===parts[0][3]&&p[4]===parts[0][4]));
   assert.equal(parts.filter(p=>p[5].startsWith('url(')).length,1);
-  assert.equal(new Set(parts.map(p=>p[1])).size,2);
-  assert.equal(new Set(parts.map(p=>p[2])).size,2);
+  assert.equal(new Set(parts.map(p=>p[1])).size,4);
+  assert.equal(new Set(parts.map(p=>p[2])).size,1);
+  for(let i=1;i<parts.length;i++)assert.equal(Number(parts[i][1]),Number(parts[i-1][1])+Number(parts[i-1][3]));
+  assert.match(html,/1 公尺/);
 });
 
 test('illustrations can be switched off while all units retain ten questions and calculation areas', () => {
