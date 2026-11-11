@@ -1441,8 +1441,6 @@
   "本參賽版對應三年級上學期，參考南一 115 上課本與習作；課程版本標示並非原書逐題重製或出版社授權聲明。": "This competition edition covers Grade 3, first semester, with Nani 115 first-semester textbooks and workbooks as references. Edition labels are not a statement of publisher authorization or a claim to reproduce the original exercises.",
   "跨年級版本目前參考南一 115 上及 114 下教材。下學期參考材料與平台所採 115 學年度安排有版次差異，尤其三下「找規律」尚缺 115 下同版原書，不能標示為同版逐題核對完成。": "The cross-grade edition currently references Nani 115 first-semester and 114 second-semester materials. Second-semester references differ from the platform’s 115 school-year sequence. In particular, the matching 115 second-semester source for Grade 3 patterns is unavailable; it has not been verified exercise by exercise against that edition.",
   "二、平台內容與圖片": "2. Platform content and images",
-  "練習、提示、互動教具與教學活動依學生需求編寫及調整，開發過程使用 AI 工具協助，由教師選用、檢查與修訂。一般數學概念、單位及公式可能與其他教材相同，不據此宣稱所有內容均為獨創。": "Practice, prompts, interactive tools and learning activities are written and adapted for students’ needs. AI tools assist development, while the teacher selects, checks and revises the material. General mathematical concepts, units and formulas may also occur in other materials; this is not a claim that all content is wholly original.",
-  "操作示意圖包含程式繪製的數量、尺規、鐘面、分數及幾何圖像；動物與場景圖片則作為平台的視覺素材。圖片未另標示開放授權者，本頁不提供其再授權；如需另行使用，請先確認個別素材的來源與使用權。": "Hands-on diagrams include programmatically drawn quantities, rulers, clocks, fractions and geometric figures. Animal and scene images provide visual elements for the platform. Unless an image carries an explicit open license, this page does not grant permission to reuse it. Confirm the source and rights for each item before separate use.",
   "三、朗讀、音效與音樂": "3. Read-aloud, sound effects and music",
   "朗讀使用合成語音或裝置提供的語音功能；遊戲包含以程式產生的提示音及音樂。這些功能不是出版社隨書音檔，亦不代表本站可替語音服務或第三方作品另行授權。": "Read-aloud uses synthesized speech or voices available on the device. Games include programmatically generated sound effects and music. These features are not publisher-provided recordings, and this site does not grant licenses on behalf of speech services or third-party creators.",
   "四、字型與第三方程式": "4. Fonts and third-party software",
@@ -1475,5 +1473,7 @@
   "授權狀態": "Authorization status",
   "公開問題回報（GitHub Issues）": "Public issue reporting (GitHub Issues)",
   "說明更新日期：2026 年 11 月 11 日": "Last updated: November 11, 2026",
-  "教材來源與網站聲明": "Teaching sources and website statement"
+  "教材來源與網站聲明": "Teaching sources and website statement",
+  "本站依學生的學習需求，設計與調整數學練習、解題提示、互動教具及教學活動。製作過程運用 AI 工具協助，由教師進行內容選用、檢核與修訂。數學概念、公式與單位依通用的學科知識呈現。": "The website designs and adapts mathematics practice, problem-solving prompts, interactive tools and teaching activities to meet students’ learning needs. AI tools assist the production process, while a teacher selects, checks and revises the content. Mathematical concepts, formulas and units follow established subject knowledge.",
+  "網站中的數量、尺規、鐘面、分數與幾何示意圖，主要以程式繪製；動物角色與場景圖片用於輔助教學及介面呈現。第三方素材的權利歸原權利人所有，使用範圍以個別授權條款為準。若需轉載、改作或另作其他用途，請先確認相關素材的使用權限。": "Quantity, measurement, clock, fraction and geometry diagrams are mainly drawn programmatically. Animal characters and scene images support teaching and the interface. Rights to third-party materials remain with their respective rights holders, and permitted use is governed by each item’s license. Before reproducing, adapting or otherwise using a material, please check the relevant permissions."
 }
