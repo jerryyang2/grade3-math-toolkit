@@ -67,6 +67,7 @@ jobs:
 
           entries = {
               'index.html',
+              'materials.html',
               'lower.html',
               'worksheet-preview.html',
               'favicon.svg',

@@ -1,0 +1,31 @@
+.site-material-footer{box-sizing:border-box;max-width:1200px;margin:32px auto 0;padding:24px 28px 32px;border-top:1px solid #cbd6c5;color:#43564a;background:#f6f7ef;font-size:18px;line-height:1.85;text-align:left;font-family:"BiauKaiTC","BiauKai","DFKai-SB",serif}
+body:has(#math-floating-tools) .site-material-footer{margin-inline:90px;max-width:none}
+.site-material-footer p{margin:0 0 12px;font-size:inherit;line-height:inherit}
+.site-material-footer a{color:#245b48;text-decoration:underline;text-underline-offset:4px;font-weight:700}
+.site-material-footer a:focus-visible,.materials-page a:focus-visible{outline:3px solid #b57123;outline-offset:5px;border-radius:3px}
+.site-material-footer .material-footer-brand{font-size:15px;color:#586b5d;margin-bottom:14px}
+.materials-page{margin:0;background:#fbf9f1;color:#273f33;font:18px/1.9 "BiauKaiTC","BiauKai","DFKai-SB",serif}
+.materials-page *{box-sizing:border-box}
+.materials-page .materials-header{max-width:1040px;margin:auto;padding:22px 150px 22px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.materials-page .materials-brand{display:flex;align-items:center;gap:12px;color:#294e3c;text-decoration:none;font-weight:700}
+.materials-page .materials-brand img{width:42px;height:42px}
+.materials-page .materials-back{border:1px solid #a9bfaa;border-radius:12px;padding:8px 18px;background:white;color:#294e3c;text-decoration:none}
+.materials-page main{max-width:1000px;margin:auto;padding:24px 28px 60px}
+.materials-page .materials-eyebrow{margin:0;color:#5d735f;font-size:16px}
+.materials-page h1{font-size:clamp(30px,5vw,44px);line-height:1.4;margin:12px 0 16px}
+.materials-page .materials-intro{max-width:48em;margin-bottom:28px;color:#4e6253}
+.materials-page .materials-notice{border-left:5px solid #bc8a37;background:#fff3d6;border-radius:0 14px 14px 0;padding:20px 24px;margin-bottom:28px}
+.materials-page section{margin:22px 0;padding:24px 28px;background:#fff;border:1px solid #dbe1d4;border-radius:18px;box-shadow:0 5px 16px #30462d05}
+.materials-page h2{font-size:25px;line-height:1.5;margin:0 0 14px}
+.materials-page h3{font-size:20px;margin:18px 0 6px}
+.materials-page p{margin:8px 0 14px}
+.materials-page li{margin:8px 0}
+.materials-page a{color:#235d48;text-underline-offset:4px;overflow-wrap:anywhere}
+.materials-page .materials-table-wrap{overflow:auto}
+.materials-page table{width:100%;border-collapse:collapse;text-align:left;min-width:440px}
+.materials-page th,.materials-page td{border-bottom:1px solid #dce3d7;padding:12px;vertical-align:top}
+.materials-page th{background:#f0f5e9}
+.materials-page .materials-updated{font-size:15px;color:#647361;margin-top:26px}
+.materials-page .site-material-footer{max-width:1000px;margin:0 auto}
+@media(max-width:600px){.site-material-footer{margin-top:20px;padding:20px;font-size:18px}body:has(#math-floating-tools) .site-material-footer{margin-inline:78px;padding-inline:12px}.materials-page .materials-header{padding:18px 20px}.materials-page main{padding:20px 18px 36px}.materials-page section{padding:20px 18px}.materials-page .materials-notice{padding:16px 18px}.materials-page .materials-brand{font-size:17px;max-width:calc(100% -130px)}.materials-page h2{font-size:23px}.materials-page .materials-back{padding:6px 12px;width:100%;text-align:center}}
+@media print{.site-material-footer,.materials-page .materials-header,.materials-page .language-switch{display:none!important}.materials-page{background:white}.materials-page main{max-width:none;padding:0}.materials-page section{box-shadow:none;break-inside:avoid}.materials-page .materials-table-wrap{overflow:visible}}

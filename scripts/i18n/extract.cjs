@@ -8,7 +8,7 @@ const han = /[\u3400-\u9fff]/u;
 const ignored = /(?:-manifest|visual-data|game-answer-validation|i18n-en|i18n\.js|vendor)/;
 function sources() {
   const walk = dir => fs.readdirSync(path.join(root, dir), {withFileTypes:true}).flatMap(e => e.isDirectory() ? (e.name==='vendor' ? [] : walk(path.join(dir,e.name))) : [path.join(dir,e.name)]);
-  return ['index.html', ...walk('js'), ...walk('games'), ...walk('islands')].filter(f => /\.(?:js|html)$/.test(f) && !ignored.test(f));
+  return ['index.html', 'materials.html', ...walk('js'), ...walk('games'), ...walk('islands')].filter(f => /\.(?:js|html)$/.test(f) && !ignored.test(f));
 }
 function inventory() {
   const entries = new Map();
