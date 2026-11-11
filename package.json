@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
+    "materials:sync": "node scripts/sync-materials-footer.cjs",
+    "materials:check": "node scripts/sync-materials-footer.cjs --check",
     "worksheets:pdf": "node scripts/sync-worksheet-pdf.cjs",
     "worksheets:pdf:check": "node scripts/sync-worksheet-pdf.cjs --check",
     "worksheets:install-hook": "node scripts/sync-worksheet-pdf.cjs --install-hook",
